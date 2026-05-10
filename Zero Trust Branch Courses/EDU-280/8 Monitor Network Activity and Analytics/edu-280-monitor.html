@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 8 — Monitor Network Activity and Analytics · EDU-280</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#fff1f2;--surface:#fff;--surface-2:#fee2e2;--border:#fecaca;--border-dim:#fef2f2;
+  --text:#1c0505;--text-soft:#4a1010;--text-muted:#8c3a3a;
+  --red:#b91c1c;--red-glow:rgba(185,28,28,0.07);--red-dim:#fecaca;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+  --teal:#0d7d8a;--teal-light:#d0f0f4;--teal-border:#9adde6;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#4a1010;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#f87171;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#4a1010;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#f87171;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#f87171;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#f87171;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--red);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#f87171;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--surface-2);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--red);border-bottom-color:var(--red);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--red);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--red-glow);border:1px solid var(--red-dim);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--red);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--surface-2);border-color:var(--border);}
+.callout-note .callout-header{color:var(--red);}
+.callout-note .callout-icon{background:var(--red-dim);color:var(--red);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-tip{background:var(--green-light);border-color:var(--green-border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-tip .callout-body{color:#0d4a2a;}
+/* Feature grid */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.feat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.feat-card-title{font-size:12px;font-weight:700;color:var(--red);margin-bottom:4px;}
+.feat-card-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Dashboard cards */
+.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+.dash-tag{font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--red);margin-bottom:6px;}
+.dash-title{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.dash-body{font-size:12px;color:var(--text-soft);line-height:1.55;}
+/* Link score */
+.score-scale{display:flex;height:16px;border-radius:8px;overflow:hidden;margin-bottom:8px;}
+.score-bad{flex:1;background:#fee2e2;}
+.score-ok{flex:1;background:#fef9c3;}
+.score-good{flex:1;background:#d4f0e0;}
+.score-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:16px;}
+/* Log fields */
+.log-fields{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.log-field{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--text-soft);}
+.log-field strong{color:var(--red);}
+/* Step rows */
+.step-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.step-row{display:flex;gap:14px;align-items:flex-start;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-content{flex:1;}
+.step-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.step-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Knowledge check */
+.kcheck{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
+.kcheck-q{background:var(--text);padding:16px 20px;font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;line-height:1.4;}
+.kcheck-options{padding:16px 20px;display:flex;flex-direction:column;gap:8px;}
+.kcheck-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;color:var(--text-soft);line-height:1.5;}
+.kcheck-option.correct{background:var(--green-light);border-color:var(--green-border);color:var(--green);}
+.kcheck-option.wrong{background:var(--surface-2);border-color:var(--border);color:var(--text-muted);text-decoration:line-through;}
+.kcheck-opt-badge{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.correct .kcheck-opt-badge{background:var(--green);color:#fff;}
+.wrong .kcheck-opt-badge{background:var(--red-dim);color:var(--red);}
+.kcheck-option:not(.correct):not(.wrong) .kcheck-opt-badge{background:var(--border);color:var(--text-muted);}
+/* Lesson tools */
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--red);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#f87171;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#4a1010;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+/* Sidebar */
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#f87171;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#c8807a;line-height:1.6;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--red);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.feat-grid,.dash-grid{grid-template-columns:1fr;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../zero-trust-branch-hub.html">Zero Trust Branch</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-280-hub.html">EDU-280</a>
+      <span class="breadcrumb-sep">›</span>
+      Section 8
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> EDU-280 · Section 8 · 25 min</div>
+    <h1>Monitor Network Activity <em>and Analytics</em></h1>
+    <p>Analytics dashboards, traffic flow charts, interface health and link scoring, and packet and flow logs for session-level troubleshooting.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">See the traffic, score the links, read the logs — <em>visibility is the first line of defense</em>.</div>
+  <p class="motivation-sub">Zero Trust Branch gives administrators rich, layered visibility — from high-level dashboard summaries of device counts and threat incidents, to per-session packet logs showing exactly who communicated with whom on which port. Link Scoring turns raw jitter and latency data into an actionable 0–30 score.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-analytics',this)">Analytics &amp; Charts</button>
+  <button class="nav-tab" onclick="navTo('section-linkhealth',this)">Interface Health &amp; Link Scoring</button>
+  <button class="nav-tab" onclick="navTo('section-logs',this)">Monitoring &amp; Logs</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- OVERVIEW -->
+<div class="section-block" id="section-overview">
+  <div class="section-label">MODULE OVERVIEW</div>
+  <h2>Visibility into branch traffic, health, and sessions</h2>
+  <p>This module covers three layers of observability built into Zero Trust Branch: analytics dashboards and traffic visualizations for network-wide patterns, interface health monitoring and Link Scoring for WAN link quality, and packet/flow logs for per-session troubleshooting.</p>
+
+  <h3>Learning Objectives</h3>
+  <ul class="content-list">
+    <li>Describe how Insights and Charts dashboards provide visibility into branch traffic and behavior</li>
+    <li>Identify key flows and unusual traffic patterns using traffic visualizations</li>
+    <li>Explain Link Scoring and how latency, jitter, and packet loss affect link quality</li>
+    <li>Analyze packet and flow logs to investigate sessions and troubleshoot performance or connectivity issues</li>
+  </ul>
+
+  <h3>Module Highlights</h3>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-title">Monitor with Analytics</div>
+      <div class="feat-card-body">Use ZTB Analytics dashboards and traffic visualizations to understand branch traffic patterns and operational behavior.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Review Interface Health &amp; Link Scoring</div>
+      <div class="feat-card-body">Evaluate WAN/link quality using Link Scoring inputs such as latency, jitter, and packet loss to identify performance degradation.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Troubleshoot with Logs</div>
+      <div class="feat-card-body">Use packet logs and flow logs to investigate sessions, validate traffic outcomes, and accelerate root-cause analysis.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Gateway Monitoring</div>
+      <div class="feat-card-body">Track CPU, memory, and disk usage per gateway, with 24-hour trend graphs and top container resource breakdown.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ANALYTICS & CHARTS -->
+<div class="section-block" id="section-analytics">
+  <div class="section-label">ANALYTICS &amp; TRAFFIC CHARTS</div>
+  <h2>Dashboard visibility and traffic flow visualization</h2>
+
+  <h3>The ZTB Dashboard</h3>
+  <p>The Zero Trust Branch dashboard gives administrators a high-level, real-time overview of the entire branch network. It's your launchpad for visibility, insights, and action.</p>
+
+  <div class="dash-grid">
+    <div class="dash-card">
+      <div class="dash-tag">PANEL 1</div>
+      <div class="dash-title">Insights Panel</div>
+      <div class="dash-body">Snapshot of total endpoints, network count, isolation incidents, and active threats. Click <em>Learn more</em> for deeper reports.</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-tag">PANEL 2</div>
+      <div class="dash-title">Device Insights</div>
+      <div class="dash-body">Understand connected devices by brand and model, including IoT devices like IP cameras — broken down by network.</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-tag">PANEL 3</div>
+      <div class="dash-title">Network Topology</div>
+      <div class="dash-body">Visualize connections between locations and the Internet using interactive charts. Use zoom and search tools to explore any node.</div>
+    </div>
+  </div>
+
+  <h3>Traffic Flow Charts</h3>
+  <p>The Traffic Flow Chart is one of the most powerful tools for understanding lateral movement inside your network. It helps you visualize how devices are communicating with each other — so you can spot risky patterns, validate policies, or simply see what's happening in real time.</p>
+
+  <ul class="content-list">
+    <li><strong>Every device becomes a node</strong> in the graph</li>
+    <li><strong>Every communication path becomes an edge</strong> connecting those nodes</li>
+    <li><strong>Click any node</strong> to get more details — network, subnet, VLAN tag, and network type</li>
+    <li>Built on a graph database, giving you a dynamic, searchable view of all internal traffic flows</li>
+  </ul>
+
+  <div class="callout callout-note">
+    <div class="callout-header"><div class="callout-icon">i</div>UPDATE FREQUENCY</div>
+    <div class="callout-body">The Traffic Flow Chart is not instantaneous — it may take up to <strong>10 minutes</strong> after a communication event for it to show up. For real-time session visibility, use Flow Logs instead.</div>
+  </div>
+
+  <h3>Gateway Monitoring</h3>
+  <p>Monitoring provides critical insights into the performance and resource utilization of edge gateways. In a Zero Trust framework, continuous monitoring maintains operational integrity and ensures security policies are consistently applied.</p>
+
+  <div class="key-concept">
+    <strong>Monitoring path:</strong> Infrastructure › Connectors › Edge › Zero Trust Branch › Site-Name › Sites › Monitoring
+  </div>
+
+  <div class="dash-grid">
+    <div class="dash-card">
+      <div class="dash-tag">METRICS</div>
+      <div class="dash-title">CPU / Memory / Disk</div>
+      <div class="dash-body">Key metrics displayed alongside detailed historical data trends for 24-hour periods, enabling real-time health assessment.</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-tag">BREAKDOWN</div>
+      <div class="dash-title">Top Containers</div>
+      <div class="dash-body">Identifies resource-intensive services such as routing, policy engines, and VPNs, with CPU and memory consumption per container. Helps diagnose bottlenecks.</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-tag">HISTORY</div>
+      <div class="dash-title">Trends</div>
+      <div class="dash-body">Historical resource graphs (CPU, memory, disk) provide visual representation of consumption patterns for proactive capacity planning and anomaly detection.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-analytics" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('analytics','Analytics & Charts')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-analytics" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-analytics"></span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- INTERFACE HEALTH & LINK SCORING -->
+<div class="section-block" id="section-linkhealth">
+  <div class="section-label">INTERFACE HEALTH &amp; LINK SCORING</div>
+  <h2>Measuring WAN link quality with Link Scoring</h2>
+  <p>After defining segmentation policies, it's important to ensure reliable communication between devices. Interface health monitoring helps detect link failures early, enabling intelligent routing decisions.</p>
+
+  <h3>What Is Interface Monitoring?</h3>
+  <p>Link failures can cause significant disruptions in your network. Interface health monitoring works by <strong>sending continuous probes to a defined destination</strong> to track whether a link is up or down. An intelligent ZTB gateway detects these failures and adjusts routing decisions accordingly.</p>
+
+  <h3>Link Scoring (0–30)</h3>
+  <p>Zero Trust Branch supports Link Scoring on a scale of <strong>0–30</strong> based on three metrics: jitter, latency, and packet loss. Because these metrics have different units, the results are normalized over a <strong>window of 30 iterations</strong> to produce a consistent, comparable score.</p>
+
+  <div class="score-scale">
+    <div class="score-bad"></div>
+    <div class="score-ok"></div>
+    <div class="score-good"></div>
+  </div>
+  <div class="score-labels"><span>0 — Poor</span><span>10</span><span>20</span><span>30 — Excellent</span></div>
+
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-title">Latency (ms)</div>
+      <div class="feat-card-body">Measured delay across the link. High latency indicates congestion or a long physical distance between endpoints.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Jitter (ms)</div>
+      <div class="feat-card-body">Variation in delay. High jitter degrades real-time applications like VoIP and video — even if average latency is acceptable.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Packet Loss (%)</div>
+      <div class="feat-card-body">Packets observed as lost on the link. Any packet loss degrades TCP and UDP application performance significantly.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Normalized Score</div>
+      <div class="feat-card-body">Because jitter, latency, and packet loss use different units, the score is normalized over 30 iterations to give a single 0–30 health indicator.</div>
+    </div>
+  </div>
+
+  <div class="key-concept">
+    <strong>Interface Statistics path:</strong> Infrastructure › Connectors › Edge › Zero Trust Branch › Site-Name › Sites › Interfaces<br>
+    Click the score for the required WAN interface to open Interface Statistics 24h.
+  </div>
+
+  <h3>What Interface Statistics Show</h3>
+  <ul class="content-list">
+    <li><strong>Interface / Gateway / Type / MAC</strong> — identifies which interface and gateway the statistics belong to</li>
+    <li><strong>Score</strong> — Link Scoring 0–30, representing overall link quality</li>
+    <li><strong>Loss (%)</strong> — packet loss observed on the link</li>
+    <li><strong>Latency (ms)</strong> — measured delay across the link</li>
+    <li><strong>Jitter (ms)</strong> — variation in delay</li>
+  </ul>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">✓</div>TROUBLESHOOTING TIP</div>
+    <div class="callout-body">Use the <strong>AVG Score, AVG Loss, and AVG Latency</strong> charts to confirm whether issues are <em>persistent</em> or <em>intermittent</em> over the last 24 hours. Persistent degradation suggests a link problem; intermittent spikes suggest congestion or a routing issue.</div>
+  </div>
+
+  <div class="kcheck">
+    <div class="kcheck-q">In Zero Trust Branch, what is the maximum Link Score a WAN interface can receive, and which three metrics are used to calculate it?</div>
+    <div class="kcheck-options">
+      <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Maximum score of 100, calculated using bandwidth, latency, and uptime</div>
+      <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>Maximum score of 30, calculated using jitter, latency, and packet loss — normalized over a window of 30 iterations</div>
+      <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Maximum score of 30, calculated using bandwidth, throughput, and packet loss</div>
+      <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Maximum score of 10, calculated using jitter, latency, and uptime</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-linkhealth" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('linkhealth','Interface Health & Link Scoring')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-linkhealth" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-linkhealth"></span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MONITORING & LOGS -->
+<div class="section-block" id="section-logs">
+  <div class="section-label">MONITORING &amp; LOGS</div>
+  <h2>Packet logs and flow logs for session-level investigation</h2>
+  <p>Monitoring tools in Zero Trust Branch help you troubleshoot issues, spot patterns, and keep track of what's happening inside your network — giving you just the right level of visibility, whether you're looking for big-picture insights or fine-grained details.</p>
+
+  <h3>Packet Logs</h3>
+  <p>Packet logs give you detailed visibility into the traffic flowing through your network. They help you analyze patterns and troubleshoot any issues by showing raw data for each communication event.</p>
+
+  <div class="key-concept">
+    <strong>Path:</strong> Logs › Packet Logs
+  </div>
+
+  <h3>Packet Log Filters</h3>
+  <p>Drill down into logs using a variety of filter criteria:</p>
+
+  <div class="log-fields">
+    <div class="log-field"><strong>Source:</strong> IP address</div>
+    <div class="log-field"><strong>Source:</strong> Port</div>
+    <div class="log-field"><strong>Source:</strong> OS</div>
+    <div class="log-field"><strong>Source:</strong> Browser</div>
+    <div class="log-field"><strong>Source:</strong> Geolocation</div>
+    <div class="log-field"><strong>Destination:</strong> IP address</div>
+    <div class="log-field"><strong>Destination:</strong> Name</div>
+    <div class="log-field"><strong>Destination:</strong> Country</div>
+    <div class="log-field"><strong>Destination:</strong> Port</div>
+    <div class="log-field"><strong>Host:</strong> Hostname</div>
+    <div class="log-field"><strong>Host:</strong> OS</div>
+  </div>
+
+  <h3>Flow Logs</h3>
+  <p>Flow logs give you a summary of session-level communications between endpoints. Each flow is defined by a <strong>4-tuple</strong>: source IP, destination IP, destination port, and protocol. The associated action and policy are also shown.</p>
+
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-title">4-Tuple Per Flow</div>
+      <div class="feat-card-body">Source IP · Destination IP · Destination Port · Protocol. Shows the associated action (allow/deny) and policy.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Deduplication by Default</div>
+      <div class="feat-card-body">By default, only one entry is logged per hour for a given 4-tuple. For example, if Host A sends multiple DNS requests to 8.8.8.8, only one is logged in that hour.</div>
+    </div>
+  </div>
+
+  <div class="callout callout-note">
+    <div class="callout-header"><div class="callout-icon">i</div>INCREASING LOG FREQUENCY</div>
+    <div class="callout-body">Want more detail? You can disable throttling when creating or editing a policy to see more frequent flow log entries for specific traffic.</div>
+  </div>
+
+  <div class="key-concept">
+    <strong>Path:</strong> Logs › Flow Logs
+  </div>
+
+  <h3>Module Summary</h3>
+  <div class="step-rows">
+    <div class="step-row"><div class="step-num">1</div><div class="step-content"><div class="step-title">Reviewed Zero Trust Branch Analytics dashboards</div><div class="step-body">Understood traffic behavior across sites using Insights, Device Insights, Network Topology, and Traffic Flow Charts.</div></div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-content"><div class="step-title">Assessed link health using Link Scoring</div><div class="step-body">Used Link Scoring inputs — latency, jitter, and packet loss — to evaluate WAN link quality and identify persistent vs. intermittent issues.</div></div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-content"><div class="step-title">Analyzed packet and flow logs</div><div class="step-body">Investigated sessions and troubleshot connectivity or performance issues by examining who communicated with whom, on which ports, and with what outcomes.</div></div></div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-logs" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('logs','Monitoring & Logs')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-logs" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-logs"></span></div></div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-280-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-280 Hub
+    </a>
+    <div class="mod-nav-group-label">SECTIONS</div>
+    <a class="mod-nav-link" href="../1 Introduce Zero Trust Branch Concepts/edu-280-intro.html"><span class="mod-nav-dot" style="background:#0d7d8a;"></span>1 · Introduce ZTB Concepts</a>
+    <a class="mod-nav-link" href="../2 Segment Branches and Devices/edu-280-segment.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>2 · Segment Branches</a>
+    <a class="mod-nav-link" href="../3 Deploy and Administer Zero Trust Branch/edu-280-deploy.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>3 · Deploy &amp; Administer</a>
+    <a class="mod-nav-link" href="../4 Integrate Zscaler and Third-Party Security Services/edu-280-integrate-security.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>4 · Integrate Security</a>
+    <a class="mod-nav-link" href="../5 Manage Branch Administration and Policies/edu-280-admin-policies.html"><span class="mod-nav-dot" style="background:#b45309;"></span>5 · Admin &amp; Policies</a>
+    <a class="mod-nav-link" href="../6 Configure Advanced Network Services/edu-280-advanced-network.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>6 · Advanced Network</a>
+    <a class="mod-nav-link" href="../7 Deploy App Connector for Zero Trust Access/edu-280-app-connector.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>7 · App Connector</a>
+    <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:#b91c1c;"></span>8 · Monitor &amp; Analytics</span>
+    <a class="mod-nav-link" href="../9 Integrate Third-Party Security Platforms/edu-280-third-party.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>9 · Third-Party Platforms</a>
+    <a class="mod-nav-link" href="../10 Troubleshoot and Diagnose Branch Issues/edu-280-troubleshoot.html"><span class="mod-nav-dot" style="background:#b45309;"></span>10 · Troubleshoot</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Dashboard — 3 panels (Insights, Devices, Topology)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Traffic Flow Chart — nodes, edges, update lag</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Gateway monitoring — CPU/memory/disk</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Top Containers — bottleneck identification</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Link Scoring scale: 0–30</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>3 Link Score inputs: jitter, latency, packet loss</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>30-iteration normalization window</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>AVG Score/Loss/Latency — persistent vs intermittent</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Packet Logs — raw data per communication event</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Packet Log filters (source, destination, host)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Flow Logs — 4-tuple, action, policy</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Flow Log deduplication (1 per hour per 4-tuple)</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Monitoring Path</div>
+      <div class="quick-ref-def">Sites › Monitoring. Shows CPU, memory, disk, Top Containers, and 24h trend graphs per gateway.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Link Scoring</div>
+      <div class="quick-ref-def">Score 0–30 based on jitter + latency + packet loss, normalized over 30 iterations. Sites › Interfaces.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Traffic Flow Charts</div>
+      <div class="quick-ref-def">Up to 10-minute delay after communication event. Use Flow Logs for real-time session data.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Packet Logs</div>
+      <div class="quick-ref-def">Logs › Packet Logs. Filter by source (IP/port/OS/browser/geo), destination (IP/name/country/port), or host.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Flow Logs</div>
+      <div class="quick-ref-def">Logs › Flow Logs. 4-tuple: src IP · dst IP · dst port · protocol. 1 entry per hour per 4-tuple by default.</div>
+    </div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-280 · <span>Section 8</span></div>
+  <div class="footer-right">Monitor Network Activity and Analytics</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu280-s8-monitor';
+function getStore(){try{return JSON.parse(localStorage.getItem(PAGE_KEY))||{};}catch(e){return{};}}
+function saveStore(s){try{localStorage.setItem(PAGE_KEY,JSON.stringify(s));}catch(e){}}
+function addQuestion(sectionId,sectionLabel){
+  const ta=document.getElementById('q-'+sectionId);
+  const text=ta.value.trim();if(!text)return;
+  const s=getStore();if(!s.questions)s.questions=[];
+  s.questions.push({section:sectionLabel,text,id:Date.now()});
+  saveStore(s);ta.value='';renderQPanel();
+}
+function deleteQuestion(id){
+  const s=getStore();s.questions=(s.questions||[]).filter(q=>q.id!==id);
+  saveStore(s);renderQPanel();
+}
+function renderQPanel(){
+  const s=getStore();const qs=s.questions||[];
+  const count=document.getElementById('qpanel-count');
+  const body=document.getElementById('qpanel-body');
+  count.textContent=qs.length;count.style.display=qs.length?'inline':'none';
+  if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Use the boxes below each section to add one.</p>';return;}
+  const groups={};qs.forEach(q=>{if(!groups[q.section])groups[q.section]=[];groups[q.section].push(q);});
+  body.innerHTML=Object.entries(groups).map(([label,items],gi)=>`
+    <div class="q-group"><div class="q-group-label">${label.toUpperCase()}</div>
+    ${items.map((q,i)=>`<div class="q-item"><div class="q-num">${gi*10+i+1}</div><div class="q-text">${q.text}</div><button class="q-del" onclick="deleteQuestion(${q.id})">✕</button></div>`).join('')}
+    </div>`).join('');
+}
+function toggleQPanel(){
+  const body=document.getElementById('qpanel-body');
+  const hdr=document.getElementById('qpanel-header');
+  const chev=document.getElementById('qpanel-chevron');
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);chev.textContent=open?'▴':'▾';
+  const s=getStore();s.qOpen=open;saveStore(s);
+}
+document.querySelectorAll('.notes-ta').forEach(ta=>{
+  const key=ta.id;const s=getStore();if(s[key])ta.value=s[key];
+  let timer;
+  ta.addEventListener('input',()=>{
+    clearTimeout(timer);timer=setTimeout(()=>{
+      const st=getStore();st[key]=ta.value;saveStore(st);
+      const ns=document.getElementById('ns-'+key.replace('notes-',''));
+      if(ns){ns.textContent='Saved';setTimeout(()=>{ns.textContent='';},1800);}
+    },600);
+  });
+});
+function toggleCheck(li){
+  li.classList.toggle('done');const s=getStore();if(!s.checks)s.checks={};
+  s.checks[li.querySelector('span').textContent]=li.classList.contains('done');saveStore(s);
+}
+(function restoreChecks(){
+  const s=getStore();if(!s.checks)return;
+  document.querySelectorAll('#checklist li').forEach(li=>{
+    if(s.checks[li.querySelector('span').textContent])li.classList.add('done');
+  });
+})();
+function navTo(id,btn){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+(function init(){
+  renderQPanel();const s=getStore();
+  if(s.qOpen){
+    document.getElementById('qpanel-body').classList.add('open');
+    document.getElementById('qpanel-header').classList.add('open');
+    document.getElementById('qpanel-chevron').textContent='▴';
+  }
+})();
+</script>
+</body>
+</html>

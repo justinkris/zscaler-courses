@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The AI Data Security Challenge — EDU-111</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#fef9ec;--surface:#ffffff;--surface-2:#fffbf0;--border:#fde68a;--border-dim:#fef3c7;
+  --text:#1c1204;--text-soft:#3d2e08;--text-muted:#9a7c30;
+  --amber:#b45309;--amber-glow:rgba(180,83,9,0.07);--amber-dim:#fde68a;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#7a6020;letter-spacing:0.08em;margin-bottom:12px;}
+.breadcrumb a{color:#fbbf24;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#3d2e08;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#fbbf24;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#fbbf24;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#fbbf24;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--amber);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--amber);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#fbbf24;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--amber);border-bottom-color:var(--amber);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--amber);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--amber-glow);border:1px solid var(--amber-dim);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--amber);font-weight:600;}
+.definition{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:12px;}
+.definition-term{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.definition-body{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+.callout-note{background:var(--amber-glow);border-color:var(--amber-dim);}
+.callout-note .callout-header{color:var(--amber);}
+.callout-note .callout-icon{background:var(--amber-dim);color:var(--amber);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-tip{background:var(--blue-light);border-color:var(--blue-border);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-tip .callout-icon{background:var(--blue-border);color:var(--blue);}
+.callout-tip .callout-body{color:#1e3a5c;}
+.callout-analogy{background:var(--green-light);border-color:var(--green-border);}
+.callout-analogy .callout-header{color:var(--green);}
+.callout-analogy .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-analogy .callout-body{color:#0f4a28;}
+.compare-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+.compare-table th{background:var(--text);color:#fff;padding:10px 14px;text-align:left;font-weight:500;font-size:11px;letter-spacing:0.08em;}
+.compare-table th:first-child{border-radius:10px 0 0 0;}
+.compare-table th:last-child{border-radius:0 10px 0 0;}
+.compare-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-soft);vertical-align:top;line-height:1.6;}
+.compare-table tr:nth-child(even) td{background:var(--surface-2);}
+.compare-table tr:last-child td:first-child{border-radius:0 0 0 10px;}
+.compare-table tr:last-child td:last-child{border-radius:0 0 10px 0;}
+.gap-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
+.gap-card-header{background:var(--text);padding:14px 20px;}
+.gap-card-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:#fff;}
+.gap-card-sub{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.gap-row{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.gap-col{padding:16px 20px;}
+.gap-col+.gap-col{border-left:1px solid var(--border);}
+.gap-col-label{font-size:9px;font-weight:700;letter-spacing:0.16em;margin-bottom:6px;padding:3px 8px;border-radius:6px;display:inline-block;}
+.label-legacy{background:var(--blue-light);color:var(--blue);}
+.label-ai{background:var(--red-light);color:var(--red);}
+.gap-col-text{font-size:13px;color:var(--text-soft);line-height:1.65;}
+.risk-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--amber);border-radius:14px;padding:20px 22px;margin-bottom:16px;}
+.risk-num{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--amber);margin-bottom:6px;}
+.risk-name{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.risk-body{font-size:13px;color:var(--text-soft);line-height:1.7;margin-bottom:12px;}
+.risk-example{background:var(--amber-glow);border-left:3px solid var(--amber);padding:10px 14px;border-radius:0 8px 8px 0;font-family:'JetBrains Mono','Courier New',monospace;font-size:11px;color:var(--text-soft);line-height:1.7;font-style:italic;}
+.risk-example-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--amber);margin-bottom:4px;font-style:normal;font-family:'Epilogue',sans-serif;}
+.shadow-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.shadow-card{border-radius:14px;padding:20px;border:2px solid;}
+.shadow-card.sanctioned{background:var(--green-light);border-color:var(--green-border);}
+.shadow-card.shadow{background:var(--red-light);border-color:var(--red-border);}
+.shadow-card-label{font-size:9px;font-weight:700;letter-spacing:0.16em;margin-bottom:4px;}
+.sanctioned .shadow-card-label{color:var(--green);}
+.shadow .shadow-card-label{color:var(--red);}
+.shadow-card-title{font-family:'Fraunces',serif;font-size:17px;font-weight:700;margin-bottom:4px;}
+.sanctioned .shadow-card-title{color:var(--green);}
+.shadow .shadow-card-title{color:var(--red);}
+.shadow-card-pct{font-size:11px;font-weight:600;margin-bottom:10px;padding:2px 8px;border-radius:10px;display:inline-block;}
+.sanctioned .shadow-card-pct{background:var(--green-border);color:#0f4a28;}
+.shadow .shadow-card-pct{background:var(--red-border);color:#7a1414;}
+.shadow-card ul{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.shadow-card ul li{font-size:12px;line-height:1.5;padding-left:12px;position:relative;}
+.shadow-card ul li::before{content:'›';position:absolute;left:0;font-weight:700;}
+.sanctioned ul li{color:#0f4a28;}
+.shadow ul li{color:#7a1414;}
+.hallucination-steps{display:flex;flex-direction:column;gap:0;margin:16px 0 20px;}
+.h-step{display:grid;grid-template-columns:120px 1fr;gap:16px;position:relative;}
+.h-step:not(:last-child){margin-bottom:16px;padding-bottom:16px;border-bottom:1px dashed var(--border);}
+.h-step-label{font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--amber);padding-top:2px;}
+.h-step-body{font-size:13px;color:var(--text-soft);line-height:1.65;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#fbbf24;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#c0a060;line-height:1.6;}
+.sidebar-note{background:var(--amber-glow);border:1px solid var(--amber-dim);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text-soft);line-height:1.6;margin-bottom:10px;font-style:italic;}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--amber);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#fbbf24;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#3d2e08;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--amber);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+/* ── MODULE NAV ── */
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.gap-row,.shadow-grid,.lesson-tools-grid{grid-template-columns:1fr;}.gap-col+.gap-col{border-left:none;border-top:1px solid var(--border);}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      The AI Data Security Challenge · EDU-111
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — The AI Data Security Challenge · EDU-111</div>
+    <h1>The AI Data <em>Security Challenge</em></h1>
+    <p>Why traditional controls fail, the three security gaps AI creates, the data risks employees generate every day, and what Shadow AI means for governance.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">The threat is no longer <em>only external.</em></div>
+  <p class="motivation-sub">Employees using AI tools to be productive are unknowingly creating data exposure risks that traditional controls cannot see. Understanding the gap is the first step to closing it.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-challenge',this)">The Challenge</button>
+  <button class="nav-tab" onclick="navTo('section-gaps',this)">The Three Gaps</button>
+  <button class="nav-tab" onclick="navTo('section-risks',this)">What Are We Risking</button>
+  <button class="nav-tab" onclick="navTo('section-shadow',this)">Shadow AI</button>
+  <button class="nav-tab" onclick="navTo('section-hallucination',this)">When AI Makes Things Up</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- THE CHALLENGE -->
+  <div class="section-block" id="section-challenge">
+    <div class="section-label">THE CHALLENGE</div>
+    <h2>Why traditional security wasn't built for AI</h2>
+    <p>Traditional security was built around a world where data moves as files, through managed accounts, over inspectable network traffic. AI has changed all three of those assumptions.</p>
+    <p>When a person pastes a customer list into a public AI tool to save time, there is no file transfer. The DLP sees nothing. When they access that tool through a personal account, the request travels over HTTPS. The firewall sees a destination, not the content.</p>
+
+    <div class="key-concept">
+      <strong>The core problem:</strong> This is not a story about malicious insiders. Most people using AI tools at work are trying to save time and do their jobs well. The problem is that the security controls watching for threats were never designed to see AI as a risk vector.
+    </div>
+
+    <p>Most employees are already using AI tools as part of their daily work. Yet formal AI security policies remain rare. The gap between AI adoption and AI governance is not theoretical — it is happening on every ordinary workday.</p>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>THE GOVERNANCE GAP</div>
+      <div class="callout-body">Most employees regularly use public GenAI tools for work tasks. Very few organisations have formal AI security policies in place. A significant gap exists between AI adoption speed and governance readiness. The risk does not require malicious intent — it requires only that someone pastes the wrong thing into the wrong tool on an ordinary Tuesday afternoon.</div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-challenge" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('challenge','The Challenge')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-challenge" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-challenge"></span></div></div>
+    </div>
+  </div>
+
+  <!-- THE THREE GAPS -->
+  <div class="section-block" id="section-gaps">
+    <div class="section-label">THE THREE GAPS</div>
+    <h2>Why traditional security controls fail against AI</h2>
+    <p>Security controls that worked reliably for years are now encountering behaviour they were not built to detect. Three specific gaps explain how this happens.</p>
+
+    <div class="gap-card">
+      <div class="gap-card-header">
+        <div class="gap-card-title">Gap 1 of 3 — The Clipboard Gap</div>
+        <div class="gap-card-sub">DLP tools scan for file transfers. Pasting text into an AI prompt is not a file transfer.</div>
+      </div>
+      <div class="gap-row">
+        <div class="gap-col"><div class="gap-col-label label-legacy">LEGACY VIEW</div><p class="gap-col-text">DLP tools scan for file uploads, email attachments, and network transfers to catch sensitive data moving out of the organisation.</p></div>
+        <div class="gap-col"><div class="gap-col-label label-ai">AI REALITY</div><p class="gap-col-text">When an employee pastes a customer list directly into an AI tool, there is no file. The transfer happens invisibly, as text in a browser session. DLP sees nothing.</p></div>
+      </div>
+    </div>
+
+    <div class="gap-card">
+      <div class="gap-card-header">
+        <div class="gap-card-title">Gap 2 of 3 — The Identity Gap</div>
+        <div class="gap-card-sub">Identity controls rely on corporate accounts. AI is frequently accessed through personal ones.</div>
+      </div>
+      <div class="gap-row">
+        <div class="gap-col"><div class="gap-col-label label-legacy">LEGACY VIEW</div><p class="gap-col-text">SSO and managed account policies ensure that access to tools and data happens through identities the organisation can see and govern.</p></div>
+        <div class="gap-col"><div class="gap-col-label label-ai">AI REALITY</div><p class="gap-col-text">Employees frequently access AI platforms through personal accounts. This sits entirely outside corporate identity controls, leaving no audit trail and no enforcement point.</p></div>
+      </div>
+    </div>
+
+    <div class="gap-card">
+      <div class="gap-card-header">
+        <div class="gap-card-title">Gap 3 of 3 — The Encryption Gap</div>
+        <div class="gap-card-sub">Firewalls can see where traffic is going. They cannot read what is inside an encrypted prompt.</div>
+      </div>
+      <div class="gap-row">
+        <div class="gap-col"><div class="gap-col-label label-legacy">LEGACY VIEW</div><p class="gap-col-text">Firewalls inspect HTTP traffic and block known harmful destinations based on domain category or threat reputation.</p></div>
+        <div class="gap-col"><div class="gap-col-label label-ai">AI REALITY</div><p class="gap-col-text">All traffic to AI platforms travels over HTTPS. The firewall sees the destination. It cannot read the proprietary code, customer data, or regulated information inside the prompt.</p></div>
+      </div>
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">★</div>THE KEY INSIGHT</div>
+      <div class="callout-body">Three blind spots. Each one invisible to tools that are working exactly as designed. AI has not broken the controls — it has changed the assumptions those controls were built on.</div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-gaps" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('gaps','The Three Gaps')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-gaps" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-gaps"></span></div></div>
+    </div>
+  </div>
+
+  <!-- WHAT ARE WE RISKING -->
+  <div class="section-block" id="section-risks">
+    <div class="section-label">WHAT ARE WE RISKING</div>
+    <h2>Three categories of real data risk</h2>
+    <p>The governance gap between AI usage and AI policy is not abstract. When employees use public AI tools without organisational oversight, three categories of risk emerge — each with direct legal, regulatory, and competitive consequences.</p>
+
+    <div class="risk-card">
+      <div class="risk-num">RISK 1 OF 3</div>
+      <div class="risk-name">Data Leakage</div>
+      <div class="risk-body">Sensitive data pasted into a public AI tool can be retained or processed by that platform. Once submitted, the organisation has no control over what happens to it. There is no recall, no deletion guarantee, no audit trail.</div>
+      <div class="risk-example">
+        <div class="risk-example-label">EXAMPLE PROMPT THAT CREATES RISK</div>
+        "Analyze this customer list: John Doe, SSN: 123, account balance: $142,000..."
+      </div>
+    </div>
+
+    <div class="risk-card">
+      <div class="risk-num">RISK 2 OF 3</div>
+      <div class="risk-name">IP Exposure</div>
+      <div class="risk-body">Proprietary source code, pricing models, or strategic plans shared for AI assistance can expose competitive advantage. There is no reliable way to retrieve that information once submitted. The competitive damage may not be visible until a competitor launches something familiar.</div>
+      <div class="risk-example">
+        <div class="risk-example-label">EXAMPLE PROMPT THAT CREATES RISK</div>
+        "Optimize this code: def proprietary_pricing_model(tier, volume): ..."
+      </div>
+    </div>
+
+    <div class="risk-card">
+      <div class="risk-num">RISK 3 OF 3</div>
+      <div class="risk-name">Compliance Violation</div>
+      <div class="risk-body">Regulated data submitted to an unapproved AI service can trigger violations under GDPR, HIPAA, or PCI-DSS — even when the employee had no intent to breach policy. Intent is irrelevant to the regulator. The violation is the act of submission.</div>
+      <div class="risk-example">
+        <div class="risk-example-label">EXAMPLE PROMPT THAT CREATES RISK</div>
+        "Translate this patient record to Spanish: Patient: Maria Garcia, DOB: 04/15/1978..."
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-risks" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('risks','What Are We Risking')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-risks" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-risks"></span></div></div>
+    </div>
+  </div>
+
+  <!-- SHADOW AI -->
+  <div class="section-block" id="section-shadow">
+    <div class="section-label">SHADOW AI</div>
+    <h2>The AI your security team cannot see</h2>
+    <p>Shadow AI is the use of AI tools by employees without IT approval or knowledge. It is the AI equivalent of shadow IT — except it moves faster, is harder to detect, and carries direct data risk from the first interaction.</p>
+
+    <div class="shadow-grid">
+      <div class="shadow-card sanctioned">
+        <div class="shadow-card-label">SANCTIONED AI</div>
+        <div class="shadow-card-title">Approved. Visible. Governed.</div>
+        <div class="shadow-card-pct">~10% of enterprise AI usage</div>
+        <ul>
+          <li>Approved by IT and security teams</li>
+          <li>Access controlled through corporate accounts</li>
+          <li>Usage is logged and auditable</li>
+          <li>Data handling terms reviewed and accepted</li>
+        </ul>
+      </div>
+      <div class="shadow-card shadow">
+        <div class="shadow-card-label">SHADOW AI</div>
+        <div class="shadow-card-title">Unsanctioned. Invisible. Ungoverned.</div>
+        <div class="shadow-card-pct">~90% of enterprise AI usage</div>
+        <ul>
+          <li>Used without IT approval or knowledge</li>
+          <li>Accessed through personal or browser accounts</li>
+          <li>No logging, no audit trail, no visibility</li>
+          <li>Data terms unknown or unreviewed</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>THE SCALE OF THE PROBLEM</div>
+      <div class="callout-body">The approved tools are a small fraction of what is actually running. The majority of enterprise AI activity is happening outside the security team's line of sight. Every piece of data submitted through a Shadow AI tool is data the organisation has lost control of — without knowing it happened.</div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-shadow" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('shadow','Shadow AI')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-shadow" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-shadow"></span></div></div>
+    </div>
+  </div>
+
+  <!-- HALLUCINATION -->
+  <div class="section-block" id="section-hallucination">
+    <div class="section-label">WHEN AI MAKES THINGS UP</div>
+    <h2>Hallucination — the governance risk hiding in plain sight</h2>
+    <p>AI does not retrieve facts. It predicts them. Most of the time that produces useful output. But when the model encounters a gap in its knowledge, it does not stop — it keeps generating. The following scenario shows what that looks like when the stakes are high.</p>
+
+    <div class="hallucination-steps">
+      <div class="h-step">
+        <div class="h-step-label">THE ACTION</div>
+        <div class="h-step-body">A professional uses a public AI tool to generate research references. The tool returns a confident, well-formatted list. The output is submitted without independent verification.</div>
+      </div>
+      <div class="h-step">
+        <div class="h-step-label">THE MECHANISM</div>
+        <div class="h-step-body">AI does not retrieve facts. It predicts them. When it encounters a gap in its knowledge, it keeps generating — producing citations that look real, sound plausible, and do not exist. The output sounded credible. None of it was real.</div>
+      </div>
+      <div class="h-step">
+        <div class="h-step-label">THE RESULT</div>
+        <div class="h-step-body">The fabricated references are discovered after submission. The professional faces sanctions and reputational damage. The AI performed as designed. Verification was absent.</div>
+      </div>
+    </div>
+
+    <div class="key-concept">
+      <strong>Key lesson:</strong> Hallucination is not a bug that will be patched. It is how these models work. The control is governance, not better AI.
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>A GOVERNANCE MISTAKE, NOT A TECHNOLOGY MISTAKE</div>
+      <div class="callout-body">Trusting AI output without verification is not a technology mistake. It is a governance mistake. And the consequences are real — legally, reputationally, and operationally. Every AI output that will be acted upon, shared, or submitted must be independently verified.</div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">→</div>WHERE THIS LEADS</div>
+      <div class="callout-body">You now understand the three security gaps AI creates, the three categories of data risk, what Shadow AI means at enterprise scale, and why hallucination is a governance problem. The next lesson introduces the Zscaler framework that addresses all of these systematically.</div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-hallucination" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('hallucination','When AI Makes Things Up')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-hallucination" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-hallucination"></span></div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-111-hub.html"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> EDU-111 Hub</a>
+    <div class="mod-nav-group-label">LESSONS</div>
+    <a class="mod-nav-link" href="../How Attackers Weaponize AI/edu-111-attackers-ai.html"><span class="mod-nav-dot" style="background:#b91c1c;"></span>How Attackers Weaponize AI <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h8M7 3l4 4-4 4"/></svg></a>
+    <a class="mod-nav-link" href="../How Defenders Fight Back/edu-111-defenders-fight-back.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>How Defenders Fight Back <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h8M7 3l4 4-4 4"/></svg></a>
+    <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:#b45309;"></span>The Data Risk</span>
+    <a class="mod-nav-link" href="../The Defence Strategy/edu-111-defence-strategy.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>The Defence Strategy <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h8M7 3l4 4-4 4"/></svg></a>
+    <div class="mod-nav-group-label">RECAP</div>
+    <a class="mod-nav-link" href="../Recap/edu-111-recap.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>Module Recap <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h8M7 3l4 4-4 4"/></svg></a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+    <div class="quick-ref"><div class="quick-ref-term">THE CHALLENGE</div><div class="quick-ref-def">AI changed how data moves. DLP, identity controls, and firewalls were built for a pre-AI world. The gap is structural, not a misconfiguration.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">CLIPBOARD GAP</div><div class="quick-ref-def">Paste ≠ file transfer. DLP sees nothing. Data leaves the org invisibly as text in a browser session.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">IDENTITY GAP</div><div class="quick-ref-def">Personal accounts bypass SSO. No audit trail, no enforcement point, no visibility.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">ENCRYPTION GAP</div><div class="quick-ref-def">HTTPS hides prompt content from firewalls. Destination visible. Data inside: invisible.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">THREE RISKS</div><div class="quick-ref-def">Data Leakage · IP Exposure · Compliance Violation. None require malicious intent.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">SHADOW AI</div><div class="quick-ref-def">~90% of enterprise AI activity is unsanctioned. No logging, no governance, no visibility.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">HALLUCINATION</div><div class="quick-ref-def">Not a bug. Structural to how LLMs work. Control = governance. Every output must be verified.</div></div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">CHECKLIST — EDU-111</div>
+    <ul class="subtopic-list">
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Explain why DLP fails when data is pasted into an AI tool</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Name all three security gaps and what each one is blind to</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Give a real example of each of the three data risk categories</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Explain the difference between sanctioned AI and Shadow AI</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>State the approximate split of sanctioned vs shadow AI at enterprise scale</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Explain why hallucination is a governance problem, not a technology one</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Explain why compliance violations can occur without malicious intent</span></li>
+    </ul>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="sidebar-note">Clipboard Gap — data leaks through paste-to-prompt actions that DLP tools cannot detect because no file is transferred.</div>
+    <div class="sidebar-note">Identity Gap — AI accessed via personal accounts sits outside corporate SSO, leaving no audit trail.</div>
+    <div class="sidebar-note">Encryption Gap — HTTPS hides prompt content from firewalls that can only inspect destinations.</div>
+    <div class="sidebar-note">Shadow AI — AI tools used by employees without IT approval, knowledge, or governance.</div>
+    <div class="sidebar-note">Hallucination — LLM generating confident, fluent output that is factually incorrect. Structural, not fixable by patching.</div>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-111<span>.</span></div>
+  <div class="footer-right">The AI Data Security Challenge · Zscaler Course · Study Guide · 5 Sections</div>
+</footer>
+
+<script>
+const SECTIONS={challenge:'The Challenge',gaps:'The Three Gaps',risks:'What Are We Risking',shadow:'Shadow AI',hallucination:'When AI Makes Things Up'};
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li){li.classList.toggle('done');}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem('edu111dr-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem('edu111dr-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem('edu111dr-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem('edu111dr-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem('edu111dr-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+document.addEventListener('DOMContentLoaded',()=>{renderQPanel();initNotes();if(localStorage.getItem('edu111dr-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}});
+</script>
+</body>
+</html>

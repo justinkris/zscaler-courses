@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 5 — Manage Branch Administration and Policies · EDU-280</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#fefaf0;--surface:#fff;--surface-2:#fef9c3;--border:#fde68a;--border-dim:#fef3c7;
+  --text:#1c1000;--text-soft:#3d2800;--text-muted:#92700a;
+  --amber:#b45309;--amber-glow:rgba(180,83,9,0.07);--amber-dim:#fde68a;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+  --teal:#0d7d8a;--teal-light:#d0f0f4;--teal-border:#9adde6;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);display:flex;align-items:flex-end;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#3d2800;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#fbbf24;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#3d2800;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#fbbf24;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#fbbf24;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#fbbf24;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--amber);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--amber);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#fbbf24;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--amber);border-bottom-color:var(--amber);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--amber);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--amber-glow);border:1px solid var(--amber-dim);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--amber);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+.callout-note{background:var(--surface-2);border-color:var(--border);}
+.callout-note .callout-header{color:var(--amber);}
+.callout-note .callout-icon{background:var(--amber-dim);color:var(--amber);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-tip{background:var(--green-light);border-color:var(--green-border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-tip .callout-body{color:#0d4a2a;}
+/* Airgap grid */
+.airgap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.airgap-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+.airgap-tag{font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--amber);margin-bottom:6px;}
+.airgap-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.airgap-attr{font-size:11px;font-weight:700;color:var(--amber);margin-top:6px;margin-bottom:2px;}
+.airgap-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Obj types */
+.obj-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.obj-card{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;}
+.obj-num{width:22px;height:22px;border-radius:50%;background:var(--amber);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.obj-content-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.obj-content-body{font-size:11px;color:var(--text-soft);line-height:1.5;}
+/* Template types */
+.tmpl-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.tmpl-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+.tmpl-tag{font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--amber);margin-bottom:6px;}
+.tmpl-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.tmpl-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Firewall levels */
+.fw-levels{display:flex;gap:0;margin-bottom:20px;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+.fw-level{flex:1;padding:14px 16px;text-align:center;border-right:1px solid var(--border);}
+.fw-level:last-child{border-right:none;}
+.fw-level-order{font-size:10px;font-weight:700;letter-spacing:0.12em;margin-bottom:4px;}
+.fw-level-name{font-family:'Fraunces',serif;font-size:13px;font-weight:600;color:var(--text);}
+.fw-level-sub{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.fw-1{background:#fef9c3;}.fw-1 .fw-level-order{color:var(--amber);}
+.fw-2{background:#fef3c7;}.fw-2 .fw-level-order{color:var(--amber);}
+.fw-3{background:#fde68a;}.fw-3 .fw-level-order{color:#92400e;}
+.fw-4{background:#fcd34d;}.fw-4 .fw-level-order{color:#78350f;}
+/* RKS color codes */
+.rks-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+.rks-card{border-radius:12px;padding:12px 14px;text-align:center;}
+.rks-green{background:#d4f0e0;border:1px solid #a7e0c0;}.rks-green .rks-label{color:var(--green);}
+.rks-yellow{background:#fef9c3;border:1px solid #fde68a;}.rks-yellow .rks-label{color:#92400e;}
+.rks-orange{background:#fef3c7;border:1px solid var(--border);}.rks-orange .rks-label{color:var(--amber);}
+.rks-red{background:var(--red-light);border:1px solid var(--red-border);}.rks-red .rks-label{color:var(--red);}
+.rks-label{font-size:12px;font-weight:700;}
+.rks-desc{font-size:11px;margin-top:4px;color:var(--text-soft);}
+/* Routing table */
+.routing-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px;}
+.routing-table th{background:var(--text);color:#fff;padding:9px 12px;text-align:left;font-weight:500;font-size:11px;letter-spacing:0.06em;}
+.routing-table th:first-child{border-radius:10px 0 0 0;}
+.routing-table th:last-child{border-radius:0 10px 0 0;}
+.routing-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text-soft);vertical-align:middle;}
+.routing-table tr:nth-child(even) td{background:var(--surface-2);}
+.routing-table tr:last-child td:first-child{border-radius:0 0 0 10px;}
+.routing-table tr:last-child td:last-child{border-radius:0 0 10px 0;}
+.route-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;display:inline-block;}
+.route-zia{background:var(--blue-light);color:var(--blue);}
+.route-zpa{background:var(--teal-light);color:var(--teal);}
+.route-direct{background:var(--surface-2);color:var(--text-muted);}
+/* PBR steps */
+.pbr-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+.pbr-row{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+.pbr-num{width:28px;height:28px;border-radius:50%;background:var(--amber);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pbr-content{flex:1;}
+.pbr-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.pbr-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Knowledge check */
+.kcheck{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
+.kcheck-q{background:var(--text);padding:16px 20px;font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;line-height:1.4;}
+.kcheck-options{padding:16px 20px;display:flex;flex-direction:column;gap:8px;}
+.kcheck-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;color:var(--text-soft);line-height:1.5;}
+.kcheck-option.correct{background:var(--green-light);border-color:var(--green-border);color:var(--green);}
+.kcheck-option.wrong{background:var(--red-light);border-color:var(--red-border);color:var(--red);text-decoration:line-through;}
+.kcheck-opt-badge{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.correct .kcheck-opt-badge{background:var(--green);color:#fff;}
+.wrong .kcheck-opt-badge{background:var(--red);color:#fff;}
+.kcheck-option:not(.correct):not(.wrong) .kcheck-opt-badge{background:var(--border);color:var(--text-muted);}
+/* Lesson tools */
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--amber);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#fbbf24;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#3d2800;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+/* Sidebar */
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#fbbf24;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#c4a050;line-height:1.6;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--amber);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.airgap-grid,.tmpl-grid,.rks-grid,.obj-grid{grid-template-columns:1fr;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}.fw-levels{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../zero-trust-branch-hub.html">Zero Trust Branch</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-280-hub.html">EDU-280</a>
+      <span class="breadcrumb-sep">›</span>
+      Section 5
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> EDU-280 · Section 5 · 30 min</div>
+    <h1>Manage Branch <em>Administration and Policies</em></h1>
+    <p>Airgap protection modes, asset management, tags, templates, objects, firewall policies, the Ransomware Kill Switch, and routing policies.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Templates, tags, and policies — <em>administration that scales</em>.</div>
+  <p class="motivation-sub">Consistent branch security doesn't happen by accident. It's built through standardized templates, reusable objects, tag-based segmentation, and firewall policies evaluated in the right order — with a kill switch ready when ransomware strikes.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-assets',this)">Assets &amp; Tags</button>
+  <button class="nav-tab" onclick="navTo('section-templates',this)">Templates &amp; Objects</button>
+  <button class="nav-tab" onclick="navTo('section-firewall',this)">Firewall &amp; RKS</button>
+  <button class="nav-tab" onclick="navTo('section-routing',this)">Routing Policies</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="section-block" id="section-overview">
+    <div class="section-label">MODULE OVERVIEW</div>
+    <h2>Administration, policies, and protection modes</h2>
+    <p>This module covers the full administrative layer of Zero Trust Branch — from how devices are isolated and discovered, to how templates standardize multi-site deployments, and how firewall and routing policies enforce Zero Trust at the edge.</p>
+
+    <h3>Learning Objectives</h3>
+    <ul class="content-list">
+      <li><strong>Manage and apply</strong> templates for consistent branch deployment</li>
+      <li><strong>Configure</strong> objects and groups for efficient policy implementation</li>
+      <li><strong>Assign and use</strong> tags to classify branch assets effectively</li>
+      <li><strong>Enforce</strong> Zero Trust Segmentation and firewall policies to secure branch networks</li>
+      <li><strong>Configure</strong> routing policies for optimized traffic distribution</li>
+    </ul>
+
+    <h3>Airgap Protection Modes</h3>
+    <p>Zero Trust Branch offers three protection modes based on the level of isolation required. Each balances security, compatibility, and operational complexity differently.</p>
+
+    <div class="airgap-grid">
+      <div class="airgap-card">
+        <div class="airgap-tag">MODE 1</div>
+        <div class="airgap-title">Airgap</div>
+        <div class="airgap-attr">Behavior</div>
+        <div class="airgap-body">Assigns a /32 network mask to each endpoint — "network of one." Devices are isolated and cannot communicate directly on the same subnet. All traffic routes through Device Segmentation gateway.</div>
+        <div class="airgap-attr">Use Case</div>
+        <div class="airgap-body">Highly regulated environments requiring complete isolation.</div>
+        <div class="airgap-attr">Challenge</div>
+        <div class="airgap-body">May not be supported by all systems due to /32 mask limitations in hardware/software.</div>
+      </div>
+      <div class="airgap-card">
+        <div class="airgap-tag">MODE 2</div>
+        <div class="airgap-title">Airgap-Lite</div>
+        <div class="airgap-attr">Behavior</div>
+        <div class="airgap-body">Uses the subnet mask assigned by the DHCP server — allows endpoints to communicate directly without routing all traffic through the gateway.</div>
+        <div class="airgap-attr">Use Case</div>
+        <div class="airgap-body">Networks where /32 is not supported or where full isolation isn't required.</div>
+        <div class="airgap-attr">Trade-Off</div>
+        <div class="airgap-body">Less isolation than Airgap but improves compatibility.</div>
+      </div>
+      <div class="airgap-card">
+        <div class="airgap-tag">MODE 3</div>
+        <div class="airgap-title">Airgap+</div>
+        <div class="airgap-attr">Behavior</div>
+        <div class="airgap-body">Supports micro-subnets (/27–/30). Devices in the same micro-subnet can communicate locally; traffic to external destinations or different subnets routes through the gateway.</div>
+        <div class="airgap-attr">Use Case</div>
+        <div class="airgap-body">Organisations needing limited local communication alongside secure inspection of external traffic.</div>
+        <div class="airgap-attr">Requirements</div>
+        <div class="airgap-body">Device Segmentation gateway must operate in server mode for associated VLANs. Available from Airgap OS 7.7.6+.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ASSETS & TAGS -->
+  <div class="section-block" id="section-assets">
+    <div class="section-label">ASSETS &amp; TAGS</div>
+    <h2>Managing assets and classifying with tags</h2>
+
+    <h3>Managing Your Assets</h3>
+    <p>The Assets section in the Zero Trust Branch interface gives administrators a clear view of all devices currently connected to the network and their health status. Each asset entry shows:</p>
+    <ul class="content-list">
+      <li><strong>System</strong> — OS, Software Rev</li>
+      <li><strong>Security</strong> — Protection mode (Airgap/Airgap-Lite/Airgap+), Quarantined status, Risk Score, Secure Posture Score</li>
+      <li><strong>IP Allocation</strong> — Assignment Type (DHCP/Static), Last Seen, Lease Interval</li>
+      <li><strong>Tags</strong> — automatically assigned tags and any custom tags</li>
+    </ul>
+
+    <h3>Automatic Device Fingerprinting</h3>
+    <p>The system uses fingerprinting techniques to automatically discover and classify devices on the network:</p>
+    <ul class="content-list">
+      <li><strong>DHCP Options</strong> — identifies device type from DHCP request parameters</li>
+      <li><strong>HTTP User-Agent</strong> — classifies devices based on browser/app signatures</li>
+      <li><strong>SSL Fingerprint</strong> — identifies devices through their TLS handshake characteristics</li>
+    </ul>
+    <p>The system also integrates with third-party vendors like <strong>Armis</strong> to further improve asset discovery accuracy and classification.</p>
+
+    <h3>Working with Tags</h3>
+    <p>Tags help classify assets based on meaningful attributes like OS, model, brand, or risk level — <strong>without relying on IP addresses</strong>. This allows flexible, scalable policies that adapt to dynamic environments.</p>
+
+    <div class="key-concept">
+      <strong>Auto-tagging:</strong> Once an asset is discovered, the system automatically assigns tags. If integrated with third-party systems like Armis, additional tags from those systems are also added. Admins can add custom tags to further categorize assets.
+    </div>
+
+    <h3>Real-World Tags Example</h3>
+    <p>Your organisation uses a NAS device that only works with Windows 7 or Server 2008.</p>
+    <ul class="content-list">
+      <li><strong>Old way:</strong> Assign static IPs to those machines and write firewall rules based on IPs — breaks when IPs change</li>
+      <li><strong>Better way with Tags:</strong> Create a tag like "Microsoft Windows Kernel 6.1" → Apply it to all Windows 7/Server 2008 devices → Create a policy allowing only devices with that tag to access the NAS. Even if IP addresses change, the policy still works.</li>
+    </ul>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>KEY INSIGHT</div>
+      <div class="callout-body">Tags aren't just for organisation — they <strong>drive segmentation policies</strong>. Tag-based policies automatically adapt as devices change IPs, join new subnets, or move between locations. This is what makes Zero Trust Branch dynamically scalable without manual rule updates.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-assets" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('assets','Assets & Tags')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-assets" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-assets"></span></div></div>
+    </div>
+  </div>
+
+  <!-- TEMPLATES & OBJECTS -->
+  <div class="section-block" id="section-templates">
+    <div class="section-label">TEMPLATES &amp; OBJECTS</div>
+    <h2>Templates, compatibility, and Objects &amp; Groups</h2>
+
+    <h3>Template Compatibility and Management</h3>
+    <p>Templates provide a standardized way to consolidate configurations for large-scale global deployments of Zero Trust Branch Gateways — ensuring efficiency and consistency across multiple locations.</p>
+
+    <div class="key-concept">
+      <strong>Navigation:</strong> Infrastructure › Connectors › Edge › Zero Trust Branch › Site Templates
+    </div>
+
+    <div class="tmpl-grid">
+      <div class="tmpl-card">
+        <div class="tmpl-tag">DEFAULT TEMPLATES</div>
+        <div class="tmpl-title">Prebuilt by System</div>
+        <div class="tmpl-body">Non-editable, but clonable. Useful for quick start with minor tweaks. Examples: vm-standalone-default, zt400-ha-default, zt600-enhanced-ha-default, zt800-standalone-default.</div>
+      </div>
+      <div class="tmpl-card">
+        <div class="tmpl-tag">CUSTOM TEMPLATES</div>
+        <div class="tmpl-title">Created by Admins</div>
+        <div class="tmpl-body">Full flexibility — Add, Edit, Delete, Clone. Ideal for large-scale or site-specific deployments. Clone a default template as a starting point, then customise for specific requirements.</div>
+      </div>
+    </div>
+
+    <h3>Template Compatibility</h3>
+    <p>Templates are available for all platform types: <strong>ZT8010, ZT800, ZT600, ZT400, and VM form factors</strong>. For each platform, two deployment versions exist:</p>
+    <ul class="content-list">
+      <li><strong>Standalone</strong> — for individual gateways (single appliance per site)</li>
+      <li><strong>HA (High Availability)</strong> — for redundancy; supports mix-and-match platform types between primary and standby</li>
+    </ul>
+
+    <h3>Why Use Templates?</h3>
+    <ul class="content-list">
+      <li><strong>Standardization:</strong> Reduces variability across sites — configurations are consistent and auditable</li>
+      <li><strong>Flexibility:</strong> Custom templates allow tailored adjustments for site-specific needs without starting from scratch</li>
+      <li><strong>Efficiency:</strong> Streamlines deployment, saving time and minimizing errors — scale operations while maintaining reliability</li>
+    </ul>
+
+    <h3>Objects &amp; Groups</h3>
+    <p>Objects and Groups offer a scalable way to organise network entities and enforce granular segmentation policies with precision — especially useful across large, dynamic networks with different asset types.</p>
+
+    <div class="key-concept">
+      <strong>Navigation:</strong> Policies › Access Control › Segmentation › Zero Trust Branch › Objects &amp; Groups
+    </div>
+
+    <h3>9 Group Types</h3>
+    <div class="obj-grid">
+      <div class="obj-card">
+        <div class="obj-num">1</div>
+        <div class="obj-content"><div class="obj-content-title">Device</div><div class="obj-content-body">Groups devices dynamically using attributes like OS, manufacturer, and posture score.</div></div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">2</div>
+        <div class="obj-content"><div class="obj-content-title">Domains</div><div class="obj-content-body">Groups by domain names for access control.</div></div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">3</div>
+        <div class="obj-content"><div class="obj-content-title">DNS Gateways</div><div class="obj-content-body">Defines DNS servers or gateways.</div></div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">4</div>
+        <div class="obj-content"><div class="obj-content-title">Network</div><div class="obj-content-body">Manages IP-based communications, similar to firewall rules.</div></div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">5</div>
+        <div class="obj-content"><div class="obj-content-title">MAC</div><div class="obj-content-body">Allows grouping by MAC addresses for authentication and policy creation.</div></div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">6</div>
+        <div class="obj-content"><div class="obj-content-title">Port</div><div class="obj-content-body">Defines communication rules based on specific protocols and port ranges.</div></div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">7</div>
+        <div class="obj-content"><div class="obj-content-title">Time Schedule</div><div class="obj-content-body">Controls when the policy is enforced — only during defined days and times.</div></div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">8</div>
+        <div class="obj-content"><div class="obj-content-title">Zone</div><div class="obj-content-body">Includes LAN, WAN, HA, and Management zones.</div></div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">9</div>
+        <div class="obj-content"><div class="obj-content-title">SaaS Apps</div><div class="obj-content-body">Enables policy creation for SaaS application traffic.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-templates" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('templates','Templates & Objects')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-templates" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-templates"></span></div></div>
+    </div>
+  </div>
+
+  <!-- FIREWALL & RKS -->
+  <div class="section-block" id="section-firewall">
+    <div class="section-label">FIREWALL POLICIES &amp; RANSOMWARE KILL SWITCH</div>
+    <h2>Firewall policies and the Ransomware Kill Switch</h2>
+
+    <h3>Zero Trust Branch Firewall Policies</h3>
+    <p>ZTB Firewall policies deliver robust security by isolating and controlling communication between different network environments. Built on a zero trust framework — no connection is trusted by default — effectively preventing lateral movement and minimizing attack surfaces.</p>
+
+    <h3>Firewall Policy Scope and Evaluation Order</h3>
+    <p>Policies can be applied at four scope levels. Evaluation starts at the most specific (site) and falls back through template, global, then system default. <strong>Evaluation stops at the first match</strong> — rule order and scope placement directly determine which policy controls traffic.</p>
+
+    <div class="fw-levels">
+      <div class="fw-level fw-1">
+        <div class="fw-level-order">1ST — CHECKED FIRST</div>
+        <div class="fw-level-name">Site-specific</div>
+        <div class="fw-level-sub">Policies for this site only</div>
+      </div>
+      <div class="fw-level fw-2">
+        <div class="fw-level-order">2ND</div>
+        <div class="fw-level-name">Template</div>
+        <div class="fw-level-sub">Applied when no site-level match</div>
+      </div>
+      <div class="fw-level fw-3">
+        <div class="fw-level-order">3RD</div>
+        <div class="fw-level-name">Global</div>
+        <div class="fw-level-sub">Applied when no template match</div>
+      </div>
+      <div class="fw-level fw-4">
+        <div class="fw-level-order">4TH — LAST RESORT</div>
+        <div class="fw-level-name">System (Default)</div>
+        <div class="fw-level-sub">Cannot be modified by admins</div>
+      </div>
+    </div>
+
+    <div class="key-concept">
+      <strong>Navigation:</strong> Policies › Access Control › Segmentation › Zero Trust Branch › Policies<br>
+      Tabs: Global Policies · Template Policies · Site Policies
+    </div>
+
+    <h3>Knowledge Check</h3>
+    <div class="kcheck">
+      <div class="kcheck-q">Which correctly describes the order in which Zero Trust Branch firewall policies are evaluated?</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Global rules, Template rules, Site-specific rules, System (default) rules</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Template rules, Site-specific rules, System (default) rules, Global rules</div>
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>Site-specific rules (checked first) → Template rules → Global rules → System (default) rules applied last as the fallback</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>System (default) rules first, then Site-specific, Template, Global</div>
+      </div>
+    </div>
+
+    <h3>Ransomware Kill Switch (RKS)</h3>
+    <p>The Ransomware Kill Switch is a <strong>one-click attack surface-reduction tool</strong> integrated into Zero Trust Branch. It empowers organisations to rapidly contain ransomware threats without disrupting critical business operations.</p>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>WHY IT MATTERS</div>
+      <div class="callout-body">Ransomware attacks on IoT/OT environments have surged by <strong>400%</strong> year-over-year. <strong>61%</strong> of breaches target OT-connected organisations. Standard incident response methods halt critical operations and cause significant business disruption — the RKS solves this with targeted containment.</div>
+    </div>
+
+    <h3>RKS Core Capabilities</h3>
+    <ul class="content-list">
+      <li><strong>One-click Containment:</strong> pre-set severity tiers ("virtual fuses" or Defcon levels) for progressive lockdowns — from blocking vulnerable protocols to isolating entire OT segments</li>
+      <li><strong>Maintains Business Uptime:</strong> targeted containment without shutdowns — keeps essential operations running</li>
+      <li><strong>Tiered, Policy-based Response:</strong> example escalation path: block high-risk access → no non-essential communication → block access to "Crown Jewels" apps</li>
+      <li><strong>Orchestration Integration:</strong> fully controllable via APIs for seamless integration with SIEM, SOAR, EDR/XDR tools — enabling automated incident response</li>
+      <li><strong>Integrated Visibility:</strong> complete east-west network traffic visibility for all endpoints, real-time granular policy enforcement</li>
+    </ul>
+
+    <h3>RKS Color Codes</h3>
+    <div class="rks-grid">
+      <div class="rks-card rks-green"><div class="rks-label">Green</div><div class="rks-desc">Normal operations — maintain normal access and firewall behavior, increase monitoring</div></div>
+      <div class="rks-card rks-yellow"><div class="rks-label">Yellow</div><div class="rks-desc">Elevated caution — restrict some access, heighten alerting</div></div>
+      <div class="rks-card rks-orange"><div class="rks-label">Orange</div><div class="rks-desc">High risk — enforce Orange mode policies, restrict non-essential comms</div></div>
+      <div class="rks-card rks-red"><div class="rks-label">Red</div><div class="rks-desc">Critical containment — enforce Red policies, maximum isolation</div></div>
+    </div>
+
+    <p>The default color is <strong>Green</strong>. During incidents, only policies associated with the <strong>active color code</strong> are evaluated, in top-down order, stopping at the first match.</p>
+
+    <div class="key-concept">
+      <strong>Enable RKS:</strong> Policies › Access Control › Segmentation › Zero Trust Branch › Kill Switch
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-firewall" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('firewall','Firewall & RKS')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-firewall" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-firewall"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ROUTING POLICIES -->
+  <div class="section-block" id="section-routing">
+    <div class="section-label">ROUTING POLICIES</div>
+    <h2>Branch routing policies and Policy-Based Routing</h2>
+
+    <p>Routing policies let organisations control how traffic from branch sites reaches specific destinations — ensuring traffic is routed securely and efficiently to ZIA, ZPA, or directly to the internet.</p>
+
+    <h3>Routing Decision Matrix</h3>
+    <table class="routing-table">
+      <thead><tr><th>Destination Type</th><th>Priority</th><th>Recommended Path</th></tr></thead>
+      <tbody>
+        <tr><td>Internet / SaaS</td><td>Security first</td><td><span class="route-badge route-zia">ZIA</span></td></tr>
+        <tr><td>Private Application (DC/VPC)</td><td>Security first</td><td><span class="route-badge route-zpa">ZPA</span></td></tr>
+        <tr><td>Trusted Internet Breakout</td><td>Security first</td><td><span class="route-badge route-zia">ZIA</span></td></tr>
+        <tr><td>Internet / SaaS</td><td>Performance first</td><td><span class="route-badge route-zia">ZIA</span></td></tr>
+        <tr><td>Private Application (DC/VPC)</td><td>Performance first</td><td><span class="route-badge route-zpa">ZPA</span></td></tr>
+        <tr><td>Trusted Internet Breakout</td><td>Performance first</td><td><span class="route-badge route-direct">Direct</span></td></tr>
+        <tr><td>Internet / SaaS</td><td>Continuity first (HA)</td><td><span class="route-badge route-zia">ZIA</span></td></tr>
+        <tr><td>Private Application (DC/VPC)</td><td>Continuity first (HA)</td><td><span class="route-badge route-zpa">ZPA</span></td></tr>
+        <tr><td>Trusted Internet Breakout</td><td>Continuity first (HA)</td><td><span class="route-badge route-zia">ZIA</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3>4 Default Routing Rules</h3>
+    <p>When a new site is added, four default routing policies are automatically created to allow ZIA, ZPA, and Zscaler Cloud Endpoints communication:</p>
+    <ul class="content-list">
+      <li><strong>Rule 1 — Default-ZPA-PBR:</strong> Non-ZCC traffic destined to private applications → ZPA</li>
+      <li><strong>Rule 2 — Default-App-Segment-PBR:</strong> App Connector app segment discovery of private applications → ZPA (tcp:53, udp:53,67)</li>
+      <li><strong>Rule 3 — Default Zscaler Rule:</strong> LAN side traffic destined to Zscaler cloud endpoints → LAN/WAN</li>
+      <li><strong>Rule 4 — Default ZIA Rule:</strong> All internet-bound "catch all" traffic → ZIA via IPSec</li>
+    </ul>
+
+    <h3>Policy-Based Routing (PBR)</h3>
+    <p>Zero Trust Branch Gateway aims to replace traditional L2/L3 switches and firewalls. Policy-Based Routing (PBR) enables flexible routing decisions that go beyond standard destination-based routing — steer traffic using intent such as who the traffic is from, what service it's using, or where it's going.</p>
+
+    <div class="pbr-steps">
+      <div class="pbr-row">
+        <div class="pbr-num">1</div>
+        <div class="pbr-content">
+          <div class="pbr-title">Match Traffic</div>
+          <div class="pbr-body">Each packet is inspected against match criteria before deciding how to route it. Unlike traditional routing, PBR can evaluate: <strong>source IP address, TCP/UDP ports, destination address</strong>.</div>
+        </div>
+      </div>
+      <div class="pbr-row">
+        <div class="pbr-num">2</div>
+        <div class="pbr-content">
+          <div class="pbr-title">Apply Routing Policy</div>
+          <div class="pbr-body">When a match is found, the associated routing policy takes effect. Policies evaluated in priority order — <strong>first match wins</strong>. Each policy defines which WAN interface or path the traffic should take and under what conditions.</div>
+        </div>
+      </div>
+      <div class="pbr-row">
+        <div class="pbr-num">3</div>
+        <div class="pbr-content">
+          <div class="pbr-title">Steer for Outcomes</div>
+          <div class="pbr-body">ZTB dynamically directs traffic across all WAN links: <strong>Load Balance</strong> (distribute flows across multiple WAN links), <strong>Failover</strong> (reroute instantly when a link degrades), <strong>Optimize</strong> (set by priority and link quality).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-concept">
+      <strong>Configure PBR:</strong> Infrastructure › Connectors › Edge › Zero Trust Branch › Sites › Your Site › Routing Policy<br>
+      Create routing policies: specify Source IP, Destination IP, Primary/Secondary interface, Next Hop, and traffic distribution method.
+    </div>
+
+    <h3>Knowledge Check</h3>
+    <div class="kcheck">
+      <div class="kcheck-q">Which criteria can Policy-Based Routing (PBR) use to make routing decisions?</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Destination IP address only — this is standard routing, not PBR</div>
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>Source address and TCP/UDP ports — PBR goes well beyond destination-only routing to enable intent-based traffic steering</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>MAC address only</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-routing" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('routing','Routing Policies')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-routing" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-routing"></span></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-280-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-280 Hub
+    </a>
+    <div class="mod-nav-group-label">SECTIONS</div>
+    <a class="mod-nav-link" href="../1 Introduce Zero Trust Branch Concepts/edu-280-intro.html"><span class="mod-nav-dot" style="background:#0d7d8a;"></span>1 · Introduce ZTB Concepts</a>
+    <a class="mod-nav-link" href="../2 Segment Branches and Devices/edu-280-segment.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>2 · Segment Branches</a>
+    <a class="mod-nav-link" href="../3 Deploy and Administer Zero Trust Branch/edu-280-deploy.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>3 · Deploy &amp; Administer</a>
+    <a class="mod-nav-link" href="../4 Integrate Zscaler and Third-Party Security Services/edu-280-integrate-security.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>4 · Integrate Security</a>
+    <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:var(--amber);"></span>5 · Admin &amp; Policies</span>
+    <a class="mod-nav-link" href="../6 Configure Advanced Network Services/edu-280-advanced-network.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>6 · Advanced Network</a>
+    <a class="mod-nav-link" href="../7 Deploy App Connector for Zero Trust Access/edu-280-app-connector.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>7 · App Connector</a>
+    <a class="mod-nav-link" href="../8 Monitor Network Activity and Analytics/edu-280-monitor.html"><span class="mod-nav-dot" style="background:#b91c1c;"></span>8 · Monitor &amp; Analytics</a>
+    <a class="mod-nav-link" href="../9 Integrate Third-Party Security Platforms/edu-280-third-party.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>9 · Third-Party Platforms</a>
+    <a class="mod-nav-link" href="../10 Troubleshoot and Diagnose Branch Issues/edu-280-troubleshoot.html"><span class="mod-nav-dot" style="background:var(--amber);"></span>10 · Troubleshoot</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Airgap vs Airgap-Lite vs Airgap+</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Asset fingerprinting (DHCP, HTTP UA, SSL)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Tags — classify without relying on IPs</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Default vs Custom templates</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Template compatibility (ZT8010/800/600/400/VM)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>9 Object/Group types</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Firewall policy evaluation order (4 levels)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>RKS — one-click containment tool</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>RKS color codes (Green/Yellow/Orange/Red)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Routing decision matrix (ZIA/ZPA/Direct)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>4 default routing rules</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>PBR — 3-step process (Match/Apply/Steer)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Both knowledge checks answered</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Airgap Modes</div>
+      <div class="quick-ref-def">Airgap = /32 full isolation. Airgap-Lite = DHCP mask, less isolation, more compatible. Airgap+ = micro-subnets /27–/30, local comms + external inspection.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Firewall Eval Order</div>
+      <div class="quick-ref-def">Site → Template → Global → System (default). Evaluation stops at first match. More specific scopes take precedence.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">RKS Navigation</div>
+      <div class="quick-ref-def">Policies › Access Control › Segmentation › Zero Trust Branch › Kill Switch. Default = Green. Only active color code policies evaluated during incident.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">PBR Criteria</div>
+      <div class="quick-ref-def">Source IP · TCP/UDP ports · Destination address. Goes beyond destination-only routing. First match wins; top-down evaluation.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Default Routing Rules</div>
+      <div class="quick-ref-def">Rule 1: non-ZCC → private apps via ZPA. Rule 2: App Connector discovery via ZPA. Rule 3: LAN → Zscaler cloud endpoints. Rule 4: all internet → ZIA.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Tags Navigation</div>
+      <div class="quick-ref-def">Objects &amp; Groups: Policies › Access Control › Segmentation › Zero Trust Branch › Objects &amp; Groups. Tags make policies IP-independent and dynamically scalable.</div>
+    </div>
+  </div>
+
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-280 · <span>Manage Branch Administration and Policies</span></div>
+  <div class="footer-right">Zscaler Study Guide</div>
+</footer>
+
+<script>
+const PAGE_KEY = 'edu280-admin-policies';
+
+function getStore(){try{return JSON.parse(localStorage.getItem(PAGE_KEY))||{};}catch(e){return{};}}
+function saveStore(s){try{localStorage.setItem(PAGE_KEY,JSON.stringify(s));}catch(e){}}
+
+function addQuestion(sectionId,sectionLabel){
+  const ta=document.getElementById('q-'+sectionId);
+  const text=ta.value.trim();if(!text)return;
+  const s=getStore();if(!s.questions)s.questions=[];
+  s.questions.push({section:sectionLabel,text,id:Date.now()});
+  saveStore(s);ta.value='';renderQPanel();
+}
+function deleteQuestion(id){
+  const s=getStore();s.questions=(s.questions||[]).filter(q=>q.id!==id);
+  saveStore(s);renderQPanel();
+}
+function renderQPanel(){
+  const s=getStore();const qs=s.questions||[];
+  const count=document.getElementById('qpanel-count');
+  const body=document.getElementById('qpanel-body');
+  count.textContent=qs.length;count.style.display=qs.length?'inline':'none';
+  if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Use the boxes below each section to add one.</p>';return;}
+  const groups={};qs.forEach(q=>{if(!groups[q.section])groups[q.section]=[];groups[q.section].push(q);});
+  body.innerHTML=Object.entries(groups).map(([label,items],gi)=>`
+    <div class="q-group"><div class="q-group-label">${label.toUpperCase()}</div>
+    ${items.map((q,i)=>`<div class="q-item"><div class="q-num">${gi*10+i+1}</div><div class="q-text">${q.text}</div><button class="q-del" onclick="deleteQuestion(${q.id})">✕</button></div>`).join('')}
+    </div>`).join('');
+}
+function toggleQPanel(){
+  const body=document.getElementById('qpanel-body');
+  const hdr=document.getElementById('qpanel-header');
+  const chev=document.getElementById('qpanel-chevron');
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);chev.textContent=open?'▴':'▾';
+  const s=getStore();s.qOpen=open;saveStore(s);
+}
+
+document.querySelectorAll('.notes-ta').forEach(ta=>{
+  const key=ta.id;const s=getStore();if(s[key])ta.value=s[key];
+  let timer;
+  ta.addEventListener('input',()=>{
+    clearTimeout(timer);timer=setTimeout(()=>{
+      const st=getStore();st[key]=ta.value;saveStore(st);
+      const ns=document.getElementById('ns-'+key.replace('notes-',''));
+      if(ns){ns.textContent='Saved';setTimeout(()=>{ns.textContent='';},1800);}
+    },600);
+  });
+});
+
+function toggleCheck(li){
+  li.classList.toggle('done');const s=getStore();if(!s.checks)s.checks={};
+  s.checks[li.querySelector('span').textContent]=li.classList.contains('done');saveStore(s);
+}
+(function restoreChecks(){
+  const s=getStore();if(!s.checks)return;
+  document.querySelectorAll('#checklist li').forEach(li=>{
+    if(s.checks[li.querySelector('span').textContent])li.classList.add('done');
+  });
+})();
+
+function navTo(id,btn){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+(function init(){
+  renderQPanel();const s=getStore();
+  if(s.qOpen){
+    document.getElementById('qpanel-body').classList.add('open');
+    document.getElementById('qpanel-header').classList.add('open');
+    document.getElementById('qpanel-chevron').textContent='▴';
+  }
+})();
+</script>
+</body>
+</html>

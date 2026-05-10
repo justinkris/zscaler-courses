@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZDDC Study Guide — Deployment Methodology</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#dbeafe;--surface:#ffffff;--surface-2:#eff6ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1e35;--text-soft:#1e3a5c;--text-muted:#5a7a99;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.08);--blue-dim:#bfdbfe;--blue-surface:#e8f0fb;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:flex-end;justify-content:space-between;gap:32px;background:var(--text);}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);letter-spacing:0.08em;margin-bottom:12px;}
+.breadcrumb a{color:var(--blue);text-decoration:none;}
+.breadcrumb-sep{color:var(--border);}
+.day-badge{display:inline-flex;align-items:center;gap:6px;background:var(--text);color:#fff;padding:5px 14px;border-radius:20px;font-size:11px;letter-spacing:0.1em;margin-bottom:14px;}
+.day-badge-dot{width:5px;height:5px;background:var(--blue);border-radius:50%;}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#ffffff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-meta-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px;}
+.tag{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid;display:inline-block;}
+.tag-method{background:#e0e7ff;color:#3730a3;border-color:#c7d2fe;}
+.tag-weight{background:var(--blue-glow);color:var(--blue);border-color:var(--blue-dim);}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--blue);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--blue-glow);border:1px solid var(--blue-dim);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--blue);font-weight:600;}
+.definition{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:12px;}
+.definition-term{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.definition-body{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--amber-light);border-color:var(--amber-border);}
+.callout-note .callout-header{color:var(--amber);}
+.callout-note .callout-icon{background:var(--amber-border);color:var(--amber);}
+.callout-note .callout-body{color:#7a5000;}
+.callout-analogy{background:var(--green-light);border-color:var(--green-border);}
+.callout-analogy .callout-header{color:var(--green);}
+.callout-analogy .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-analogy .callout-body{color:#0f4a28;}
+.callout-tip{background:var(--blue-glow);border-color:var(--blue-dim);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-tip .callout-icon{background:var(--blue-dim);color:var(--blue);}
+.callout-tip .callout-body{color:var(--text-soft);}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+.compare-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+.compare-table th{background:var(--text);color:#fff;padding:10px 14px;text-align:left;font-weight:500;font-size:11px;letter-spacing:0.08em;}
+.compare-table th:first-child{border-radius:10px 0 0 0;}
+.compare-table th:last-child{border-radius:0 10px 0 0;}
+.compare-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-soft);vertical-align:top;line-height:1.6;}
+.compare-table tr:nth-child(even) td{background:var(--surface-2);}
+.compare-table tr:last-child td:first-child{border-radius:0 0 0 10px;}
+.compare-table tr:last-child td:last-child{border-radius:0 0 10px 0;}
+.flow-steps{display:flex;flex-direction:column;gap:0;margin:16px 0 24px;}
+.flow-step{display:flex;align-items:flex-start;gap:14px;position:relative;}
+.flow-step:not(:last-child)::after{content:'';position:absolute;left:17px;top:38px;width:2px;height:calc(100% - 6px);background:var(--border);}
+.flow-num{width:36px;height:36px;border-radius:50%;background:var(--text);color:#93c5fd;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;position:relative;z-index:1;}
+.flow-text{padding:6px 0 22px;font-size:13px;color:var(--text-soft);line-height:1.6;}
+.flow-text strong{color:var(--text);}
+.flow-text .phase-word{display:inline-block;background:var(--blue);color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;letter-spacing:0.08em;margin-left:6px;vertical-align:middle;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#93c5fd;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#7a9ab8;line-height:1.6;}
+.sidebar-note{background:var(--blue-glow);border:1px solid var(--blue-dim);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text-soft);line-height:1.6;margin-bottom:10px;font-style:italic;}
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0 28px;}
+.score-card{border-radius:14px;padding:16px 18px;border:1px solid;}
+.score-card.strong{background:var(--green-light);border-color:var(--green-border);}
+.score-card.gap{background:var(--red-light);border-color:var(--red-border);}
+.score-card.partial{background:var(--amber-light);border-color:var(--amber-border);}
+.score-card-label{font-size:10px;font-weight:600;letter-spacing:0.12em;margin-bottom:5px;}
+.score-card.strong .score-card-label{color:var(--green);}
+.score-card.gap .score-card-label{color:var(--red);}
+.score-card.partial .score-card-label{color:var(--amber);}
+.score-card-domain{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.score-card-note{font-size:12px;line-height:1.55;}
+.score-card.strong .score-card-note{color:#0f4a28;}
+.score-card.gap .score-card-note{color:#7a1414;}
+.score-card.partial .score-card-note{color:#7a5000;}
+.pipeline-box{background:var(--text);color:#93b4cc;border-radius:10px;padding:16px 20px;font-family:'JetBrains Mono','Courier New',monospace;font-size:12px;line-height:1.8;margin:14px 0 20px;white-space:pre;overflow-x:auto;}
+.pipeline-box .hl{color:#93c5fd;font-weight:600;}
+.pipeline-box .dim{color:var(--text-muted);}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--blue);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}}
+
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(147,197,253,0.1);border:1px solid rgba(147,197,253,0.2);padding:5px 14px;border-radius:20px;font-size:11px;color:#93c5fd;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#93c5fd;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;white-space:nowrap;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--blue);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Domain 1 · Methodology</div>
+    <h1>Deployment <em>Methodology</em></h1>
+    <p>Deep-dive reference for Deployment Methodology — phases, deliverables, design overviews, and exam-critical precision.</p>
+  </div>
+</header>
+<div class="motivation-banner">
+  <div class="motivation-text">Own the <em>methodology first.</em></div>
+  <p class="motivation-sub">Deliverables, phases, design areas — the exam tests precision here. Read slowly and it sticks.</p>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-phases',this)">The 6 Phases</button>
+  <button class="nav-tab" onclick="navTo('section-pilot',this)">Pilot Design</button>
+  <button class="nav-tab" onclick="navTo('section-change',this)">Change Control</button>
+  <button class="nav-tab" onclick="navTo('section-raci',this)">RACI</button>
+  <button class="nav-tab" onclick="navTo('section-transition',this)">Transition</button>
+  <button class="nav-tab" onclick="navTo('section-analogies',this)">Analogies</button>
+  <button class="nav-tab" onclick="navTo('section-exam',this)">Exam Tips</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="section-block" id="section-overview">
+    <div class="section-label">OVERVIEW</div>
+    <h2>What is the Zscaler Deployment Methodology?</h2>
+    <p>The Deployment Methodology is the structured framework Zscaler Professional Services uses to take a customer from signed SoW to a fully operational, customer-owned deployment. It exists to ensure consistent, low-risk engagements and to protect both the customer and the PS team from scope creep, surprise blockers, and failed go-lives.</p>
+    <p>It comprises six sequential phases, each with a specific purpose, set of deliverables, and an implicit exit gate. You do not move to the next phase without completing the current one — and any request to add scope mid-phase triggers the Change Request process.</p>
+    <div class="key-concept">
+      <strong>Central insight:</strong> Every phase has an exit gate. The SoW and the HLD are the two contracts that hold the project together — one commercial, one technical. Touch either and you re-baseline the project.
+    </div>
+  </div>
+
+  <!-- THE 6 PHASES -->
+  <div class="section-block" id="section-phases">
+    <div class="section-label">THE 6 PHASES</div>
+    <h2>Initiation → Plan → Configure → Pilot → Production → Transition</h2>
+
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-text">
+          <strong>Initiation</strong> <span class="phase-word">WHO</span><br>
+          Triggered the moment the SoW is signed. This is the handover from sales to PS. It is <em>not</em> about requirements — it is about getting the project off the ground administratively.<br><br>
+          <strong>Deliverables:</strong> Kickoff meeting · Stakeholder map / RACI · Project charter (scope, timeline, comms cadence) · PS team assignment · Tenant access logistics confirmed.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-text">
+          <strong>Plan</strong> <span class="phase-word">WHAT</span><br>
+          Deep-dive design phase. This is where you run design workshops, fill out the IDA, and produce the High-Level Design document. Everything you're going to build is defined here.<br><br>
+          <strong>Deliverables:</strong> IDA completed (ZIA + ZPA) · Traffic forwarding method confirmed · IdP/SAML metadata exchanged · App Connector placement agreed · Cloud/tenant selection confirmed · HLD drafted and signed off by customer sponsor.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-text">
+          <strong>Configure</strong> <span class="phase-word">BUILD</span><br>
+          Build the tenant per the signed-off HLD. No users are live yet. Any request to add scope here triggers a formal Change Request.<br><br>
+          <strong>Deliverables:</strong> ZIA / ZPA / ZDX configured · SSL Inspection enabled · Policies built · App Segments and Connector Groups created · SAML IdP integration live · Tenant tested and ready for pilot users.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <div class="flow-text">
+          <strong>Pilot Roll-out</strong> <span class="phase-word">PROVE</span><br>
+          Validate the deployment with a representative subset of users before committing the full organisation. A poorly designed pilot gives false confidence. See the Pilot Design section.<br><br>
+          <strong>Deliverables:</strong> Pilot group live · Issues logged and resolved · Exit criteria met (see below) · Pilot sign-off from customer technical lead.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">5</div>
+        <div class="flow-text">
+          <strong>Production Roll-out</strong> <span class="phase-word">SCALE</span><br>
+          Expand from the pilot group to the full user population. Roll out in waves — don't flip all 5,000 users at once.<br><br>
+          <strong>Deliverables:</strong> All users onboarded · All sites live · Tunnel capacity confirmed at full load · Helpdesk ticket volume tracking normal.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">6</div>
+        <div class="flow-text">
+          <strong>Transition</strong> <span class="phase-word">HAND OVER</span><br>
+          Final phase. Review all work done, provide short and long-term recommendations, resolve outstanding items, and transfer ownership to the customer's ops team.<br><br>
+          <strong>Deliverables:</strong> Runbook / operations guide · Admin training completed · Short and long-term recommendations documented · Support handover (PS → TAM / support) · Project formally closed.
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>EXAM TRAP — INITIATION VS PLAN</div>
+      <div class="callout-body">The exam will describe a scenario where the SoW has just been signed and ask what you do next. The wrong answer is "gather requirements" — that's Plan. The right answer is "run the kickoff, establish the RACI, assign the PS team" — that's Initiation. The two phases have a hard boundary: Initiation = who + how we work. Plan = what we're building.</div>
+    </div>
+
+    <h3>Phase Summary Table</h3>
+    <table class="compare-table">
+      <thead><tr><th>#</th><th>Phase</th><th>One-word essence</th><th>Key output</th><th>Who's involved</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Initiation</td><td>WHO</td><td>Kickoff + RACI + charter</td><td>PS lead, customer exec sponsor, account team</td></tr>
+        <tr><td>2</td><td>Plan</td><td>WHAT</td><td>Signed-off HLD</td><td>PS, customer IT architects, IdP / network owners</td></tr>
+        <tr><td>3</td><td>Configure</td><td>BUILD</td><td>Configured tenant</td><td>PS engineer, customer IT (review)</td></tr>
+        <tr><td>4</td><td>Pilot Roll-out</td><td>PROVE</td><td>Validated use cases + sign-off</td><td>Pilot users, helpdesk, PS, customer tech lead</td></tr>
+        <tr><td>5</td><td>Production Roll-out</td><td>SCALE</td><td>Full user base live</td><td>IT ops, change management, PS (advisory)</td></tr>
+        <tr><td>6</td><td>Transition</td><td>HAND OVER</td><td>Runbook + support handoff</td><td>PS, TAM, customer ops team</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PILOT DESIGN -->
+  <div class="section-block" id="section-pilot">
+    <div class="section-label">PILOT DESIGN &amp; EXIT CRITERIA</div>
+    <h2>Why pilot design matters — and what a good one looks like</h2>
+    <p>A poorly designed pilot gives the sponsor false confidence. The most common mistake is using IT users only — they are unrepresentative on every dimension that matters.</p>
+
+    <h3>Why IT-only pilots fail</h3>
+    <table class="compare-table">
+      <thead><tr><th>Risk</th><th>IT Users</th><th>General Users</th></tr></thead>
+      <tbody>
+        <tr><td>App coverage</td><td>Use a small set of IT tools — App Segments and policies only proven for their apps</td><td>Use the full breadth of departmental applications — gaps surface immediately</td></tr>
+        <tr><td>Issue reporting</td><td>Self-heal silently — misconfiguration never surfaces</td><td>Raise helpdesk tickets — issues become visible</td></tr>
+        <tr><td>Capacity</td><td>50 users at HQ doesn't test branch tunnels or App Connector load</td><td>Representative load across all sites stresses real-world capacity</td></tr>
+        <tr><td>Behaviour</td><td>Technically compliant — won't trigger edge-case DLP or URL filtering rules</td><td>Normal browsing and file behaviour — exercises full policy surface</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Well-designed pilot matrix</h3>
+    <ul class="content-list">
+      <li><strong>Power users from each department</strong> — cover application breadth. If Finance works, all Finance users work.</li>
+      <li><strong>Users from each site / location</strong> — prove tunnel capacity and connectivity at every egress point, not just HQ.</li>
+      <li><strong>All device types in scope</strong> — Windows, Mac, mobile if applicable. Don't pilot Windows-only then deploy to 500 Mac users.</li>
+      <li><strong>Users who have been told they are on the pilot</strong> — they know to report issues. Silent pilots produce silent failures.</li>
+    </ul>
+
+    <div class="callout callout-analogy">
+      <div class="callout-header"><div class="callout-icon">⟳</div>THE TASTE TESTER ANALOGY</div>
+      <div class="callout-body">Using only IT users to pilot Zscaler is like asking the head chef to taste-test a dish before it goes to paying customers. The chef knows the ingredients, can work around the flaws, and won't complain the same way a customer would. You need real diners — people who just want it to work — to know whether the dish is actually ready.</div>
+    </div>
+
+    <h3>Pilot exit criteria — the full list</h3>
+    <p>Zero helpdesk tickets is not an exit criterion. It might just mean nobody noticed. Here is what you actually need before recommending production go-live:</p>
+
+    <table class="compare-table">
+      <thead><tr><th>Category</th><th>Exit criterion</th></tr></thead>
+      <tbody>
+        <tr><td>Infrastructure</td><td>Throughput baseline confirmed — ideally a 7-day graph covering peak load. No tunnel drops or failover events.</td></tr>
+        <tr><td>Infrastructure</td><td>App Connector capacity confirmed — no CPU/memory alerts, connection queue healthy.</td></tr>
+        <tr><td>Infrastructure</td><td>Device capability confirmed for chosen forwarding method (GRE/IPSec/ZCC) at each site.</td></tr>
+        <tr><td>Policy</td><td>All pilot users' applications resolving correctly — zero access denials from missing App Segments or policy gaps.</td></tr>
+        <tr><td>Policy</td><td>SSL Inspection, URL Filtering, and DLP (if in scope) behaving as expected — no false positives blocking legitimate work.</td></tr>
+        <tr><td>Identity</td><td>All pilot users authenticating successfully via SAML. No clock skew, cert, or attribute errors in logs.</td></tr>
+        <tr><td>Identity</td><td>SCIM provisioning confirmed — all pilot users and groups appearing correctly in the tenant.</td></tr>
+        <tr><td>Process</td><td>Helpdesk ticket volume trending down to near-zero and stable.</td></tr>
+        <tr><td>Process</td><td>All issues raised during the pilot have been resolved and documented.</td></tr>
+        <tr><td>Process</td><td>Formal sign-off obtained from pilot users and customer technical lead — not just "no news is good news."</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CHANGE CONTROL -->
+  <div class="section-block" id="section-change">
+    <div class="section-label">CHANGE CONTROL</div>
+    <h2>What to do when a customer asks to add scope mid-project</h2>
+    <p>This scenario appears in the exam because it tests whether you understand the purpose of the phases — not just what they're called. The wrong answer is to just start building. The right answer follows this sequence every time.</p>
+
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-text"><strong>Understand the use case</strong> — ask what problem they're trying to solve before touching anything. The feature they asked for may not be the right solution, or it may already be covered by current scope.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-text"><strong>Assess the impact</strong> — scope (does it change the HLD?), timeline (does the pilot date slip?), effort (extra Configure + Pilot work), licensing (do they own the SKU?).</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-text"><strong>Raise a Change Request / Change Order</strong> — the formal mechanism against the SoW. Involves PS lead, PM, customer sponsor, and sometimes the account team.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <div class="flow-text"><strong>Document the decision</strong> — approved, deferred, or rejected. Either way it goes into the project log. Silence is not a decision.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>WATCH OUT — "SURE, WE'LL ADD IT"</div>
+      <div class="callout-body">The exam wrong answer is agreeing to add scope without a formal Change Request. This is how projects miss go-live dates. Scope creep during Configure is one of the top reasons Zscaler deployments slip. Always name the CR process explicitly — saying "we'd have a chat" is insufficient.</div>
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">★</div>YOUR SESSION GAP — MEMORISE THIS</div>
+      <div class="callout-body">In the session quiz you correctly identified the process steps but didn't name the formal mechanism. On the exam: the answer is always <strong>"raise a Change Request / Change Order against the SoW."</strong> Use that exact language.</div>
+    </div>
+  </div>
+
+  <!-- RACI -->
+  <div class="section-block" id="section-raci">
+    <div class="section-label">RACI FRAMEWORK</div>
+    <h2>Who does what in a ZDDC engagement?</h2>
+    <p>RACI eliminates ambiguity in multi-party projects. In a complex ZIA + ZPA deployment, multiple organisations and teams are involved. Without RACI, escalation paths break down and decisions stall. The RACI document is produced in the <strong>Initiation</strong> phase as a formal output.</p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Letter</th>
+          <th>Meaning</th>
+          <th>Typical role in ZDDC</th>
+          <th>Communication</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>R</strong></td>
+          <td><strong>Responsible</strong> — does the work</td>
+          <td>PS Technical Lead — builds the config, runs workshops, delivers the solution</td>
+          <td>Two-way</td>
+        </tr>
+        <tr>
+          <td><strong>A</strong></td>
+          <td><strong>Accountable</strong> — owns the outcome (one only)</td>
+          <td>Project Manager — answers for the project outcome</td>
+          <td>Two-way</td>
+        </tr>
+        <tr>
+          <td><strong>C</strong></td>
+          <td><strong>Consulted</strong> — input before decisions</td>
+          <td>Customer Network/Security team + PS SMEs — firewall rules, IdP details</td>
+          <td>Two-way</td>
+        </tr>
+        <tr>
+          <td><strong>I</strong></td>
+          <td><strong>Informed</strong> — kept updated on progress</td>
+          <td>Customer executives — need visibility without being in the weeds</td>
+          <td>One-way</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>R vs A — THE EXAM TRAP</div>
+      <div class="callout-body">Responsible = <em>does the work</em>. Accountable = <em>owns the outcome</em>. The PS consultant is <strong>Responsible</strong>. The Project Manager is <strong>Accountable</strong>. There can be multiple Responsible parties — but only <strong>one</strong> Accountable person per task.</div>
+    </div>
+  </div>
+
+  <!-- TRANSITION DELIVERABLES -->
+  <div class="section-block" id="section-transition">
+    <div class="section-label">TRANSITION DELIVERABLES</div>
+    <h2>What do you hand over at the end?</h2>
+    <p>The Transition phase is the formal close of the PS engagement. Four key outputs must be delivered before the customer's team can operate independently.</p>
+
+    <div class="definition">
+      <div class="definition-term">Runbook</div>
+      <div class="definition-body">Operational SOPs for the customer's team post-handover. Answers "how do we do X day-to-day?" — adding a new location, whitelisting a cloud app, creating a URL filtering rule. This is the operations manual.</div>
+    </div>
+    <div class="definition">
+      <div class="definition-term">As-Built Document</div>
+      <div class="definition-body">A record of what was actually configured and — critically — <em>why</em> each decision was made. Includes not just the what (SSL bypass for banking.com) but the why (certificate pinning causes app breakage). This context prevents the customer's team from accidentally breaking things months later.</div>
+    </div>
+    <div class="definition">
+      <div class="definition-term">Short-Term Recommendations</div>
+      <div class="definition-body">Quick wins and immediate actions for after handover. Often items that were out of scope but low-effort — e.g. "enable DNS Security on remaining locations within 30 days."</div>
+    </div>
+    <div class="definition">
+      <div class="definition-term">Long-Term Recommendations</div>
+      <div class="definition-body">Strategic roadmap for continued maturity. Features to adopt next, architecture improvements, expansion plans.</div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">→</div>EXAM TIP — MAP THE QUESTION</div>
+      <div class="callout-body">"How do we add a new location next year?" → <strong>Runbook</strong>. "Why did you bypass SSL for that domain?" → <strong>As-Built</strong>. "What should we do in the next 90 days?" → <strong>Short-term recommendations</strong>.</div>
+    </div>
+  </div>
+
+  <!-- ANALOGIES -->
+  <div class="section-block" id="section-analogies">
+    <div class="section-label">ANALOGIES</div>
+    <h2>Ways to think about it</h2>
+    <div class="callout callout-analogy">
+      <div class="callout-header"><div class="callout-icon">⟳</div>BUILDING A HOUSE</div>
+      <div class="callout-body">Initiation = sign the contract, agree what you're building, define RACI. Plan = draw the blueprints. Configure = build the structure. Pilot = invite 5 people to test-live and report problems. Production = everyone moves in. Transition = hand over the keys, the manual, and a list of what to improve next year.</div>
+    </div>
+    <div class="callout callout-analogy">
+      <div class="callout-header"><div class="callout-icon">⟳</div>RACI AS AN ER TEAM</div>
+      <div class="callout-body">The surgeon (R) does the operation. The attending physician (A) is accountable for the patient outcome. The specialist you call for input (C) is consulted. The patient's family (I) is informed. Only one person is accountable — the attending. Multiple surgeons can be responsible for different parts. Nobody asks the family to make surgical decisions, but they deserve to know what's happening.</div>
+    </div>
+  </div>
+
+  <!-- EXAM TIPS -->
+  <div class="section-block" id="section-exam">
+    <div class="section-label">EXAM TIPS</div>
+    <h2>What the exam tests for this domain</h2>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">→</div>PHASE BOUNDARY QUESTIONS</div>
+      <div class="callout-body">The exam loves the Initiation/Plan boundary and the Configure/Pilot boundary. When you see "SoW just signed" → Initiation. When you see "scope change requested during Configure" → Change Request. When you see "pilot showed zero issues" → check the pilot design before recommending go-live.</div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">→</div>TRANSITION IS MORE THAN DOCS</div>
+      <div class="callout-body">Don't reduce Transition to "hand over documentation." The exam expects: short and long-term recommendations, path to resolution of outstanding items, and a clear explanation of how Zscaler will continue supporting the customer's transformation. Ops guide + training + recommendations + formal close.</div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">→</div>CHINA PRESENCE — PLAN PHASE FLAG</div>
+      <div class="callout-body">China users trigger <strong>China Premium Access</strong> — a specific Zscaler add-on. This affects cloud selection and must be confirmed during the Plan phase (or ideally pre-sale). Changing this post-provisioning is disruptive. If you see China in a scenario, flag this immediately in your answer.</div>
+    </div>
+
+    <ul class="content-list">
+      <li>The IDA (Initial Deployment Assessment) is a <strong>Plan phase</strong> tool — not Initiation.</li>
+      <li>HLD sign-off is the exit gate for the Plan phase. Don't move to Configure without it.</li>
+      <li>Zscaler's cloud infrastructure does not get overwhelmed by 5,000 users. App Connectors, IdP, and branch tunnels do.</li>
+      <li>GRE is the <strong>preferred</strong> tunnel method — higher soft limit than IPSec. Confirm GRE capability before defaulting to IPSec.</li>
+      <li>ZPA LSS (log streaming to SIEM) requires a <strong>separate licence</strong>. Always confirm before designing SIEM integration into ZPA.</li>
+    </ul>
+  </div>
+
+</div><!-- end main-content -->
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE — 6 PHASES</div>
+    <div class="quick-ref"><div class="quick-ref-term">1 · INITIATION</div><div class="quick-ref-def">SoW signed → kickoff → RACI → charter → PS team assigned. WHO and HOW.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">2 · PLAN</div><div class="quick-ref-def">IDA workshops → HLD → cloud selection → forwarding method agreed → HLD signed off. WHAT.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">3 · CONFIGURE</div><div class="quick-ref-def">Build the tenant per HLD. No users live. Change Request for any scope addition. BUILD.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">4 · PILOT</div><div class="quick-ref-def">Representative users from all depts + all sites + all device types. Exit criteria must be met. PROVE.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">5 · PRODUCTION</div><div class="quick-ref-def">Scale to full user base in waves. Monitor capacity and ticket volume. SCALE.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">6 · TRANSITION</div><div class="quick-ref-def">Runbook + training + short/long-term recommendations + formal close. HAND OVER.</div></div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">SESSION SCORE — 4 MAY 2026</div>
+    <div class="score-grid">
+      <div class="score-card strong"><div class="score-card-label">STRONG</div><div class="score-card-domain">6 Phases</div><div class="score-card-note">Correct order, correct essence for each</div></div>
+      <div class="score-card strong"><div class="score-card-label">STRONG</div><div class="score-card-domain">Initiation</div><div class="score-card-note">Deliverables correct and well-articulated</div></div>
+      <div class="score-card partial"><div class="score-card-label">MID</div><div class="score-card-domain">Pilot Design</div><div class="score-card-note">Good instincts, needs exit criteria in full</div></div>
+      <div class="score-card partial"><div class="score-card-label">MID</div><div class="score-card-domain">Change Control</div><div class="score-card-note">Must name Change Request explicitly</div></div>
+      <div class="score-card partial"><div class="score-card-label">MID</div><div class="score-card-domain">Transition</div><div class="score-card-note">More than docs — add recommendations</div></div>
+      <div class="score-card strong"><div class="score-card-label">STRONG</div><div class="score-card-domain">China / Geo</div><div class="score-card-note">China Premium Access — Plan phase flag</div></div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">LAB CHECKLIST — TOPIC 1</div>
+    <ul class="subtopic-list">
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Walk tenant top-to-bottom — map each menu to a phase</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Draft a sample 6-phase project plan for a 5,000-user customer</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Write Initiation deliverables from memory (kickoff agenda, RACI, charter)</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Write Transition deliverables from memory (runbook, recommendations, handover)</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Complete the IDA (HTML version) for a fictional customer end-to-end</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Write a Change Request scenario from memory — all 4 steps</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">NOTES FROM SESSION — 4 MAY</div>
+    <div class="sidebar-note">Initiation vs Plan trap: I initially said Plan when the SoW was signed. The trigger is Initiation — requirements gathering is Plan.</div>
+    <div class="sidebar-note">Change Control: I described the steps but didn't name the formal mechanism. Always say "Change Request / Change Order against the SoW."</div>
+    <div class="sidebar-note">Pilot exit criteria: I focused on infrastructure but missed helpdesk ticket volume trending down and formal user sign-off.</div>
+    <div class="sidebar-note">Capacity risk: It's not Zscaler's cloud that gets overwhelmed — it's App Connectors, branch tunnels, and the customer's IdP.</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">NEXT TOPIC</div>
+    <div class="sidebar-note">Day 03–04: Identity Services — SAML auth flow, SCIM provisioning, ZIdentity, SP-initiated vs IdP-initiated, step-up auth.</div>
+  </div>
+
+</div><!-- end sidebar -->
+</main>
+
+<footer>
+  <div class="footer-left">ZDDC<span>.</span></div>
+  <div class="footer-right">Zscaler Deployment &amp; Delivery Consultant (EDU-302) · Study Guide · Topic 1 · 4 May 2026</div>
+</footer>
+
+<script>
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li){li.classList.toggle('done');}
+</script>
+</body>
+</html>

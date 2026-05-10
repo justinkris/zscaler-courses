@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Troubleshooting &amp; Best Practices — EDU-270</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#fef9ec;--surface:#ffffff;--surface-2:#fffbf0;--border:#fde68a;--border-dim:#fef3c7;
+  --text:#1c1204;--text-soft:#3d2e08;--text-muted:#9a7c30;
+  --amber:#b45309;--amber-glow:rgba(180,83,9,0.07);--amber-dim:#fde68a;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:#1c1204;display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#9a7c30;letter-spacing:0.08em;margin-bottom:12px;}
+.breadcrumb a{color:#fbbf24;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#3d2e08;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#fbbf24;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#fbbf24;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#fbbf24;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--amber);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--amber);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#1c1204;color:#fbbf24;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--amber);border-bottom-color:var(--amber);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--amber);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--amber-glow);border:1px solid var(--amber-dim);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--amber);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+.callout-note{background:var(--amber-glow);border-color:var(--amber-dim);}
+.callout-note .callout-header{color:var(--amber);}
+.callout-note .callout-icon{background:var(--amber-dim);color:var(--amber);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-tip{background:var(--green-light);border-color:var(--green-border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-tip .callout-body{color:#0f4a28;}
+.compare-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+.compare-table th{background:#1c1204;color:#fff;padding:10px 14px;text-align:left;font-weight:500;font-size:11px;letter-spacing:0.08em;}
+.compare-table th:first-child{border-radius:10px 0 0 0;}
+.compare-table th:last-child{border-radius:0 10px 0 0;}
+.compare-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-soft);vertical-align:top;line-height:1.6;}
+.compare-table tr:nth-child(even) td{background:var(--surface-2);}
+.compare-table tr:last-child td:first-child{border-radius:0 0 0 10px;}
+.compare-table tr:last-child td:last-child{border-radius:0 0 10px 0;}
+.best-practice-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:16px;}
+.bp-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.bp-num{width:32px;height:32px;border-radius:50%;background:var(--amber);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.bp-title{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--text);}
+.bp-body ul{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.bp-body ul li{font-size:13px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+.bp-body ul li::before{content:'›';position:absolute;left:2px;color:var(--amber);font-weight:700;}
+.code-block{background:#1c1204;border-radius:10px;padding:14px 16px;font-family:'JetBrains Mono','Courier New',monospace;font-size:12px;color:#fbbf24;line-height:1.7;margin-bottom:16px;overflow-x:auto;}
+.diagram-wrap{border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;background:var(--surface);}
+.diagram-wrap img{width:100%;display:block;}
+.diagram-caption{font-size:11px;color:var(--text-muted);padding:10px 14px;background:var(--surface-2);border-top:1px solid var(--border);text-align:center;font-style:italic;}
+.steps-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+.steps-list li{display:flex;align-items:flex-start;gap:14px;}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--amber);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-body{font-size:13px;color:var(--text-soft);line-height:1.7;padding-top:4px;}
+.step-body strong{color:var(--text);}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--amber);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:#1c1204;color:#fbbf24;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#3d2e08;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--amber);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#1c1204;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:#1c1204;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#fbbf24;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#c0a060;line-height:1.6;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-270-hub.html">EDU-270</a>
+      <span class="breadcrumb-sep">›</span>
+      Troubleshooting &amp; Best Practices
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Troubleshooting · EDU-270</div>
+    <h1>Troubleshooting &amp; <em>Best Practices</em></h1>
+    <p>HTTP status codes, rate limiting, error code debugging, and best practices for secure, consistent, and scalable Zscaler API usage.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Good automation <em>handles failures gracefully.</em></div>
+  <p class="motivation-sub">Knowing how to read error codes, handle rate limits, and follow security best practices turns a fragile script into a production-ready automation tool.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-errors',this)">Status Codes</button>
+  <button class="nav-tab" onclick="navTo('section-ratelimit',this)">Rate Limiting</button>
+  <button class="nav-tab" onclick="navTo('section-bestpractices',this)">Best Practices</button>
+  <button class="nav-tab" onclick="navTo('section-debug',this)">Debugging Errors</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- STATUS CODES -->
+  <div class="section-block" id="section-errors">
+    <div class="section-label">API RESPONSE CODES AND ERROR MESSAGES</div>
+    <h2>HTTP Status Codes</h2>
+    <p>The following HTTP status codes are returned by the Zscaler API to indicate the outcome of a request. Understanding these codes is the first step in diagnosing and resolving API issues.</p>
+
+    <table class="compare-table">
+      <thead><tr><th>Code</th><th>Description</th><th>Common Cause</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--green);font-weight:700;">200</td><td>Successful</td><td>Request processed correctly — data returned</td></tr>
+        <tr><td style="color:var(--green);font-weight:700;">201</td><td>Created</td><td>New resource created successfully via POST</td></tr>
+        <tr><td style="color:var(--green);font-weight:700;">204</td><td>Successful — No Content</td><td>DELETE or update succeeded — no body returned</td></tr>
+        <tr><td style="color:var(--amber);font-weight:700;">400</td><td>Invalid or Bad Request</td><td>Malformed JSON, missing required fields, invalid parameter values</td></tr>
+        <tr><td style="color:var(--amber);font-weight:700;">401</td><td>Session Not Authenticated / Timed Out</td><td>Bearer token missing, expired, or invalid</td></tr>
+        <tr><td style="color:var(--red);font-weight:700;">403</td><td>Forbidden</td><td>API key disabled; role has no access permissions; missing SKU subscription; portal in maintenance mode during POST/PUT/DELETE</td></tr>
+        <tr><td style="color:var(--red);font-weight:700;">404</td><td>Resource Does Not Exist</td><td>Incorrect endpoint URL, resource ID doesn't exist</td></tr>
+        <tr><td style="color:var(--red);font-weight:700;">405</td><td>Method Not Allowed</td><td>HTTP method not supported for this resource endpoint</td></tr>
+        <tr><td style="color:var(--red);font-weight:700;">409</td><td>Edit Conflict</td><td>Another admin saving a configuration change simultaneously — retry after a short delay</td></tr>
+        <tr><td style="color:var(--red);font-weight:700;">415</td><td>Unsupported Media Type</td><td>Missing <code>Content-Type: application/json</code> header</td></tr>
+        <tr><td style="color:var(--red);font-weight:700;">429</td><td>Rate Limit Exceeded</td><td>Too many requests. Response includes Retry-After value</td></tr>
+        <tr><td style="color:var(--red);font-weight:700;">500</td><td>Unexpected Error</td><td>Internal server error — contact Zscaler Support if persistent</td></tr>
+        <tr><td style="color:var(--red);font-weight:700;">503</td><td>Service Temporarily Unavailable</td><td>Service is down for maintenance or overloaded</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>403 FORBIDDEN — KNOW THE REASONS</div>
+      <div class="callout-body">403 can occur for multiple reasons: the API key was disabled by your service provider; the user's role has no access permissions or functional scope; a required SKU subscription is missing; or API operations using POST, PUT, or DELETE are performed when the ZIA Admin Portal is in maintenance mode during a scheduled upgrade. Check each of these before escalating.</div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-errors" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('errors','Status Codes')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-errors" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-errors"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RATE LIMITING -->
+  <div class="section-block" id="section-ratelimit">
+    <div class="section-label">RATE LIMITING</div>
+    <h2>Rate Limiting in Zscaler APIs</h2>
+    <p>Every endpoint and action has two rate limit types. These limits throttle the number of API calls you can make. Every endpoint has a weight, and every weight has a default rate limit, but some endpoints have exceptions.</p>
+
+    <div class="key-concept">
+      <strong>Two-tier rate limiting:</strong>
+      <br>1. A <strong>lower bound limit</strong> that protects against high bursts of requests over a short period of time.
+      <br>2. An <strong>upper bound limit</strong> that protects against a high volume of requests over a long period of time.
+    </div>
+
+    <table class="compare-table">
+      <thead><tr><th>Weight</th><th>Typical Assignment</th><th>Req/sec</th><th>Req/min</th><th>Req/hr</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Heavy</strong></td><td>DELETE</td><td>—</td><td>1</td><td>4</td></tr>
+        <tr><td><strong>Medium</strong></td><td>POST, PUT</td><td>1</td><td>—</td><td>400</td></tr>
+        <tr><td><strong>Light</strong></td><td>GET</td><td>2</td><td>—</td><td>4,000</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Handling Rate Limit Errors</h3>
+    <p>As a best practice, after each call to an endpoint, your script should include a wait (or sleep) period. For example in Python, you would use the <code>time.sleep()</code> function.</p>
+    <p>When the rate limit is exceeded, a 429 HTTP error message is returned with a Retry-After response in the body:</p>
+
+    <div class="code-block">{
+    "message": "Rate Limit (1/SECOND) exceeded",
+    "Retry-After": "0 seconds"
+}</div>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">★</div>BEST PRACTICE FOR RATE LIMITS</div>
+      <div class="callout-body">Use batch requests for bulk operations to minimise the number of individual API calls. Monitor OneAPI usage via the Postman REST API client to avoid exceeding rate limits. Build retry logic into scripts that respects the Retry-After header value when a 429 is received.</div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-ratelimit" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('ratelimit','Rate Limiting')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-ratelimit" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-ratelimit"></span></div></div>
+    </div>
+  </div>
+
+  <!-- BEST PRACTICES -->
+  <div class="section-block" id="section-bestpractices">
+    <div class="section-label">BEST PRACTICES</div>
+    <h2>API Best Practices</h2>
+    <p>Following these best practices ensures your Zscaler API integrations are secure, consistent, and scalable.</p>
+
+
+    <div class="best-practice-card">
+      <div class="bp-header">
+        <div class="bp-num">01</div>
+        <div class="bp-title">Secure API Usage</div>
+      </div>
+      <div class="bp-body">
+        <ul>
+          <li>Rotate API tokens using ZIdentity periodically to prevent unauthorised access</li>
+          <li>Always generate different Access Tokens for separate endpoints</li>
+          <li>Always validate and assign the specific API resources to the users — do not provide super admin access to everyone</li>
+          <li>Never share the Secret ID/JWT or Client ID to anyone</li>
+          <li>Always use HTTPS for secure communication</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="best-practice-card">
+      <div class="bp-header">
+        <div class="bp-num">02</div>
+        <div class="bp-title">Maintaining Consistency</div>
+      </div>
+      <div class="bp-body">
+        <ul>
+          <li>Always use Zscaler provided JSON templates for all Zscaler APIs for standardising configurations</li>
+          <li>Implement version control for all Zscaler API scripts</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="best-practice-card">
+      <div class="bp-header">
+        <div class="bp-num">03</div>
+        <div class="bp-title">Enhancing Scalability</div>
+      </div>
+      <div class="bp-body">
+        <ul>
+          <li>Use batch requests for bulk operations</li>
+          <li>Monitor OneAPI usage via Postman REST API client to avoid exceeding rate limits</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="best-practice-card">
+      <div class="bp-header">
+        <div class="bp-num">04</div>
+        <div class="bp-title">Deployment Methodologies</div>
+      </div>
+      <div class="bp-body">
+        <ul>
+          <li>Always test changes in staging before production</li>
+          <li>Use environment variables for sensitive information like OneAPI tokens using ZIdentity</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>NEVER DO THESE THINGS</div>
+      <div class="callout-body">Never share your Secret ID, JWT token, or Client ID with anyone — these are equivalent to passwords. Never use HTTP (always HTTPS). Never hardcode credentials in scripts — use environment variables. Never give super admin access when scoped access is sufficient. Never skip staging testing before pushing to production.</div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-bestpractices" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('bestpractices','Best Practices')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-bestpractices" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-bestpractices"></span></div></div>
+    </div>
+  </div>
+
+  <!-- DEBUGGING ERRORS -->
+  <div class="section-block" id="section-debug">
+    <div class="section-label">DEBUGGING ERROR CODES</div>
+    <h2>Systematic Error Debugging</h2>
+    <p>When you receive an error code, work through this systematic checklist before escalating to Zscaler Support.</p>
+
+    <ol class="steps-list">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>Check for configuration errors:</strong> Look for typos, whitespaces, or invalid JSON formatting in your request body. Invalid JSON is a common cause of 400 errors.</div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-body"><strong>Verify all request elements against API documentation:</strong>
+          <ul style="margin-top:8px;list-style:none;display:flex;flex-direction:column;gap:4px;">
+            <li style="padding-left:12px;position:relative;font-size:13px;"><span style="position:absolute;left:0;color:var(--amber);">›</span> Request headers — is Authorization: Bearer {token} included? Is Content-Type: application/json set?</li>
+            <li style="padding-left:12px;position:relative;font-size:13px;"><span style="position:absolute;left:0;color:var(--amber);">›</span> Parameters in the request body — all required fields present? Correct data types?</li>
+            <li style="padding-left:12px;position:relative;font-size:13px;"><span style="position:absolute;left:0;color:var(--amber);">›</span> Query parameters — correct format and values?</li>
+            <li style="padding-left:12px;position:relative;font-size:13px;"><span style="position:absolute;left:0;color:var(--amber);">›</span> HTTP method — is GET/POST/PUT/DELETE correct for this endpoint?</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-body"><strong>Check authentication state:</strong> Is the token expired (401)? Does the API client have the correct scope/resource access for this endpoint (403)?</div>
+      </li>
+      <li>
+        <div class="step-num">4</div>
+        <div class="step-body"><strong>For 429 errors:</strong> Implement the Retry-After delay. Add time.sleep() between requests. Consider batch operations instead of sequential individual calls.</div>
+      </li>
+      <li>
+        <div class="step-num">5</div>
+        <div class="step-body"><strong>For 409 conflicts:</strong> Another admin is making simultaneous changes. Retry the request after a short delay. Add retry logic with exponential backoff to your scripts.</div>
+      </li>
+    </ol>
+
+    <div class="key-concept">
+      <strong>Token Expiry Tip:</strong> Access tokens are time-sensitive. Build token refresh logic into your scripts so they automatically re-authenticate before the token expires rather than failing mid-execution with a 401 error.
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-debug" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('debug','Debugging Errors')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-debug" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-debug"></span></div></div>
+    </div>
+  </div>
+
+</div><!-- end main-content -->
+
+<div class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-270-hub.html">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1L1 7l6 6M1 7h12"/></svg>
+      EDU-270 Hub
+    </a>
+    <div class="mod-nav-group-label">LESSONS</div>
+    <a class="mod-nav-link" href="../1 Introduction/edu-270-intro.html"><div class="mod-nav-dot" style="background:#1a6dcc;"></div>1 · Introduction</a>
+    <a class="mod-nav-link" href="../2 Zero Trust Automation Platform/edu-270-automation-platform.html"><div class="mod-nav-dot" style="background:#1a7c4a;"></div>2 · Automation Platform</a>
+    <a class="mod-nav-link" href="../3 Architecture, Framework and Use Cases/edu-270-architecture.html"><div class="mod-nav-dot" style="background:#5c35cc;"></div>3 · Architecture &amp; Use Cases</a>
+    <a class="mod-nav-link current" href="edu-270-troubleshooting.html"><div class="mod-nav-dot" style="background:var(--amber);"></div>4 · Troubleshooting</a>
+    <a class="mod-nav-link" href="../5 Recap/edu-270-recap.html"><div class="mod-nav-dot" style="background:#6d28d9;"></div>5 · Recap</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleDone(this,0)"><div class="subtopic-check"></div><span>Recall all 10 status codes and their meaning</span></li>
+      <li onclick="toggleDone(this,1)"><div class="subtopic-check"></div><span>Explain 4 possible causes of a 403 error</span></li>
+      <li onclick="toggleDone(this,2)"><div class="subtopic-check"></div><span>Describe the two rate limit types (burst vs volume)</span></li>
+      <li onclick="toggleDone(this,3)"><div class="subtopic-check"></div><span>State the rate limits for GET, POST/PUT, and DELETE</span></li>
+      <li onclick="toggleDone(this,4)"><div class="subtopic-check"></div><span>Explain what a 429 response body looks like</span></li>
+      <li onclick="toggleDone(this,5)"><div class="subtopic-check"></div><span>List all 5 Secure API Usage best practices</span></li>
+      <li onclick="toggleDone(this,6)"><div class="subtopic-check"></div><span>Name the 2 Maintaining Consistency best practices</span></li>
+      <li onclick="toggleDone(this,7)"><div class="subtopic-check"></div><span>Walk through the 5-step error debugging process</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK STATUS CODE REFERENCE</div>
+    <div class="quick-ref"><div class="quick-ref-term">200 / 201 / 204</div><div class="quick-ref-def">Success. 200 = data returned. 201 = created. 204 = success, no content.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">400</div><div class="quick-ref-def">Bad request. Check JSON formatting, typos, whitespace, required fields.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">401</div><div class="quick-ref-def">Not authenticated. Token missing, expired, or invalid. Re-authenticate.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">403</div><div class="quick-ref-def">Forbidden. API key disabled, no role permissions, missing SKU, or maintenance mode.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">404</div><div class="quick-ref-def">Not found. Check endpoint URL and resource ID.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">415</div><div class="quick-ref-def">Unsupported media. Add Content-Type: application/json header.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">429</div><div class="quick-ref-def">Rate limit exceeded. Check Retry-After header. Add sleep() to scripts.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">500 / 503</div><div class="quick-ref-def">Server error / unavailable. Retry later or contact Zscaler Support.</div></div>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-270<span>.</span></div>
+  <div class="footer-right">Troubleshooting &amp; Best Practices · Section 4 of 5</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu270-troubleshooting';
+const SECTIONS={errors:'Status Codes',ratelimit:'Rate Limiting',bestpractices:'Best Practices',debug:'Debugging Errors'};
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+document.addEventListener('DOMContentLoaded',()=>{renderQPanel();initNotes();initChecks();if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}});
+</script>
+</body>
+</html>

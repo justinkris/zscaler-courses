@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Recap — EDU-220</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f3ff;--surface:#fff;--surface-2:#f0eeff;--border:#c8b8ff;--border-dim:#e5dcff;
+  --text:#0d0820;--text-soft:#2a1f50;--text-muted:#7060a8;
+  --purple:#5c35cc;--purple-glow:rgba(92,53,204,0.08);--purple-dim:#c8b8ff;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#5a4a88;letter-spacing:0.08em;margin-bottom:12px;}
+.breadcrumb a{color:#a78bfa;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#2a1f50;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#a78bfa;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#a78bfa;border-radius:50%;display:inline-block;}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#a78bfa;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.page-body{max-width:860px;margin:0 auto;padding:60px 40px 100px;}
+h2{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:16px;}
+h3{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--text);margin-bottom:8px;margin-top:20px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:10px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+ul.content-list li{font-size:13px;color:var(--text-soft);padding-left:14px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--purple);font-weight:700;font-size:16px;line-height:1.3;}
+/* Summary blocks */
+.summary-block{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:24px;}
+.summary-block-header{padding:16px 24px;display:flex;align-items:center;gap:10px;}
+.summary-block-tag{font-size:10px;font-weight:700;letter-spacing:0.16em;padding:4px 12px;border-radius:20px;}
+.summary-block-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-top:4px;}
+.section1 .summary-block-header{background:#f0f5ff;border-bottom:1px solid #bfdbfe;}
+.section1 .summary-block-tag{background:#dbeafe;color:#1a6dcc;}
+.section2 .summary-block-header{background:#f0fdf8;border-bottom:1px solid var(--green-border);}
+.section2 .summary-block-tag{background:var(--green-light);color:var(--green);}
+.section3 .summary-block-header{background:#fff5f5;border-bottom:1px solid var(--red-border);}
+.section3 .summary-block-tag{background:var(--red-light);color:var(--red);}
+.qrg-section .summary-block-header{background:#faf5ff;border-bottom:1px solid var(--purple-dim);}
+.qrg-section .summary-block-tag{background:var(--purple-dim);color:var(--purple);}
+.summary-points{padding:18px 24px;display:flex;flex-direction:column;gap:12px;}
+.summary-point{display:flex;align-items:flex-start;gap:12px;}
+.summary-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.section1 .summary-num{background:#dbeafe;color:#1a6dcc;}
+.section2 .summary-num{background:var(--green-light);color:var(--green);}
+.section3 .summary-num{background:var(--red-light);color:var(--red);}
+.qrg-section .summary-num{background:var(--purple-dim);color:var(--purple);}
+.summary-text{font-size:13px;color:var(--text-soft);line-height:1.75;padding-top:3px;}
+.summary-text strong{color:var(--text);}
+/* Learning outcomes */
+.outcomes-block{background:var(--text);border-radius:20px;padding:36px 40px;margin-top:40px;margin-bottom:40px;}
+.outcomes-title{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:8px;}
+.outcomes-sub{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:24px;line-height:1.6;}
+.outcomes-list{display:flex;flex-direction:column;gap:12px;}
+.outcome-item{display:flex;align-items:flex-start;gap:14px;}
+.outcome-num{width:30px;height:30px;border-radius:50%;background:var(--purple);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.outcome-text{font-size:14px;color:rgba(255,255,255,0.8);line-height:1.7;padding-top:4px;}
+.outcome-text strong{color:#a78bfa;}
+/* QRG reference */
+.qrg-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:18px 24px;}
+.qrg-item{background:var(--surface-2);border:1px solid var(--border-dim);border-radius:10px;padding:12px 14px;}
+.qrg-item-title{font-size:11px;font-weight:700;color:var(--purple);letter-spacing:0.08em;margin-bottom:4px;}
+.qrg-item-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Nav */
+.mod-nav-panel{position:fixed;top:24px;right:24px;width:220px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 16px;z-index:200;box-shadow:0 8px 32px rgba(92,53,204,0.1);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 12px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;}
+.mod-nav-link{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:5px 8px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface-2);}
+.mod-nav-link.current{background:var(--surface-2);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.back-link{display:inline-flex;align-items:center;gap:8px;margin-bottom:36px;font-size:12px;font-weight:600;letter-spacing:0.08em;color:var(--purple);text-decoration:none;padding:8px 16px;border:1px solid var(--border);border-radius:20px;background:var(--surface);transition:background 0.15s;}
+.back-link:hover{background:var(--surface-2);}
+@media(max-width:700px){.page-body{padding:40px 20px 80px;}header{padding:32px 20px 28px;}.mod-nav-panel{display:none;}.qrg-grid{grid-template-columns:1fr;}.summary-points,.summary-block-header{padding:16px 18px;}.outcomes-block{padding:28px 24px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb"><a href="../../index.html">Zscaler Courses</a><span class="breadcrumb-sep">›</span><a href="#">EDU-220</a><span class="breadcrumb-sep">›</span>Recap</div>
+  <div class="header-eyebrow"><span class="dot-live"></span> Course Recap · EDU-220</div>
+  <h1>Course <em>Recap</em></h1>
+  <p>Seven key themes. Six learning outcomes. One Quick Reference Guide.</p>
+</header>
+
+<nav class="mod-nav-panel">
+  <a class="mod-nav-hub" href="../edu-220-hub.html"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> EDU-220 Hub</a>
+  <div class="mod-nav-group-label">SECTION 1</div>
+  <a class="mod-nav-link" href="../1 - Introduction to Data Security/edu-220-intro-data-security.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>Introduction</a>
+  <div class="mod-nav-group-label">SECTION 2</div>
+  <a class="mod-nav-link" href="../2A Data in Motion/edu-220-data-in-motion.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>2A — Data in Motion</a>
+  <a class="mod-nav-link" href="../2B Secure SaaS Data/edu-220-secure-saas-data.html"><span class="mod-nav-dot" style="background:#6c35cc;"></span>2B — Secure SaaS Data</a>
+  <a class="mod-nav-link" href="../2C Secure Cloud, Endpoint Data, and BYOD!/edu-220-cloud-endpoint-byod.html"><span class="mod-nav-dot" style="background:#b45309;"></span>2C — Cloud &amp; BYOD</a>
+  <div class="mod-nav-group-label">SECTION 3</div>
+  <a class="mod-nav-link" href="../3 - Incident Management Capabilities/edu-220-incident-management.html"><span class="mod-nav-dot" style="background:#b91c1c;"></span>Incident Management</a>
+  <div class="mod-nav-group-label">RECAP</div>
+  <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:#5c35cc;"></span>Course Recap</span>
+</nav>
+
+<div class="page-body">
+
+  <a class="back-link" href="#">← Back to EDU-220 Hub</a>
+
+  <!-- SECTION 1 SUMMARY -->
+  <div class="summary-block section1">
+    <div class="summary-block-header">
+      <div>
+        <div class="summary-block-tag">SECTION 1 — INTRODUCTION</div>
+        <div class="summary-block-title">Data Security Overview &amp; AI Discovery</div>
+      </div>
+    </div>
+    <div class="summary-points">
+      <div class="summary-point">
+        <div class="summary-num">1</div>
+        <div class="summary-text">Zscaler provides <strong>comprehensive data protection through unified DLP policies</strong> — automating classification, improving visibility, and offering real-time protection across motion, cloud, endpoints, and BYOD.</div>
+      </div>
+      <div class="summary-point">
+        <div class="summary-num">2</div>
+        <div class="summary-text"><strong>AI-driven inline discovery</strong> identifies sensitive data leaving the organisation with visibility into users, destinations, and behaviour patterns. Endpoint scanning flags high-risk users; cloud discovery analyses storage patterns against GLBA, PCI, and HIPAA themes.</div>
+      </div>
+    </div>
+    <!-- Image: unified data protection umbrella -->
+    <div style="margin:0 24px 20px;border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+      <img src="1.png" alt="Cartoon umbrella with Zscaler logo protecting laptop, phone, cloud, and USB drive from rain" style="width:100%;display:block;">
+    </div>
+  </div>
+
+  <!-- SECTION 2 SUMMARY -->
+  <div class="summary-block section2">
+    <div class="summary-block-header">
+      <div>
+        <div class="summary-block-tag">SECTION 2 — ADVANCED SERVICES</div>
+        <div class="summary-block-title">Data in Motion, SaaS, Cloud, Endpoint &amp; BYOD</div>
+      </div>
+    </div>
+    <div class="summary-points">
+      <div class="summary-point">
+        <div class="summary-num">3</div>
+        <div class="summary-text">Zscaler's <strong>unified DLP engine</strong> applies consistent policies across web traffic, SaaS apps, public cloud, private apps, and endpoint data — including USB transfers and email. OCR extracts sensitive data from images; AIP integration enforces Microsoft sensitivity labels.</div>
+      </div>
+      <div class="summary-point">
+        <div class="summary-num">4</div>
+        <div class="summary-text"><strong>UEBA and Adaptive Access</strong> detect anomalous user behaviour and trigger automatic responses (MFA, account reauthentication). Parallel Policy Processing ensures all DLP rules are evaluated — the most restrictive action always wins, unlike traditional proxies that stop at the first match.</div>
+      </div>
+      <div class="summary-point">
+        <div class="summary-num">5</div>
+        <div class="summary-text">Zscaler's <strong>out-of-band CASB</strong> (OOB CASB) provides API-based data at rest scanning, malware detection, and SSPM — leveraging the same DLP policies for inline and at-rest scanning. <strong>AppTotal Security</strong> discovers, analyses, and remediates third-party apps connected to SaaS platforms.</div>
+      </div>
+      <div class="summary-point">
+        <div class="summary-num">6</div>
+        <div class="summary-text"><strong>DSPM</strong> enables discovery, classification, and continuous monitoring of sensitive data across all cloud environments (AWS, Azure, GCP). <strong>Browser Isolation and PRA</strong> provide secure BYOD access — data doesn't land on unmanaged devices; DLP policies still apply.</div>
+      </div>
+    </div>
+    <!-- Image: parallel policy processing -->
+    <div style="margin:0 24px 16px;border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+      <img src="2.png" alt="Cartoon showing parallel policy processing (multiple gates) vs traditional single-gate proxy" style="width:100%;display:block;">
+    </div>
+    <!-- Image: browser isolation -->
+    <div style="margin:0 24px 20px;border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+      <img src="3.png" alt="Cartoon of person at laptop viewing cloud apps through a glass wall — data cannot cross to the device" style="width:100%;display:block;">
+    </div>
+  </div>
+
+  <!-- SECTION 3 SUMMARY -->
+  <div class="summary-block section3">
+    <div class="summary-block-header">
+      <div>
+        <div class="summary-block-tag">SECTION 3 — INCIDENT MANAGEMENT</div>
+        <div class="summary-block-title">Zscaler Workflow Automation</div>
+      </div>
+    </div>
+    <div class="summary-points">
+      <div class="summary-point">
+        <div class="summary-num">7</div>
+        <div class="summary-text">Zscaler's <strong>Incident Management</strong> streamlines identifying, analysing, and resolving incidents. End users can be notified via browser-based notifications, Slack/Teams connectors, or Zscaler Client Connector. Admins handle incidents via email, Secure ICAP protocol, and real-time log streaming to external SIEMs. <strong>Zscaler Workflow Automation</strong> automates incident management for swift remediation.</div>
+      </div>
+    </div>
+    <!-- Image: workflow automation -->
+    <div style="margin:0 24px 20px;border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+      <img src="4.png" alt="Cartoon robot arm sorting alert cards into bins representing workflow automation" style="width:100%;display:block;">
+    </div>
+  </div>
+
+  <!-- QRG SUMMARY -->
+  <div class="summary-block qrg-section">
+    <div class="summary-block-header">
+      <div>
+        <div class="summary-block-tag">QUICK REFERENCE GUIDE</div>
+        <div class="summary-block-title">Key Points from the Official QRG</div>
+      </div>
+    </div>
+    <div class="qrg-grid">
+      <div class="qrg-item">
+        <div class="qrg-item-title">SHADOW IT DISCOVERY</div>
+        <div class="qrg-item-body">Database of ~45,000 cloud apps, each tagged with a risk score. Apps analysed for threat (encryption, SSL, port evasion) and hosting (certifications, T&Cs). Risk scores are customisable.</div>
+      </div>
+      <div class="qrg-item">
+        <div class="qrg-item-title">CLOUD APP CONTROL</div>
+        <div class="qrg-item-body">Recognises and categorises 50,000 cloud apps into 16 categories. Deep inspection includes payloads and HTML content — granular per-activity enforcement, not just per-app blocking.</div>
+      </div>
+      <div class="qrg-item">
+        <div class="qrg-item-title">TENANT RESTRICTIONS</div>
+        <div class="qrg-item-body">Differentiates personal vs corporate accounts within the same app. Full access to corporate; restricted activities on personal. Useful for multi-instance orgs (acquisitions, partnerships).</div>
+      </div>
+      <div class="qrg-item">
+        <div class="qrg-item-title">OCR (OPTICAL CHARACTER RECOGNITION)</div>
+        <div class="qrg-item-body">Powered by ML/AI — extracts sensitive data from handwritten text, image files, and screenshots. Enforces DLP policies even on image-based sensitive content.</div>
+      </div>
+      <div class="qrg-item">
+        <div class="qrg-item-title">UEBA ALERTS</div>
+        <div class="qrg-item-body">Focuses on insider threats, compromised credentials, and APTs. Benefits: easy management, continuous event evaluation, centralised tracking, advanced analytics against baseline behaviour.</div>
+      </div>
+      <div class="qrg-item">
+        <div class="qrg-item-title">PARALLEL POLICY PROCESSING</div>
+        <div class="qrg-item-body">All DLP policies evaluated — stricter rules applied. Unlike traditional firewalls that stop at first match. "Evaluate All Rules" setting in DLP Advanced Settings.</div>
+      </div>
+      <div class="qrg-item">
+        <div class="qrg-item-title">OOB CASB API SUPPORT</div>
+        <div class="qrg-item-body">Office 365, Google Apps, Salesforce, Box, Dropbox, GitHub, Azure Blob, GCP storage. Same DLP policies applied to data at rest as inline traffic. Retro + iterative scans.</div>
+      </div>
+      <div class="qrg-item">
+        <div class="qrg-item-title">DSPM</div>
+        <div class="qrg-item-body">Discovers, classifies, and continuously monitors data across all cloud environments. Least-privilege access enforcement. Real-time alerts and remediation guidance. Metadata stays local.</div>
+      </div>
+      <div class="qrg-item">
+        <div class="qrg-item-title">ENDPOINT DLP — BLOCK RULE</div>
+        <div class="qrg-item-body">Creates rules by file type, size, user group. Rule "Block sensitive data to the cloud" protects personal cloud storage. End-user notifications and file quarantine on trigger.</div>
+      </div>
+      <div class="qrg-item">
+        <div class="qrg-item-title">BYOD: BROWSER ISOLATION + PRA</div>
+        <div class="qrg-item-body">Browser Isolation for web apps — data never lands on unmanaged device. PRA for RDP/SSH access to internal systems. Together replace most VDI use cases cost-effectively.</div>
+      </div>
+      <div class="qrg-item">
+        <div class="qrg-item-title">WORKFLOW AUTOMATION</div>
+        <div class="qrg-item-body">Integrates with ZIA, ZDX, Business Insights. Auto-groups incidents by user/manager/policy. Supports ServiceNow tickets, on-premises receivers, SIEM streaming. Escalation to managers for approval.</div>
+      </div>
+      <div class="qrg-item">
+        <div class="qrg-item-title">APPTOTAL</div>
+        <div class="qrg-item-body">Discover (30+ attributes via API), Analyze (static, sandbox, heuristic), Remediate (End User Review / Revoke / Ban). Continuously monitors and streamlines recertifications.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEARNING OUTCOMES -->
+  <div class="outcomes-block">
+    <div class="outcomes-title">From this course, you should now be able to:</div>
+    <div class="outcomes-sub">Six learning outcomes across all three sections.</div>
+    <div class="outcomes-list">
+      <div class="outcome-item">
+        <div class="outcome-num">1</div>
+        <div class="outcome-text"><strong>Identify</strong> the need for a new data protection approach — why traditional fragmented tools fall short.</div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-num">2</div>
+        <div class="outcome-text"><strong>Explain</strong> how Zscaler provides data security to users through the Zero Trust Exchange framework.</div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-num">3</div>
+        <div class="outcome-text"><strong>Identify</strong> Zscaler's data security services for protecting data across various channels — motion, rest, cloud, endpoints, BYOD, and SaaS.</div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-num">4</div>
+        <div class="outcome-text"><strong>Learn</strong> about the AI-driven auto data discovery and classification capabilities — inline, endpoint, and cloud discovery.</div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-num">5</div>
+        <div class="outcome-text"><strong>Configure</strong> Zscaler Data Security policies to meet organisational requirements — DLP, CASB, SSPM, and endpoint rules.</div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-num">6</div>
+        <div class="outcome-text"><strong>Leverage</strong> Zscaler Workflow Automation for efficient incident handling — grouping, notification, escalation, and resolution.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

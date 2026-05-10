@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module Recap — EDU-111</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5f3ff;--surface:#fff;--surface-2:#f0eeff;--border:#c8bbff;--border-dim:#ece8ff;
+  --text:#0d0820;--text-soft:#2a1f50;--text-muted:#7060a8;
+  --purple:#5c35cc;--purple-glow:rgba(92,53,204,0.08);--purple-dim:#c8bbff;
+  --red:#b91c1c;--amber:#b45309;--green:#1a7c4a;--blue:#1a6dcc;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{padding:48px 60px 36px;background:var(--text);}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#5a4a88;letter-spacing:0.08em;margin-bottom:12px;}
+.breadcrumb a{color:#a78bfa;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#2a1f50;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#a78bfa;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#a78bfa;border-radius:50%;display:inline-block;}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#a78bfa;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.page-body{max-width:860px;margin:0 auto;padding:60px 40px 100px;width:100%;}
+/* Recap blocks */
+.recap-block{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:28px;}
+.recap-block-header{padding:18px 28px;display:flex;align-items:center;gap:12px;}
+.recap-block-tag{font-size:10px;font-weight:700;letter-spacing:0.16em;padding:4px 12px;border-radius:20px;}
+.recap-block-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--text);margin-top:4px;}
+.recap-block.threat .recap-block-header{background:#fff5f5;border-bottom:1px solid #fecaca;}
+.recap-block.threat .recap-block-tag{background:#fee2e2;color:var(--red);}
+.recap-block.data .recap-block-header{background:#fffbf0;border-bottom:1px solid #fde68a;}
+.recap-block.data .recap-block-tag{background:#fef9c3;color:var(--amber);}
+.recap-block.defence .recap-block-header{background:#f0fdf8;border-bottom:1px solid #a7e0c0;}
+.recap-block.defence .recap-block-tag{background:#d4f0e0;color:var(--green);}
+.recap-points{padding:20px 28px;display:flex;flex-direction:column;gap:14px;}
+.recap-point{display:flex;align-items:flex-start;gap:14px;}
+.recap-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.threat .recap-num{background:#fee2e2;color:var(--red);}
+.data .recap-num{background:#fef9c3;color:var(--amber);}
+.defence .recap-num{background:#d4f0e0;color:var(--green);}
+.recap-text{font-size:14px;color:var(--text-soft);line-height:1.75;padding-top:4px;}
+.recap-text strong{color:var(--text);}
+/* Learning outcomes */
+.outcomes-block{background:var(--text);border-radius:20px;padding:36px 40px;margin-top:40px;}
+.outcomes-title{font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:#fff;margin-bottom:8px;}
+.outcomes-sub{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:28px;line-height:1.6;}
+.outcomes-list{display:flex;flex-direction:column;gap:14px;}
+.outcome-item{display:flex;align-items:flex-start;gap:14px;}
+.outcome-num{width:30px;height:30px;border-radius:50%;background:var(--purple);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.outcome-text{font-size:14px;color:rgba(255,255,255,0.8);line-height:1.7;padding-top:4px;}
+.outcome-text strong{color:#a78bfa;}
+/* Back link */
+.back-link{display:inline-flex;align-items:center;gap:8px;margin-bottom:36px;font-size:12px;font-weight:600;letter-spacing:0.08em;color:var(--purple);text-decoration:none;padding:8px 16px;border:1px solid var(--border);border-radius:20px;background:var(--surface);transition:background 0.15s;}
+.back-link:hover{background:var(--surface-2);}
+/* Module nav */
+.mod-nav-panel{position:fixed;top:24px;right:24px;width:220px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 16px;z-index:200;box-shadow:0 8px 32px rgba(92,53,204,0.1);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 12px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;}
+.mod-nav-link{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:5px 8px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface-2);}
+.mod-nav-link.current{background:var(--surface-2);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+@media(max-width:700px){.page-body{padding:40px 20px 80px;}header{padding:32px 20px 28px;}.recap-block-header,.recap-points{padding:16px 20px;}.outcomes-block{padding:28px 24px;}.mod-nav-panel{display:none;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../edu-111-hub.html">EDU-111</a>
+    <span class="breadcrumb-sep">›</span>
+    Recap
+  </div>
+  <div class="header-eyebrow"><span class="dot-live"></span> Module Recap · EDU-111</div>
+  <h1>Module <em>Recap</em></h1>
+  <p>Three themes. Nine key points. Five learning outcomes.</p>
+</header>
+
+<nav class="mod-nav-panel">
+  <a class="mod-nav-hub" href="../edu-111-hub.html"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> EDU-111 Hub</a>
+  <div class="mod-nav-group-label">LESSONS</div>
+  <a class="mod-nav-link" href="../How Attackers Weaponize AI/edu-111-attackers-ai.html"><span class="mod-nav-dot" style="background:#b91c1c;"></span>How Attackers Weaponize AI</a>
+  <a class="mod-nav-link" href="../How Defenders Fight Back/edu-111-defenders-fight-back.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>How Defenders Fight Back</a>
+  <a class="mod-nav-link" href="../The Data Risk/edu-111-data-risk.html"><span class="mod-nav-dot" style="background:#b45309;"></span>The Data Risk</a>
+  <a class="mod-nav-link" href="../The Defence Strategy/edu-111-defence-strategy.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>The Defence Strategy</a>
+  <div class="mod-nav-group-label">RECAP</div>
+  <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:#5c35cc;"></span>Module Recap</span>
+</nav>
+
+<div class="page-body">
+
+  <a class="back-link" href="../edu-111-hub.html">← Back to EDU-111 Hub</a>
+
+  <!-- THE CYBER THREAT -->
+  <div class="recap-block threat">
+    <div class="recap-block-header">
+      <div>
+        <div class="recap-block-tag">THE CYBER THREAT</div>
+        <div class="recap-block-title">How AI Changes the Attack Chain</div>
+      </div>
+    </div>
+    <div class="recap-points">
+      <div class="recap-point">
+        <div class="recap-num">1</div>
+        <div class="recap-text">AI accelerates every phase of a cyberattack. <strong>Reconnaissance, access, lateral movement, and action</strong> all become faster and more adaptive.</div>
+      </div>
+      <div class="recap-point">
+        <div class="recap-num">2</div>
+        <div class="recap-text">Defenders must use AI too. The quality of the result depends heavily on <strong>the quality of the prompt</strong> and how the tool is directed.</div>
+      </div>
+      <div class="recap-point">
+        <div class="recap-num">3</div>
+        <div class="recap-text">AI systems create new attack surfaces. <strong>Prompt injection, jailbreaking, and related attacks</strong> target the AI itself.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE DATA RISK -->
+  <div class="recap-block data">
+    <div class="recap-block-header">
+      <div>
+        <div class="recap-block-tag">THE DATA RISK</div>
+        <div class="recap-block-title">The Gap Between AI Usage and AI Governance</div>
+      </div>
+    </div>
+    <div class="recap-points">
+      <div class="recap-point">
+        <div class="recap-num">1</div>
+        <div class="recap-text">Traditional controls were not built for AI interactions. Data can move through <strong>prompts and responses in ways legacy tools do not fully see.</strong></div>
+      </div>
+      <div class="recap-point">
+        <div class="recap-num">2</div>
+        <div class="recap-text"><strong>Shadow AI</strong> expands the attack surface when employees use unsanctioned AI tools without security review or governance.</div>
+      </div>
+      <div class="recap-point">
+        <div class="recap-num">3</div>
+        <div class="recap-text"><strong>Hallucination is also a risk.</strong> Incorrect output can create operational, legal, and security consequences when it is trusted without verification.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE DEFENCE STRATEGY -->
+  <div class="recap-block defence">
+    <div class="recap-block-header">
+      <div>
+        <div class="recap-block-tag">THE DEFENCE STRATEGY</div>
+        <div class="recap-block-title">From Awareness to Action</div>
+      </div>
+    </div>
+    <div class="recap-points">
+      <div class="recap-point">
+        <div class="recap-num">1</div>
+        <div class="recap-text">The <strong>Zscaler AI Security Framework</strong> is built around three core pillars: AI Asset Management, Secure Access to AI, and Secure AI Apps and Infrastructure.</div>
+      </div>
+      <div class="recap-point">
+        <div class="recap-num">2</div>
+        <div class="recap-text"><strong>Governance and Compliance</strong> runs across all three. It is a continuous layer, not a separate fourth pillar.</div>
+      </div>
+      <div class="recap-point">
+        <div class="recap-num">3</div>
+        <div class="recap-text">Strong defence combines <strong>AI speed with human judgment.</strong> AI helps detect, investigate, and accelerate response, while humans make the critical decisions.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEARNING OUTCOMES -->
+  <div class="outcomes-block">
+    <div class="outcomes-title">From this module, you should now be able to:</div>
+    <div class="outcomes-sub">Five outcomes across the three themes.</div>
+    <div class="outcomes-list">
+      <div class="outcome-item">
+        <div class="outcome-num">1</div>
+        <div class="outcome-text"><strong>Describe</strong> how attackers use AI to enhance phishing, malware, and other cyber threats.</div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-num">2</div>
+        <div class="outcome-text"><strong>Explain</strong> how AI changes the data security risks organisations must manage.</div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-num">3</div>
+        <div class="outcome-text"><strong>Recognise</strong> why Shadow AI and legacy controls create visibility and control gaps.</div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-num">4</div>
+        <div class="outcome-text"><strong>Explain</strong> the purpose of the Zscaler AI Security Framework in securing AI adoption.</div>
+      </div>
+      <div class="outcome-item">
+        <div class="outcome-num">5</div>
+        <div class="outcome-text"><strong>Recognise</strong> how AI Governance promotes safe usage policies.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

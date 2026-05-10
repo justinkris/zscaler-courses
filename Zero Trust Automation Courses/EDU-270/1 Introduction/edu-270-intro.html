@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introduction to APIs — EDU-270</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#ffffff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --amber:#b45309;--amber-light:#fef9ec;--amber-border:#fde68a;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:#0d1a2e;display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#5a7a9a;letter-spacing:0.08em;margin-bottom:12px;}
+.breadcrumb a{color:#60a5fa;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#1e3a5c;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#60a5fa;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#60a5fa;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#60a5fa;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--blue);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#60a5fa;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--blue);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--blue-glow);border:1px solid var(--blue-dim);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--blue);font-weight:600;}
+.definition{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:12px;}
+.definition-term{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.definition-body{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--blue-glow);border-color:var(--blue-dim);}
+.callout-note .callout-header{color:var(--blue);}
+.callout-note .callout-icon{background:var(--blue-dim);color:var(--blue);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-tip{background:var(--green-light);border-color:var(--green-border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-tip .callout-body{color:#0f4a28;}
+.callout-warn{background:var(--amber-light);border-color:var(--amber-border);}
+.callout-warn .callout-header{color:var(--amber);}
+.callout-warn .callout-icon{background:var(--amber-border);color:var(--amber);}
+.callout-warn .callout-body{color:#7a3a00;}
+.compare-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+.compare-table th{background:#0d1a2e;color:#fff;padding:10px 14px;text-align:left;font-weight:500;font-size:11px;letter-spacing:0.08em;}
+.compare-table th:first-child{border-radius:10px 0 0 0;}
+.compare-table th:last-child{border-radius:0 10px 0 0;}
+.compare-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-soft);vertical-align:top;line-height:1.6;}
+.compare-table tr:nth-child(even) td{background:var(--surface-2);}
+.compare-table tr:last-child td:first-child{border-radius:0 0 0 10px;}
+.compare-table tr:last-child td:last-child{border-radius:0 0 10px 0;}
+.num-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px;}
+.num-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+.num-card-num{font-size:28px;font-weight:700;color:var(--blue);font-family:'Fraunces',serif;line-height:1;}
+.num-card-label{font-size:11px;font-weight:600;color:var(--text);margin:4px 0 4px;}
+.num-card-body{font-size:12px;color:var(--text-muted);line-height:1.6;}
+.method-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
+.method-card{border-radius:12px;padding:14px 16px;border:1px solid;}
+.method-get{background:#e0f2fe;border-color:#7dd3fc;}
+.method-post{background:var(--green-light);border-color:var(--green-border);}
+.method-put{background:var(--amber-light);border-color:var(--amber-border);}
+.method-del{background:var(--red-light);border-color:var(--red-border);}
+.method-badge{font-size:10px;font-weight:700;letter-spacing:0.12em;padding:2px 8px;border-radius:6px;display:inline-block;margin-bottom:6px;}
+.method-get .method-badge{background:#0284c7;color:#fff;}
+.method-post .method-badge{background:var(--green);color:#fff;}
+.method-put .method-badge{background:var(--amber);color:#fff;}
+.method-del .method-badge{background:var(--red);color:#fff;}
+.method-name{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.method-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+.diagram-wrap{border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;background:var(--surface);}
+.diagram-wrap img{width:100%;display:block;}
+.diagram-caption{font-size:11px;color:var(--text-muted);padding:10px 14px;background:var(--surface-2);border-top:1px solid var(--border);text-align:center;font-style:italic;}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--blue);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:#0d1a2e;color:#60a5fa;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#1e3a5c;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--blue);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#0d1a2e;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#60a5fa;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#7aa8cc;line-height:1.6;}
+.sidebar-note{background:var(--blue-glow);border:1px solid var(--blue-dim);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text-soft);line-height:1.6;margin-bottom:10px;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-270-hub.html">EDU-270</a>
+      <span class="breadcrumb-sep">›</span>
+      Introduction to APIs
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Introduction · EDU-270</div>
+    <h1>Introduction to <em>APIs</em></h1>
+    <p>API fundamentals, RESTful principles, HTTP methods, request/response cycle, and why APIs power Zscaler Zero Trust Automation.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">APIs are the <em>language of automation.</em></div>
+  <p class="motivation-sub">Before you can automate Zero Trust, you need to understand the building blocks — what an API is, how it works, and why Zscaler built OneAPI to unify them all.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Course Overview</button>
+  <button class="nav-tab" onclick="navTo('section-api',this)">What is an API</button>
+  <button class="nav-tab" onclick="navTo('section-restful',this)">RESTful APIs</button>
+  <button class="nav-tab" onclick="navTo('section-methods',this)">HTTP Methods</button>
+  <button class="nav-tab" onclick="navTo('section-why',this)">Why APIs Matter</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- COURSE OVERVIEW -->
+  <div class="section-block" id="section-overview">
+    <div class="section-label">COURSE OVERVIEW</div>
+    <h2>EDU-270: Zero Trust Automation</h2>
+    <p>This course explores how Zscaler APIs and the OneAPI framework enable enterprises to rapidly adopt Zero Trust Architecture through automation. You will cover everything from basic API concepts through hands-on configuration with Postman.</p>
+
+    <h3>Course Sections</h3>
+    <div class="num-grid">
+      <div class="num-card">
+        <div class="num-card-num">01</div>
+        <div class="num-card-label">API Overview</div>
+        <div class="num-card-body">What APIs are, how they work, HTTP methods, RESTful principles.</div>
+      </div>
+      <div class="num-card">
+        <div class="num-card-num">02</div>
+        <div class="num-card-label">Zero Trust Automation Platform</div>
+        <div class="num-card-body">ZIA, ZPA, ZDX, Client Connector APIs. ZIdentity and OneAPI.</div>
+      </div>
+      <div class="num-card">
+        <div class="num-card-num">03</div>
+        <div class="num-card-label">Architecture, Framework &amp; Use Cases</div>
+        <div class="num-card-body">OneAPI architecture, traditional vs. new framework, real use cases.</div>
+      </div>
+      <div class="num-card">
+        <div class="num-card-num">04</div>
+        <div class="num-card-label">Troubleshooting &amp; Best Practices</div>
+        <div class="num-card-body">Error codes, rate limiting, secure usage, maintaining consistency.</div>
+      </div>
+    </div>
+
+    <h3>Learning Outcomes</h3>
+    <p>After completing this course you will be able to:</p>
+    <ul class="content-list">
+      <li>Describe the basic concepts of APIs</li>
+      <li>Discuss Zscaler APIs using ZIA, ZPA, ZDX, and Zscaler Client Connector endpoints</li>
+      <li>Explain the role and importance of OneAPI within the Zscaler Automation Framework</li>
+      <li>Describe ZIdentity, including its authentication and provisioning workflow</li>
+      <li>Identify the necessary steps to access OneAPI</li>
+      <li>Describe the architecture and workflow of OneAPI within Zscaler Zero Trust Automation</li>
+      <li>Configure OneAPI using Postman for various Zscaler services</li>
+      <li>Identify common use cases for Zero Trust Automation</li>
+      <li>Discuss the necessary troubleshooting steps and best practices for using OneAPI</li>
+    </ul>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Course Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- WHAT IS AN API -->
+  <div class="section-block" id="section-api">
+    <div class="section-label">WHAT IS AN API</div>
+    <h2>API Fundamentals</h2>
+    <p>An <strong>API (Application Programming Interface)</strong> is a set of rules and protocols that allows different software applications to communicate with each other. It defines the methods and data formats applications use to request and exchange information.</p>
+
+    <div class="key-concept">
+      <strong>Core definition:</strong> An API is the messenger between applications. It takes a request from one system, tells another system what to do, and returns the response — like a waiter taking your order to the kitchen and bringing back your food.
+    </div>
+
+    <h3>How APIs Work: Request-Response Cycle</h3>
+    <p>Every API interaction follows the same pattern. A client sends a request to a server, the server processes it, and returns a response.</p>
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead><tr><th>Component</th><th>Role</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>API Client</strong></td><td>Sends the API request</td><td>Postman, your script, Zscaler portal</td></tr>
+          <tr><td><strong>Endpoint</strong></td><td>The URL that receives the request</td><td>api.zsapi.net/zia/api/v1/users</td></tr>
+          <tr><td><strong>HTTP Method</strong></td><td>The type of operation</td><td>GET, POST, PUT, DELETE</td></tr>
+          <tr><td><strong>Request Headers</strong></td><td>Metadata about the request</td><td>Authorization, Content-Type</td></tr>
+          <tr><td><strong>Request Body</strong></td><td>Data sent with the request (JSON)</td><td>User details for POST request</td></tr>
+          <tr><td><strong>API Server</strong></td><td>Authenticates, validates, retrieves data</td><td>Zscaler backend service</td></tr>
+          <tr><td><strong>Response Headers</strong></td><td>Metadata about the response</td><td>Content-Type, Rate-Limit info</td></tr>
+          <tr><td><strong>Response Body</strong></td><td>The returned data (JSON)</td><td>User list, policy details</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>API Status Codes</h3>
+    <div class="num-grid">
+      <div class="num-card">
+        <div class="num-card-num" style="color:var(--green)">200</div>
+        <div class="num-card-label">OK</div>
+        <div class="num-card-body">Request successful. Data returned.</div>
+      </div>
+      <div class="num-card">
+        <div class="num-card-num" style="color:var(--green)">201</div>
+        <div class="num-card-label">Created</div>
+        <div class="num-card-body">Resource successfully created.</div>
+      </div>
+      <div class="num-card">
+        <div class="num-card-num" style="color:var(--amber)">400</div>
+        <div class="num-card-label">Bad Request</div>
+        <div class="num-card-body">Invalid or malformed request.</div>
+      </div>
+      <div class="num-card">
+        <div class="num-card-num" style="color:var(--red)">404</div>
+        <div class="num-card-label">Not Found</div>
+        <div class="num-card-body">Resource does not exist.</div>
+      </div>
+    </div>
+
+    <h3>Private vs. Public APIs</h3>
+    <div class="method-grid">
+      <div class="method-card" style="background:#e0f2fe;border-color:#7dd3fc;">
+        <div class="method-badge" style="background:#0284c7;color:#fff;">PRIVATE</div>
+        <div class="method-name">Internal APIs</div>
+        <div class="method-body">Used within an organisation. Access restricted to internal teams. Not exposed externally. Used for internal integrations and automation.</div>
+      </div>
+      <div class="method-card" style="background:var(--green-light);border-color:var(--green-border);">
+        <div class="method-badge" style="background:var(--green);color:#fff;">PUBLIC</div>
+        <div class="method-name">External APIs</div>
+        <div class="method-body">Exposed to external developers or partners. Enable third-party integrations. Often require API keys or OAuth tokens for access.</div>
+      </div>
+    </div>
+
+    <div class="diagram-wrap">
+      <img src="diagram-api-types.png" alt="Private vs Public APIs diagram">
+      <div class="diagram-caption">Private APIs (internal use) vs. Public APIs (external access) — both types are used within the Zscaler ecosystem</div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-api" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('api','What is an API')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-api" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-api"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RESTFUL APIS -->
+  <div class="section-block" id="section-restful">
+    <div class="section-label">RESTFUL APIs</div>
+    <h2>RESTful API Principles</h2>
+    <p>A <strong>RESTful API</strong> (Representational State Transfer) uses standard HTTP methods to perform operations. All Zscaler APIs are RESTful, meaning they follow a consistent set of architectural constraints.</p>
+
+    <div class="num-grid">
+      <div class="num-card">
+        <div class="num-card-label" style="font-size:13px;font-weight:700;">Stateless</div>
+        <div class="num-card-body">Each request contains all information needed. No session state is stored on the server between requests.</div>
+      </div>
+      <div class="num-card">
+        <div class="num-card-label" style="font-size:13px;font-weight:700;">Client-Server</div>
+        <div class="num-card-body">Client and server are separate. Client handles UI/UX; server handles data and business logic.</div>
+      </div>
+      <div class="num-card">
+        <div class="num-card-label" style="font-size:13px;font-weight:700;">Cacheable</div>
+        <div class="num-card-body">Responses can be cached to improve performance. OneAPI uses caching for frequently requested data.</div>
+      </div>
+      <div class="num-card">
+        <div class="num-card-label" style="font-size:13px;font-weight:700;">Uniform Interface</div>
+        <div class="num-card-body">Consistent way to interact with resources. All Zscaler APIs follow the same patterns and conventions.</div>
+      </div>
+      <div class="num-card">
+        <div class="num-card-label" style="font-size:13px;font-weight:700;">Layered System</div>
+        <div class="num-card-body">Client doesn't need to know if it's talking to the actual server or an intermediary (like OneAPI Gateway).</div>
+      </div>
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">i</div>WHY THIS MATTERS FOR ONEAPI</div>
+      <div class="callout-body">Because all Zscaler APIs follow RESTful principles through OneAPI, a developer only needs to learn one pattern. The same request structure, authentication approach, and response format works across ZIA, ZPA, ZDX, and Client Connector APIs.</div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-restful" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('restful','RESTful APIs')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-restful" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-restful"></span></div></div>
+    </div>
+  </div>
+
+  <!-- HTTP METHODS -->
+  <div class="section-block" id="section-methods">
+    <div class="section-label">HTTP METHODS</div>
+    <h2>HTTP Methods &amp; Request Structure</h2>
+    <p>APIs use HTTP methods to indicate the desired action. Each method maps to a CRUD operation and has a specific rate-limit weight in Zscaler's OneAPI.</p>
+
+    <div class="method-grid">
+      <div class="method-card method-get">
+        <div class="method-badge">GET</div>
+        <div class="method-name">Retrieve Data</div>
+        <div class="method-body">Read-only. Retrieves resources without modifying them. Light weight — up to 4,000 req/hr in OneAPI. Example: list all users, get policy details.</div>
+      </div>
+      <div class="method-card method-post">
+        <div class="method-badge">POST</div>
+        <div class="method-name">Create Resource</div>
+        <div class="method-body">Creates a new resource on the server. Medium weight — 1 req/sec, 400 req/hr. Example: add a URL filtering rule, create a user.</div>
+      </div>
+      <div class="method-card method-put">
+        <div class="method-badge">PUT</div>
+        <div class="method-name">Update Resource</div>
+        <div class="method-body">Updates an existing resource in its entirety. Medium weight — same limits as POST. Example: update a policy rule configuration.</div>
+      </div>
+      <div class="method-card method-del">
+        <div class="method-badge">DELETE</div>
+        <div class="method-name">Remove Resource</div>
+        <div class="method-body">Deletes a resource from the server. Heavy weight — 1 req/min, 4 req/hr. Use carefully — irreversible action.</div>
+      </div>
+    </div>
+
+    <h3>API Request Structure</h3>
+    <div class="definition">
+      <div class="definition-term">Endpoint URL</div>
+      <div class="definition-body">The address of the API resource. For Zscaler OneAPI: <code>https://api.zsapi.net/{product}/api/v1/{resource}</code></div>
+    </div>
+    <div class="definition">
+      <div class="definition-term">HTTP Headers</div>
+      <div class="definition-body">Metadata sent with the request. Key headers: <code>Authorization: Bearer {token}</code>, <code>Content-Type: application/json</code></div>
+    </div>
+    <div class="definition">
+      <div class="definition-term">Request Body (JSON)</div>
+      <div class="definition-body">Data payload for POST/PUT requests. Must be valid JSON. Zscaler provides JSON templates to standardise configurations.</div>
+    </div>
+
+    <div class="diagram-wrap">
+      <img src="diagram-api-request.png" alt="API request structure diagram">
+      <div class="diagram-caption">API request structure showing endpoint, method, headers, and JSON body components</div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-methods" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('methods','HTTP Methods')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-methods" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-methods"></span></div></div>
+    </div>
+  </div>
+
+  <!-- WHY APIs MATTER -->
+  <div class="section-block" id="section-why">
+    <div class="section-label">WHY APIS MATTER</div>
+    <h2>Why APIs Power Zero Trust Automation</h2>
+    <p>APIs are the foundation of the Zscaler Zero Trust Automation strategy. Without APIs, every configuration change would require manual portal interaction — slow, error-prone, and impossible to scale.</p>
+
+    <div class="num-grid">
+      <div class="num-card">
+        <div class="num-card-label" style="font-size:13px;font-weight:700;color:var(--blue);">Integration</div>
+        <div class="num-card-body">Connect Zscaler with SIEM, ITSM, and third-party tools. ServiceNow + ZDX is a key example.</div>
+      </div>
+      <div class="num-card">
+        <div class="num-card-label" style="font-size:13px;font-weight:700;color:var(--blue);">Automation</div>
+        <div class="num-card-body">Automate repetitive tasks — policy deployment, user provisioning, URL filtering updates.</div>
+      </div>
+      <div class="num-card">
+        <div class="num-card-label" style="font-size:13px;font-weight:700;color:var(--blue);">Monitoring</div>
+        <div class="num-card-body">Pull real-time health, performance, and security telemetry programmatically.</div>
+      </div>
+      <div class="num-card">
+        <div class="num-card-label" style="font-size:13px;font-weight:700;color:var(--blue);">Authentication</div>
+        <div class="num-card-body">ZIdentity OAuth tokens allow secure, controlled programmatic access to all Zscaler services.</div>
+      </div>
+      <div class="num-card">
+        <div class="num-card-label" style="font-size:13px;font-weight:700;color:var(--blue);">Developer Engagement</div>
+        <div class="num-card-body">Partners and customers can build on top of Zscaler's platform using documented, stable APIs.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>THE ZERO TRUST AUTOMATION GOAL</div>
+      <div class="callout-body">Zscaler's goal is to empower enterprises to rapidly adopt Zero Trust Architecture. Key benefits of this automation approach include: Improved Security Posture, Streamlined Processes, Better ROI, Reduced Human Error, Faster Threat Response, and Enhanced Visibility and Control.</div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-why" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('why','Why APIs Matter')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-why" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-why"></span></div></div>
+    </div>
+  </div>
+
+</div><!-- end main-content -->
+
+<div class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-270-hub.html">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1L1 7l6 6M1 7h12"/></svg>
+      EDU-270 Hub
+    </a>
+    <div class="mod-nav-group-label">LESSONS</div>
+    <a class="mod-nav-link current" href="edu-270-intro.html"><div class="mod-nav-dot" style="background:var(--blue);"></div>1 · Introduction</a>
+    <a class="mod-nav-link" href="../2 Zero Trust Automation Platform/edu-270-automation-platform.html"><div class="mod-nav-dot" style="background:var(--green);"></div>2 · Automation Platform</a>
+    <a class="mod-nav-link" href="../3 Architecture, Framework and Use Cases/edu-270-architecture.html"><div class="mod-nav-dot" style="background:var(--purple);"></div>3 · Architecture &amp; Use Cases</a>
+    <a class="mod-nav-link" href="../4 Troubleshooting and Best Practices/edu-270-troubleshooting.html"><div class="mod-nav-dot" style="background:var(--amber);"></div>4 · Troubleshooting</a>
+    <a class="mod-nav-link" href="../5 Recap/edu-270-recap.html"><div class="mod-nav-dot" style="background:#6d28d9;"></div>5 · Recap</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleDone(this,0)"><div class="subtopic-check"></div><span>Define what an API is and its purpose</span></li>
+      <li onclick="toggleDone(this,1)"><div class="subtopic-check"></div><span>Explain the request-response cycle</span></li>
+      <li onclick="toggleDone(this,2)"><div class="subtopic-check"></div><span>Name the 4 HTTP methods and when to use each</span></li>
+      <li onclick="toggleDone(this,3)"><div class="subtopic-check"></div><span>Describe the 5 RESTful principles</span></li>
+      <li onclick="toggleDone(this,4)"><div class="subtopic-check"></div><span>Distinguish private vs public APIs</span></li>
+      <li onclick="toggleDone(this,5)"><div class="subtopic-check"></div><span>State 3 status codes and their meaning</span></li>
+      <li onclick="toggleDone(this,6)"><div class="subtopic-check"></div><span>List 5 reasons why APIs matter for automation</span></li>
+      <li onclick="toggleDone(this,7)"><div class="subtopic-check"></div><span>Describe the 4 components of an API request</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="quick-ref"><div class="quick-ref-term">API</div><div class="quick-ref-def">Set of rules/protocols for software to communicate. Defines methods and data formats for requesting and exchanging information.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">RESTful API</div><div class="quick-ref-def">API that uses standard HTTP methods. Stateless, client-server, cacheable, uniform interface, layered system.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Endpoint</div><div class="quick-ref-def">The URL a client calls to access an API resource. e.g. api.zsapi.net/zia/api/v1/users</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Bearer Token</div><div class="quick-ref-def">Access credential passed in the Authorization header of every API request.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">JSON</div><div class="quick-ref-def">JavaScript Object Notation — the standard data format for API request bodies and responses.</div></div>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-270<span>.</span></div>
+  <div class="footer-right">Introduction to APIs · Zero Trust Automation · Section 1 of 5</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu270-intro';
+const SECTIONS={overview:'Course Overview',api:'What is an API',restful:'RESTful APIs',methods:'HTTP Methods',why:'Why APIs Matter'};
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+document.addEventListener('DOMContentLoaded',()=>{renderQPanel();initNotes();initChecks();if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}});
+</script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDU-220 Hub — Data Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:#fef9f0;--cream-dark:#f5eddb;--ink:#1a1209;--ink-soft:#5a4a35;--ink-muted:#8a7660;
+  --orange:#ff6b35;--orange-light:#fff3ec;--orange-border:#ffd5c0;
+  --border:#ede5d8;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px 120px;animation:pageEnter 0.45s ease both;}
+@keyframes pageEnter{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--ink-muted);letter-spacing:0.08em;margin-bottom:12px;align-self:flex-start;}
+.breadcrumb a{color:var(--orange);text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:var(--ink-muted);}
+.page-title{text-align:center;margin-bottom:48px;}
+.day-badge{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:var(--cream);padding:5px 14px;border-radius:20px;font-size:11px;letter-spacing:0.1em;margin-bottom:14px;}
+.day-badge-dot{width:5px;height:5px;background:var(--orange);border-radius:50%;}
+h1{font-family:'Fraunces',serif;font-size:48px;font-weight:700;line-height:1.0;color:var(--ink);}
+h1 em{font-style:italic;font-weight:400;color:var(--orange);}
+.page-tagline{font-family:'Fraunces',serif;font-size:15px;font-style:italic;color:var(--ink-muted);margin-top:10px;line-height:1.6;}
+.hub-layout{display:grid;grid-template-columns:1fr 260px;gap:32px;width:100%;max-width:1100px;align-items:start;}
+.card-col{display:flex;flex-direction:column;gap:20px;}
+.section-group-label{font-size:10px;font-weight:700;letter-spacing:0.2em;color:var(--ink-muted);padding:0 4px;margin-bottom:-8px;}
+.nav-card{background:var(--cream);border:1px solid var(--border);border-radius:20px;overflow:hidden;text-decoration:none;display:flex;flex-direction:column;position:relative;transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.4s ease,border-color 0.3s ease;}
+.nav-card:hover{z-index:2;}
+.nav-card::before{content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(to right,transparent,rgba(255,255,255,0.22) 50%,transparent);transform:skewX(-15deg);pointer-events:none;z-index:2;}
+.nav-card:hover::before{animation:card-shine 0.55s ease forwards;}
+@keyframes card-shine{to{left:160%;}}
+.nav-card.c-blue:hover{transform:translateY(-16px) scale(1.03) rotate(-1deg);box-shadow:0 28px 56px rgba(26,109,204,0.25),0 0 0 1.5px var(--blue-border);border-color:var(--blue-border);}
+.nav-card.c-blue:hover .card-img{background:#b8d5f5!important;}
+.nav-card.c-blue .card-arrow{color:var(--blue);}
+.nav-card.c-green:hover{transform:translateY(-16px) scale(1.03) rotate(1deg);box-shadow:0 28px 56px rgba(26,124,74,0.25),0 0 0 1.5px var(--green-border);border-color:var(--green-border);}
+.nav-card.c-green:hover .card-img{background:#a7e0c0!important;}
+.nav-card.c-green .card-arrow{color:var(--green);}
+.nav-card.c-purple:hover{transform:translateY(-16px) scale(1.03) rotate(-0.5deg);box-shadow:0 28px 56px rgba(92,53,204,0.25),0 0 0 1.5px var(--purple-border);border-color:var(--purple-border);}
+.nav-card.c-purple:hover .card-img{background:#c8bbff!important;}
+.nav-card.c-purple .card-arrow{color:var(--purple);}
+.nav-card.c-amber:hover{transform:translateY(-16px) scale(1.03) rotate(-1deg);box-shadow:0 28px 56px rgba(180,83,9,0.25),0 0 0 1.5px var(--amber-border);border-color:var(--amber-border);}
+.nav-card.c-amber:hover .card-img{background:#fde68a!important;}
+.nav-card.c-amber .card-arrow{color:var(--amber);}
+.nav-card.c-red:hover{transform:translateY(-16px) scale(1.03) rotate(1deg);box-shadow:0 28px 56px rgba(185,28,28,0.25),0 0 0 1.5px var(--red-border);border-color:var(--red-border);}
+.nav-card.c-red:hover .card-img{background:#ffd4d4!important;}
+.nav-card.c-red .card-arrow{color:var(--red);}
+.card-img{width:100%;height:80px;background:var(--cream-dark);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:background 0.3s ease;}
+.card-img-icon{font-size:32px;opacity:0.7;}
+.nav-card.c-blue .card-img-icon{color:var(--blue);}
+.nav-card.c-green .card-img-icon{color:var(--green);}
+.nav-card.c-purple .card-img-icon{color:var(--purple);}
+.nav-card.c-amber .card-img-icon{color:var(--amber);}
+.nav-card.c-red .card-img-icon{color:var(--red);}
+.nav-card.c-blue{border-color:var(--blue-border);}.nav-card.c-blue .card-img{background:var(--blue-light);}
+.nav-card.c-green{border-color:var(--green-border);}.nav-card.c-green .card-img{background:var(--green-light);}
+.nav-card.c-purple{border-color:var(--purple-border);}.nav-card.c-purple .card-img{background:var(--purple-light);}
+.nav-card.c-amber{border-color:var(--amber-border);}.nav-card.c-amber .card-img{background:var(--amber-light);}
+.nav-card.c-red{border-color:var(--red-border);}.nav-card.c-red .card-img{background:var(--red-light);}
+.card-body{padding:18px 22px 20px;flex:1;display:flex;flex-direction:column;gap:5px;}
+.card-label{font-size:10px;letter-spacing:0.16em;color:var(--ink-muted);}
+.card-name{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--ink);line-height:1.2;}
+.card-desc{font-size:12px;color:var(--ink-muted);line-height:1.6;max-height:0;overflow:hidden;opacity:0;margin-top:0;transition:max-height 0.35s ease,opacity 0.25s ease,margin-top 0.3s ease;}
+.nav-card:hover .card-desc{max-height:80px;opacity:1;margin-top:2px;}
+.card-arrow{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;letter-spacing:0.08em;max-height:0;overflow:hidden;opacity:0;margin-top:0;transition:max-height 0.3s ease,opacity 0.25s ease,margin-top 0.3s ease;}
+.nav-card:hover .card-arrow{max-height:32px;opacity:1;margin-top:8px;}
+.nav-card:hover .card-arrow svg{animation:arrow-nudge 0.35s cubic-bezier(0.34,1.56,0.64,1) 0.1s both;}
+@keyframes arrow-nudge{to{transform:translateX(4px);}}
+.sidebar{background:#fff;border:1px solid var(--border);border-radius:20px;padding:24px 22px;position:sticky;top:24px;}
+.sidebar-title{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.sidebar-group{margin-bottom:14px;}
+.sidebar-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--ink-muted);margin-bottom:4px;padding-left:12px;}
+.sidebar-links{display:flex;flex-direction:column;gap:2px;}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;text-decoration:none;color:var(--ink-soft);font-size:13px;font-weight:500;transition:background 0.15s,color 0.15s;}
+.sidebar-link:hover{background:var(--cream-dark);color:var(--ink);}
+.sidebar-link-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.sidebar-divider{height:1px;background:var(--border);margin:10px 0;}
+.sidebar-note{font-size:11px;color:var(--ink-muted);line-height:1.6;font-style:italic;padding:0 4px;margin-top:10px;}
+footer{position:fixed;bottom:0;left:0;right:0;padding:14px 40px;border-top:1px solid var(--border);background:var(--cream-dark);display:flex;justify-content:space-between;align-items:center;}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--ink);}
+.footer-left span{color:var(--orange);}
+.footer-right{font-size:11px;color:var(--ink-muted);letter-spacing:0.06em;}
+@media(max-width:900px){.hub-layout{grid-template-columns:1fr;}.sidebar{position:static;}body{padding:40px 20px 100px;}h1{font-size:36px;}}
+</style>
+</head>
+<body>
+
+<div class="breadcrumb">
+  <a href="../../index.html">Zscaler Courses</a>
+  <span class="breadcrumb-sep">›</span>
+  <a href="../data-security-hub.html">Data Security</a>
+  <span class="breadcrumb-sep">›</span>
+  EDU-220
+</div>
+
+<div class="page-title">
+  <div class="day-badge"><span class="day-badge-dot"></span> EDU-220 · Data Security</div>
+  <h1>Data <em>Security</em></h1>
+  <p class="page-tagline">Zero Trust data protection across motion, rest, cloud, endpoints, and BYOD.</p>
+</div>
+
+<div class="hub-layout">
+  <div class="card-col">
+
+    <div class="section-group-label">SECTION 1</div>
+
+    <a class="nav-card c-blue" href="1 - Introduction to Data Security/edu-220-intro-data-security.html">
+      <div class="card-img"><div class="card-img-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div></div>
+      <div class="card-body">
+        <div class="card-label">SECTION 1</div>
+        <div class="card-name">Introduction to Data Security</div>
+        <div class="card-desc">Why data security matters, the major breach timeline (2021–2025), cost of a breach ($4.88M avg), and Zscaler's unified approach with AI-driven auto discovery.</div>
+        <div class="card-arrow">Open lesson <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+
+    <div class="section-group-label">SECTION 2 — ADVANCED DATA SECURITY SERVICES</div>
+
+    <a class="nav-card c-green" href="2A Data in Motion/edu-220-data-in-motion.html">
+      <div class="card-img"><div class="card-img-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div></div>
+      <div class="card-body">
+        <div class="card-label">SECTION 2A</div>
+        <div class="card-name">Secure Data in Motion</div>
+        <div class="card-desc">DLP policies (content vs context-driven), UEBA alerts, parallel policy processing, Gen AI Security, and outbound email DLP with 6-step flow.</div>
+        <div class="card-arrow">Open lesson <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+
+    <a class="nav-card c-purple" href="2B Secure SaaS Data/edu-220-secure-saas-data.html">
+      <div class="card-img"><div class="card-img-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></div></div>
+      <div class="card-body">
+        <div class="card-label">SECTION 2B</div>
+        <div class="card-name">Secure SaaS Data</div>
+        <div class="card-desc">Out-of-Band CASB (5 use cases), SSPM, SaaS Assets Summary Report, and AppTotal Security for third-party app discovery, analysis, and remediation.</div>
+        <div class="card-arrow">Open lesson <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+
+    <a class="nav-card c-amber" href="2C Secure Cloud, Endpoint Data, and BYOD!/edu-220-cloud-endpoint-byod.html">
+      <div class="card-img"><div class="card-img-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div></div>
+      <div class="card-body">
+        <div class="card-label">SECTION 2C</div>
+        <div class="card-name">Secure Cloud, Endpoint &amp; BYOD</div>
+        <div class="card-desc">DSPM (5-step cloud flow), Endpoint DLP with User Confirmation, Endpoint DLP Report, Browser Isolation and PRA for unmanaged devices.</div>
+        <div class="card-arrow">Open lesson <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+
+    <div class="section-group-label">SECTION 3</div>
+
+    <a class="nav-card c-red" href="3 - Incident Management Capabilities/edu-220-incident-management.html">
+      <div class="card-img"><div class="card-img-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div></div>
+      <div class="card-body">
+        <div class="card-label">SECTION 3</div>
+        <div class="card-name">Incident Management</div>
+        <div class="card-desc">Notification options (browser, Slack/Teams, Client Connector), admin SIEM/ICAP/ServiceNow integration, and Zscaler Workflow Automation for DLP incident lifecycle management.</div>
+        <div class="card-arrow">Open lesson <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+
+    <div class="section-group-label">RECAP</div>
+
+    <a class="nav-card c-purple" href="Recap/edu-220-recap.html">
+      <div class="card-img"><div class="card-img-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div></div>
+      <div class="card-body">
+        <div class="card-label">COURSE RECAP</div>
+        <div class="card-name">Course Recap &amp; QRG</div>
+        <div class="card-desc">Seven key themes, six learning outcomes, twelve-point QRG summary, and three cartoon illustrations covering the core concepts of EDU-220.</div>
+        <div class="card-arrow">Open recap <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-title">EDU-220 Navigation</div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-group-label">SECTION 1</div>
+      <div class="sidebar-links">
+        <a class="sidebar-link" href="1 - Introduction to Data Security/edu-220-intro-data-security.html">
+          <span class="sidebar-link-dot" style="background:var(--blue);"></span>Introduction to Data Security
+        </a>
+      </div>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-group-label">SECTION 2</div>
+      <div class="sidebar-links">
+        <a class="sidebar-link" href="2A Data in Motion/edu-220-data-in-motion.html">
+          <span class="sidebar-link-dot" style="background:var(--green);"></span>2A — Data in Motion
+        </a>
+        <a class="sidebar-link" href="2B Secure SaaS Data/edu-220-secure-saas-data.html">
+          <span class="sidebar-link-dot" style="background:var(--purple);"></span>2B — Secure SaaS Data
+        </a>
+        <a class="sidebar-link" href="2C Secure Cloud, Endpoint Data, and BYOD!/edu-220-cloud-endpoint-byod.html">
+          <span class="sidebar-link-dot" style="background:var(--amber);"></span>2C — Cloud, Endpoint &amp; BYOD
+        </a>
+      </div>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-group-label">SECTION 3</div>
+      <div class="sidebar-links">
+        <a class="sidebar-link" href="3 - Incident Management Capabilities/edu-220-incident-management.html">
+          <span class="sidebar-link-dot" style="background:var(--red);"></span>Incident Management
+        </a>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-links">
+      <a class="sidebar-link" href="Recap/edu-220-recap.html">
+        <span class="sidebar-link-dot" style="background:var(--purple);"></span>Course Recap &amp; QRG
+      </a>
+    </div>
+
+    <div class="sidebar-note">Questions and notes persist per page via localStorage.</div>
+  </aside>
+</div>
+
+<footer>
+  <div class="footer-left">EDU-220<span>.</span></div>
+  <div class="footer-right">Zscaler Data Security</div>
+</footer>
+
+</body>
+</html>

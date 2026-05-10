@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intro to AI Study Guide — EDU-110</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#dbeafe;--surface:#ffffff;--surface-2:#eff6ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1e35;--text-soft:#1e3a5c;--text-muted:#5a7a99;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.08);--blue-dim:#bfdbfe;--blue-surface:#e8f0fb;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:flex-end;justify-content:space-between;gap:32px;background:var(--text);}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);letter-spacing:0.08em;margin-bottom:12px;}
+.breadcrumb a{color:var(--blue);text-decoration:none;}
+.breadcrumb-sep{color:var(--border);}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#ffffff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(147,197,253,0.1);border:1px solid rgba(147,197,253,0.2);padding:5px 14px;border-radius:20px;font-size:11px;color:#93c5fd;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#93c5fd;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--blue);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--blue);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--blue-glow);border:1px solid var(--blue-dim);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--blue);font-weight:600;}
+.definition{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:12px;}
+.definition-term{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.definition-body{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--amber-light);border-color:var(--amber-border);}
+.callout-note .callout-header{color:var(--amber);}
+.callout-note .callout-icon{background:var(--amber-border);color:var(--amber);}
+.callout-note .callout-body{color:#7a5000;}
+.callout-analogy{background:var(--green-light);border-color:var(--green-border);}
+.callout-analogy .callout-header{color:var(--green);}
+.callout-analogy .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-analogy .callout-body{color:#0f4a28;}
+.callout-tip{background:var(--blue-glow);border-color:var(--blue-dim);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-tip .callout-icon{background:var(--blue-dim);color:var(--blue);}
+.callout-tip .callout-body{color:var(--text-soft);}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+.compare-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+.compare-table th{background:var(--text);color:#fff;padding:10px 14px;text-align:left;font-weight:500;font-size:11px;letter-spacing:0.08em;}
+.compare-table th:first-child{border-radius:10px 0 0 0;}
+.compare-table th:last-child{border-radius:0 10px 0 0;}
+.compare-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-soft);vertical-align:top;line-height:1.6;}
+.compare-table tr:nth-child(even) td{background:var(--surface-2);}
+.compare-table tr:last-child td:first-child{border-radius:0 0 0 10px;}
+.compare-table tr:last-child td:last-child{border-radius:0 0 10px 0;}
+.flow-steps{display:flex;flex-direction:column;gap:0;margin:16px 0 24px;}
+.flow-step{display:flex;align-items:flex-start;gap:14px;position:relative;}
+.flow-step:not(:last-child)::after{content:'';position:absolute;left:17px;top:38px;width:2px;height:calc(100% - 6px);background:var(--border);}
+.flow-num{width:36px;height:36px;border-radius:50%;background:var(--text);color:#93c5fd;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;position:relative;z-index:1;}
+.flow-text{padding:6px 0 22px;font-size:13px;color:var(--text-soft);line-height:1.6;}
+.flow-text strong{color:var(--text);}
+.flow-text .phase-word{display:inline-block;background:var(--blue);color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;letter-spacing:0.08em;margin-left:6px;vertical-align:middle;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#93c5fd;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#7a9ab8;line-height:1.6;}
+.sidebar-note{background:var(--blue-glow);border:1px solid var(--blue-dim);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text-soft);line-height:1.6;margin-bottom:10px;font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--blue);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}}
+
+/* ── QUESTIONS PANEL ── */
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover{background:var(--surface-2);}
+.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);transition:transform 0.2s;}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#93c5fd;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+
+/* ── LESSON TOOLS ── */
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--blue);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#93c5fd;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#1a2e4a;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+@media(max-width:900px){.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+
+/* ── IMAGE PLACEHOLDERS ── */
+.img-placeholder{margin-top:12px;padding-top:10px;border-top:1px solid rgba(0,0,0,0.1);}
+.img-toggle{background:none;border:none;padding:0;font-family:'Epilogue',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;cursor:pointer;color:inherit;opacity:0.65;display:flex;align-items:center;gap:5px;transition:opacity 0.15s;}
+.img-toggle:hover{opacity:1;}
+.img-chevron{font-size:9px;display:inline-block;transition:transform 0.2s;}
+.img-placeholder.open .img-chevron{transform:rotate(90deg);}
+.img-placeholder-body{display:none;margin-top:12px;}
+.img-placeholder.open .img-placeholder-body{display:block;}
+.img-frame{border:1.5px dashed rgba(0,0,0,0.18);border-radius:12px;overflow:hidden;padding:4px;background:rgba(255,255,255,0.38);}
+.img-frame img{width:100%;border-radius:9px;display:block;}
+.img-frame-text{border:1.5px dashed rgba(0,0,0,0.18);border-radius:12px;padding:20px 18px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;background:rgba(255,255,255,0.38);}
+.img-frame-icon{opacity:0.35;}
+.img-prompt-label{font-size:9px;letter-spacing:0.18em;font-weight:600;opacity:0.5;text-transform:uppercase;}
+.img-prompt-text{font-size:12px;line-height:1.7;font-style:italic;text-align:center;opacity:0.8;max-width:440px;color:inherit;}
+.img-size{font-size:10px;font-weight:600;letter-spacing:0.14em;opacity:0.45;margin-top:2px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      Intro to AI · EDU-110
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Intro to AI · EDU-110</div>
+    <h1>Intro to <em>AI</em></h1>
+    <p>Five lessons covering AI foundations, machine learning, LLMs, RAG, MCP, computer vision, and agentic systems.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Understand the <em>foundations first.</em></div>
+  <p class="motivation-sub">Every advanced AI concept — RAG, agents, MCP — is built on what these five lessons establish. Get these right and the rest follows.</p>
+</div>
+
+<!-- Questions Panel -->
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-l1',this)">Lesson 1 · AI Foundations</button>
+  <button class="nav-tab" onclick="navTo('section-l2',this)">Lesson 2 · Generative AI</button>
+  <button class="nav-tab" onclick="navTo('section-l3',this)">Lesson 3 · How LLMs Work</button>
+  <button class="nav-tab" onclick="navTo('section-l4',this)">Lesson 4 · RAG, MCP &amp; Vision</button>
+  <button class="nav-tab" onclick="navTo('section-l5',this)">Lesson 5 · Agentic AI</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- LESSON 1 -->
+  <div class="section-block" id="section-l1">
+    <div class="section-label">LESSON 1</div>
+    <h2>AI Foundations and Evolution</h2>
+    <p>Artificial Intelligence is not a single technology — it is a collection of techniques that allow machines to learn from patterns, solve problems, and support human decisions. Understanding what AI actually does at a foundational level is essential before moving into how modern systems like LLMs and agents are built.</p>
+
+    <div class="key-concept">
+      <strong>Point 1:</strong> AI helps machines learn from patterns, solve problems, and support decisions. It does not reason the way humans do — it finds and applies statistical regularities in data.
+    </div>
+    <div class="key-concept">
+      <strong>Point 2:</strong> The quality of AI outcomes depends on three things: the quality of the training data, the design of the model, and the degree of human oversight in how results are used.
+    </div>
+    <div class="key-concept">
+      <strong>Point 3:</strong> Modern AI evolved step by step — from Machine Learning, to Neural Networks, to Deep Learning, and then to Transformer architectures that power today's large language models.
+    </div>
+
+    <h3>The Evolution of AI — Step by Step</h3>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-text">
+          <strong>Machine Learning</strong> <span class="phase-word">PATTERNS</span><br>
+          Systems that learn from labelled examples instead of being explicitly programmed with rules. Given enough examples, a model infers the relationship between inputs and outputs.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-text">
+          <strong>Neural Networks</strong> <span class="phase-word">LAYERS</span><br>
+          Inspired loosely by the brain, neural networks stack interconnected layers of nodes. Each layer transforms the input slightly, allowing the system to learn complex non-linear relationships.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-text">
+          <strong>Deep Learning</strong> <span class="phase-word">DEPTH</span><br>
+          Neural networks with many layers. Depth allows the model to learn hierarchical representations — edges → shapes → objects in vision; words → phrases → meaning in language.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <div class="flow-text">
+          <strong>Transformers</strong> <span class="phase-word">ATTENTION</span><br>
+          The architecture behind modern LLMs. Transformers use an attention mechanism that lets the model weigh the relevance of every word in a sequence relative to every other word — enabling language understanding at scale.
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-analogy">
+      <div class="callout-header"><div class="callout-icon">⟳</div>ANALOGY — DATA QUALITY</div>
+      <div class="callout-body">An AI model trained on bad data is like a new employee whose entire training came from incorrect manuals. They will perform confidently and consistently — and be consistently wrong. Garbage in, garbage out is not a cliché; it is the single most important constraint in applied AI.</div>
+      <div class="img-placeholder">
+        <button class="img-toggle" onclick="this.closest('.img-placeholder').classList.toggle('open')"><span class="img-chevron">▸</span> Image</button>
+        <div class="img-placeholder-body">
+          <div class="img-frame">
+            <img src="Images/1.png" alt="Data quality analogy — employee presenting nonsense from bad manuals">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div class="tool-col">
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-l1" placeholder="What are you unsure about from this lesson?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('l1','Lesson 1 · AI Foundations')">Add Question</button></div>
+      </div>
+      <div class="tool-col">
+        <div class="tool-label">MY NOTES</div>
+        <textarea class="tool-textarea notes-ta" id="notes-l1" placeholder="Write your notes here..." rows="5"></textarea>
+        <div class="tool-row"><span class="save-status" id="ns-l1"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LESSON 2 -->
+  <div class="section-block" id="section-l2">
+    <div class="section-label">LESSON 2</div>
+    <h2>From Machine Learning to Generative AI</h2>
+    <p>Traditional programming and machine learning both process inputs to produce outputs — but they differ fundamentally in how that output is produced. Generative AI adds a third mode: instead of classifying or predicting, it <em>creates</em>.</p>
+
+    <h3>Three Modes of Computing</h3>
+    <table class="compare-table">
+      <thead><tr><th>Mode</th><th>How it works</th><th>Example output</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Traditional programming</strong></td><td>Developer writes explicit rules. Given input A, return output B. No learning — logic is hard-coded.</td><td>Calculating tax, sorting a list</td></tr>
+        <tr><td><strong>Machine Learning</strong></td><td>System learns patterns from labelled training data. Generalises rules it was never explicitly told.</td><td>Spam detection, image classification</td></tr>
+        <tr><td><strong>Generative AI</strong></td><td>System creates new content by learning the statistical distribution of training data, then sampling from it.</td><td>Text, images, code, audio, video</td></tr>
+      </tbody>
+    </table>
+
+    <div class="key-concept">
+      <strong>The shift:</strong> ML asks "what category does this belong to?" or "what value comes next?" Generative AI asks "what new thing should I create?" — a fundamentally different task with fundamentally different implications for security and work.
+    </div>
+
+    <h3>Why This Matters for Security</h3>
+    <p>When AI can generate convincing text, realistic images, working code, and synthesised audio, the threat surface changes. Social engineering attacks can be personalised at scale. Malicious code can be scaffolded quickly. Deepfakes become a real-world tool. Understanding that GenAI creates rather than retrieves is the starting point for understanding those risks.</p>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">→</div>KEY DISTINCTION TO REMEMBER</div>
+      <div class="callout-body">Machine Learning = <strong>recognise and classify</strong>. Generative AI = <strong>create and produce</strong>. The exam or any quiz on this material will probe whether you understand which mode is which — keep the boundary sharp.</div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div class="tool-col">
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-l2" placeholder="What are you unsure about from this lesson?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('l2','Lesson 2 · Generative AI')">Add Question</button></div>
+      </div>
+      <div class="tool-col">
+        <div class="tool-label">MY NOTES</div>
+        <textarea class="tool-textarea notes-ta" id="notes-l2" placeholder="Write your notes here..." rows="5"></textarea>
+        <div class="tool-row"><span class="save-status" id="ns-l2"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LESSON 3 -->
+  <div class="section-block" id="section-l3">
+    <div class="section-label">LESSON 3</div>
+    <h2>How LLMs Work</h2>
+    <p>A Large Language Model does not look things up. It does not search a database of facts. It predicts — one token at a time — what text is most plausible given everything that came before it. This distinction matters enormously when evaluating the reliability of AI output.</p>
+
+    <div class="key-concept">
+      <strong>Point 1 — Prediction, not retrieval:</strong> LLMs predict the most plausible next token based on patterns learned during training. A fluent, confident sentence is not evidence of factual accuracy.
+    </div>
+    <div class="key-concept">
+      <strong>Point 2 — Hallucination is structural:</strong> Because LLMs generate plausible-sounding continuations, they can produce incorrect information with high apparent confidence. This is called hallucination and is a fundamental property of the architecture — not a bug to be patched.
+    </div>
+    <div class="key-concept">
+      <strong>Point 3 — Base LLM constraints:</strong> A base LLM (without additional tooling) has no enterprise memory, no ability to take actions in the world, and no awareness of events after its training cutoff date.
+    </div>
+
+    <h3>The Three Hard Limits of a Base LLM</h3>
+    <div class="definition">
+      <div class="definition-term">No enterprise memory</div>
+      <div class="definition-body">A base LLM has no access to your organisation's documents, emails, tickets, or data. It only knows what was in its public training corpus. Enterprise knowledge must be injected at inference time — this is what RAG solves.</div>
+    </div>
+    <div class="definition">
+      <div class="definition-term">No hands / no agency</div>
+      <div class="definition-body">A base LLM can only produce text. It cannot send an email, run a query, call an API, or take any action in the world. Agency requires external tooling — this is what MCP and agentic systems solve.</div>
+    </div>
+    <div class="definition">
+      <div class="definition-term">Knowledge cutoff</div>
+      <div class="definition-body">LLM training is a snapshot in time. Anything that happened after the training cutoff is unknown to the model. It will still answer questions about post-cutoff events — confidently, and incorrectly.</div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>HALLUCINATION IS NOT A MINOR EDGE CASE</div>
+      <div class="callout-body">LLMs will invent citations, make up product features, fabricate statistics, and describe events that never happened — all in fluent, authoritative prose. In a security context, this means AI-assisted decisions must include human verification. Fluency is not accuracy.</div>
+    </div>
+
+    <div class="callout callout-analogy">
+      <div class="callout-header"><div class="callout-icon">⟳</div>ANALOGY — AUTOCOMPLETE AT SCALE</div>
+      <div class="callout-body">An LLM is essentially the autocomplete on your phone, trained on a vastly larger corpus. Your phone's autocomplete suggests "sounds good" because that is statistically what tends to follow "thanks for letting me know" — it does not know whether you actually think it sounds good. LLMs work the same way, just at a scale that makes the output feel like genuine understanding.</div>
+      <div class="img-placeholder">
+        <button class="img-toggle" onclick="this.closest('.img-placeholder').classList.toggle('open')"><span class="img-chevron">▸</span> Image</button>
+        <div class="img-placeholder-body">
+          <div class="img-frame">
+            <img src="Images/2.png" alt="Autocomplete at scale analogy — giant smartphone with tiny person below">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div class="tool-col">
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-l3" placeholder="What are you unsure about from this lesson?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('l3','Lesson 3 · How LLMs Work')">Add Question</button></div>
+      </div>
+      <div class="tool-col">
+        <div class="tool-label">MY NOTES</div>
+        <textarea class="tool-textarea notes-ta" id="notes-l3" placeholder="Write your notes here..." rows="5"></textarea>
+        <div class="tool-row"><span class="save-status" id="ns-l3"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LESSON 4 -->
+  <div class="section-block" id="section-l4">
+    <div class="section-label">LESSON 4</div>
+    <h2>SLMs, RAG, MCP, and Computer Vision</h2>
+    <p>The three hard limits of a base LLM — no memory, no agency, no current knowledge — each have a corresponding solution. Lesson 4 introduces the building blocks that extend what a base model can do.</p>
+
+    <h3>RAG — Retrieval-Augmented Generation</h3>
+    <p>RAG gives an AI model memory by retrieving relevant information at the moment a query is made, then injecting that context into the prompt before generating a response. The model's answer is grounded in the retrieved content rather than solely in what it learned during training.</p>
+    <div class="key-concept">
+      <strong>What RAG solves:</strong> Enterprise knowledge access and knowledge cutoff. Instead of retraining the model on company data, you retrieve the right documents at query time and hand them to the model as context.
+    </div>
+
+    <h3>MCP — Model Context Protocol</h3>
+    <p>MCP gives an AI the ability to act. It is a protocol that connects an AI model to external tools, systems, and workflows — allowing it to take actions such as calling APIs, querying databases, sending messages, or executing code.</p>
+    <div class="key-concept">
+      <strong>What MCP solves:</strong> Agency. Without MCP (or equivalent tooling), an LLM can only produce text. With MCP, it can interact with the world — search the web, write to a file, trigger a workflow.
+    </div>
+
+    <h3>Computer Vision</h3>
+    <p>Computer Vision gives AI the ability to interpret visual input — images, video, diagrams, screenshots. In a multimodal system, the vision component feeds its interpretation to the language model, allowing the system to reason about what it "sees."</p>
+    <div class="key-concept">
+      <strong>What Computer Vision adds:</strong> Perception of visual data. A model with vision can read a chart, identify objects in a video feed, interpret a screenshot, or process a scanned document — as part of a larger reasoning or agentic system.
+    </div>
+
+    <h3>How They Fit Together</h3>
+    <table class="compare-table">
+      <thead><tr><th>Capability</th><th>What it gives the model</th><th>Solves which base LLM limit</th></tr></thead>
+      <tbody>
+        <tr><td><strong>RAG</strong></td><td>Memory — access to enterprise and real-time knowledge</td><td>No enterprise memory · Knowledge cutoff</td></tr>
+        <tr><td><strong>MCP</strong></td><td>Hands — ability to call tools, systems, and APIs</td><td>No agency / no actions</td></tr>
+        <tr><td><strong>Computer Vision</strong></td><td>Eyes — ability to interpret images and video</td><td>Text-only input limitation</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-analogy">
+      <div class="callout-header"><div class="callout-icon">⟳</div>ANALOGY — BUILDING A COMPLETE EMPLOYEE</div>
+      <div class="callout-body">A base LLM is a highly educated person locked in a room with no windows, no files, and no phone. RAG hands them a filing cabinet of relevant documents. MCP gives them a phone and a computer to act on the outside world. Computer Vision opens the window so they can see what's happening. Together, you have something that starts to resemble a capable knowledge worker.</div>
+      <div class="img-placeholder">
+        <button class="img-toggle" onclick="this.closest('.img-placeholder').classList.toggle('open')"><span class="img-chevron">▸</span> Image</button>
+        <div class="img-placeholder-body">
+          <div class="img-frame">
+            <img src="Images/3.png" alt="Building a complete employee analogy — person in room receiving filing cabinet, phone, and window">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div class="tool-col">
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-l4" placeholder="What are you unsure about from this lesson?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('l4','Lesson 4 · RAG, MCP &amp; Vision')">Add Question</button></div>
+      </div>
+      <div class="tool-col">
+        <div class="tool-label">MY NOTES</div>
+        <textarea class="tool-textarea notes-ta" id="notes-l4" placeholder="Write your notes here..." rows="5"></textarea>
+        <div class="tool-row"><span class="save-status" id="ns-l4"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LESSON 5 -->
+  <div class="section-block" id="section-l5">
+    <div class="section-label">LESSON 5</div>
+    <h2>Agentic AI</h2>
+    <p>Agentic AI is what you get when memory, action, and perception are combined in a single system that can pursue a goal over multiple steps. Instead of answering one question and stopping, an AI agent can plan, act, observe the result, and continue — until the task is complete.</p>
+
+    <div class="key-concept">
+      <strong>The shift:</strong> A base LLM is a tool that <em>answers</em>. An AI agent is a system that can <em>execute</em>. This changes the risk profile, the capability ceiling, and what governance and oversight look like.
+    </div>
+
+    <h3>The Three Capabilities of an Agent</h3>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-text">
+          <strong>Perceive</strong> <span class="phase-word">INPUT</span><br>
+          The agent takes in information from its environment — text, tool results, images, real-time data. Computer Vision and RAG are what give an agent rich perceptual inputs beyond plain text.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-text">
+          <strong>Reason</strong> <span class="phase-word">PLAN</span><br>
+          The agent uses an LLM to reason about its current state, its goal, and what action to take next. This is where the intelligence lives — deciding what to do given what has been observed.
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-text">
+          <strong>Act</strong> <span class="phase-word">OUTPUT</span><br>
+          The agent takes an action using a tool (via MCP or equivalent) — querying a database, calling an API, writing a file, sending a request. It then observes the result and decides what to do next.
+        </div>
+      </div>
+    </div>
+
+    <h3>Why This Matters for Security</h3>
+    <p>When AI can act autonomously over multiple steps, the security model changes. A prompt injection attack on a passive LLM produces bad text. A prompt injection attack on an agent with access to email, file systems, and APIs can cause real damage. Agentic systems require new controls: least-privilege tool access, human-in-the-loop checkpoints, and audit trails for every action taken.</p>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>AGENTIC AI AMPLIFIES RISK</div>
+      <div class="callout-body">The same capabilities that make an agent useful — memory, tools, multi-step reasoning — also make it a larger attack surface. An agent that can read files, send requests, and write data is not just a chatbot. It is a system with real-world reach. Security architecture must account for this from the start.</div>
+    </div>
+
+    <div class="callout callout-analogy">
+      <div class="callout-header"><div class="callout-icon">⟳</div>ANALOGY — CHATBOT VS ASSISTANT</div>
+      <div class="callout-body">A base LLM is a very knowledgeable person who can only talk. An AI agent is a person who can talk, make calls, open files, write reports, and follow up on tasks — all without being asked again after the initial instruction. The capability difference is enormous. So is the responsibility difference.</div>
+      <div class="img-placeholder">
+        <button class="img-toggle" onclick="this.closest('.img-placeholder').classList.toggle('open')"><span class="img-chevron">▸</span> Image</button>
+        <div class="img-placeholder-body">
+          <div class="img-frame">
+            <img src="Images/4.png" alt="Chatbot vs assistant analogy — split scene of passive vs active person">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">→</div>COURSE SUMMARY — THE ARC</div>
+      <div class="callout-body">Lesson 1: AI learns from patterns. Lesson 2: GenAI creates, not just classifies. Lesson 3: LLMs predict — fluent is not factual. Lesson 4: RAG, MCP, and Vision each solve one base LLM limit. Lesson 5: Combine all three and you get an agent that can pursue goals. Each lesson builds directly on the last.</div>
+      <div class="img-placeholder">
+        <button class="img-toggle" onclick="this.closest('.img-placeholder').classList.toggle('open')"><span class="img-chevron">▸</span> Image</button>
+        <div class="img-placeholder-body">
+          <div class="img-frame">
+            <img src="Images/5.png" alt="Course summary — the arc from AI foundations to agentic systems">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div class="tool-col">
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-l5" placeholder="What are you unsure about from this lesson?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('l5','Lesson 5 · Agentic AI')">Add Question</button></div>
+      </div>
+      <div class="tool-col">
+        <div class="tool-label">MY NOTES</div>
+        <textarea class="tool-textarea notes-ta" id="notes-l5" placeholder="Write your notes here..." rows="5"></textarea>
+        <div class="tool-row"><span class="save-status" id="ns-l5"></span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main-content -->
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE — 5 LESSONS</div>
+    <div class="quick-ref"><div class="quick-ref-term">LESSON 1 · AI FOUNDATIONS</div><div class="quick-ref-def">AI learns from patterns. Quality depends on data, model design, and human oversight. Evolution: ML → Neural Nets → Deep Learning → Transformers.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">LESSON 2 · GENERATIVE AI</div><div class="quick-ref-def">Traditional = rules. ML = classify. GenAI = create. Generates text, images, code, audio, video. Major shift for work and security.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">LESSON 3 · HOW LLMS WORK</div><div class="quick-ref-def">Predict next token, not retrieve truth. Fluent ≠ factual. Base limits: no memory, no agency, knowledge cutoff.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">LESSON 4 · RAG, MCP, VISION</div><div class="quick-ref-def">RAG = memory. MCP = hands (action). Computer Vision = eyes. Each solves one base LLM limit.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">LESSON 5 · AGENTIC AI</div><div class="quick-ref-def">Memory + action + perception = agent. Perceive → reason → act. Moves from answering to executing. New security surface.</div></div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">CHECKLIST — EDU-110</div>
+    <ul class="subtopic-list">
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Explain AI evolution (ML → Neural Nets → Deep Learning → Transformers) from memory</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>State the difference between traditional programming, ML, and GenAI in one sentence each</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Explain why hallucination is structural — not a fixable bug</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Name the three base LLM limits and which technology solves each</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Describe what RAG does in one sentence without using the word "retrieval"</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Explain what MCP gives an AI agent that a base LLM lacks</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Describe an agentic AI loop: perceive → reason → act</span></li>
+      <li onclick="toggleDone(this)"><div class="subtopic-check"></div><span>Explain why agentic AI changes the security risk model</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="sidebar-note">Transformer — the neural network architecture (attention mechanism) behind modern LLMs.</div>
+    <div class="sidebar-note">Hallucination — when an LLM produces confident, plausible-sounding text that is factually wrong.</div>
+    <div class="sidebar-note">RAG — Retrieval-Augmented Generation. Injects retrieved documents into the prompt at inference time.</div>
+    <div class="sidebar-note">MCP — Model Context Protocol. Connects an AI model to external tools so it can take real-world actions.</div>
+    <div class="sidebar-note">Agentic AI — a system combining perception, reasoning, and action to pursue goals over multiple steps.</div>
+  </div>
+
+</div><!-- end sidebar -->
+</main>
+
+<footer>
+  <div class="footer-left">EDU-110<span>.</span></div>
+  <div class="footer-right">Intro to AI · Zscaler Short Course · Study Guide · 5 Lessons</div>
+</footer>
+
+<script>
+// ── NAV ──
+function navTo(id,el){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const target=document.getElementById(id);
+  if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}
+}
+
+// ── CHECKLIST ──
+function toggleDone(li){li.classList.toggle('done');}
+
+// ── QUESTIONS PANEL ──
+const LESSONS={l1:'Lesson 1 · AI Foundations',l2:'Lesson 2 · Generative AI',l3:'Lesson 3 · How LLMs Work',l4:'Lesson 4 · RAG, MCP & Vision',l5:'Lesson 5 · Agentic AI'};
+
+function toggleQPanel(){
+  const body=document.getElementById('qpanel-body');
+  const header=document.getElementById('qpanel-header');
+  const chevron=document.getElementById('qpanel-chevron');
+  const open=body.classList.toggle('open');
+  header.classList.toggle('open',open);
+  chevron.textContent=open?'▴':'▾';
+  localStorage.setItem('edu110-qpanel-open',open);
+}
+
+function getQuestions(){return JSON.parse(localStorage.getItem('edu110-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem('edu110-questions',JSON.stringify(qs));}
+
+function addQuestion(lessonKey,lessonName){
+  const ta=document.getElementById('q-'+lessonKey);
+  const text=ta.value.trim();
+  if(!text)return;
+  const qs=getQuestions();
+  qs.push({id:Date.now(),lesson:lessonKey,lessonName,text});
+  saveQuestions(qs);
+  ta.value='';
+  renderQPanel();
+  // Auto-open panel so user sees their question
+  const body=document.getElementById('qpanel-body');
+  if(!body.classList.contains('open'))toggleQPanel();
+}
+
+function deleteQuestion(id){
+  saveQuestions(getQuestions().filter(q=>q.id!==id));
+  renderQPanel();
+}
+
+function renderQPanel(){
+  const qs=getQuestions();
+  const count=document.getElementById('qpanel-count');
+  count.textContent=qs.length;
+  count.style.display=qs.length?'inline':'none';
+  const hint=document.querySelector('.qpanel-hint');
+  if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';
+  const body=document.getElementById('qpanel-body');
+  if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each lesson.</p>';return;}
+  const groups={};
+  Object.keys(LESSONS).forEach(k=>{groups[k]=[];});
+  qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});
+  let html='';let num=0;
+  Object.entries(groups).forEach(([key,items])=>{
+    if(!items.length)return;
+    html+=`<div class="q-group"><div class="q-group-label">${LESSONS[key]}</div>`;
+    items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});
+    html+='</div>';
+  });
+  body.innerHTML=html;
+}
+
+// ── NOTES ──
+function initNotes(){
+  document.querySelectorAll('.notes-ta').forEach(ta=>{
+    const saved=localStorage.getItem('edu110-'+ta.id);
+    if(saved)ta.value=saved;
+    ta.addEventListener('input',()=>{
+      localStorage.setItem('edu110-'+ta.id,ta.value);
+      const statusId='ns-'+ta.id.replace('notes-','');
+      const status=document.getElementById(statusId);
+      if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}
+    });
+  });
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded',()=>{
+  renderQPanel();
+  initNotes();
+  if(localStorage.getItem('edu110-qpanel-open')==='true'){
+    document.getElementById('qpanel-body').classList.add('open');
+    document.getElementById('qpanel-header').classList.add('open');
+    document.getElementById('qpanel-chevron').textContent='▴';
+  }
+});
+</script>
+</body>
+</html>

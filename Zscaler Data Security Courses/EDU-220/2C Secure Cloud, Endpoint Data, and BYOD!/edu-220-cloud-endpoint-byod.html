@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Cloud, Endpoint &amp; BYOD — EDU-220</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fef9ec;--surface:#fff;--surface-2:#fffbf0;--border:#fde68a;--border-dim:#fef3c7;
+  --text:#1c1204;--text-soft:#3d2e08;--text-muted:#9a7c30;
+  --amber:#b45309;--amber-glow:rgba(180,83,9,0.07);--amber-dim:#fde68a;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --purple:#5c35cc;--purple-light:#ece8ff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#7a6020;letter-spacing:0.08em;margin-bottom:12px;}
+.breadcrumb a{color:#fbbf24;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#3d2e08;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#fbbf24;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#fbbf24;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#fbbf24;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--amber);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--amber);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#fbbf24;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--amber);border-bottom-color:var(--amber);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--amber);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--amber-glow);border:1px solid var(--amber-dim);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--amber);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-tip{background:var(--surface-2);border-color:var(--border);}
+.callout-tip .callout-header{color:var(--amber);}
+.callout-tip .callout-icon{background:var(--amber-dim);color:var(--amber);}
+.callout-tip .callout-body{color:var(--text-soft);}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+/* DSPM flow */
+.dspm-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px;}
+.dspm-step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 12px;text-align:center;}
+.dspm-step-name{font-size:12px;font-weight:700;color:var(--amber);margin-bottom:4px;}
+.dspm-step-q{font-size:11px;color:var(--text-muted);line-height:1.4;}
+/* Compare grid */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.cmp-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+.cmp-icon{font-size:18px;margin-bottom:6px;}
+.cmp-name{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.cmp-body{font-size:13px;color:var(--text-soft);line-height:1.65;}
+/* Knowledge check */
+.kcheck{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.kcheck-q{background:var(--text);padding:14px 20px;font-size:13px;color:#fff;line-height:1.6;}
+.kcheck-options{padding:12px 20px;display:flex;flex-direction:column;gap:8px;}
+.kcheck-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;color:var(--text-soft);line-height:1.5;}
+.kcheck-option.correct{background:var(--green-light);border-color:var(--green-border);color:var(--green);font-weight:600;}
+.kcheck-option.wrong{background:var(--red-light);border-color:var(--red-border);color:var(--red);text-decoration:line-through;opacity:0.7;}
+.kcheck-opt-badge{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.correct .kcheck-opt-badge{background:var(--green);color:#fff;}
+.wrong .kcheck-opt-badge{background:var(--red);color:#fff;}
+/* Diagrams */
+.diagram-wrap{margin:20px 0 24px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface);}
+.diagram-img{width:100%;display:block;}
+.diagram-caption{font-size:11px;color:var(--text-muted);padding:10px 16px;border-top:1px solid var(--border);background:var(--surface-2);letter-spacing:0.04em;}
+/* Sidebar */
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#fbbf24;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#c0a060;line-height:1.6;}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--amber);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#fbbf24;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#3d2e08;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--amber);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+@media(max-width:900px){header{padding:24px 20px 20px;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.dspm-flow{grid-template-columns:1fr 1fr;}.compare-grid,.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="breadcrumb"><a href="../../index.html">Zscaler Courses</a><span class="breadcrumb-sep">›</span>Secure Cloud, Endpoint &amp; BYOD · EDU-220</div>
+  <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — 2C: Secure Cloud, Endpoint &amp; BYOD · EDU-220</div>
+  <h1>Secure Cloud, Endpoint <em>&amp; BYOD</em></h1>
+  <p>DSPM for cloud data, Endpoint DLP with user confirmation, dashboard &amp; reports, and browser isolation / PRA for unmanaged devices.</p>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Zscaler secures cloud, endpoint, and BYOD data with <em>robust visibility</em>, risk management, seamless DLP, and secure access.</div>
+  <p class="motivation-sub">Whether data lives in AWS, on a corporate laptop, or is accessed from a contractor's personal device — Zscaler provides consistent protection across all three vectors.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span><span class="qpanel-count" id="qpanel-count">0</span><span class="qpanel-hint">— click to expand</span><span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-cloud',this)">Secure Cloud (DSPM)</button>
+  <button class="nav-tab" onclick="navTo('section-endpoint',this)">Secure Endpoint</button>
+  <button class="nav-tab" onclick="navTo('section-byod',this)">Secure BYOD</button>
+  <button class="nav-tab" onclick="navTo('section-kcheck',this)">Knowledge Check</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="section-block" id="section-overview">
+    <div class="section-label">OVERVIEW</div>
+    <h2>Three vectors — one unified approach</h2>
+    <p>This lesson covers how Zscaler protects data across three distinct environments that sit outside traditional inline web traffic: public cloud storage, endpoint devices, and unmanaged/BYOD devices.</p>
+    <div class="diagram-wrap">
+      <img src="diagram-platform.png" alt="Zscaler Data Security Platform showing Secure Cloud Data (DSPM), Secure Endpoint Data, and Secure Unmanaged Devices highlighted" class="diagram-img">
+      <div class="diagram-caption">Zscaler Data Security Platform — this lesson covers Secure Cloud Data (DSPM), Secure Endpoint Data, and Secure Unmanaged Devices (Browser Isolation)</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- SECURE CLOUD DATA -->
+  <div class="section-block" id="section-cloud">
+    <div class="section-label">SECURE CLOUD DATA — DSPM</div>
+    <h2>Data Security Posture Management</h2>
+    <p>In today's digital-first world, businesses use cloud platforms like AWS, Azure, and Google Cloud to store, manage, and process data. While the cloud is flexible and scalable, it comes with security risks — data breaches, cyberattacks, and misconfigurations. Protecting sensitive information requires tools that go beyond traditional security measures.</p>
+    <p>Zscaler enhances cloud security through its zero-trust framework. The Zscaler <strong>Data Security Posture Management (DSPM)</strong> is a security approach that helps organisations identify, monitor, and protect sensitive data across their environment, ensuring it stays secure and compliant.</p>
+
+    <h3>The 5-Step Cloud Data Security Flow</h3>
+    <div class="diagram-wrap">
+      <img src="diagram-cloud-flow.png" alt="Cloud Data 5-step security flow: Discovery, Classification, Identity and Access, Exposure, Posture" class="diagram-img">
+      <div class="diagram-caption">Cloud Data security flow — 5 questions every organisation needs to answer about their cloud data</div>
+    </div>
+    <div class="dspm-flow">
+      <div class="dspm-step"><div class="dspm-step-name">Discovery</div><div class="dspm-step-q">Where is my data stored?</div></div>
+      <div class="dspm-step"><div class="dspm-step-name">Classification</div><div class="dspm-step-q">What type of data is it?</div></div>
+      <div class="dspm-step"><div class="dspm-step-name">Identity &amp; Access</div><div class="dspm-step-q">Who can access this data?</div></div>
+      <div class="dspm-step"><div class="dspm-step-name">Exposure</div><div class="dspm-step-q">Is my data exposed?</div></div>
+      <div class="dspm-step"><div class="dspm-step-name">Posture</div><div class="dspm-step-q">How secure is my data?</div></div>
+    </div>
+
+    <h3>How DSPM Works</h3>
+    <p>DSPM deploys two components — a <strong>Scanner</strong> and an <strong>Orchestrator</strong>:</p>
+    <ul class="content-list">
+      <li><strong>Scanner</strong> — scans data configurations stored at the cloud console; identifies sensitive data (Buckets, VMs, DBs); sends findings to the Orchestrator.</li>
+      <li><strong>Orchestrator</strong> — the final step; remediates identified issues through policies, guides, and actionable insights.</li>
+      <li><strong>Metadata stays local</strong> — metadata remains within the customer environment and is not transferred outside, preserving data sovereignty.</li>
+    </ul>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>DSPM KEY CAPABILITIES</div>
+      <div class="callout-body">DSPM provides: Data Discovery (identify sensitive data across cloud), Posture Control (find misconfigurations &amp; vulnerabilities), and Actionable Insights (correlate, prioritise, auto-remediate). It also offers a geographical data breakdown — showing the types and volume of data stored in each location.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-cloud" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('cloud','Secure Cloud Data')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-cloud" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-cloud"></span></div></div>
+    </div>
+  </div>
+
+  <!-- SECURE ENDPOINT DATA -->
+  <div class="section-block" id="section-endpoint">
+    <div class="section-label">SECURE ENDPOINT DATA</div>
+    <h2>Endpoint DLP — protecting data on devices</h2>
+    <p>Zscaler's <strong>Endpoint Data Loss Prevention (DLP)</strong> is a security measure designed to monitor, detect, and protect sensitive or critical data on endpoint devices — laptops, desktops, and mobile phones. It extends monitoring to activities such as printing, saving, uploading, and sharing.</p>
+    <p>Custom and predefined DLP engines detect sensitive data, allowing or blocking user actions. Endpoint DLP rules are triggered via the Zscaler Client Connector, ensuring incidents are logged even without network connectivity.</p>
+
+    <h3>User Confirmation Feature</h3>
+    <p>Instead of hard-blocking users, Zscaler offers a <strong>User Confirmation</strong> (soft block / "Confirm Allow") option within the ZIA Admin Portal. This requires users to justify a sensitive action before proceeding — allowing the operation but capturing their reasoning.</p>
+    <ul class="content-list">
+      <li>Useful for educating users and reducing help desk overhead, especially when testing new rules or dictionaries</li>
+      <li>Justifications come back to the admin as a feedback loop</li>
+      <li>If a user chooses to justify and continue — the operation <strong>is allowed</strong> (not blocked)</li>
+      <li>User Confirmation severity is not set to high for all printers — it is configurable per use case</li>
+    </ul>
+
+    <h3>Dashboard and Reports</h3>
+    <p>The <strong>Endpoint DLP Report</strong> (navigate via Zscaler Internet Access → Analytics → Endpoint DLP Report) provides daily insights into end-user activity with sensitive data. It contains two tabs:</p>
+    <ul class="content-list">
+      <li><strong>Overview tab</strong> — Activities with Sensitive Data, total Incidents, Users Generating Incidents; Activities Distribution and Incidents Distribution by DLP Engines (PCI, Credit Card, SSN, ChatGPT CatchAll, etc.)</li>
+      <li><strong>Incidents tab</strong> — filter by Action Taken (Allow/Block/Exempted/Confirm Allow/Confirm Block), Severity, and Content Type (DLP Dictionaries, DLP Engines, ML Categories)</li>
+    </ul>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>EXAM POINT</div>
+      <div class="callout-body">The rule name <strong>"Block sensitive data to the cloud"</strong> is set to protect personal cloud storage — e.g., blocking uploads to personal Google Drive, Dropbox, or OneDrive while allowing uploads to corporate accounts. This is a named rule that appears in the Endpoint DLP policy configuration.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-endpoint" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('endpoint','Secure Endpoint Data')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-endpoint" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-endpoint"></span></div></div>
+    </div>
+  </div>
+
+  <!-- BYOD -->
+  <div class="section-block" id="section-byod">
+    <div class="section-label">SECURE UNMANAGED ASSETS — BYOD</div>
+    <h2>Browser Isolation and Privileged Remote Access</h2>
+    <p>In today's flexible work environment, personal devices are increasingly used for work. While this enhances productivity, it creates vulnerabilities — unmanaged devices can become gateways for data breaches, malware attacks, or unauthorised access to sensitive information.</p>
+
+    <div class="key-concept">
+      <strong>The solution:</strong> Rather than deploying costly VDI infrastructure, Zscaler combines <strong>Browser Isolation</strong> and <strong>Privileged Remote Access (PRA)</strong> to provide VDI-like controls for unmanaged devices — without requiring agents or heavy infrastructure.
+    </div>
+
+    <div class="compare-grid">
+      <div class="cmp-card">
+        <div class="cmp-icon">🌐</div>
+        <div class="cmp-name">Browser Isolation</div>
+        <div class="cmp-body">Manages secure access for widely used web-based applications. Data doesn't land on the unmanaged device — the browser session runs in a cloud container. Covers Web Apps and SaaS apps. Eliminates the need for VDI for most modern work environments.</div>
+      </div>
+      <div class="cmp-card">
+        <div class="cmp-icon">🔐</div>
+        <div class="cmp-name">Privileged Remote Access (PRA)</div>
+        <div class="cmp-body">Ensures seamless connectivity to internal and privileged systems that require specific protocols (RDP/SSH) without resorting to traditional network-centric models. Covers internal systems requiring specialised access. Agentless.</div>
+      </div>
+    </div>
+
+    <div class="diagram-wrap">
+      <img src="diagram-vdi.png" alt="VDI deconstruction diagram showing VDI alternatives: Browser Isolation for Web Apps, PRA for RDP/SSH, N/A for Thick Client Apps. Goal: Reduce cost and complexity." class="diagram-img">
+      <div class="diagram-caption">Deconstructing VDI deployments — Zscaler alternatives: Browser Isolation (Web Apps), PRA (RDP/SSH). Thick client apps remain N/A. Goal: reduce cost and complexity.</div>
+    </div>
+
+    <h3>Mitigating Data Leakage from BYOD</h3>
+    <ul class="content-list">
+      <li>Browser isolation prevents file downloads and restricts clipboard access from unmanaged devices</li>
+      <li>DLP policies can still be enforced on the isolated session — same policies as managed devices</li>
+      <li>ZIA and ZPA direct traffic for SaaS and private apps respectively, even from unmanaged devices</li>
+      <li>The dual approach achieves VDI-like controls in a cost-effective, agile, and scalable manner</li>
+    </ul>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-byod" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('byod','Secure BYOD')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-byod" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-byod"></span></div></div>
+    </div>
+  </div>
+
+  <!-- KNOWLEDGE CHECK -->
+  <div class="section-block" id="section-kcheck">
+    <div class="section-label">KNOWLEDGE CHECK</div>
+    <h2>Select the three correct statements</h2>
+    <div class="kcheck">
+      <div class="kcheck-q">Identify and select the <strong>three true statements</strong> regarding securing cloud data and endpoint data.</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>The user confirmation feature is useful for educating users and reducing help desk overhead, especially when testing new rules or dictionaries.</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>The user confirmation feature is set to a high severity level for all printers.</div>
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>The rule name "Block sensitive data to the cloud" was set to protect personal cloud storage.</div>
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>DSPM offers a geographical data breakdown, showing the types and volume of data stored in each location.</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>If a user chooses to justify and continue printing a PII file, the operation is blocked by default.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-kcheck" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('kcheck','Knowledge Check')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-kcheck" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-kcheck"></span></div></div>
+    </div>
+  </div>
+
+</div>
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-220-hub.html"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> EDU-220 Hub</a>
+    <div class="mod-nav-group-label">SECTION 1</div>
+    <a class="mod-nav-link" href="../1 - Introduction to Data Security/edu-220-intro-data-security.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>Introduction to Data Security</a>
+    <div class="mod-nav-group-label">SECTION 2</div>
+    <a class="mod-nav-link" href="../2A Data in Motion/edu-220-data-in-motion.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>2A — Data in Motion</a>
+    <a class="mod-nav-link" href="../2B Secure SaaS Data/edu-220-secure-saas-data.html"><span class="mod-nav-dot" style="background:#6c35cc;"></span>2B — Secure SaaS Data</a>
+    <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:#b45309;"></span>2C — Cloud, Endpoint &amp; BYOD</span>
+    <div class="mod-nav-group-label">SECTION 3</div>
+    <a class="mod-nav-link" href="../3 - Incident Management Capabilities/edu-220-incident-management.html"><span class="mod-nav-dot" style="background:#b91c1c;"></span>Incident Management</a>
+    <div class="mod-nav-group-label">RECAP</div>
+    <a class="mod-nav-link" href="../Recap/edu-220-recap.html"><span class="mod-nav-dot" style="background:#6c35cc;"></span>Course Recap</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>DSPM overview and purpose</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>5-step cloud data security flow</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>DSPM Scanner vs Orchestrator</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Endpoint DLP capabilities</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>User Confirmation feature</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Endpoint DLP Report (Overview & Incidents)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Browser Isolation for BYOD</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Privileged Remote Access (PRA)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>VDI deconstruction diagram</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Knowledge check completed</span></li>
+    </ul>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+    <div class="quick-ref"><div class="quick-ref-term">DSPM</div><div class="quick-ref-def">Data Security Posture Management — discovers, classifies, and continuously monitors sensitive data across all cloud environments.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Endpoint DLP</div><div class="quick-ref-def">Monitors and controls data activity on user devices — triggered via Zscaler Client Connector even without network connectivity.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">User Confirmation</div><div class="quick-ref-def">Soft block — requires user to justify a DLP-triggering action. Operation is allowed if user justifies; not blocked. Good for testing policies.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">PRA</div><div class="quick-ref-def">Privileged Remote Access — agentless secure access to internal systems requiring RDP/SSH without VPN or VDI.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Browser Isolation</div><div class="quick-ref-def">Runs the browser session in a cloud container — data never lands on the unmanaged device. Eliminates need for VDI for web apps.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-220 · <span>2C — Secure Cloud, Endpoint &amp; BYOD</span></div>
+  <div class="footer-right">Zscaler Study Guide</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu220-cloud-endpoint-byod';
+function getStore(){try{return JSON.parse(localStorage.getItem(PAGE_KEY))||{};}catch(e){return{};}}
+function saveStore(s){try{localStorage.setItem(PAGE_KEY,JSON.stringify(s));}catch(e){}}
+function addQuestion(sId,sLabel){const ta=document.getElementById('q-'+sId);const text=ta.value.trim();if(!text)return;const s=getStore();if(!s.questions)s.questions=[];s.questions.push({section:sLabel,text,id:Date.now()});saveStore(s);ta.value='';renderQPanel();}
+function deleteQuestion(id){const s=getStore();s.questions=(s.questions||[]).filter(q=>q.id!==id);saveStore(s);renderQPanel();}
+function renderQPanel(){const s=getStore();const qs=s.questions||[];const count=document.getElementById('qpanel-count');const body=document.getElementById('qpanel-body');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet.</p>';return;}const groups={};qs.forEach(q=>{if(!groups[q.section])groups[q.section]=[];groups[q.section].push(q);});body.innerHTML=Object.entries(groups).map(([label,items],gi)=>`<div class="q-group"><div class="q-group-label">${label.toUpperCase()}</div>${items.map((q,i)=>`<div class="q-item"><div class="q-num">${gi*10+i+1}</div><div class="q-text">${q.text}</div><button class="q-del" onclick="deleteQuestion(${q.id})">✕</button></div>`).join('')}</div>`).join('');}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const hdr=document.getElementById('qpanel-header');const chev=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');hdr.classList.toggle('open',open);chev.textContent=open?'▴':'▾';const s=getStore();s.qOpen=open;saveStore(s);}
+document.querySelectorAll('.notes-ta').forEach(ta=>{const key=ta.id;const s=getStore();if(s[key])ta.value=s[key];let timer;ta.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(()=>{const st=getStore();st[key]=ta.value;saveStore(st);const ns=document.getElementById('ns-'+key.replace('notes-',''));if(ns){ns.textContent='Saved';setTimeout(()=>{ns.textContent='';},1800);}},600);});});
+function toggleCheck(li){li.classList.toggle('done');const s=getStore();if(!s.checks)s.checks={};s.checks[li.querySelector('span').textContent]=li.classList.contains('done');saveStore(s);}
+(function restoreChecks(){const s=getStore();if(!s.checks)return;document.querySelectorAll('#checklist li').forEach(li=>{if(s.checks[li.querySelector('span').textContent])li.classList.add('done');});})();
+function navTo(id,btn){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');}
+(function init(){renderQPanel();const s=getStore();if(s.qOpen){const body=document.getElementById('qpanel-body');const hdr=document.getElementById('qpanel-header');const chev=document.getElementById('qpanel-chevron');body.classList.add('open');hdr.classList.add('open');chev.textContent='▴';}})();
+</script>
+</body>
+</html>

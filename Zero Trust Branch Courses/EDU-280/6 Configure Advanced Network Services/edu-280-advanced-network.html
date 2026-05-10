@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 6 — Configure Advanced Network Services · EDU-280</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#fff;--surface-2:#e8f0fb;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0a1628;--text-soft:#1e3a5c;--text-muted:#4a6fa8;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+  --teal:#0d7d8a;--teal-light:#d0f0f4;--teal-border:#9adde6;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#1e3a5c;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#60a5fa;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#1e3a5c;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#60a5fa;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#60a5fa;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#60a5fa;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--blue);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#60a5fa;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--blue);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--blue-glow);border:1px solid var(--blue-dim);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--blue);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+.callout-note{background:var(--surface-2);border-color:var(--border);}
+.callout-note .callout-header{color:var(--blue);}
+.callout-note .callout-icon{background:var(--blue-dim);color:var(--blue);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-tip{background:var(--green-light);border-color:var(--green-border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-tip .callout-body{color:#0d4a2a;}
+/* Data table */
+.data-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+.data-table th{background:var(--text);color:#fff;padding:9px 12px;text-align:left;font-weight:500;font-size:11px;letter-spacing:0.06em;}
+.data-table th:first-child{border-radius:10px 0 0 0;}
+.data-table th:last-child{border-radius:0 10px 0 0;}
+.data-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text-soft);vertical-align:middle;}
+.data-table tr:nth-child(even) td{background:var(--surface-2);}
+/* Mode cards */
+.mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.mode-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+.mode-tag{font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--blue);margin-bottom:6px;}
+.mode-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.mode-attr{font-size:11px;font-weight:700;color:var(--blue);margin-top:8px;margin-bottom:2px;}
+.mode-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Feature grid */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.feat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.feat-card-title{font-size:12px;font-weight:700;color:var(--blue);margin-bottom:4px;}
+.feat-card-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Step rows */
+.step-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.step-row{display:flex;gap:14px;align-items:flex-start;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-content{flex:1;}
+.step-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.step-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Code block */
+.code-block{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.6;overflow-x:auto;margin-bottom:14px;}
+code{background:var(--surface-2);border-radius:4px;padding:1px 6px;font-family:'Courier New',monospace;font-size:12px;color:var(--blue);}
+/* Compare */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.compare-card{border-radius:12px;padding:16px 18px;}
+.compare-v2{background:#eff6ff;border:1px solid #bfdbfe;}
+.compare-v3{background:var(--green-light);border:1px solid var(--green-border);}
+.compare-title{font-size:13px;font-weight:700;margin-bottom:6px;}
+.compare-v2 .compare-title{color:var(--blue);}
+.compare-v3 .compare-title{color:var(--green);}
+.compare-body{font-size:12px;color:var(--text-soft);line-height:1.55;}
+/* Rules list */
+.rules-list{list-style:none;padding:0;margin-bottom:20px;}
+.rules-list li{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 14px;margin-bottom:8px;font-size:13px;color:var(--text-soft);line-height:1.6;}
+.rules-list li strong{color:var(--blue);}
+/* Knowledge check */
+.kcheck{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
+.kcheck-q{background:var(--text);padding:16px 20px;font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;line-height:1.4;}
+.kcheck-options{padding:16px 20px;display:flex;flex-direction:column;gap:8px;}
+.kcheck-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;color:var(--text-soft);line-height:1.5;}
+.kcheck-option.correct{background:var(--green-light);border-color:var(--green-border);color:var(--green);}
+.kcheck-option.wrong{background:var(--red-light);border-color:var(--red-border);color:var(--red);text-decoration:line-through;}
+.kcheck-opt-badge{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.correct .kcheck-opt-badge{background:var(--green);color:#fff;}
+.wrong .kcheck-opt-badge{background:var(--red);color:#fff;}
+.kcheck-option:not(.correct):not(.wrong) .kcheck-opt-badge{background:var(--border);color:var(--text-muted);}
+/* Lesson tools */
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--blue);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#60a5fa;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#1e3a5c;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+/* Sidebar */
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#60a5fa;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#8ab4e8;line-height:1.6;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--blue);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.mode-grid,.feat-grid,.compare-grid{grid-template-columns:1fr;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../zero-trust-branch-hub.html">Zero Trust Branch</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-280-hub.html">EDU-280</a>
+      <span class="breadcrumb-sep">›</span>
+      Section 6
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> EDU-280 · Section 6 · 35 min</div>
+    <h1>Configure Advanced <em>Network Services</em></h1>
+    <p>VRRP high availability, DHCP dynamic addressing, SNMP device monitoring, and DNS Policies for secure branch DNS control.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">HA, addressing, monitoring, resolution — <em>the infrastructure that keeps branches alive</em>.</div>
+  <p class="motivation-sub">Zero Trust Branch isn't just about segmentation — it's about operational resilience. VRRP keeps gateways alive during failures, DHCP gives every device a consistent identity, SNMP gives you visibility, and DNS Policies make sure every query goes exactly where it should.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-vrrp',this)">VRRP &amp; HA</button>
+  <button class="nav-tab" onclick="navTo('section-dhcp',this)">DHCP</button>
+  <button class="nav-tab" onclick="navTo('section-snmp',this)">SNMP</button>
+  <button class="nav-tab" onclick="navTo('section-dns',this)">DNS Policies</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- OVERVIEW -->
+<div class="section-block" id="section-overview">
+  <div class="section-label">MODULE OVERVIEW</div>
+  <h2>Advanced network services powering branch operations</h2>
+  <p>This module covers the four operational pillars that extend Zero Trust Branch beyond basic connectivity — high availability through VRRP, flexible IP addressing through DHCP, device telemetry through SNMP, and secure name resolution through DNS Policies.</p>
+
+  <h3>Module Objectives</h3>
+  <ul class="content-list">
+    <li><strong>Configure VRRP</strong> for gateway high availability and stateful session failover</li>
+    <li><strong>Set up DHCP</strong> for dynamic IP allocation and device-specific IP reservations</li>
+    <li><strong>Integrate SNMP v2/v3</strong> for device monitoring and performance telemetry</li>
+    <li><strong>Apply DNS Policies</strong> to control DNS requests and responses at branch sites</li>
+  </ul>
+
+  <!-- Diagram: ZTB Advanced Services Overview -->
+  <div style="background:var(--surface-2);border:2px dashed var(--border);border-radius:12px;padding:24px 20px;margin:16px 0;text-align:center;">
+    <div style="font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px;">Diagram</div>
+    <div style="font-size:12px;color:var(--text-muted);font-style:italic;max-width:480px;margin:0 auto;line-height:1.6;">[Generate: flat minimalist illustration of a network appliance gateway at the center with four service icons surrounding it — a shield (HA), a clock (DHCP), a chart bar (SNMP), and a globe (DNS) — connected by thin lines, blue palette, no text labels]</div>
+  </div>
+
+  <h3>VyOS Routing Engine</h3>
+  <p>Zero Trust Branch is built on the <strong>VyOS</strong> routing engine, which provides a full-featured networking stack powering all advanced services — static and dynamic routing, DHCP, DNS policy enforcement, SNMP monitoring, and VRRP-based HA.</p>
+
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-title">Routing</div>
+      <div class="feat-card-body">Static routes, BGP/OSPF dynamic routing, and Policy-Based Routing (PBR)</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">High Availability</div>
+      <div class="feat-card-body">VRRP mastership with Conntrack sync and link state monitoring</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">DHCP &amp; DNS</div>
+      <div class="feat-card-body">Built-in DHCP server with reservations and DNS policy enforcement</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Security Integration</div>
+      <div class="feat-card-body">iptables enforcement, SNMP whitelisting, ZIA/ZPA integration</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- VRRP -->
+<div class="section-block" id="section-vrrp">
+  <div class="section-label">VRRP &amp; HIGH AVAILABILITY</div>
+  <h2>Stateful gateway failover with VRRP</h2>
+  <p>VRRP (Virtual Router Redundancy Protocol) is the HA mastership protocol used by Zero Trust Branch. It elects one gateway as <strong>Master</strong> and another as <strong>Backup</strong>, providing continuous availability if the Master fails.</p>
+
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-title">Active (Master)</div>
+      <div class="feat-card-body">Forwards all traffic. Sends GARP announcements to claim the virtual IP/MAC on the network.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Hot Standby (Backup)</div>
+      <div class="feat-card-body">Monitors the Master via heartbeat. Takes over immediately upon Master failure.</div>
+    </div>
+  </div>
+
+  <!-- VRRP Diagram -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:0;overflow-x:auto;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;min-width:100px;">
+      <div style="background:#dbeafe;border:2px solid #1a6dcc;border-radius:10px;padding:12px 16px;font-size:12px;font-weight:700;color:#1a6dcc;text-align:center;">Gateway 1<br><span style="font-size:10px;font-weight:400;color:#4a6fa8;">MASTER (Active)</span></div>
+      <div style="font-size:10px;color:#1a6dcc;font-weight:600;">Forwards all traffic</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;padding:0 16px;gap:4px;">
+      <div style="font-size:18px;color:var(--blue);">⇌</div>
+      <div style="font-size:10px;color:var(--text-muted);text-align:center;">HA Link<br>(v7.8+ dedicated)</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;min-width:100px;">
+      <div style="background:#f1f5f9;border:2px dashed #94a3b8;border-radius:10px;padding:12px 16px;font-size:12px;font-weight:700;color:#475569;text-align:center;">Gateway 2<br><span style="font-size:10px;font-weight:400;">HOT STANDBY</span></div>
+      <div style="font-size:10px;color:#64748b;font-weight:600;">Monitors + syncs state</div>
+    </div>
+    <div style="padding:0 16px;font-size:18px;color:#94a3b8;">→</div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;min-width:80px;">
+      <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:12px;font-weight:700;color:var(--text-muted);text-align:center;">Branch<br>LAN</div>
+      <div style="font-size:10px;color:var(--text-muted);">Virtual IP</div>
+    </div>
+  </div>
+
+  <h3>HA Link Evolution</h3>
+  <table class="data-table">
+    <thead><tr><th>Version</th><th>HA Link Type</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>v7.7</strong></td><td>WAN link for VRRP</td><td>VRRP heartbeats share the WAN interface</td></tr>
+      <tr><td><strong>v7.8+</strong></td><td>Dedicated HA link</td><td>Independent of WAN — faster, more reliable failover</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Key VRRP Features</h3>
+  <ul class="content-list">
+    <li><strong>Non-preemptive failover:</strong> Backup does not forcibly reclaim mastership when the original Master returns</li>
+    <li><strong>Conntrack sync:</strong> Active session state is mirrored to the Backup for stateful switchover — no dropped sessions</li>
+    <li><strong>Link state monitoring:</strong> WAN/uplink health triggers automatic mastership changes</li>
+    <li><strong>GARP:</strong> Gratuitous ARP broadcasts update downstream switches after failover</li>
+    <li><strong>Keepalived:</strong> The daemon running inside VyOS that manages VRRP timers and advertisements</li>
+  </ul>
+
+  <h3>VRRP Use Cases</h3>
+  <div class="mode-grid">
+    <div class="mode-card">
+      <div class="mode-tag">USE CASE 1</div>
+      <div class="mode-title">Continuous Availability</div>
+      <div class="mode-body">Branch users maintain connectivity even when one gateway goes offline. The Backup takes over the virtual IP without any user-visible interruption.</div>
+    </div>
+    <div class="mode-card">
+      <div class="mode-tag">USE CASE 2</div>
+      <div class="mode-title">Stateful Switchover</div>
+      <div class="mode-body">Active sessions are not dropped during failover — Conntrack sync preserves flow state on the Backup before the Master fails.</div>
+    </div>
+    <div class="mode-card">
+      <div class="mode-tag">USE CASE 3</div>
+      <div class="mode-title">Minimal-Downtime Upgrades</div>
+      <div class="mode-body">Upgrade one gateway at a time; the other maintains branch connectivity throughout the maintenance window.</div>
+    </div>
+  </div>
+
+  <div class="key-concept">
+    <strong>Configure VRRP:</strong> Infrastructure › Connectors › Edge › Zero Trust Branch › Sites › Your Site › Settings › VRRP
+  </div>
+
+  <h3>HA Troubleshooting Sequence</h3>
+  <div class="step-rows">
+    <div class="step-row"><div class="step-num">1</div><div class="step-content"><div class="step-title">Who is Master?</div><div class="step-body">Identify which gateway currently holds mastership before making any changes.</div></div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-content"><div class="step-title">Is the HA path healthy?</div><div class="step-body">Check connectivity on the dedicated HA link (v7.8+) or WAN link (v7.7).</div></div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-content"><div class="step-title">Is session state syncing?</div><div class="step-body">Verify Conntrack is replicating flows to the Backup gateway.</div></div></div>
+    <div class="step-row"><div class="step-num">4</div><div class="step-content"><div class="step-title">Did link monitoring trigger switchover?</div><div class="step-body">Review link state events and VRRP logs for automated failover history.</div></div></div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-vrrp" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('vrrp','VRRP & HA')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-vrrp" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-vrrp"></span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- DHCP -->
+<div class="section-block" id="section-dhcp">
+  <div class="section-label">DHCP</div>
+  <h2>Dynamic addressing and device fingerprinting</h2>
+  <p>Zero Trust Branch provides an integrated DHCP server for branch IP addressing across Airgap VLANs, with three modes that balance isolation and compatibility.</p>
+
+  <h3>DHCP Modes for Airgap VLANs</h3>
+  <div class="mode-grid">
+    <div class="mode-card">
+      <div class="mode-tag">MODE 1</div>
+      <div class="mode-title">Airgap</div>
+      <div class="mode-attr">DHCP Server</div>
+      <div class="mode-body">ON — /32 host masks assigned. Full isolation — each device gets a unique /32 address. All traffic routes through the Device Segmentation gateway.</div>
+      <div class="mode-attr">Use Case</div>
+      <div class="mode-body">Highly regulated environments requiring complete isolation.</div>
+    </div>
+    <div class="mode-card">
+      <div class="mode-tag">MODE 2</div>
+      <div class="mode-title">Airgap-Lite</div>
+      <div class="mode-attr">DHCP Server</div>
+      <div class="mode-body">ON — Original subnet preserved. Devices get addresses from the original VLAN subnet. Less isolation, more compatible.</div>
+      <div class="mode-attr">Use Case</div>
+      <div class="mode-body">Networks where /32 is not supported or where full isolation isn't required.</div>
+    </div>
+    <div class="mode-card">
+      <div class="mode-tag">MODE 3</div>
+      <div class="mode-title">Static</div>
+      <div class="mode-attr">DHCP Server</div>
+      <div class="mode-body">OFF — No DHCP service. Devices use statically configured IP addresses.</div>
+      <div class="mode-attr">Use Case</div>
+      <div class="mode-body">Environments with existing static addressing that cannot be changed.</div>
+    </div>
+  </div>
+
+  <div class="key-concept">
+    <strong>Key Concept:</strong> Airgap VLANs offer three DHCP modes — full isolation with /32 masks, lite mode preserving original subnets, and static (off) mode — plus CSV-based bulk IP reservations that require DHCP server mode to be active.
+  </div>
+
+  <h3>IP Reservations</h3>
+  <p>Reserve specific IPs for known devices (servers, printers, cameras) to maintain predictable addressing while still using DHCP. Requirements: ZTB must be the DHCP server for the VLAN, and the VLAN must be created first.</p>
+
+  <h3>CSV Import Format</h3>
+  <table class="data-table">
+    <thead><tr><th>Column</th><th>Values / Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>mac_address</code></td><td>Device MAC address</td></tr>
+      <tr><td><code>ip_address</code></td><td>Reserved IP address</td></tr>
+      <tr><td><code>hostname</code></td><td>Device hostname</td></tr>
+      <tr><td><code>type</code></td><td><code>static</code> | <code>reserved</code> | <code>dhcp</code> | <code>dhcprelay</code> | <code>discovered</code> | <code>delete</code></td></tr>
+      <tr><td><code>status</code></td><td><code>airgap</code> | <code>airgap-lite</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Device Fingerprinting</h3>
+  <p>ZTB uses DHCP fingerprinting to classify devices before full network access is granted — enabling early device identity signals during the DORA handshake.</p>
+
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-title">MAC OUI</div>
+      <div class="feat-card-body">First 3 bytes of the MAC identify the device manufacturer (e.g., Apple, Dell, Cisco).</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">DHCP Fingerprinting</div>
+      <div class="feat-card-body">Reads protocol signals during the DORA handshake to classify the device type before an IP is assigned.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">DHCP Early Signals</div>
+      <div class="feat-card-body">Provides device identity before a full IP is assigned — critical for pre-access classification.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">DHCP Options</div>
+      <div class="feat-card-body">Option 53 = Message type (VM type). Option 60 = Vendor Class Identifier.</div>
+    </div>
+  </div>
+
+  <div class="key-concept">
+    <strong>DNS Settings:</strong> Infrastructure › Connectors › Edge › Zero Trust Branch › Sites › Your Site › Settings › DNS<br>
+    Configure WAN DNS Servers and Private DNS Servers for name resolution at the site level.
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-dhcp" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('dhcp','DHCP')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-dhcp" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-dhcp"></span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SNMP -->
+<div class="section-block" id="section-snmp">
+  <div class="section-label">SNMP</div>
+  <h2>Monitoring ZTB gateways with SNMP v2 and v3</h2>
+  <p>Simple Network Management Protocol (SNMP) supports device monitoring by collecting operational status and performance metrics. ZTB supports <strong>SNMPv2</strong> and <strong>SNMPv3</strong>, selected based on security and access-control requirements.</p>
+
+  <div class="compare-grid">
+    <div class="compare-card compare-v2">
+      <div class="compare-title">SNMPv2 — Simpler</div>
+      <div class="compare-body">Community-string based monitoring. Best fit for environments requiring simple setup, efficient scalability, and basic security. No encryption.</div>
+    </div>
+    <div class="compare-card compare-v3">
+      <div class="compare-title">SNMPv3 — More Secure</div>
+      <div class="compare-body">Adds authentication and privacy controls. Best fit for Zero Trust environments prioritizing advanced security, compliance, and user-based access control.</div>
+    </div>
+  </div>
+
+  <h3>SNMPv2 vs SNMPv3 Comparison</h3>
+  <table class="data-table">
+    <thead><tr><th>Feature</th><th>SNMPv2</th><th>SNMPv3</th></tr></thead>
+    <tbody>
+      <tr><td>Security Protocol</td><td>Community strings (public/private)</td><td>HMAC-SHA or HMAC-MD5</td></tr>
+      <tr><td>Authentication</td><td>Community strings only</td><td>User-based (strong auth)</td></tr>
+      <tr><td>Data Privacy</td><td>Plaintext — no encryption</td><td>AES or DES encryption</td></tr>
+      <tr><td>Scalability</td><td>Small-to-medium deployments</td><td>Large, high-security environments</td></tr>
+      <tr><td>Access Control</td><td>Basic network-level control</td><td>Granular, user-based permissions</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Configure SNMPv2</h3>
+  <p>ZTB supports SNMPv2 via the WAN and Management interfaces. Since SNMPv2 does not encrypt communications, ZTB improves security by allowing only <strong>whitelisted SNMP servers</strong> to monitor gateways.</p>
+
+  <div class="key-concept">
+    <strong>Portal path:</strong> Infrastructure › Connectors › Edge › Zero Trust Branch › Settings › Global › SNMP Configurations<br>
+    Enable SNMPv2, set Community value, add Client IPs allowed to poll, and click Save. Download the SNMP MIB for your server.
+  </div>
+
+  <h3>Validate SNMPv2</h3>
+  <p>Run in the gateway console to confirm the whitelist was applied:</p>
+  <div class="code-block">iptables -nvL SECURITY_RULES</div>
+  <p>Look for ACCEPT rules on UDP port 161 for the whitelisted SNMP manager IPs.</p>
+
+  <h3>Configure SNMPv3</h3>
+  <p>SNMPv3 adds user authentication and message encryption. Key security capabilities:</p>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-title">Authentication</div>
+      <div class="feat-card-body">Ensures messages are exchanged only between verified users, reducing unauthorized access.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Privacy (Encryption)</div>
+      <div class="feat-card-body">Uses AES or DES to encrypt SNMP communications — monitoring data cannot be intercepted in transit.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Message Integrity</div>
+      <div class="feat-card-body">Prevents tampering by ensuring SNMP messages are not modified in transit.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Access Control</div>
+      <div class="feat-card-body">Defines user roles and permissions so only approved users/servers can access or manage the device.</div>
+    </div>
+  </div>
+
+  <div class="key-concept">
+    <strong>Portal path:</strong> Infrastructure › Connectors › Edge › Settings › Global › SNMP Configurations › ⚙ (gear icon)<br>
+    Build SNMPv3 components: Profile/User, Security Group (noAuthNoPriv / authNoPriv / authPriv), View/OIDs, Trap Parameters.
+  </div>
+
+  <h3>Verify SNMPv3</h3>
+  <p>Perform an SNMPv3 walk from the SNMP server:</p>
+  <div class="code-block">snmpwalk -v3 -l authNoPriv -u admin -a SHA -A "test@123" 10.120.1.5</div>
+  <p>A successful walk returns MIB OID data from the gateway, confirming SNMPv3 is operational.</p>
+
+  <div class="kcheck">
+    <div class="kcheck-q">Which SNMPv3 feature ensures monitoring data cannot be intercepted or altered while in transit?</div>
+    <div class="kcheck-options">
+      <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Authentication — this verifies user identity, not data confidentiality</div>
+      <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>Privacy (Encryption) — SNMPv3 Privacy uses AES or DES to encrypt SNMP messages in transit</div>
+      <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Access Control — this restricts who can manage the device, not protect data in transit</div>
+      <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Message Integrity — this prevents tampering but does not provide encryption</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-snmp" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('snmp','SNMP')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-snmp" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-snmp"></span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- DNS POLICIES -->
+<div class="section-block" id="section-dns">
+  <div class="section-label">DNS POLICIES</div>
+  <h2>Controlling DNS requests and responses at branch sites</h2>
+  <p>DNS Policies in Zero Trust Branch let you define rules that control DNS requests and responses to your ZTB sites — enabling granular filtering, condition-based actions, and secure routing of DNS traffic.</p>
+
+  <h3>What DNS Policies Enable</h3>
+  <ul class="content-list">
+    <li><strong>Monitor all DNS traffic:</strong> Apply policies to all DNS requests and responses regardless of protocol (UDP and TCP)</li>
+    <li><strong>Granular filtering:</strong> Use criteria such as source IP/subnet, FQDN, wildcard domains, or any domain</li>
+    <li><strong>Condition-based actions:</strong> Allow or reject queries, redirect to specific DNS gateways, or override DNS responses</li>
+  </ul>
+
+  <div class="callout callout-note">
+    <div class="callout-header"><div class="callout-icon">i</div>DEFAULT RULE</div>
+    <div class="callout-body">A system default rule allows and forwards all DNS traffic. It has the <strong>lowest precedence</strong> and can be overridden by establishing a policy that matches any domain.</div>
+  </div>
+
+  <h3>Configuration Paths</h3>
+  <div class="key-concept">
+    <strong>Site DNS Settings:</strong> Infrastructure › Connectors › Edge › Zero Trust Branch › &lt;YOUR-SITE&gt; › Sites › Settings › DNS<br>
+    Configure WAN DNS Servers (default: 1.1.1.7, 8.8.8.8) and Private DNS Servers.<br><br>
+    <strong>DNS Policies:</strong> Infrastructure › Connectors › Edge › Zero Trust Branch › &lt;YOUR-SITE&gt; › Sites › DNS Policies<br>
+    Note: All IPv4 in DNS Policies refers to Local Interface IPs (AppC, Private, Airgap, those not directly connected).
+  </div>
+
+  <h3>Recommended DNS Policy Set — Public DNS Servers (4 Rules)</h3>
+  <ul class="rules-list">
+    <li><strong>Rule 1:</strong> For AppC to resolve FQDN over Central DNS server in the Data Center to their original IP address</li>
+    <li><strong>Rule 2:</strong> To resolve applications to their original IP addresses by re-directing specific FQDNs DNS requests over ZPA — IP based Branch to Branch over ZPA</li>
+    <li><strong>Rule 3:</strong> To resolve applications to their original IP addresses by re-directing specific FQDNs DNS requests over ZPA — IP based within Branch</li>
+    <li><strong>Rule 4:</strong> Private DNS Servers configured with Public Servers. ZCC-ZPA resolves to synthetic IP when Private application FQDN request is sent. Catch-all DNS policy (hidden) handles remaining name resolution using Private DNS servers.</li>
+  </ul>
+
+  <h3>Recommended DNS Policy Set — Private DNS Servers (7 Rules)</h3>
+  <ul class="rules-list">
+    <li><strong>Rule 1:</strong> For AppC to resolve FQDN over Central DNS server in the data center</li>
+    <li><strong>Rule 2:</strong> Redirect specific FQDNs DNS requests over ZPA — IP based Branch to Branch over ZPA</li>
+    <li><strong>Rule 3:</strong> Redirect specific FQDNs DNS requests over ZPA — IP based within Branch</li>
+    <li><strong>Rule 4:</strong> Resolve all domain traffic from ZTB via WAN DNS server directly from WAN interface</li>
+    <li><strong>Rule 5:</strong> Resolve Zscaler domain from any users using WAN DNS server</li>
+    <li><strong>Rule 6:</strong> Resolve all ZPA application segments to synthetic IP address using ZPA DNS server</li>
+    <li><strong>Rule 7:</strong> Default catch-all policy</li>
+  </ul>
+
+  <div class="kcheck">
+    <div class="kcheck-q">What is the primary purpose of DNS Policies in Zero Trust Branch?</div>
+    <div class="kcheck-options">
+      <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>To convert FQDNs to IP addresses automatically for all users on the internet</div>
+      <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>To define rules that control DNS requests and responses for ZTB sites, enabling filtering, redirection, and override capabilities</div>
+      <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>To assign static IP addresses to branch devices and manage DHCP leases</div>
+      <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>To encrypt all DNS traffic using TLS and ensure DNSSEC validation</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-dns" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('dns','DNS Policies')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-dns" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-dns"></span></div></div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-280-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-280 Hub
+    </a>
+    <div class="mod-nav-group-label">SECTIONS</div>
+    <a class="mod-nav-link" href="../1 Introduce Zero Trust Branch Concepts/edu-280-intro.html"><span class="mod-nav-dot" style="background:#0d7d8a;"></span>1 · Introduce ZTB Concepts</a>
+    <a class="mod-nav-link" href="../2 Segment Branches and Devices/edu-280-segment.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>2 · Segment Branches</a>
+    <a class="mod-nav-link" href="../3 Deploy and Administer Zero Trust Branch/edu-280-deploy.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>3 · Deploy &amp; Administer</a>
+    <a class="mod-nav-link" href="../4 Integrate Zscaler and Third-Party Security Services/edu-280-integrate-security.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>4 · Integrate Security</a>
+    <a class="mod-nav-link" href="../5 Manage Branch Administration and Policies/edu-280-admin-policies.html"><span class="mod-nav-dot" style="background:#b45309;"></span>5 · Admin &amp; Policies</a>
+    <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>6 · Advanced Network</span>
+    <a class="mod-nav-link" href="../7 Deploy App Connector for Zero Trust Access/edu-280-app-connector.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>7 · App Connector</a>
+    <a class="mod-nav-link" href="../8 Monitor Network Activity and Analytics/edu-280-monitor.html"><span class="mod-nav-dot" style="background:#b91c1c;"></span>8 · Monitor &amp; Analytics</a>
+    <a class="mod-nav-link" href="../9 Integrate Third-Party Security Platforms/edu-280-third-party.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>9 · Third-Party Platforms</a>
+    <a class="mod-nav-link" href="../10 Troubleshoot and Diagnose Branch Issues/edu-280-troubleshoot.html"><span class="mod-nav-dot" style="background:#b45309;"></span>10 · Troubleshoot</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>VRRP — Active vs Hot Standby roles</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>HA link evolution (v7.7 WAN vs v7.8+ dedicated)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Conntrack sync for stateful failover</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>DHCP modes: Airgap / Airgap-Lite / Static</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>IP reservation CSV format (5 columns)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Device fingerprinting: MAC OUI + DORA</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>SNMPv2 vs SNMPv3 comparison (5 features)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>SNMPv2 whitelist config + iptables validation</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>SNMPv3 walk: snmpwalk command</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>DNS Policy 3 capabilities (monitor/filter/act)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Public DNS policy rules (4)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Private DNS policy rules (7)</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">VRRP Config Path</div>
+      <div class="quick-ref-def">Sites › Settings › VRRP. v7.8+: dedicated HA link separate from WAN for faster failover.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">DHCP Modes</div>
+      <div class="quick-ref-def">Airgap = /32 isolation. Airgap-Lite = original subnet preserved. Static = DHCP OFF.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">SNMP Config Path</div>
+      <div class="quick-ref-def">Settings › Global › SNMP Configurations. Validate with: iptables -nvL SECURITY_RULES.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">SNMPv3 Verify</div>
+      <div class="quick-ref-def">snmpwalk -v3 -l authNoPriv -u admin -a SHA -A "test@123" &lt;GW-IP&gt;</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">DNS Policies Path</div>
+      <div class="quick-ref-def">Sites › DNS Policies. All IPv4 = Local Interface IPs (AppC, Private, Airgap).</div>
+    </div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-280 · <span>Section 6</span></div>
+  <div class="footer-right">Configure Advanced Network Services</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu280-s6-adv-network';
+function getStore(){try{return JSON.parse(localStorage.getItem(PAGE_KEY))||{};}catch(e){return{};}}
+function saveStore(s){try{localStorage.setItem(PAGE_KEY,JSON.stringify(s));}catch(e){}}
+
+function addQuestion(sectionId,sectionLabel){
+  const ta=document.getElementById('q-'+sectionId);
+  const text=ta.value.trim();if(!text)return;
+  const s=getStore();if(!s.questions)s.questions=[];
+  s.questions.push({section:sectionLabel,text,id:Date.now()});
+  saveStore(s);ta.value='';renderQPanel();
+}
+function deleteQuestion(id){
+  const s=getStore();s.questions=(s.questions||[]).filter(q=>q.id!==id);
+  saveStore(s);renderQPanel();
+}
+function renderQPanel(){
+  const s=getStore();const qs=s.questions||[];
+  const count=document.getElementById('qpanel-count');
+  const body=document.getElementById('qpanel-body');
+  count.textContent=qs.length;count.style.display=qs.length?'inline':'none';
+  if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Use the boxes below each section to add one.</p>';return;}
+  const groups={};qs.forEach(q=>{if(!groups[q.section])groups[q.section]=[];groups[q.section].push(q);});
+  body.innerHTML=Object.entries(groups).map(([label,items],gi)=>`
+    <div class="q-group"><div class="q-group-label">${label.toUpperCase()}</div>
+    ${items.map((q,i)=>`<div class="q-item"><div class="q-num">${gi*10+i+1}</div><div class="q-text">${q.text}</div><button class="q-del" onclick="deleteQuestion(${q.id})">✕</button></div>`).join('')}
+    </div>`).join('');
+}
+function toggleQPanel(){
+  const body=document.getElementById('qpanel-body');
+  const hdr=document.getElementById('qpanel-header');
+  const chev=document.getElementById('qpanel-chevron');
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);chev.textContent=open?'▴':'▾';
+  const s=getStore();s.qOpen=open;saveStore(s);
+}
+document.querySelectorAll('.notes-ta').forEach(ta=>{
+  const key=ta.id;const s=getStore();if(s[key])ta.value=s[key];
+  let timer;
+  ta.addEventListener('input',()=>{
+    clearTimeout(timer);timer=setTimeout(()=>{
+      const st=getStore();st[key]=ta.value;saveStore(st);
+      const ns=document.getElementById('ns-'+key.replace('notes-',''));
+      if(ns){ns.textContent='Saved';setTimeout(()=>{ns.textContent='';},1800);}
+    },600);
+  });
+});
+function toggleCheck(li){
+  li.classList.toggle('done');const s=getStore();if(!s.checks)s.checks={};
+  s.checks[li.querySelector('span').textContent]=li.classList.contains('done');saveStore(s);
+}
+(function restoreChecks(){
+  const s=getStore();if(!s.checks)return;
+  document.querySelectorAll('#checklist li').forEach(li=>{
+    if(s.checks[li.querySelector('span').textContent])li.classList.add('done');
+  });
+})();
+function navTo(id,btn){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+(function init(){
+  renderQPanel();const s=getStore();
+  if(s.qOpen){
+    document.getElementById('qpanel-body').classList.add('open');
+    document.getElementById('qpanel-header').classList.add('open');
+    document.getElementById('qpanel-chevron').textContent='▴';
+  }
+})();
+</script>
+</body>
+</html>

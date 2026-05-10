@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architecture, Framework &amp; Use Cases — EDU-270</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5f0ff;--surface:#ffffff;--surface-2:#f8f5ff;--border:#c8bbff;--border-dim:#e0d9ff;
+  --text:#130a2e;--text-soft:#2a1a5c;--text-muted:#6a5a9a;
+  --purple:#5c35cc;--purple-glow:rgba(92,53,204,0.07);--purple-dim:#c8bbff;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --amber:#b45309;--amber-light:#fef9ec;--amber-border:#fde68a;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:#130a2e;display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#6a5a9a;letter-spacing:0.08em;margin-bottom:12px;}
+.breadcrumb a{color:#a78bfa;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#2a1a5c;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#a78bfa;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#a78bfa;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#a78bfa;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--purple);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--purple);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#130a2e;color:#a78bfa;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--purple);border-bottom-color:var(--purple);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--purple);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--purple-glow);border:1px solid var(--purple-dim);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--purple);font-weight:600;}
+.definition{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:12px;}
+.definition-term{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.definition-body{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--purple-glow);border-color:var(--purple-dim);}
+.callout-note .callout-header{color:var(--purple);}
+.callout-note .callout-icon{background:var(--purple-dim);color:var(--purple);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-tip{background:var(--green-light);border-color:var(--green-border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-tip .callout-body{color:#0f4a28;}
+.callout-warn{background:var(--amber-light);border-color:var(--amber-border);}
+.callout-warn .callout-header{color:var(--amber);}
+.callout-warn .callout-icon{background:var(--amber-border);color:var(--amber);}
+.callout-warn .callout-body{color:#7a3a00;}
+.compare-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+.compare-table th{background:#130a2e;color:#fff;padding:10px 14px;text-align:left;font-weight:500;font-size:11px;letter-spacing:0.08em;}
+.compare-table th:first-child{border-radius:10px 0 0 0;}
+.compare-table th:last-child{border-radius:0 10px 0 0;}
+.compare-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-soft);vertical-align:top;line-height:1.6;}
+.compare-table tr:nth-child(even) td{background:var(--surface-2);}
+.compare-table tr:last-child td:first-child{border-radius:0 0 0 10px;}
+.compare-table tr:last-child td:last-child{border-radius:0 0 10px 0;}
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px;}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.feature-card-title{font-size:12px;font-weight:700;color:var(--purple);margin-bottom:4px;}
+.feature-card-body{font-size:12px;color:var(--text-muted);line-height:1.6;}
+.use-case-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--purple);border-radius:14px;padding:20px 22px;margin-bottom:16px;}
+.use-case-num{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--purple);margin-bottom:6px;}
+.use-case-name{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.use-case-body{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.diagram-wrap{border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;background:var(--surface);}
+.diagram-wrap img{width:100%;display:block;}
+.diagram-caption{font-size:11px;color:var(--text-muted);padding:10px 14px;background:var(--surface-2);border-top:1px solid var(--border);text-align:center;font-style:italic;}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--purple);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:#130a2e;color:#a78bfa;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#2a1a5c;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--purple);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#130a2e;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:#130a2e;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#a78bfa;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#8a70cc;line-height:1.6;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-270-hub.html">EDU-270</a>
+      <span class="breadcrumb-sep">›</span>
+      Architecture, Framework &amp; Use Cases
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Architecture · EDU-270</div>
+    <h1>Architecture, Framework &amp; <em>Use Cases</em></h1>
+    <p>Zscaler API architecture, the Zero Trust Automation Framework, traditional vs. new approaches, and real-world use cases for ZIA, ZPA, and Client Connector.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">The framework is the <em>foundation of automation.</em></div>
+  <p class="motivation-sub">Understanding how the Zscaler Zero Trust Automation architecture works — and seeing it applied to real use cases — transforms abstract concepts into actionable skills.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-architecture',this)">API Architecture</button>
+  <button class="nav-tab" onclick="navTo('section-traditional',this)">Traditional Framework</button>
+  <button class="nav-tab" onclick="navTo('section-zta',this)">ZTA Framework</button>
+  <button class="nav-tab" onclick="navTo('section-usecases',this)">Use Cases</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- API ARCHITECTURE -->
+  <div class="section-block" id="section-architecture">
+    <div class="section-label">API ARCHITECTURE AND ACCESS</div>
+    <h2>Zscaler API Architecture and Access</h2>
+    <p>Zscaler APIs provide a secure and scalable approach to programmatically manage and configure Zscaler services, enabling seamless policy enforcement, configuration management, and comprehensive logging through an authenticated and documented API gateway.</p>
+
+    <div class="diagram-wrap">
+      <img src="diagram-api-architecture.png" alt="Zscaler API Architecture flow diagram">
+      <div class="diagram-caption">Zscaler API Architecture: Central Authority (API Gateway) → API Capabilities (Policy, Log, Config Management) → Authentication &amp; Security → Developer Support</div>
+    </div>
+
+    <h3>Central Authority Level</h3>
+    <div class="definition">
+      <div class="definition-term">API Gateway</div>
+      <div class="definition-body">The central hub for applying policies and retrieving data. All API requests are routed through the OneAPI Gateway, which enforces authentication, access policies, and rate limits.</div>
+    </div>
+    <div class="definition">
+      <div class="definition-term">Authentication</div>
+      <div class="definition-body">The gateway authenticates with the Central Authority, which may include the Admin Portal. ZIdentity serves as the OAuth server for all authentication.</div>
+    </div>
+    <div class="definition">
+      <div class="definition-term">Browser and Programmatic Access</div>
+      <div class="definition-body">Activities done in the browser are driven by APIs, which can also be used programmatically for various controls. Both methods use the same underlying API infrastructure.</div>
+    </div>
+
+    <h3>API Capabilities</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-title">Policy Management</div>
+        <div class="feature-card-body">Make policy changes and configurations programmatically. Update application segments and manage access policies at scale.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">Log Management</div>
+        <div class="feature-card-body">Stream logs for monitoring and analysis. Integrate with SIEM tools for real-time security visibility.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">Configuration Management</div>
+        <div class="feature-card-body">Handle SCIM and IdP configurations. Manage custom service edges, trusted networks, and connector groups.</div>
+      </div>
+    </div>
+
+    <h3>Authentication and Security</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-title">Authentication Control</div>
+        <div class="feature-card-body">Manage authentication processes. ZIdentity OAuth tokens validated at the API Gateway level.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">Rate Limiting</div>
+        <div class="feature-card-body">Ensure API usage is controlled and fair. Two-tier system: burst limits (lower bound) and volume limits (upper bound).</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">Identity and Validation</div>
+        <div class="feature-card-body">Manage identity verification and payload validation. JWT signature verified against client's public key or X.509 certificate.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">Logging</div>
+        <div class="feature-card-body">Comprehensive logging for monitoring and troubleshooting all API interactions.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">Third-Party Integrations</div>
+        <div class="feature-card-body">Control and integrate with third-party partner APIs through a standardised interface.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">Developer Support</div>
+        <div class="feature-card-body">All APIs documented and available through the Zscaler Help Portal for easy reference and implementation.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-architecture" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('architecture','API Architecture')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-architecture" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-architecture"></span></div></div>
+    </div>
+  </div>
+
+  <!-- TRADITIONAL FRAMEWORK -->
+  <div class="section-block" id="section-traditional">
+    <div class="section-label">TRADITIONAL AUTOMATION FRAMEWORK</div>
+    <h2>Traditional Zscaler Automation Framework</h2>
+    <p>Before OneAPI, the traditional automation framework had significant limitations. Each product required separate management, creating complexity and error potential.</p>
+
+    <h3>Challenges of the Traditional Approach</h3>
+    <p>Deploying new SaaS solutions at scale is complex and prone to errors, leading to slow rollouts and increased costs. Fragmented ownership among multiple administrators — particularly in the context of mergers or acquisitions — results in accountability issues.</p>
+
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead><tr><th>Challenge</th><th>Description</th><th>Impact</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Credential Management</strong></td><td>Credentials maintained within the administrator console of each product</td><td>Multiple sets of credentials to manage and rotate per product</td></tr>
+          <tr><td><strong>API Endpoint Fragmentation</strong></td><td>Each product API has a separate API endpoint</td><td>Scripts need multiple endpoints; increased complexity</td></tr>
+          <tr><td><strong>Common Functionality Variations</strong></td><td>Variations on common API features such as Rate Limiting</td><td>Cannot apply uniform rate-limit handling across products</td></tr>
+          <tr><td><strong>Multiple Auth Flows</strong></td><td>Each product required separate registration, auth, and token requests</td><td>Multiple sets of code for each product's authentication flow</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="diagram-wrap">
+      <img src="diagram-traditional-framework.png" alt="Traditional Zscaler Automation Framework workflow">
+      <div class="diagram-caption">Traditional framework: customers must separately authenticate and obtain tokens for ZIA (zsapi.zscaler.net), ZPA (config.zpatwo.net), and Client Connector (api-mobile.zscalerbeta.net)</div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>THE CORE PROBLEM</div>
+      <div class="callout-body">Before OneAPI, switching between different API products required repeated registration, authorization, token requests, and token grants. Automation scripts had to manage multiple endpoints and tokens, raising the chances of mistakes and security issues. OneAPI simplifies this by unifying API interactions under a single framework, reducing redundant code and error risk.</div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-traditional" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('traditional','Traditional Framework')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-traditional" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-traditional"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ZTA FRAMEWORK -->
+  <div class="section-block" id="section-zta">
+    <div class="section-label">ZERO TRUST AUTOMATION FRAMEWORK</div>
+    <h2>Zscaler Zero Trust Automation Framework</h2>
+    <p>The ZIdentity framework centralises identity management within the Zscaler ecosystem, integrating authentication, entitlement management, and external identity providers. This represents the modern replacement for the fragmented traditional approach.</p>
+
+    <div class="key-concept">
+      <strong>The New Model:</strong> Everything external that is going to interact with Zscaler over automation — customers, partners, technology partners — must create API clients. All users authenticate via ZIdentity, which is Zscaler's identity platform hosting all registered API clients. ZIdentity is the OAuth Server which issues tokens required to interact with Zscaler products.
+    </div>
+
+    <div class="diagram-wrap">
+      <img src="diagram-zta-framework.png" alt="Zscaler Zero Trust Automation Framework">
+      <div class="diagram-caption">Zero Trust Automation Framework: Customers authenticate through ZIdentity (acme.zslogin.net) → Token → OneAPI Gateway (api.zsapi.net) → ZIA, ZPA, Client Connector, Other Products</div>
+    </div>
+
+    <h3>Framework Components</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-card-title">OneAPI Platform</div>
+        <div class="feature-card-body">Common consistent API experience for all types of customers. Single endpoint: api.zsapi.net.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">ZIdentity</div>
+        <div class="feature-card-body">API Credential Management. OAuth Server that issues tokens. Hosts all registered API clients.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">Single Endpoint</div>
+        <div class="feature-card-body">A single endpoint to use for all Zscaler APIs. No more managing multiple product-specific URLs.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-title">OneAPI Gateway</div>
+        <div class="feature-card-body">Single endpoint supporting common functionality: Token Validation, Rate Limit, Access Policy, Quota, and much more.</div>
+      </div>
+    </div>
+
+    <h3>Step-Up Authentication</h3>
+    <p>OneAPI supports step-up authentication — a dynamic request for stronger authentication when accessing sensitive resources or when risk signals are detected.</p>
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead><tr><th>Level</th><th>Authentication Strength</th></tr></thead>
+        <tbody>
+          <tr><td>AL1</td><td>Basic authentication — standard login</td></tr>
+          <tr><td>AL2</td><td>MFA with second factor (SMS OTP, email OTP)</td></tr>
+          <tr><td>AL3</td><td>Strong MFA (TOTP via Google Authenticator)</td></tr>
+          <tr><td>AL4</td><td>Hardware-backed authentication (FIDO key)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Flow: Login → Access Sensitive Resource → Step-Up Triggered → MFA Challenge → Access Granted. Benefits: Enhanced Security, Dynamic Risk-Based Access, Simplified Compliance.</p>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zta" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zta','ZTA Framework')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-zta" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-zta"></span></div></div>
+    </div>
+  </div>
+
+  <!-- USE CASES -->
+  <div class="section-block" id="section-usecases">
+    <div class="section-label">COMMON USE CASES</div>
+    <h2>Common Use Cases for Zscaler Zero Trust Automation</h2>
+    <p>These practical examples demonstrate how the Zero Trust Automation framework and OneAPI are applied to solve real administrative challenges across Zscaler products.</p>
+
+    <div class="use-case-card">
+      <div class="use-case-num">USE CASE 01</div>
+      <div class="use-case-name">Zscaler Internet Access (ZIA)</div>
+      <div class="use-case-body">
+        <p>ZIA API provides capabilities to automate and manage: URL filtering, policy management, user and group configurations, traffic forwarding, and reporting.</p>
+        <p><strong>Demo scenario:</strong> Block a gambling URL using ZIA API. Steps:</p>
+        <ul class="content-list">
+          <li>Verify the URL is accessible in a test browser session</li>
+          <li>Navigate to ZIA Admin Portal → Manage → URL Categories</li>
+          <li>Check if the URL filtering category (e.g., "Gambling") is enabled to block</li>
+          <li>Use Postman REST API client with the ZIA collection</li>
+          <li>Call the URL Filtering Policy endpoint, check if gambling category is blocked</li>
+          <li>Send a PUT request to update the URL filtering policy using the category ID</li>
+          <li>Add the URL to the custom categories in the JSON body</li>
+          <li>Verify the URL is now blocked in the browser</li>
+        </ul>
+        <p><strong>Prerequisite:</strong> Add an API key. Only admins with the API Key Management role can create API keys for ZIA.</p>
+      </div>
+    </div>
+
+    <div class="use-case-card">
+      <div class="use-case-num">USE CASE 02</div>
+      <div class="use-case-name">Zscaler Private Access (ZPA)</div>
+      <div class="use-case-body">
+        <p>ZPA API enables automation of: managing application access policies, configuring App Connector groups, retrieving user device information, monitoring system health.</p>
+        <p><strong>Demo scenario:</strong> Create an App Connector group using the OneAPI ZPA collection.</p>
+        <ul class="content-list">
+          <li>Log in to ZPA Admin Portal using ZIdentity credentials</li>
+          <li>Navigate to Configuration → App Connectors section to verify current state</li>
+          <li>Open Postman REST API client, load the ZPA Postman collection</li>
+          <li>All prerequisites are completed: OneAPI client authenticated</li>
+          <li>Find the customer ID from the ZPA Admin Portal → Administration → Company Details</li>
+          <li>The JSON body includes name, longitude, latitude, and location for the new connector group</li>
+          <li>Send the POST request — expected response: 201 Created</li>
+          <li>Verify the new App Connector group appears in the ZPA Admin Portal</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="use-case-card">
+      <div class="use-case-num">USE CASE 03</div>
+      <div class="use-case-name">Zscaler Client Connector</div>
+      <div class="use-case-body">
+        <p>Zscaler Client Connector API provides functionalities to automate the deployment, configuration, and monitoring of the Zscaler Client Connector across user devices.</p>
+        <p><strong>Demo scenario:</strong> Use the Client Connector API to retrieve all devices registered in the tenant and get device OTP credentials.</p>
+        <ul class="content-list">
+          <li>The ZCCBase variable in Postman is set to the Client Connector base URL (api.zsapi.net/zcc/papi/public/v1)</li>
+          <li>Client ID and Client Secret loaded in the Authorization section</li>
+          <li>Call the v1/getDevices endpoint</li>
+          <li>The API returns all devices registered in the tenant</li>
+          <li>For each device, retrieve the one-time passwords (OTPs)</li>
+          <li>The response iterates through each device's details and OTP credentials</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">i</div>POSTMAN COLLECTION</div>
+      <div class="callout-body">For all use cases, Zscaler provides a Postman collection on help.zscaler.com. The collection includes preconfigured requests, payloads, and environment variables. Download the most recent version of the collection for each product before starting your automation work.</div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-usecases" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('usecases','Use Cases')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-usecases" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-usecases"></span></div></div>
+    </div>
+  </div>
+
+</div><!-- end main-content -->
+
+<div class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-270-hub.html">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1L1 7l6 6M1 7h12"/></svg>
+      EDU-270 Hub
+    </a>
+    <div class="mod-nav-group-label">LESSONS</div>
+    <a class="mod-nav-link" href="../1 Introduction/edu-270-intro.html"><div class="mod-nav-dot" style="background:#1a6dcc;"></div>1 · Introduction</a>
+    <a class="mod-nav-link" href="../2 Zero Trust Automation Platform/edu-270-automation-platform.html"><div class="mod-nav-dot" style="background:#1a7c4a;"></div>2 · Automation Platform</a>
+    <a class="mod-nav-link current" href="edu-270-architecture.html"><div class="mod-nav-dot" style="background:var(--purple);"></div>3 · Architecture &amp; Use Cases</a>
+    <a class="mod-nav-link" href="../4 Troubleshooting and Best Practices/edu-270-troubleshooting.html"><div class="mod-nav-dot" style="background:#b45309;"></div>4 · Troubleshooting</a>
+    <a class="mod-nav-link" href="../5 Recap/edu-270-recap.html"><div class="mod-nav-dot" style="background:#6d28d9;"></div>5 · Recap</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleDone(this,0)"><div class="subtopic-check"></div><span>Describe the 4-layer Zscaler API architecture flow</span></li>
+      <li onclick="toggleDone(this,1)"><div class="subtopic-check"></div><span>Name the 3 API capabilities and examples of each</span></li>
+      <li onclick="toggleDone(this,2)"><div class="subtopic-check"></div><span>Explain the 3 challenges of the traditional framework</span></li>
+      <li onclick="toggleDone(this,3)"><div class="subtopic-check"></div><span>Describe the ZTA Framework and its 4 components</span></li>
+      <li onclick="toggleDone(this,4)"><div class="subtopic-check"></div><span>Explain step-up authentication levels AL1-AL4</span></li>
+      <li onclick="toggleDone(this,5)"><div class="subtopic-check"></div><span>Walk through the ZIA URL blocking use case steps</span></li>
+      <li onclick="toggleDone(this,6)"><div class="subtopic-check"></div><span>Walk through the ZPA App Connector group creation steps</span></li>
+      <li onclick="toggleDone(this,7)"><div class="subtopic-check"></div><span>Describe the Client Connector device retrieval use case</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="quick-ref"><div class="quick-ref-term">API Gateway</div><div class="quick-ref-def">Central hub for applying policies, authentication, and routing for all Zscaler API requests via OneAPI.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Step-Up Authentication</div><div class="quick-ref-def">Dynamic request for stronger auth (AL1-AL4) when accessing sensitive resources or risk signals detected.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">ZTA Framework</div><div class="quick-ref-def">Zscaler Zero Trust Automation Framework. Replaces traditional per-product auth with ZIdentity + OneAPI unified approach.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">App Connector Group</div><div class="quick-ref-def">ZPA logical grouping of App Connectors. Can be created/managed programmatically via ZPA API through OneAPI.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Customer ID</div><div class="quick-ref-def">Required parameter for ZPA API calls. Found in ZPA Admin Portal → Administration → Company Details.</div></div>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-270<span>.</span></div>
+  <div class="footer-right">Architecture, Framework &amp; Use Cases · Section 3 of 5</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu270-arch';
+const SECTIONS={architecture:'API Architecture',traditional:'Traditional Framework',zta:'ZTA Framework',usecases:'Use Cases'};
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+document.addEventListener('DOMContentLoaded',()=>{renderQPanel();initNotes();initChecks();if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}});
+</script>
+</body>
+</html>

@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Data in Motion — EDU-220</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#edfaf3;--surface:#ffffff;--surface-2:#f0fdf6;--border:#a7e0c0;--border-dim:#d4f0e0;
+  --text:#07200f;--text-soft:#1a4028;--text-muted:#3d7a58;
+  --green:#1a7c4a;--green-glow:rgba(26,124,74,0.07);--green-dim:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#3d7a58;letter-spacing:0.08em;margin-bottom:12px;}
+.breadcrumb a{color:#4ade80;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#1a4028;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#4ade80;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#4ade80;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#4ade80;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--green);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#4ade80;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--green);border-bottom-color:var(--green);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--green);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--green-glow);border:1px solid var(--green-dim);border-left:3px solid var(--green);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--green);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+.callout-note{background:var(--amber-light);border-color:var(--amber-border);}
+.callout-note .callout-header{color:var(--amber);}
+.callout-note .callout-icon{background:var(--amber-border);color:var(--amber);}
+.callout-note .callout-body{color:#5a3200;}
+.callout-tip{background:var(--surface-2);border-color:var(--border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-dim);color:var(--green);}
+.callout-tip .callout-body{color:var(--text-soft);}
+.callout-blue{background:var(--blue-light);border-color:var(--blue-border);}
+.callout-blue .callout-header{color:var(--blue);}
+.callout-blue .callout-icon{background:var(--blue-border);color:var(--blue);}
+.callout-blue .callout-body{color:#1e3a5c;}
+/* Use case cards */
+.use-case-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.use-case-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;}
+.use-case-num{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--green);margin-bottom:4px;}
+.use-case-name{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.use-case-body{font-size:13px;color:var(--text-soft);line-height:1.65;}
+/* DLP Policy types */
+.policy-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:20px;border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.policy-type{padding:20px 22px;}
+.policy-type+.policy-type{border-left:1px solid var(--border);}
+.policy-type-label{font-size:9px;font-weight:700;letter-spacing:0.18em;padding:3px 10px;border-radius:8px;display:inline-block;margin-bottom:8px;}
+.label-content{background:var(--blue-light);color:var(--blue);}
+.label-context{background:var(--amber-light);color:var(--amber);}
+.policy-type-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.policy-type-body{font-size:13px;color:var(--text-soft);line-height:1.65;}
+/* Feature pills */
+.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.feature-pill{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:10px;padding:12px 16px;}
+.feature-pill-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.feature-pill-body{font-size:12px;color:var(--text-soft);line-height:1.55;}
+/* UEBA alerts */
+.alert-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.alert-card{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--red);border-radius:10px;padding:12px 16px;}
+.alert-name{font-size:12px;font-weight:700;color:var(--red);margin-bottom:4px;}
+.alert-body{font-size:12px;color:var(--text-soft);line-height:1.55;}
+/* Use case scenario */
+.scenario-block{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:14px;}
+.scenario-header{background:var(--text);padding:14px 20px;}
+.scenario-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#4ade80;margin-bottom:2px;}
+.scenario-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;}
+.scenario-body{padding:14px 20px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.scenario-answer{padding:10px 20px 14px;background:var(--surface-2);border-top:1px solid var(--border);font-size:12px;color:var(--green);font-weight:600;}
+/* Email steps */
+.step-list{display:flex;flex-direction:column;gap:0;margin-bottom:20px;}
+.step-item{display:grid;grid-template-columns:44px 1fr;gap:0;}
+.step-item:not(:last-child) .step-num::after{content:'';display:block;width:2px;background:var(--border);flex:1;margin:4px auto 0;}
+.step-num{display:flex;flex-direction:column;align-items:center;padding-top:2px;}
+.step-num-circle{width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-content{padding:2px 0 20px 16px;}
+.step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.step-body{font-size:13px;color:var(--text-soft);line-height:1.65;}
+/* Knowledge check scenarios */
+.kcheck-scenario{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.kcheck-q{background:var(--text);padding:14px 20px;font-size:13px;color:#fff;line-height:1.6;}
+.kcheck-q strong{color:#4ade80;}
+.kcheck-options{padding:12px 20px;display:flex;flex-direction:column;gap:8px;}
+.kcheck-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;color:var(--text-soft);line-height:1.5;}
+.kcheck-option.correct{background:var(--surface-2);border-color:var(--green-dim);color:var(--green);font-weight:600;}
+.kcheck-option.wrong{background:var(--red-light);border-color:var(--red-border);color:var(--red);text-decoration:line-through;opacity:0.7;}
+.kcheck-opt-badge{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.correct .kcheck-opt-badge{background:var(--green);color:#fff;}
+.wrong .kcheck-opt-badge{background:var(--red);color:#fff;}
+/* Diagrams */
+.diagram-wrap{margin:20px 0 24px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface);}
+.diagram-img{width:100%;display:block;}
+.diagram-caption{font-size:11px;color:var(--text-muted);padding:10px 16px;border-top:1px solid var(--border);background:var(--surface-2);letter-spacing:0.04em;}
+/* Sidebar */
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#4ade80;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#80c89a;line-height:1.6;}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--green);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#4ade80;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#1a4028;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--green);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+/* Module nav */
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.use-case-grid,.policy-type-grid,.feature-grid,.alert-grid,.lesson-tools-grid{grid-template-columns:1fr;}.policy-type+.policy-type{border-left:none;border-top:1px solid var(--border);}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      Secure Data in Motion · EDU-220
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — 2A: Secure Data in Motion · EDU-220</div>
+    <h1>Secure Data <em>in Motion</em></h1>
+    <p>DLP policies, content vs context inspection, UEBA, Gen AI security, parallel processing, and outbound email DLP.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Secure data in motion with <em>encryption and a DLP engine</em> to prevent data leaks.</div>
+  <p class="motivation-sub">Zscaler's advanced security solutions ensure data being transmitted across networks remains protected from encryption and tampering — inspecting every byte before it leaves your organisation.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-usecases',this)">Use Cases</button>
+  <button class="nav-tab" onclick="navTo('section-dlp',this)">DLP Policies</button>
+  <button class="nav-tab" onclick="navTo('section-ueba',this)">UEBA</button>
+  <button class="nav-tab" onclick="navTo('section-parallel',this)">Parallel Processing</button>
+  <button class="nav-tab" onclick="navTo('section-genai',this)">Gen AI Security</button>
+  <button class="nav-tab" onclick="navTo('section-email',this)">Email DLP</button>
+  <button class="nav-tab" onclick="navTo('section-kcheck',this)">Knowledge Check</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="section-block" id="section-overview">
+    <div class="section-label">OVERVIEW</div>
+    <h2>Securing data as it moves</h2>
+    <p>At Zscaler, securing data in motion is a critical focus. By leveraging encryption, real-time threat detection, and the Zero Trust Exchange framework, Zscaler provides comprehensive security measures while protecting sensitive information as it travels across networks, SaaS apps, cloud environments, and endpoints.</p>
+
+    <div class="key-concept">
+      <strong>Core focus:</strong> The DLP engine plays a pivotal role in identifying and preventing unauthorised data transfers. It continuously monitors and inspects data in motion to detect and block sensitive information from being sent to unauthorised destinations — regardless of how the transfer occurs.
+    </div>
+
+    <div class="diagram-wrap">
+      <img src="diagram-platform.png" alt="Zscaler Data Security Platform overview showing Secure SaaS Data, Secure Cloud Data, Secure Data in Motion, Secure Endpoint Data, and Secure Unmanaged Devices all unified through Zero Trust Exchange" class="diagram-img">
+      <div class="diagram-caption">Zscaler Data Security Platform — unified and comprehensive. Secure Data in Motion (highlighted) sits at the centre, covering Internet &amp; Email DLP, Gen AI Security, and UEBA &amp; Adaptive Access.</div>
+    </div>
+
+    <h3>Where "Data in Motion" fits</h3>
+    <p>Within the Zscaler platform, Secure Data in Motion covers three key capabilities:</p>
+    <ul class="content-list">
+      <li><strong>Internet &amp; Email DLP</strong> — structured, unstructured, and image data inspected as it moves</li>
+      <li><strong>Gen AI Security</strong> — prompt visibility and blocking for generative AI platforms</li>
+      <li><strong>UEBA &amp; Adaptive Access</strong> — responds to risky anomalies detected in user behaviour</li>
+    </ul>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- USE CASES -->
+  <div class="section-block" id="section-usecases">
+    <div class="section-label">COMMON USE CASES</div>
+    <h2>Six practical use cases for inline data protection</h2>
+    <p>Now that you have a basic understanding of securing data in motion, let's explore how these concepts apply to practical scenarios. When considering inline data protection, all six use cases below must be addressed to safeguard data in real time.</p>
+
+    <div class="use-case-grid">
+      <div class="use-case-card">
+        <div class="use-case-num">USE CASE 1</div>
+        <div class="use-case-name">Shadow IT Discovery</div>
+        <div class="use-case-body">Automatically surfaces unsanctioned applications employees are using — providing visibility before enforcement can begin.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-num">USE CASE 2</div>
+        <div class="use-case-name">Cloud App Control</div>
+        <div class="use-case-body">Enables granular policy enforcement per app category. Instead of blanket blocks, you can allow an app but restrict specific actions — e.g., allow Google Drive but block file uploads. Each app category has a risk score (0–100).</div>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-num">USE CASE 3</div>
+        <div class="use-case-name">Tenancy Restrictions</div>
+        <div class="use-case-body">Differentiates between instances of the same tenant. For example: allow uploads to corporate OneDrive but block uploads to personal OneDrive — even within the same application.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-num">USE CASE 4</div>
+        <div class="use-case-name">Inline DLP for Web and SaaS</div>
+        <div class="use-case-body">Inspects all traffic in real time using the unified DLP policy engine — detecting sensitive content in web uploads, SaaS file transfers, email, and cloud storage from a single policy point.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-num">USE CASE 5</div>
+        <div class="use-case-name">UEBA &amp; Adaptive Access</div>
+        <div class="use-case-body">Monitors user and entity behaviour for anomalies. When suspicious behaviour is detected (e.g., bulk downloads), adaptive access can automatically require MFA, restrict access, or force reauthentication.</div>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-num">USE CASE 6</div>
+        <div class="use-case-name">Data Security on BYOD</div>
+        <div class="use-case-body">Browser Isolation prevents data from landing on unmanaged or personal devices — protecting sensitive data without requiring VDI or MDM deployment.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>CLOUD APP CONTROL EXAMPLE</div>
+      <div class="callout-body">With Cloud App Control, you don't need to block an entire platform. Instead, you can permit General activities for social media but block file attachment sending. Or allow corporate OneDrive access while blocking uploads to personal OneDrive via tenancy restrictions — all with OCR-powered content inspection.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-usecases" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('usecases','Use Cases')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-usecases" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-usecases"></span></div></div>
+    </div>
+  </div>
+
+  <!-- DLP POLICIES -->
+  <div class="section-block" id="section-dlp">
+    <div class="section-label">DLP POLICIES</div>
+    <h2>Zscaler Data Loss Prevention Policies</h2>
+    <p>Zscaler DLP policies are designed to protect sensitive data across networks and applications. They monitor data movement and enforce rules to prevent unauthorised sharing, access, or loss — based on both user activities and application behaviour.</p>
+
+    <div class="policy-type-grid">
+      <div class="policy-type">
+        <div class="policy-type-label label-content">CONTENT-DRIVEN</div>
+        <div class="policy-type-title">What the data IS</div>
+        <div class="policy-type-body">Inspects the actual content of data to identify sensitive information (credit card numbers, SSNs, confidential documents). Detection based on predefined patterns, keywords, or file types — regardless of where or how it's transmitted.</div>
+      </div>
+      <div class="policy-type">
+        <div class="policy-type-label label-context">CONTEXT-DRIVEN</div>
+        <div class="policy-type-title">Where &amp; how it's used</div>
+        <div class="policy-type-body">Focuses on the context in which data is being used or moved — user identity, device security level, location, and time of access — rather than the content of the data itself.</div>
+      </div>
+    </div>
+
+    <div class="diagram-wrap">
+      <img src="diagram-content-driven.png" alt="Content-driven DLP policies diagram showing 6 features: Keyword Scanning, Pattern Recognition, AI or ML, Exact Data Match, Indexed Document Match, File Type Detection" class="diagram-img">
+      <div class="diagram-caption">Content-driven DLP — 6 detection methods radiating from the central DLP engine</div>
+    </div>
+
+    <h3>Content-driven Features</h3>
+    <div class="feature-grid">
+      <div class="feature-pill">
+        <div class="feature-pill-name">1. Keyword Scanning</div>
+        <div class="feature-pill-body">Scans for sensitive or confidential words/phrases — credit card numbers, SSNs, specific business-related technical terms.</div>
+      </div>
+      <div class="feature-pill">
+        <div class="feature-pill-name">2. Pattern Recognition</div>
+        <div class="feature-pill-body">Identifies specific data formats by detecting predefined sequences and structures (e.g., credit card or SSN patterns).</div>
+      </div>
+      <div class="feature-pill">
+        <div class="feature-pill-name">3. AI or ML</div>
+        <div class="feature-pill-body">Advanced algorithms identify complex information types — medical records, financial data — that may not follow simple patterns but require contextual understanding.</div>
+      </div>
+      <div class="feature-pill">
+        <div class="feature-pill-name">4. Exact Data Match (EDM)</div>
+        <div class="feature-pill-body">Uses a defined EDM template to accurately match data against records from structured sources (database exports), enabling precise detection of customer or employee records.</div>
+      </div>
+      <div class="feature-pill">
+        <div class="feature-pill-name">5. Indexed Document Match (IDM)</div>
+        <div class="feature-pill-body">Fingerprints and indexes critical documents with sensitive data, creating a repository the Zscaler service uses to identify matches in outbound traffic. Supports confidence thresholds (e.g., 75% match).</div>
+      </div>
+      <div class="feature-pill">
+        <div class="feature-pill-name">6. File Type Detection</div>
+        <div class="feature-pill-body">Identifies sensitive information based on file type — PDFs, Word documents, Excel spreadsheets — regardless of file extension or encoding.</div>
+      </div>
+    </div>
+
+    <div class="diagram-wrap">
+      <img src="diagram-context-driven.png" alt="Context-driven DLP policies diagram showing 4 factors: User Identity and Role, Device Security, Location Awareness, Time of Access" class="diagram-img">
+      <div class="diagram-caption">Context-driven DLP — 4 contextual factors that determine whether data access is permitted</div>
+    </div>
+
+    <h3>Context-driven Features</h3>
+    <div class="feature-grid">
+      <div class="feature-pill">
+        <div class="feature-pill-name">User Identity &amp; Role</div>
+        <div class="feature-pill-body">Enforces different rules based on who is accessing or sharing data. A senior researcher may have broader permissions than a new intern.</div>
+      </div>
+      <div class="feature-pill">
+        <div class="feature-pill-name">Device Security</div>
+        <div class="feature-pill-body">Considers the device's security level. Zscaler Client Connector performs posture management — checking CrowdStrike/Defender installation, firewall status, and patch levels to build a Profile Risk Score.</div>
+      </div>
+      <div class="feature-pill">
+        <div class="feature-pill-name">Location Awareness</div>
+        <div class="feature-pill-body">Policies sensitive to where data access is attempted. Access from a corporate network may be allowed; access from high-risk countries may be blocked.</div>
+      </div>
+      <div class="feature-pill">
+        <div class="feature-pill-name">Time of Access</div>
+        <div class="feature-pill-body">Access to specific data can be restricted by day or time of week — reflecting typical business hours or specific operational schedules.</div>
+      </div>
+    </div>
+
+    <h3>Advanced Content Inspection</h3>
+    <p>Zscaler's content inspection capabilities go beyond basic scanning and include:</p>
+    <ul class="content-list">
+      <li><strong>OCR (Optical Character Recognition)</strong> — detects sensitive information inside images. If an employee uploads a photo of an employee ID card, OCR will identify the sensitive content even though it's not searchable text.</li>
+      <li><strong>Microsoft AIP integration</strong> — seamlessly extends DLP policies to Microsoft Office 365 and Azure Information Protection labelled documents.</li>
+      <li><strong>Predefined &amp; custom dictionaries</strong> — built using standard PCRE/regex methods. Organisations can also create custom dictionaries for specific business terminology or data patterns.</li>
+      <li><strong>Unified inspection across all channels</strong> — the same DLP engine and policy applies whether traffic is going to the web, a SaaS app, or from an endpoint. No siloed policies.</li>
+    </ul>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">!</div>KEY DIFFERENTIATOR</div>
+      <div class="callout-body">Zscaler has been doing inline DLP for eight years. The same DLP dictionaries and engines that inspect web traffic can now also be enforced on endpoint data. One engine, one policy, across all vectors.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-dlp" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('dlp','DLP Policies')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-dlp" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-dlp"></span></div></div>
+    </div>
+  </div>
+
+  <!-- UEBA -->
+  <div class="section-block" id="section-ueba">
+    <div class="section-label">UEBA &amp; ADAPTIVE ACCESS</div>
+    <h2>User and Entity Behavior Analytics</h2>
+    <p>The UEBA feature monitors and analyses the actions of users and entities on an organisation's network. Real-time notifications called <strong>UEBA Alerts</strong> are produced in response to anomalous activity found through the analysis of user and entity behaviour.</p>
+
+    <p>UEBA tracks the following activities:</p>
+    <ul class="content-list">
+      <li>Login attempts and session durations</li>
+      <li>File access and transfers</li>
+      <li>Application usage patterns</li>
+      <li>Data exfiltration or unauthorised activity</li>
+    </ul>
+
+    <p>Zscaler has built predefined rules to detect anomalous behaviour, helping detect potential security risks such as unauthorised access or data exposure. You can also create your own alert rules to better suit your organisation's needs.</p>
+
+    <h3>Default UEBA Alerts</h3>
+    <div class="alert-grid">
+      <div class="alert-card">
+        <div class="alert-name">Impossible Travel Alert</div>
+        <div class="alert-body">Flags suspicious login attempts from geographically distant locations in a short timeframe, indicating potential unauthorised access.</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-name">Failed Login Alert</div>
+        <div class="alert-body">Detects repeated login failures, which may signal brute force attempts or compromised credentials.</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-name">Bulk Upload of Data Alert</div>
+        <div class="alert-body">Monitors unusually large data uploads, potentially indicating unauthorised data exfiltration.</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-name">Bulk Download of Data Alert</div>
+        <div class="alert-body">Tracks significant data downloads, which could pose risks of sensitive information being stolen.</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-name">Repository Exposure Modified</div>
+        <div class="alert-body">Alerts when internal repositories are suddenly made publicly accessible or when permissions are altered.</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-name">Repository Shared Externally</div>
+        <div class="alert-body">Identifies cases where repositories or files are shared outside the organisation, raising concerns about data leakage.</div>
+      </div>
+    </div>
+
+    <h3>UEBA &amp; Adaptive Access in Action</h3>
+    <div class="scenario-block">
+      <div class="scenario-header">
+        <div class="scenario-label">USE CASE</div>
+        <div class="scenario-title">John, a product manager — unusual download spike</div>
+      </div>
+      <div class="scenario-body">
+        John typically downloads around <strong>50 files</strong> from the corporate Google Drive over 90 days. One day, he suddenly downloads <strong>500 files in a single day</strong>.<br><br>
+        UEBA detects this as anomalous activity and raises a <strong>Bulk Download of Data</strong> alert. Once detected, <strong>Adaptive Access</strong> comes into play — actions can include requiring John to complete multifactor authentication, disabling his access to Google Drive, or forcing reauthentication.
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-ueba" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('ueba','UEBA')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-ueba" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-ueba"></span></div></div>
+    </div>
+  </div>
+
+  <!-- PARALLEL PROCESSING -->
+  <div class="section-block" id="section-parallel">
+    <div class="section-label">PARALLEL POLICY PROCESSING</div>
+    <h2>Why Zscaler doesn't stop at the first match</h2>
+    <p>Zscaler's DLP policies offer granular control and leverage numerous exceptions. A key differentiator is <strong>parallel policy processing</strong> — unlike traditional firewalls and web proxies where policy rule order matters and lookup stops at the first match, leaving potential security holes.</p>
+
+    <div class="key-concept">
+      <strong>Traditional approach:</strong> Rule order matters. Policy lookup stops at the first match. A stricter second rule may never be evaluated if a looser rule matches first — creating gaps.<br><br>
+      <strong>Zscaler approach:</strong> By enabling the <strong>Evaluate All Rules</strong> option under DLP Advanced Settings, administrators can ensure all rules are evaluated and the most restrictive action is enforced.
+    </div>
+
+    <h3>Example</h3>
+    <div class="callout callout-blue">
+      <div class="callout-header"><div class="callout-icon">→</div>SCENARIO</div>
+      <div class="callout-body">
+        <strong>Policy 1:</strong> Finance users are allowed to upload PCI data.<br>
+        <strong>Policy 2:</strong> Uploads containing both PCI <em>and</em> PII are blocked.<br><br>
+        A finance user uploads a file containing both PCI and PII data.<br><br>
+        <strong>Traditional proxy:</strong> Stops at Policy 1 → upload is allowed. The stricter Policy 2 is never checked.<br>
+        <strong>Zscaler (Parallel Processing):</strong> Continues to evaluate all policies → Policy 2 is enforced → upload is blocked.
+      </div>
+    </div>
+
+    <p>The DLP policy engine at Zscaler allows for a lot of granularity, with a lot of exceptions — and is highly effective precisely because it doesn't stop at the first policy match.</p>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-parallel" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('parallel','Parallel Processing')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-parallel" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-parallel"></span></div></div>
+    </div>
+  </div>
+
+  <!-- GEN AI SECURITY -->
+  <div class="section-block" id="section-genai">
+    <div class="section-label">GENERATIVE AI SECURITY</div>
+    <h2>Protecting data flowing into and out of Gen AI</h2>
+    <p>Generative AI is transforming how organisations innovate, collaborate, and boost productivity by automating workflows and streamlining operations. Yet this powerful technology raises important concerns about data security, privacy, and compliance.</p>
+
+    <div class="key-concept">
+      <strong>The challenge:</strong> How can enterprises harness the benefits of Gen AI while protecting sensitive information and promoting responsible usage? Zscaler uses Gen AI DLP inspection to restrict access and prevent sharing of sensitive data with AI platforms.
+    </div>
+
+    <h3>Gen AI Security Capabilities</h3>
+    <ul class="content-list">
+      <li><strong>Generative AI Security Report</strong> — highlights usage of AI apps within the organisation; tracks trends and usage patterns; surfaces apps with the highest risk scores at the top.</li>
+      <li><strong>Sensitive Data Access tracking</strong> — keeps track of sensitive data transactions, showing top users with the highest volume of sensitive data interactions with AI tools.</li>
+      <li><strong>Contextual visibility</strong> — provides complete contextual visibility of Gen AI transactions, enabling organisations to enforce DLP policies at the AI platform level.</li>
+      <li><strong>Cloud App Control for AI</strong> — DLP's Cloud App Control with Browser Isolation can allow access to an AI platform while blocking certain sensitive data inputs. For example: PCI data inputs to ChatGPT can be prompted or blocked.</li>
+      <li><strong>URL Filtering (URLF)</strong> — restricts websites categorised under "General AI &amp; ML", allowing organisations to block, caution, or isolate AI traffic based on risk level.</li>
+    </ul>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-genai" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('genai','Gen AI Security')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-genai" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-genai"></span></div></div>
+    </div>
+  </div>
+
+  <!-- EMAIL DLP -->
+  <div class="section-block" id="section-email">
+    <div class="section-label">OUTBOUND EMAIL DLP</div>
+    <h2>Zscaler Outbound Email DLP</h2>
+    <p>Zscaler Outbound Email DLP is designed to detect and prevent the unauthorised transmission of sensitive information via outbound emails to external domains. It enforces organisational data protection policies by inspecting <strong>subject lines</strong>, <strong>body content</strong>, and <strong>attachments</strong>.</p>
+    <p>Seamlessly integrating with your email server (via Microsoft Exchange mail flow rules), this solution enables automated monitoring, deep content inspection, and policy enforcement to reduce the risk of data breaches and ensure compliance.</p>
+
+    <div class="diagram-wrap">
+      <img src="diagram-email-dlp.png" alt="6-step Zscaler Outbound Email DLP flow: Send email → Exchange → Zscaler Smart Host → DLP Inspection → Back to Exchange → Enforce action → Deliver or block" class="diagram-img">
+      <div class="diagram-caption">Zscaler Outbound Email DLP flow — email is routed to the Zscaler Smart Host for inspection before Exchange enforces the DLP action</div>
+    </div>
+
+    <h3>How It Works — 6 Steps</h3>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num"><div class="step-num-circle">1</div></div>
+        <div class="step-content">
+          <div class="step-title">User sends email</div>
+          <div class="step-body">A user sends an email containing sensitive information to an external domain.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num"><div class="step-num-circle">2</div></div>
+        <div class="step-content">
+          <div class="step-title">Exchange → Zscaler Smart Host</div>
+          <div class="step-body">Mail flow rules (a.k.a. transport rules) instruct Microsoft Exchange to route the email to the Zscaler Smart Host via SMTP for DLP inspection.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num"><div class="step-num-circle">3</div></div>
+        <div class="step-content">
+          <div class="step-title">DLP inspection &amp; header insertion</div>
+          <div class="step-body">The Zscaler DLP service inspects the email and inserts email headers based on the verdict of the policy evaluation (Block / Allow / Custom Header).</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num"><div class="step-num-circle">4</div></div>
+        <div class="step-content">
+          <div class="step-title">Email returned to Exchange</div>
+          <div class="step-body">The inspected email (with DLP headers) is sent back to Microsoft Exchange.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num"><div class="step-num-circle">5</div></div>
+        <div class="step-content">
+          <div class="step-title">Exchange enforces DLP action</div>
+          <div class="step-body">Microsoft Exchange enforces the DLP action based on the mail flow/transport rules and the inserted headers — blocking, encrypting, or allowing the email.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num"><div class="step-num-circle">6</div></div>
+        <div class="step-content">
+          <div class="step-title">Delivery or block</div>
+          <div class="step-body">If the email is allowed, it is delivered to the next hop MTA or to the intended recipient. Sensitive emails may be quarantined, encrypted for trusted partners, or blocked entirely.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>EMAIL SENDER PROFILES</div>
+      <div class="callout-body">You can create <strong>email sender profiles</strong> and associate them with DLP policies. This allows different rules for different recipient domains — e.g., trusted partner domains may have encrypted delivery while unknown external domains are blocked. Incident forensics for email DLP are available in Zscaler Workflow Automation.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-email" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('email','Email DLP')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-email" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-email"></span></div></div>
+    </div>
+  </div>
+
+  <!-- KNOWLEDGE CHECK -->
+  <div class="section-block" id="section-kcheck">
+    <div class="section-label">KNOWLEDGE CHECK — SCENARIOS</div>
+    <h2>Apply what you've learned</h2>
+    <p>Walk through each scenario and select the best action. These reflect real decisions you'll make using Zscaler DLP tools.</p>
+
+    <div class="kcheck-scenario">
+      <div class="kcheck-q"><strong>Scenario 1:</strong> You discover that a commonly used file-sharing app does not have encryption and takes ownership of uploaded data. The app has a high-risk score.</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>Adjust the risk score based on company policies and create a policy to block or restrict the app.</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Approve the app for unrestricted use.</div>
+      </div>
+    </div>
+
+    <div class="kcheck-scenario">
+      <div class="kcheck-q"><strong>Scenario 2:</strong> You discover an application used by the finance team that is not PCI-certified. This app has a high-risk score.</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Allow the finance team to continue using the non-PCI-certified application.</div>
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>Create a policy to block the finance team from using non-PCI-certified applications.</div>
+      </div>
+    </div>
+
+    <div class="kcheck-scenario">
+      <div class="kcheck-q"><strong>Scenario 3:</strong> The DLP dashboard shows that an employee is uploading sensitive financial documents to their personal Google Drive and Gmail account.</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>Use the DLP dashboard to restrict the employee from uploading sensitive documents to personal accounts.</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Ignore the DLP alerts and take no action regarding the employee's uploads.</div>
+      </div>
+    </div>
+
+    <div class="kcheck-scenario">
+      <div class="kcheck-q"><strong>Scenario 4:</strong> You notice that employees are using both corporate and personal OneDrive accounts. You need to ensure sensitive data isn't uploaded to personal accounts.</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>Use tenancy restrictions to block uploads to personal OneDrive accounts while allowing other activities.</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Disable access to all OneDrive accounts entirely, both corporate and personal.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-kcheck" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('kcheck','Knowledge Check')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-kcheck" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-kcheck"></span></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-220-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-220 Hub
+    </a>
+    <div class="mod-nav-group-label">SECTION 1</div>
+    <a class="mod-nav-link" href="../1 - Introduction to Data Security/edu-220-intro-data-security.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>Introduction to Data Security</a>
+    <div class="mod-nav-group-label">SECTION 2</div>
+    <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>2A — Data in Motion</span>
+    <a class="mod-nav-link" href="../2B Secure SaaS Data/edu-220-secure-saas-data.html"><span class="mod-nav-dot" style="background:#6c35cc;"></span>2B — Secure SaaS Data</a>
+    <a class="mod-nav-link" href="../2C Secure Cloud, Endpoint Data, and BYOD!/edu-220-cloud-endpoint-byod.html"><span class="mod-nav-dot" style="background:#b45309;"></span>2C — Cloud, Endpoint &amp; BYOD</a>
+    <div class="mod-nav-group-label">SECTION 3</div>
+    <a class="mod-nav-link" href="../3 - Incident Management Capabilities/edu-220-incident-management.html"><span class="mod-nav-dot" style="background:#b91c1c;"></span>Incident Management</a>
+    <div class="mod-nav-group-label">RECAP</div>
+    <a class="mod-nav-link" href="../Recap/edu-220-recap.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>Course Recap</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Secure data in motion overview</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>6 common use cases</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Cloud App Control & tenancy restrictions</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Content-driven DLP (6 features)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Context-driven DLP (4 factors)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>EDM, IDM, OCR explained</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>UEBA alerts (6 types)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Adaptive access use case</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Parallel policy processing</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Gen AI Security capabilities</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Email DLP 6-step flow</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Knowledge check scenarios (4)</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">EDM</div>
+      <div class="quick-ref-def">Exact Data Match — matches outbound data against structured records (e.g., customer database exports) for precise detection.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">IDM</div>
+      <div class="quick-ref-def">Indexed Document Match — fingerprints and indexes specific documents; identifies matches in outbound traffic with a configurable confidence threshold.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">OCR</div>
+      <div class="quick-ref-def">Optical Character Recognition — detects sensitive data inside images and scanned documents.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">UEBA</div>
+      <div class="quick-ref-def">User and Entity Behavior Analytics — monitors for anomalous behaviour and triggers adaptive access responses.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Parallel Processing</div>
+      <div class="quick-ref-def">Evaluate All Rules option — all DLP policies are evaluated; the most restrictive action wins. Unlike traditional firewalls that stop at first match.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Tenancy Restriction</div>
+      <div class="quick-ref-def">Differentiates between corporate vs personal instances of the same SaaS app (e.g., corporate OneDrive vs personal OneDrive).</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Smart Host (Email DLP)</div>
+      <div class="quick-ref-def">Zscaler server that receives emails from Exchange via SMTP, performs DLP inspection, and returns headers for Exchange to act on.</div>
+    </div>
+  </div>
+
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-220 · <span>2A — Secure Data in Motion</span></div>
+  <div class="footer-right">Zscaler Study Guide</div>
+</footer>
+
+<script>
+const PAGE_KEY = 'edu220-data-in-motion';
+
+function getStore(){
+  try{return JSON.parse(localStorage.getItem(PAGE_KEY))||{};}catch(e){return{};}
+}
+function saveStore(s){
+  try{localStorage.setItem(PAGE_KEY,JSON.stringify(s));}catch(e){}
+}
+
+function addQuestion(sectionId, sectionLabel){
+  const ta=document.getElementById('q-'+sectionId);
+  const text=ta.value.trim();
+  if(!text)return;
+  const s=getStore();
+  if(!s.questions)s.questions=[];
+  s.questions.push({section:sectionLabel,text,id:Date.now()});
+  saveStore(s);
+  ta.value='';
+  renderQPanel();
+}
+function deleteQuestion(id){
+  const s=getStore();
+  s.questions=(s.questions||[]).filter(q=>q.id!==id);
+  saveStore(s);
+  renderQPanel();
+}
+function renderQPanel(){
+  const s=getStore();
+  const qs=s.questions||[];
+  const count=document.getElementById('qpanel-count');
+  const body=document.getElementById('qpanel-body');
+  count.textContent=qs.length;
+  count.style.display=qs.length?'inline':'none';
+  if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Use the boxes below each section to add one.</p>';return;}
+  const groups={};
+  qs.forEach(q=>{if(!groups[q.section])groups[q.section]=[];groups[q.section].push(q);});
+  body.innerHTML=Object.entries(groups).map(([label,items],gi)=>`
+    <div class="q-group">
+      <div class="q-group-label">${label.toUpperCase()}</div>
+      ${items.map((q,i)=>`
+        <div class="q-item">
+          <div class="q-num">${gi*10+i+1}</div>
+          <div class="q-text">${q.text}</div>
+          <button class="q-del" onclick="deleteQuestion(${q.id})">✕</button>
+        </div>`).join('')}
+    </div>`).join('');
+}
+function toggleQPanel(){
+  const body=document.getElementById('qpanel-body');
+  const hdr=document.getElementById('qpanel-header');
+  const chev=document.getElementById('qpanel-chevron');
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);
+  chev.textContent=open?'▴':'▾';
+  const s=getStore();s.qOpen=open;saveStore(s);
+}
+
+document.querySelectorAll('.notes-ta').forEach(ta=>{
+  const key=ta.id;
+  const s=getStore();
+  if(s[key])ta.value=s[key];
+  let timer;
+  ta.addEventListener('input',()=>{
+    clearTimeout(timer);
+    timer=setTimeout(()=>{
+      const st=getStore();st[key]=ta.value;saveStore(st);
+      const ns=document.getElementById('ns-'+key.replace('notes-',''));
+      if(ns){ns.textContent='Saved';setTimeout(()=>{ns.textContent='';},1800);}
+    },600);
+  });
+});
+
+function toggleCheck(li){
+  li.classList.toggle('done');
+  const s=getStore();
+  if(!s.checks)s.checks={};
+  s.checks[li.querySelector('span').textContent]=li.classList.contains('done');
+  saveStore(s);
+}
+(function restoreChecks(){
+  const s=getStore();
+  if(!s.checks)return;
+  document.querySelectorAll('#checklist li').forEach(li=>{
+    if(s.checks[li.querySelector('span').textContent])li.classList.add('done');
+  });
+})();
+
+function navTo(id,btn){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+(function init(){
+  renderQPanel();
+  const s=getStore();
+  if(s.qOpen){
+    const body=document.getElementById('qpanel-body');
+    const hdr=document.getElementById('qpanel-header');
+    const chev=document.getElementById('qpanel-chevron');
+    body.classList.add('open');hdr.classList.add('open');chev.textContent='▴';
+  }
+})();
+</script>
+</body>
+</html>

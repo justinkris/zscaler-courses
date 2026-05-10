@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure SaaS Data — EDU-220</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f0ff;--surface:#fff;--surface-2:#f0eaff;--border:#c8b0f5;--border-dim:#e5d8ff;
+  --text:#140828;--text-soft:#2e1a50;--text-muted:#6a4a9a;
+  --purple:#6c35cc;--purple-glow:rgba(108,53,204,0.07);--purple-dim:#c8b0f5;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#6a4a9a;letter-spacing:0.08em;margin-bottom:12px;}
+.breadcrumb a{color:#c084fc;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#2e1a50;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(192,132,252,0.1);border:1px solid rgba(192,132,252,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#c084fc;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#c084fc;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#c084fc;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--purple);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--purple);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#c084fc;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--purple);border-bottom-color:var(--purple);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--purple);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--purple-glow);border:1px solid var(--purple-dim);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--purple);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-tip{background:var(--surface-2);border-color:var(--border);}
+.callout-tip .callout-header{color:var(--purple);}
+.callout-tip .callout-icon{background:var(--purple-dim);color:var(--purple);}
+.callout-tip .callout-body{color:var(--text-soft);}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+/* Use case cards */
+.uc-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.uc-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--purple);border-radius:14px;padding:16px 18px;}
+.uc-tag{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--purple);margin-bottom:4px;}
+.uc-name{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.uc-body{font-size:13px;color:var(--text-soft);line-height:1.65;}
+/* AppTotal steps */
+.apptotal-steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px;}
+.at-step{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.at-step-header{background:var(--text);padding:12px 16px;}
+.at-step-num{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#c084fc;margin-bottom:2px;}
+.at-step-name{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:#fff;}
+.at-step-body{padding:12px 16px;font-size:13px;color:var(--text-soft);line-height:1.65;}
+/* Remediate options */
+.remediate-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.rem-opt{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;}
+.rem-opt-name{font-size:12px;font-weight:700;color:var(--purple);margin-bottom:4px;letter-spacing:0.06em;}
+.rem-opt-body{font-size:13px;color:var(--text-soft);line-height:1.65;}
+/* Knowledge check */
+.kcheck{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.kcheck-q{background:var(--text);padding:14px 20px;font-size:13px;color:#fff;line-height:1.6;}
+.kcheck-options{padding:12px 20px;display:flex;flex-direction:column;gap:8px;}
+.kcheck-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;color:var(--text-soft);line-height:1.5;}
+.kcheck-option.correct{background:var(--green-light);border-color:var(--green-border);color:var(--green);font-weight:600;}
+.kcheck-option.wrong{background:var(--red-light);border-color:var(--red-border);color:var(--red);text-decoration:line-through;opacity:0.7;}
+.kcheck-opt-badge{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.correct .kcheck-opt-badge{background:var(--green);color:#fff;}
+.wrong .kcheck-opt-badge{background:var(--red);color:#fff;}
+/* Diagrams */
+.diagram-wrap{margin:20px 0 24px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface);}
+.diagram-img{width:100%;display:block;}
+.diagram-caption{font-size:11px;color:var(--text-muted);padding:10px 16px;border-top:1px solid var(--border);background:var(--surface-2);letter-spacing:0.04em;}
+/* Sidebar */
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#c084fc;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#b090d8;line-height:1.6;}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--purple);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#c084fc;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#2e1a50;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--purple);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.uc-grid,.apptotal-steps,.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <div class="breadcrumb"><a href="../../index.html">Zscaler Courses</a><span class="breadcrumb-sep">›</span>Secure SaaS Data · EDU-220</div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — 2B: Secure SaaS Data · EDU-220</div>
+    <h1>Secure <em>SaaS Data</em></h1>
+    <p>Out-of-Band CASB, SSPM, SaaS Assets reporting, AppTotal Security for third-party apps, and the OOB CASB knowledge check.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Secure SaaS data with Zscaler by <em>controlling access</em> and preventing data leakage.</div>
+  <p class="motivation-sub">Zscaler's Unified SaaS Security Platform — including out-of-band CASB, SSPM, and AppTotal — provides comprehensive protection for data sitting at rest across all your SaaS applications.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span><span class="qpanel-count" id="qpanel-count">0</span><span class="qpanel-hint">— click to expand</span><span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-casb',this)">Out-of-Band CASB</button>
+  <button class="nav-tab" onclick="navTo('section-report',this)">SaaS Assets Report</button>
+  <button class="nav-tab" onclick="navTo('section-apptotal',this)">AppTotal Security</button>
+  <button class="nav-tab" onclick="navTo('section-kcheck',this)">Knowledge Check</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="section-block" id="section-overview">
+    <div class="section-label">OVERVIEW</div>
+    <h2>Securing data at rest in SaaS</h2>
+    <p>There are different data protection capabilities that Zscaler provides through the Zero Trust Exchange and its Unified SaaS Security Platform to ensure the security of Software-as-a-Service (SaaS) data. As data breaches evolve and reliance on cloud solutions increases, Zscaler's comprehensive tools and strategies are essential for protecting sensitive information effectively.</p>
+    <p>With advanced <strong>Microsoft Copilot Security</strong> features, Zscaler helps organisations address risks like data oversharing and unauthorised access — even within AI-powered productivity tools.</p>
+
+    <div class="diagram-wrap">
+      <img src="diagram-platform.png" alt="Zscaler Data Security Platform showing Secure SaaS Data highlighted with Unified SaaS Security, CASB, SSPM, Supply Chain, and Microsoft Copilot Security" class="diagram-img">
+      <div class="diagram-caption">Zscaler Data Security Platform — Secure SaaS Data (highlighted) covers Unified SaaS Security: CASB, SSPM, Supply Chain integrations, and Microsoft Copilot Security</div>
+    </div>
+
+    <div class="key-concept">
+      <strong>Secure SaaS Data covers:</strong> CASB (control shadow IT & sharing), SSPM (misconfigurations & compliance), Supply Chain (secure integrations), and Microsoft Copilot Security (control sensitive data access & output).
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- OUT-OF-BAND CASB -->
+  <div class="section-block" id="section-casb">
+    <div class="section-label">OUT-OF-BAND CASB</div>
+    <h2>Out-of-Band Cloud Access Security Broker</h2>
+    <p>Zscaler offers an <strong>out-of-band CASB</strong> as part of its SaaS security solutions. Unlike inline inspection, out-of-band CASB is primarily designed to secure data <em>at rest</em> in SaaS-based services and public cloud infrastructure — by leveraging Zscaler's DLP capabilities and cloud sandbox via direct API connections to the applications.</p>
+
+    <div class="diagram-wrap">
+      <img src="diagram-oob-casb.png" alt="Out-of-Band CASB diagram showing API-based scanning of SaaS apps, with capabilities for full visibility into risky apps, controlling sharing, stopping malware, and fixing misconfigurations via SSPM" class="diagram-img">
+      <div class="diagram-caption">OOB CASB — API integration with 20+ supported apps (Microsoft, Google, AWS, Atlassian). Scan data at rest, stop malware, fix misconfigurations via SSPM.</div>
+    </div>
+
+    <h3>Five OOB CASB Use Cases</h3>
+    <div class="uc-grid">
+      <div class="uc-card">
+        <div class="uc-tag">USE CASE 1</div>
+        <div class="uc-name">Data Discovery</div>
+        <div class="uc-body">Discovers sensitive data stored within SaaS applications and cloud environments — the foundational step for identifying risks posed by sensitive information stored in the cloud.</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-tag">USE CASE 2</div>
+        <div class="uc-name">Prevent Data Exposure</div>
+        <div class="uc-body">Once data is discovered, prevents exposure by controlling who can access it and ensuring sensitive information isn't shared publicly or externally without authorisation.</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-tag">USE CASE 3</div>
+        <div class="uc-name">Secure Apps from Threats</div>
+        <div class="uc-body">Protects cloud-based apps and data from both known and unknown malware threats using sandboxing and behavioural analysis. Most CASBs provide advanced threat protection mechanisms.</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-tag">USE CASE 4</div>
+        <div class="uc-name">SaaS Security Posture Management (SSPM)</div>
+        <div class="uc-body">Identifies and remediates misconfigurations in SaaS apps; ensures compliance with industry standards and regulations. Cloud misconfiguration monitoring evaluates app security against best practices.</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-tag">USE CASE 5</div>
+        <div class="uc-name">3rd Party Apps Security</div>
+        <div class="uc-body">Protects data during SaaS-to-SaaS communications facilitated by third-party connected applications (add-ons, plugins, integrations).</div>
+      </div>
+    </div>
+
+    <h3>How OOB CASB Data Scanning Works</h3>
+    <ul class="content-list">
+      <li><strong>Retro scan</strong> — scans everything in the connected SaaS app from the beginning.</li>
+      <li><strong>Iterative scan</strong> — only scans and updates when something changes, reducing overhead.</li>
+      <li>The same DLP policies used for inline scanning are applied to data at rest — no separate policy engine.</li>
+      <li>Real-time notifications when new sensitive data or misconfigurations are detected.</li>
+      <li><strong>Supported apps (20+):</strong> Office 365, Google Apps, Salesforce, Box, Dropbox, GitHub, Azure Blob, GCP storage, Slack, GitLab, Jira, and more.</li>
+    </ul>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>SSPM KEY POINT</div>
+      <div class="callout-body">SSPM is built into the OOB CASB solution. It identifies SaaS application misconfigurations — comparing them against predefined best practices — and provides compliance mapping against standards. It also discovers third-party application integrations (e.g., apps connected to Office 365) that may be risky.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-casb" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('casb','Out-of-Band CASB')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-casb" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-casb"></span></div></div>
+    </div>
+  </div>
+
+  <!-- SAAS ASSETS REPORT -->
+  <div class="section-block" id="section-report">
+    <div class="section-label">SAAS ASSETS SUMMARY REPORT</div>
+    <h2>Visibility into SaaS security posture</h2>
+    <p>As part of maintaining a secure SaaS environment, visibility into potential risks is key. The <strong>SaaS Assets Summary Report</strong> provides an overview of SaaS Security API-based discovery and remediation activities. It enables organisations to begin investigating impacted data and identifying users who may pose security risks.</p>
+
+    <p>The report enables you to:</p>
+    <ul class="content-list">
+      <li>Gain visibility into your SaaS assets for DLP incidents, malware incidents, and risky users</li>
+      <li>Analyse the report for individual applications to configure stronger policies to mitigate threats</li>
+    </ul>
+
+    <p>The report provides insights on:</p>
+    <ul class="content-list">
+      <li><strong>Total Incidents</strong> and Incident Trend over the last 30 days</li>
+      <li><strong>Applications Generating the Incidents</strong> — broken down by category (Repository, File Sharing, Gen AI, Email, ITSM, CRM, Collaboration)</li>
+      <li><strong>DLP Incidents by Engine</strong> — pie chart breakdown (e.g., All Subject, US Names, Pacific-PA, EV SIN)</li>
+      <li><strong>Departments with Most Incidents</strong> and <strong>Users with Most Incidents</strong></li>
+      <li>Risky Cloud SaaS Applications across the organisation</li>
+    </ul>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>EXAMPLE METRICS</div>
+      <div class="callout-body">A sample report showed <strong>2.7K total incidents</strong> across 3,530 files scanned, with Repository Applications generating 2,280 DLP incidents. The top department (Default Department) had 2.8K incidents, while the top user had 2.4K incidents — surfacing exactly where to focus investigation and policy tightening.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-report" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('report','SaaS Assets Report')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-report" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-report"></span></div></div>
+    </div>
+  </div>
+
+  <!-- APPTOTAL -->
+  <div class="section-block" id="section-apptotal">
+    <div class="section-label">APPTOTAL SECURITY</div>
+    <h2>Third-party app discovery, analysis, and remediation</h2>
+    <p>Your company's data is not just within your SaaS applications — it's also with <strong>thousands of third-party integrations</strong> (add-on plugins and extensions) that connect into SaaS platforms, mobiles, desktops, and home computers. These integrations can:</p>
+    <ul class="content-list">
+      <li>Extract and manipulate your data</li>
+      <li>Expose you to a variety of supply chain risks</li>
+      <li>Increase the attack surface more than you realise</li>
+    </ul>
+
+    <p>Users often grant permissions to third-party apps using their enterprise identity (e.g., "Sign in with Microsoft"). This opens access to critical corporate applications — making it essential to understand who is behind these apps and evaluate their permissions.</p>
+
+    <div class="diagram-wrap">
+      <img src="diagram-apptotal.png" alt="AppTotal Technology 3-phase flow: Discover (API integrations, 30+ attributes extracted), Analyze (Static Analysis, App Sandbox, Heuristic Engine), Remediate (Notifications to Slack, SOAR, JIRA, Splunk)" class="diagram-img">
+      <div class="diagram-caption">AppTotal Technology — Discover → Analyze → Remediate. Uses API integrations to find apps, AI-powered analysis to assess risk, and automated remediation workflows.</div>
+    </div>
+
+    <h3>The Three Steps</h3>
+    <div class="apptotal-steps">
+      <div class="at-step">
+        <div class="at-step-header"><div class="at-step-num">STEP 1</div><div class="at-step-name">Discover</div></div>
+        <div class="at-step-body">Uses API integrations to connect with platforms (requesting only minimum privileges necessary). Once granted, retrieves a full inventory of all apps in the environment — Platform-native Services, Low-code Apps, 3rd Party Apps — extracting 30+ attributes per app.</div>
+      </div>
+      <div class="at-step">
+        <div class="at-step-header"><div class="at-step-num">STEP 2</div><div class="at-step-name">Analyze</div></div>
+        <div class="at-step-body"><strong>Static Analysis</strong> — examines app properties (unique identifier, privileges, developer). <strong>App Sandbox</strong> — tests new apps in a monitored sandbox environment. <strong>Heuristic Engine</strong> — combination of behaviours; if an app is found malicious, automated remediation is triggered.</div>
+      </div>
+      <div class="at-step">
+        <div class="at-step-header"><div class="at-step-num">STEP 3</div><div class="at-step-name">Remediate</div></div>
+        <div class="at-step-body">Three admin-selectable options: <strong>End User Review</strong> (users confirm via Slack/email; access revoked or maintained), <strong>Revoke</strong> (Google — removes all permissions), <strong>Ban</strong> (Microsoft — blocks app permanently). Integrated with Slack, SOAR (torq), JIRA, Splunk.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>APPTOTAL SUMMARY</div>
+      <div class="callout-body">Zscaler AppTotal profiles third-party apps <em>before</em> they're connected to IT-approved platforms, continuously monitors app behaviour in your environment, and streamlines end-user recertifications to revoke dormant or over-privileged app access.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-apptotal" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('apptotal','AppTotal Security')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-apptotal" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-apptotal"></span></div></div>
+    </div>
+  </div>
+
+  <!-- KNOWLEDGE CHECK -->
+  <div class="section-block" id="section-kcheck">
+    <div class="section-label">KNOWLEDGE CHECK</div>
+    <h2>Apply what you've learned</h2>
+    <div class="kcheck">
+      <div class="kcheck-q">Your HR department has uploaded employee records containing sensitive personal information to a shared folder on OneDrive. The out-of-band CASB system detects that one of the files has been shared using a public link accessible to external users. What is the most appropriate action the CASB system could take, based on the configured DLP policies?</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>Notify the administrator and remove external access to the file</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Allow the file to remain public but warn the uploader</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Delete all sensitive data from the OneDrive folder</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Prevent future uploads to the OneDrive folder automatically</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-kcheck" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('kcheck','Knowledge Check')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-kcheck" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-kcheck"></span></div></div>
+    </div>
+  </div>
+
+</div>
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-220-hub.html"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> EDU-220 Hub</a>
+    <div class="mod-nav-group-label">SECTION 1</div>
+    <a class="mod-nav-link" href="../1 - Introduction to Data Security/edu-220-intro-data-security.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>Introduction to Data Security</a>
+    <div class="mod-nav-group-label">SECTION 2</div>
+    <a class="mod-nav-link" href="../2A Data in Motion/edu-220-data-in-motion.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>2A — Data in Motion</a>
+    <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:#6c35cc;"></span>2B — Secure SaaS Data</span>
+    <a class="mod-nav-link" href="../2C Secure Cloud, Endpoint Data, and BYOD!/edu-220-cloud-endpoint-byod.html"><span class="mod-nav-dot" style="background:#b45309;"></span>2C — Cloud, Endpoint &amp; BYOD</a>
+    <div class="mod-nav-group-label">SECTION 3</div>
+    <a class="mod-nav-link" href="../3 - Incident Management Capabilities/edu-220-incident-management.html"><span class="mod-nav-dot" style="background:#b91c1c;"></span>Incident Management</a>
+    <div class="mod-nav-group-label">RECAP</div>
+    <a class="mod-nav-link" href="../Recap/edu-220-recap.html"><span class="mod-nav-dot" style="background:#6c35cc;"></span>Course Recap</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Unified SaaS Security overview</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Out-of-Band CASB purpose</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>5 OOB CASB use cases</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Retro vs iterative scanning</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>SSPM misconfigurations</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>SaaS Assets Summary Report</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>AppTotal Security 3 steps</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>End User Review / Revoke / Ban</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Knowledge check completed</span></li>
+    </ul>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+    <div class="quick-ref"><div class="quick-ref-term">OOB CASB</div><div class="quick-ref-def">Out-of-Band CASB — secures data at rest in SaaS via API connections; runs scans without being in the traffic path.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">SSPM</div><div class="quick-ref-def">SaaS Security Posture Management — identifies and remediates misconfigurations in SaaS apps to maintain compliance.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Retro Scan</div><div class="quick-ref-def">Scans all existing content in a SaaS app from the beginning — initial full baseline scan.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Iterative Scan</div><div class="quick-ref-def">Only scans new or changed content since the last scan — efficient ongoing monitoring.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">AppTotal</div><div class="quick-ref-def">Zscaler's solution for discovering, analysing, and remediating third-party apps connected to SaaS platforms.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-220 · <span>2B — Secure SaaS Data</span></div>
+  <div class="footer-right">Zscaler Study Guide</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu220-secure-saas-data';
+function getStore(){try{return JSON.parse(localStorage.getItem(PAGE_KEY))||{};}catch(e){return{};}}
+function saveStore(s){try{localStorage.setItem(PAGE_KEY,JSON.stringify(s));}catch(e){}}
+function addQuestion(sId,sLabel){const ta=document.getElementById('q-'+sId);const text=ta.value.trim();if(!text)return;const s=getStore();if(!s.questions)s.questions=[];s.questions.push({section:sLabel,text,id:Date.now()});saveStore(s);ta.value='';renderQPanel();}
+function deleteQuestion(id){const s=getStore();s.questions=(s.questions||[]).filter(q=>q.id!==id);saveStore(s);renderQPanel();}
+function renderQPanel(){const s=getStore();const qs=s.questions||[];const count=document.getElementById('qpanel-count');const body=document.getElementById('qpanel-body');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet.</p>';return;}const groups={};qs.forEach(q=>{if(!groups[q.section])groups[q.section]=[];groups[q.section].push(q);});body.innerHTML=Object.entries(groups).map(([label,items],gi)=>`<div class="q-group"><div class="q-group-label">${label.toUpperCase()}</div>${items.map((q,i)=>`<div class="q-item"><div class="q-num">${gi*10+i+1}</div><div class="q-text">${q.text}</div><button class="q-del" onclick="deleteQuestion(${q.id})">✕</button></div>`).join('')}</div>`).join('');}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const hdr=document.getElementById('qpanel-header');const chev=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');hdr.classList.toggle('open',open);chev.textContent=open?'▴':'▾';const s=getStore();s.qOpen=open;saveStore(s);}
+document.querySelectorAll('.notes-ta').forEach(ta=>{const key=ta.id;const s=getStore();if(s[key])ta.value=s[key];let timer;ta.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(()=>{const st=getStore();st[key]=ta.value;saveStore(st);const ns=document.getElementById('ns-'+key.replace('notes-',''));if(ns){ns.textContent='Saved';setTimeout(()=>{ns.textContent='';},1800);}},600);});});
+function toggleCheck(li){li.classList.toggle('done');const s=getStore();if(!s.checks)s.checks={};s.checks[li.querySelector('span').textContent]=li.classList.contains('done');saveStore(s);}
+(function restoreChecks(){const s=getStore();if(!s.checks)return;document.querySelectorAll('#checklist li').forEach(li=>{if(s.checks[li.querySelector('span').textContent])li.classList.add('done');});})();
+function navTo(id,btn){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');}
+(function init(){renderQPanel();const s=getStore();if(s.qOpen){const body=document.getElementById('qpanel-body');const hdr=document.getElementById('qpanel-header');const chev=document.getElementById('qpanel-chevron');body.classList.add('open');hdr.classList.add('open');chev.textContent='▴';}})();
+</script>
+</body>
+</html>

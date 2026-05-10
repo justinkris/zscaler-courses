@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 4 — Integrate Zscaler and Third-Party Security Services · EDU-280</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5f3ff;--surface:#fff;--surface-2:#ece8ff;--border:#c8bbff;--border-dim:#ddd6ff;
+  --text:#0d0820;--text-soft:#2a1f50;--text-muted:#7060a8;
+  --purple:#5c35cc;--purple-glow:rgba(92,53,204,0.07);--purple-dim:#c8bbff;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#2a1f50;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#a78bfa;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#2a1f50;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#a78bfa;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#a78bfa;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#a78bfa;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--purple);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--purple);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#a78bfa;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--purple);border-bottom-color:var(--purple);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--purple);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--purple-glow);border:1px solid var(--purple-dim);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--purple);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+.callout-note{background:var(--amber-light);border-color:var(--amber-border);}
+.callout-note .callout-header{color:var(--amber);}
+.callout-note .callout-icon{background:var(--amber-border);color:var(--amber);}
+.callout-note .callout-body{color:#5a3200;}
+.callout-tip{background:var(--surface-2);border-color:var(--border);}
+.callout-tip .callout-header{color:var(--purple);}
+.callout-tip .callout-icon{background:var(--purple-dim);color:var(--purple);}
+.callout-tip .callout-body{color:var(--text-soft);}
+/* Objective cards */
+.obj-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.obj-row{display:flex;gap:14px;align-items:flex-start;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+.obj-num{width:26px;height:26px;border-radius:50%;background:var(--purple);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.obj-text{font-size:13px;color:var(--text-soft);line-height:1.6;padding-top:3px;}
+.obj-text strong{color:var(--text);}
+/* CIA protection grid */
+.cia-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.cia-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 18px;}
+.cia-tag{font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--purple);margin-bottom:6px;}
+.cia-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.cia-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* IPSec benefits */
+.benefit-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.benefit-row{display:flex;gap:12px;align-items:flex-start;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+.benefit-icon{width:24px;height:24px;border-radius:50%;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;color:var(--purple);font-weight:700;}
+.benefit-content{flex:1;}
+.benefit-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.benefit-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Code block */
+.code-block{background:var(--text);border-radius:12px;padding:14px 20px;font-family:monospace;font-size:13px;color:#a78bfa;line-height:1.8;margin-bottom:16px;}
+/* GRE packet diagram */
+.packet-diagram{display:flex;flex-direction:column;gap:0;max-width:320px;margin:16px 0 20px;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+.packet-layer{padding:12px 20px;font-size:13px;font-weight:600;text-align:center;}
+.layer-ip{background:var(--blue-light);color:var(--blue);border-bottom:1px solid var(--border);}
+.layer-gre{background:var(--surface-2);color:var(--purple);border-bottom:1px solid var(--border);}
+.layer-payload{background:var(--text);color:#a78bfa;}
+/* GRE concepts */
+.gre-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.gre-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.gre-card-tag{font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--purple);margin-bottom:4px;}
+.gre-card-title{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.gre-card-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Traffic flow */
+.traffic-flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;}
+.flow-step{font-size:12px;font-weight:600;color:var(--purple);white-space:nowrap;}
+.flow-arrow{font-size:11px;color:var(--text-muted);}
+/* ZIA location benefits */
+.loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.loc-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.loc-icon{width:28px;height:28px;border-radius:50%;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:13px;margin-bottom:8px;}
+.loc-title{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.loc-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Knowledge check */
+.kcheck{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
+.kcheck-q{background:var(--text);padding:16px 20px;font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;line-height:1.4;}
+.kcheck-options{padding:16px 20px;display:flex;flex-direction:column;gap:8px;}
+.kcheck-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;color:var(--text-soft);line-height:1.5;}
+.kcheck-option.correct{background:var(--green-light);border-color:var(--green-border);color:var(--green);}
+.kcheck-option.wrong{background:var(--red-light);border-color:var(--red-border);color:var(--red);text-decoration:line-through;}
+.kcheck-opt-badge{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.correct .kcheck-opt-badge{background:var(--green);color:#fff;}
+.wrong .kcheck-opt-badge{background:var(--red);color:#fff;}
+.kcheck-option:not(.correct):not(.wrong) .kcheck-opt-badge{background:var(--border);color:var(--text-muted);}
+/* Lesson tools */
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--purple);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#a78bfa;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#2a1f50;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+/* Sidebar */
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#a78bfa;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#9080c8;line-height:1.6;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--purple);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.cia-grid,.gre-grid,.loc-grid{grid-template-columns:1fr;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../zero-trust-branch-hub.html">Zero Trust Branch</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-280-hub.html">EDU-280</a>
+      <span class="breadcrumb-sep">›</span>
+      Section 4
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> EDU-280 · Section 4 · 20 min</div>
+    <h1>Integrate Zscaler and <em>Third-Party Security</em> Services</h1>
+    <p>IPSec and GRE tunneling fundamentals, ZIA integration for branch internet traffic, and ZIA Locations for consistent policy enforcement.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Two tunnels, one goal — <em>every branch packet inspected</em>.</div>
+  <p class="motivation-sub">IPSec and GRE are the two highways branch traffic travels to reach Zscaler's Security Cloud. Choosing the right one — and understanding how ZIA Locations tie it all together — is what separates a secure branch from a compliant one.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-ipsec',this)">IPSec Tunnel</button>
+  <button class="nav-tab" onclick="navTo('section-gre',this)">GRE Tunnel</button>
+  <button class="nav-tab" onclick="navTo('section-locations',this)">ZIA Locations</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="section-block" id="section-overview">
+    <div class="section-label">MODULE OVERVIEW</div>
+    <h2>IPSec, GRE, and ZIA Locations</h2>
+    <p>This module covers the two tunneling protocols that connect Zero Trust Branch to Zscaler's Security Cloud, their key differences, and when to use each. It also covers ZIA Locations — the mechanism that enables consistent, location-based policy enforcement across all branch sites.</p>
+
+    <div class="obj-grid">
+      <div class="obj-row">
+        <div class="obj-num">1</div>
+        <div class="obj-text"><strong>Explain</strong> the purpose of tunneling with IPSec and GRE in modern branch networking</div>
+      </div>
+      <div class="obj-row">
+        <div class="obj-num">2</div>
+        <div class="obj-text"><strong>Identify</strong> the advantages and use cases for both IPSec and GRE tunnels</div>
+      </div>
+      <div class="obj-row">
+        <div class="obj-num">3</div>
+        <div class="obj-text"><strong>Understand</strong> the scenarios for selecting IPSec vs GRE to meet specific branch network demands</div>
+      </div>
+      <div class="obj-row">
+        <div class="obj-num">4</div>
+        <div class="obj-text"><strong>Understand</strong> the concept of ZIA Locations and how to manage configurations for branch traffic</div>
+      </div>
+    </div>
+
+    <div class="key-concept">
+      <strong>Key distinction:</strong> Use <strong>IPSec</strong> when you need encryption, authentication, and integrity for sensitive or business-critical traffic. Use <strong>GRE</strong> for cost-effective, lightweight forwarding when encryption is not required. Both integrate with ZIA for inline inspection and policy enforcement.
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- IPSEC TUNNEL -->
+  <div class="section-block" id="section-ipsec">
+    <div class="section-label">IPSEC TUNNEL</div>
+    <h2>Understanding IPSec</h2>
+    <p><strong>Internet Protocol Security (IPSec)</strong> is a suite of protocols that provides network-layer security to a Virtual Private Network (VPN). A VPN is a virtual network connection that provides a secure communication path between two peers on a public network.</p>
+    <p>Peers in an IPSec VPN can be: two hosts (host-to-host), a remote host and a network gateway, or the gateways of two networks — for example, the gateway of your corporate network and a ZIA Public Service Edge.</p>
+
+    <h3>Three Key Protections</h3>
+    <div class="cia-grid">
+      <div class="cia-card">
+        <div class="cia-tag">CONFIDENTIALITY</div>
+        <div class="cia-title">Protect Sensitive Data</div>
+        <div class="cia-body">Prevents unauthorised access to data. Encryption protects data in transit and at rest. Access controls limit who can view or modify information. Data classification identifies which data needs strongest protection.</div>
+      </div>
+      <div class="cia-card">
+        <div class="cia-tag">INTEGRITY</div>
+        <div class="cia-title">Detect and Prevent Tampering</div>
+        <div class="cia-body">Ensures data remains accurate and unaltered throughout its lifecycle. Hashing algorithms verify data has not been modified. Digital signatures prove origin. Audit trails record all changes.</div>
+      </div>
+      <div class="cia-card">
+        <div class="cia-tag">AUTHENTICATION</div>
+        <div class="cia-title">Verify Identity</div>
+        <div class="cia-body">Verifies identity of users, devices, or systems before granting access. MFA combines something you know, have, or are. Zero Trust requires continuous authentication — not just at the perimeter.</div>
+      </div>
+    </div>
+
+    <h3>IKE — Internet Key Exchange</h3>
+    <p>IPSec peers use a negotiation process called <strong>Internet Key Exchange (IKE)</strong> to define the security mechanisms they will use. There are two versions:</p>
+    <ul class="content-list">
+      <li><strong>IKEv1</strong> — original version; still supported in many deployments</li>
+      <li><strong>IKEv2</strong> — modern, faster, more reliable; recommended for new deployments</li>
+      <li>Authentication methods: <strong>Pre-Shared Key (PSK)</strong> or <strong>X-Auth</strong> — both peers must match the same credential method for successful tunnel establishment</li>
+    </ul>
+
+    <h3>ZIA Integration via IPSec</h3>
+    <p>By default, Zero Trust Branch establishes <strong>IPSec tunnels on the WAN side</strong> to route internet-bound traffic through ZIA's Security Cloud, where it is inspected for malware, threats, and policy compliance.</p>
+
+    <div class="benefit-list">
+      <div class="benefit-row">
+        <div class="benefit-icon">⚙</div>
+        <div class="benefit-content">
+          <div class="benefit-title">Simplified Deployment</div>
+          <div class="benefit-body">With IPSec configured by default, branch sites gain secure internet access from day one — no manual setup required.</div>
+        </div>
+      </div>
+      <div class="benefit-row">
+        <div class="benefit-icon">🛡</div>
+        <div class="benefit-content">
+          <div class="benefit-title">Enhanced Security</div>
+          <div class="benefit-body">ZIA applies inline threat protection, SSL inspection, and DLP to ensure compliance with Zero Trust security strategies.</div>
+        </div>
+      </div>
+      <div class="benefit-row">
+        <div class="benefit-icon">↗</div>
+        <div class="benefit-content">
+          <div class="benefit-title">Scalable Architecture</div>
+          <div class="benefit-body">The integration scales seamlessly with dynamic branch expansions — no complex per-branch configurations needed.</div>
+        </div>
+      </div>
+      <div class="benefit-row">
+        <div class="benefit-icon">🔍</div>
+        <div class="benefit-content">
+          <div class="benefit-title">Traffic Inspection</div>
+          <div class="benefit-body">Internet traffic is routed securely via IPSec to ZIA for inspection, mitigating the risk of unauthorised or malicious traffic.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Verifying IPSec Status via Console</h3>
+    <p>Run the following command from the appliance shell to confirm IPSec tunnels are properly established:</p>
+    <div class="code-block">docker exec strongswan ipsec status</div>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">!</div>INACTIVE TUNNEL</div>
+      <div class="callout-body">If the IPSec tunnel is inactive or not properly configured, the command will indicate that <strong>no active SAs are currently available</strong>. This is the first check when troubleshooting connectivity issues between the branch and ZIA.</div>
+    </div>
+
+    <h3>Knowledge Check</h3>
+    <div class="kcheck">
+      <div class="kcheck-q">Which command verifies that IPSec tunnels are properly established on a Zero Trust Branch appliance?</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>ip tunnel</div>
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>docker exec strongswan ipsec status — shows active Security Associations (SAs) for the IPSec tunnel</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>traceroute</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Initiate Switchover</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-ipsec" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('ipsec','IPSec Tunnel')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-ipsec" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-ipsec"></span></div></div>
+    </div>
+  </div>
+
+  <!-- GRE TUNNEL -->
+  <div class="section-block" id="section-gre">
+    <div class="section-label">GRE TUNNEL</div>
+    <h2>Integrating GRE Tunnel</h2>
+    <p><strong>Generic Routing Encapsulation (GRE)</strong> is ideal for forwarding internet-bound traffic from your corporate network to the Zscaler service. GRE is a tunneling protocol that encapsulates packets inside a transport protocol — a GRE-capable router encapsulates a payload packet inside a GRE packet, which is then encapsulated in IP.</p>
+
+    <h3>GRE Packet Structure</h3>
+    <div class="packet-diagram">
+      <div class="packet-layer layer-ip">IP Header</div>
+      <div class="packet-layer layer-gre">GRE Header</div>
+      <div class="packet-layer layer-payload">Payload</div>
+    </div>
+    <p>Traffic flows: <strong>Router → GRE Tunnel → ZIA Public Service Edge</strong></p>
+
+    <h3>GRE Key Concepts</h3>
+    <div class="gre-grid">
+      <div class="gre-card">
+        <div class="gre-card-tag">PURPOSE</div>
+        <div class="gre-card-title">High-Speed Routing</div>
+        <div class="gre-card-body">Enables high-speed, secure routing of traffic to ZIA or third-party services with minimal overhead — no encryption processing required.</div>
+      </div>
+      <div class="gre-card">
+        <div class="gre-card-tag">GRE TUNNELS</div>
+        <div class="gre-card-title">Encapsulation</div>
+        <div class="gre-card-body">Configured to encapsulate branch forwarding traffic for secure connectivity to cloud or external data centres. GRE encapsulates but does <strong>not encrypt</strong>.</div>
+      </div>
+      <div class="gre-card">
+        <div class="gre-card-tag">ZIA INTEGRATION</div>
+        <div class="gre-card-title">Nearest GRE Endpoint</div>
+        <div class="gre-card-body">Traffic exits through ZIA's nearest GRE endpoints for inline inspection and threat protection — policy is enforced at the ZIA Public Service Edge.</div>
+      </div>
+      <div class="gre-card">
+        <div class="gre-card-tag">THIRD-PARTY</div>
+        <div class="gre-card-title">Partner Routing</div>
+        <div class="gre-card-body">Routes traffic to partner networks or applications securely. Supports integration with external data centres and third-party security platforms.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>KEY BENEFITS</div>
+      <div class="callout-body"><strong>Low latency · Lightweight connectivity · Enhanced scalability</strong> for cloud services. GRE tunnels are often built to <strong>two ZIA data centres (primary/secondary)</strong> to improve availability and failover resiliency.</div>
+    </div>
+
+    <h3>GRE Traffic Flow</h3>
+    <div class="traffic-flow">
+      <span class="flow-step">Endpoint</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Device Segmentation Gateway</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">GRE Tunnel(s)</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">ZIA Cloud</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Policy Enforcement</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Internet / SaaS</span>
+    </div>
+    <p>Outcome: Reduced lateral movement (device segmentation) + consistent internet/SaaS protection (ZIA) using GRE tunnel steering. Primary and secondary tunnels provide redundancy and failover.</p>
+
+    <h3>IPSec vs GRE — When to Use Each</h3>
+    <ul class="content-list">
+      <li><strong>IPSec:</strong> use when encryption, authentication, and integrity are required — e.g., transmitting confidential or business-critical data</li>
+      <li><strong>GRE:</strong> use for cost-effective, lightweight performance tunneling when encryption is not required</li>
+      <li><strong>Both:</strong> integrate with ZIA — branch internet traffic is steered through the Zscaler Security Cloud for inspection and policy enforcement regardless of tunnel type</li>
+      <li><strong>Risk with GRE:</strong> asymmetric paths or misconfigured steering can cause traffic to bypass ZIA — always verify tunnel configuration</li>
+    </ul>
+
+    <h3>Verifying GRE via Console</h3>
+    <div class="code-block">ip tunnel</div>
+    <p>The <code style="background:var(--surface-2);padding:2px 6px;border-radius:4px;font-size:12px;color:var(--purple);">ip tunnel</code> command lists all GRE tunnel interfaces with their local and remote endpoint details — making it the most direct tool for GRE verification. It is distinct from <code style="background:var(--surface-2);padding:2px 6px;border-radius:4px;font-size:12px;color:var(--purple);">docker exec strongswan ipsec status</code> (IPSec only) and traceroute (path analysis only).</p>
+
+    <h3>Knowledge Check</h3>
+    <div class="kcheck">
+      <div class="kcheck-q">In a GRE-based ZIA forwarding setup, which command is most direct for confirming the GRE tunnel's local and remote endpoints from the gateway?</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>ip tunnel — directly lists all GRE tunnel interfaces with local and remote endpoint details</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>docker exec strongswan ipsec status — this checks IPSec SAs, not GRE</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>traceroute — shows path hops, not GRE tunnel endpoint configuration</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Initiate Switchover — used for HA failover, not tunnel verification</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-gre" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('gre','GRE Tunnel')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-gre" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-gre"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ZIA LOCATIONS -->
+  <div class="section-block" id="section-locations">
+    <div class="section-label">ZIA LOCATIONS</div>
+    <h2>Understanding ZIA Locations</h2>
+    <p><strong>ZIA Locations</strong> identify the various networks from which your organisation sends its internet traffic to Zscaler. When an organisation forwards traffic through a GRE or IPSec tunnel, Zscaler provisions the organisation's IP addresses — which you then add as locations in the ZIA portal. Locations can be added individually or imported via CSV file.</p>
+
+    <div class="key-concept">
+      <strong>Known vs Unknown traffic:</strong> When ZIA receives traffic, it checks whether it originates from a <strong>known location</strong> (configured in the portal) or an <strong>unknown location</strong> (remote user traffic). For known locations, ZIA processes the traffic based on location settings — applying authentication, location-based policies, and logging internet activity by location.
+    </div>
+
+    <h3>Navigation</h3>
+    <p>Infrastructure → Location Management → Locations. The table shows Name, Type, Details, Connection Types, and Sublocations for each configured location.</p>
+
+    <h3>6 Key Benefits of ZIA Locations</h3>
+    <div class="loc-grid">
+      <div class="loc-card">
+        <div class="loc-icon">📍</div>
+        <div class="loc-title">Identify Locations</div>
+        <div class="loc-body">Identify the locations from which your organisation sends its internet traffic to Zscaler — enabling per-location policy visibility.</div>
+      </div>
+      <div class="loc-card">
+        <div class="loc-icon">🔗</div>
+        <div class="loc-title">Associate VPN Credentials</div>
+        <div class="loc-body">Associate a VPN credential, Static IP address, and IPSec/GRE tunnel with a location — linking the tunnel to the correct policy set.</div>
+      </div>
+      <div class="loc-card">
+        <div class="loc-icon">🔒</div>
+        <div class="loc-title">Create Sub-locations</div>
+        <div class="loc-body">Create sub-locations for private networks within a larger site — enabling more granular segmentation and policy at the subnet level.</div>
+      </div>
+      <div class="loc-card">
+        <div class="loc-icon">🌐</div>
+        <div class="loc-title">Associate Virtual Edges</div>
+        <div class="loc-body">Associate Virtual Service Edges with a specific location — directing branch traffic to the nearest and most appropriate Zscaler PoP.</div>
+      </div>
+      <div class="loc-card">
+        <div class="loc-icon">🚀</div>
+        <div class="loc-title">Establish Bandwidth Limits</div>
+        <div class="loc-body">Establish upload and download bandwidth limits per location — enabling QoS and ensuring fair usage across branch sites.</div>
+      </div>
+      <div class="loc-card">
+        <div class="loc-icon">⚙</div>
+        <div class="loc-title">Enable Features</div>
+        <div class="loc-body">Enable per-location features like firewall control, authentication requirements, and X-Forwarded-For header reading.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>OPERATIONAL BENEFITS</div>
+      <div class="callout-body">ZIA Locations help deliver <strong>consistent policy enforcement, better visibility, and easier management</strong> across distributed branch environments. Every branch gets the same security posture — enforced by its location configuration, not by local appliances.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-locations" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('locations','ZIA Locations')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-locations" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-locations"></span></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-280-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-280 Hub
+    </a>
+    <div class="mod-nav-group-label">SECTIONS</div>
+    <a class="mod-nav-link" href="../1 Introduce Zero Trust Branch Concepts/edu-280-intro.html"><span class="mod-nav-dot" style="background:#0d7d8a;"></span>1 · Introduce ZTB Concepts</a>
+    <a class="mod-nav-link" href="../2 Segment Branches and Devices/edu-280-segment.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>2 · Segment Branches</a>
+    <a class="mod-nav-link" href="../3 Deploy and Administer Zero Trust Branch/edu-280-deploy.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>3 · Deploy &amp; Administer</a>
+    <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:var(--purple);"></span>4 · Integrate Security</span>
+    <a class="mod-nav-link" href="../5 Manage Branch Administration and Policies/edu-280-admin-policies.html"><span class="mod-nav-dot" style="background:#b45309;"></span>5 · Admin &amp; Policies</a>
+    <a class="mod-nav-link" href="../6 Configure Advanced Network Services/edu-280-advanced-network.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>6 · Advanced Network</a>
+    <a class="mod-nav-link" href="../7 Deploy App Connector for Zero Trust Access/edu-280-app-connector.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>7 · App Connector</a>
+    <a class="mod-nav-link" href="../8 Monitor Network Activity and Analytics/edu-280-monitor.html"><span class="mod-nav-dot" style="background:#b91c1c;"></span>8 · Monitor &amp; Analytics</a>
+    <a class="mod-nav-link" href="../9 Integrate Third-Party Security Platforms/edu-280-third-party.html"><span class="mod-nav-dot" style="background:var(--purple);"></span>9 · Third-Party Platforms</a>
+    <a class="mod-nav-link" href="../10 Troubleshoot and Diagnose Branch Issues/edu-280-troubleshoot.html"><span class="mod-nav-dot" style="background:#b45309;"></span>10 · Troubleshoot</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>4 module learning objectives</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>IPSec — 3 protections (CIA)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>IKEv1 vs IKEv2 negotiation</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>ZIA integration via IPSec (4 benefits)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>docker exec strongswan ipsec status</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>GRE — encapsulates but does not encrypt</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>GRE packet: IP Header / GRE Header / Payload</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Primary/secondary GRE tunnels for resiliency</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>ip tunnel command for GRE verification</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>IPSec vs GRE — when to use each</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>ZIA Locations — known vs unknown traffic</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>6 benefits of ZIA Locations</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Both knowledge checks answered</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">IPSec vs GRE</div>
+      <div class="quick-ref-def">IPSec = encryption + auth + integrity. Use for sensitive traffic. GRE = lightweight encapsulation, no encryption. Use for cost-effective forwarding. Both steer traffic to ZIA.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Check IPSec</div>
+      <div class="quick-ref-def">docker exec strongswan ipsec status — shows active Security Associations. "No active SAs" = tunnel is down.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Check GRE</div>
+      <div class="quick-ref-def">ip tunnel — lists all GRE interfaces with local/remote endpoint details. Most direct GRE verification tool.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">IKE</div>
+      <div class="quick-ref-def">Internet Key Exchange — negotiation process IPSec peers use to define security parameters. IKEv2 is recommended. PSK or X-Auth for authentication; both peers must match.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">ZIA Locations</div>
+      <div class="quick-ref-def">Identify networks from which org sends internet traffic. Known locations → policy-based processing. Unknown → treated as remote user traffic. Add individually or via CSV.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">GRE Resiliency</div>
+      <div class="quick-ref-def">Always build two GRE tunnels — primary and secondary ZIA data centres. Misconfigured steering can cause asymmetric paths or ZIA bypass.</div>
+    </div>
+  </div>
+
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-280 · <span>Integrate Zscaler and Third-Party Security Services</span></div>
+  <div class="footer-right">Zscaler Study Guide</div>
+</footer>
+
+<script>
+const PAGE_KEY = 'edu280-integrate-security';
+
+function getStore(){try{return JSON.parse(localStorage.getItem(PAGE_KEY))||{};}catch(e){return{};}}
+function saveStore(s){try{localStorage.setItem(PAGE_KEY,JSON.stringify(s));}catch(e){}}
+
+function addQuestion(sectionId,sectionLabel){
+  const ta=document.getElementById('q-'+sectionId);
+  const text=ta.value.trim();if(!text)return;
+  const s=getStore();if(!s.questions)s.questions=[];
+  s.questions.push({section:sectionLabel,text,id:Date.now()});
+  saveStore(s);ta.value='';renderQPanel();
+}
+function deleteQuestion(id){
+  const s=getStore();s.questions=(s.questions||[]).filter(q=>q.id!==id);
+  saveStore(s);renderQPanel();
+}
+function renderQPanel(){
+  const s=getStore();const qs=s.questions||[];
+  const count=document.getElementById('qpanel-count');
+  const body=document.getElementById('qpanel-body');
+  count.textContent=qs.length;count.style.display=qs.length?'inline':'none';
+  if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Use the boxes below each section to add one.</p>';return;}
+  const groups={};qs.forEach(q=>{if(!groups[q.section])groups[q.section]=[];groups[q.section].push(q);});
+  body.innerHTML=Object.entries(groups).map(([label,items],gi)=>`
+    <div class="q-group"><div class="q-group-label">${label.toUpperCase()}</div>
+    ${items.map((q,i)=>`<div class="q-item"><div class="q-num">${gi*10+i+1}</div><div class="q-text">${q.text}</div><button class="q-del" onclick="deleteQuestion(${q.id})">✕</button></div>`).join('')}
+    </div>`).join('');
+}
+function toggleQPanel(){
+  const body=document.getElementById('qpanel-body');
+  const hdr=document.getElementById('qpanel-header');
+  const chev=document.getElementById('qpanel-chevron');
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);chev.textContent=open?'▴':'▾';
+  const s=getStore();s.qOpen=open;saveStore(s);
+}
+
+document.querySelectorAll('.notes-ta').forEach(ta=>{
+  const key=ta.id;const s=getStore();if(s[key])ta.value=s[key];
+  let timer;
+  ta.addEventListener('input',()=>{
+    clearTimeout(timer);timer=setTimeout(()=>{
+      const st=getStore();st[key]=ta.value;saveStore(st);
+      const ns=document.getElementById('ns-'+key.replace('notes-',''));
+      if(ns){ns.textContent='Saved';setTimeout(()=>{ns.textContent='';},1800);}
+    },600);
+  });
+});
+
+function toggleCheck(li){
+  li.classList.toggle('done');const s=getStore();if(!s.checks)s.checks={};
+  s.checks[li.querySelector('span').textContent]=li.classList.contains('done');saveStore(s);
+}
+(function restoreChecks(){
+  const s=getStore();if(!s.checks)return;
+  document.querySelectorAll('#checklist li').forEach(li=>{
+    if(s.checks[li.querySelector('span').textContent])li.classList.add('done');
+  });
+})();
+
+function navTo(id,btn){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+(function init(){
+  renderQPanel();const s=getStore();
+  if(s.qOpen){
+    document.getElementById('qpanel-body').classList.add('open');
+    document.getElementById('qpanel-header').classList.add('open');
+    document.getElementById('qpanel-chevron').textContent='▴';
+  }
+})();
+</script>
+</body>
+</html>

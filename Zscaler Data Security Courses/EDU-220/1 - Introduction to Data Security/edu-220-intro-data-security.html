@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introduction to Data Security — EDU-220</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#ffffff;--surface-2:#f0f5ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0a1628;--text-soft:#1e3a5c;--text-muted:#4a6fa8;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#4a6fa8;letter-spacing:0.08em;margin-bottom:12px;}
+.breadcrumb a{color:#60a5fa;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#1e3a5c;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#60a5fa;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#60a5fa;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#60a5fa;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--blue);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#60a5fa;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--blue);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--blue-glow);border:1px solid var(--blue-dim);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--blue);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+.callout-note{background:var(--amber-light);border-color:var(--amber-border);}
+.callout-note .callout-header{color:var(--amber);}
+.callout-note .callout-icon{background:var(--amber-border);color:var(--amber);}
+.callout-note .callout-body{color:#5a3200;}
+.callout-tip{background:var(--surface-2);border-color:var(--border);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-tip .callout-icon{background:var(--blue-dim);color:var(--blue);}
+.callout-tip .callout-body{color:var(--text-soft);}
+/* Breach timeline */
+.breach-timeline{display:flex;flex-direction:column;gap:0;margin-bottom:20px;}
+.breach-item{display:grid;grid-template-columns:80px 1fr;gap:0;position:relative;}
+.breach-item:not(:last-child){margin-bottom:0;}
+.breach-year{padding:18px 0 18px 0;display:flex;flex-direction:column;align-items:center;gap:0;}
+.breach-year-label{font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--blue);background:var(--blue-dim);border-radius:10px;padding:3px 8px;}
+.breach-line{flex:1;width:2px;background:var(--border);margin-top:6px;}
+.breach-dot{width:10px;height:10px;border-radius:50%;background:var(--blue);border:2px solid #fff;box-shadow:0 0 0 2px var(--blue);flex-shrink:0;margin-top:12px;}
+.breach-body{padding:16px 0 16px 20px;border-bottom:1px solid var(--border-dim);}
+.breach-item:last-child .breach-body{border-bottom:none;}
+.breach-name{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.breach-desc{font-size:13px;color:var(--text-soft);line-height:1.65;}
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 18px;text-align:center;}
+.stat-num{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:var(--blue);line-height:1;}
+.stat-unit{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.08em;margin-top:2px;}
+.stat-label{font-size:12px;color:var(--text-soft);margin-top:8px;line-height:1.4;}
+/* Data types table */
+.data-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+.data-table th{background:var(--text);color:#fff;padding:10px 14px;text-align:left;font-weight:500;font-size:11px;letter-spacing:0.08em;}
+.data-table th:first-child{border-radius:10px 0 0 0;}
+.data-table th:last-child{border-radius:0 10px 0 0;}
+.data-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-soft);vertical-align:top;line-height:1.6;}
+.data-table tr:nth-child(even) td{background:var(--surface-2);}
+.data-table tr:last-child td:first-child{border-radius:0 0 0 10px;}
+.data-table tr:last-child td:last-child{border-radius:0 0 10px 0;}
+.badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;display:inline-block;}
+.badge-high{background:var(--red-light);color:var(--red);}
+.badge-mid{background:var(--amber-light);color:var(--amber);}
+/* Pillar cards */
+.pillar-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.pillar-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;}
+.pillar-icon{font-size:20px;margin-bottom:8px;}
+.pillar-name{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.pillar-body{font-size:13px;color:var(--text-soft);line-height:1.65;}
+/* Discovery feature cards */
+.discovery-grid{display:flex;flex-direction:column;gap:14px;margin-bottom:20px;}
+.discovery-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:14px;padding:16px 20px;}
+.discovery-tag{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:4px;}
+.discovery-name{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.discovery-body{font-size:13px;color:var(--text-soft);line-height:1.65;}
+/* Knowledge check */
+.kcheck{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
+.kcheck-q{background:var(--text);padding:16px 20px;font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;line-height:1.4;}
+.kcheck-options{padding:16px 20px;display:flex;flex-direction:column;gap:8px;}
+.kcheck-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;color:var(--text-soft);line-height:1.5;cursor:pointer;transition:background 0.15s;}
+.kcheck-option.correct{background:var(--green-light);border-color:var(--green-border);color:var(--green);}
+.kcheck-option.wrong{background:var(--red-light);border-color:var(--red-border);color:var(--red);text-decoration:line-through;}
+.kcheck-opt-badge{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.correct .kcheck-opt-badge{background:var(--green);color:#fff;}
+.wrong .kcheck-opt-badge{background:var(--red);color:#fff;}
+.kcheck-option:not(.correct):not(.wrong) .kcheck-opt-badge{background:var(--border);color:var(--text-muted);}
+/* Sidebar */
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#60a5fa;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#90b4e0;line-height:1.6;}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--blue);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#60a5fa;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#1e3a5c;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--blue);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+/* Module nav */
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+/* Diagrams */
+.diagram-wrap{margin:20px 0 24px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface);}
+.diagram-img{width:100%;display:block;}
+.diagram-caption{font-size:11px;color:var(--text-muted);padding:10px 16px;border-top:1px solid var(--border);background:var(--surface-2);letter-spacing:0.04em;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.stats-grid{grid-template-columns:1fr 1fr;}.pillar-grid{grid-template-columns:1fr;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      Introduction to Data Security · EDU-220
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Introduction to Data Security · EDU-220</div>
+    <h1>Introduction to <em>Data Security</em></h1>
+    <p>Why data security matters, the real cost of breaches, and how Zscaler's unified platform protects data across every channel.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Data Security is essential to <em>protect privacy</em> and maintain trust.</div>
+  <p class="motivation-sub">Traditional tools were built for a different world. As data spreads across SaaS, cloud, endpoints, and BYOD devices, organisations need a unified approach — not a patchwork of disconnected controls.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-intro',this)">Why It Matters</button>
+  <button class="nav-tab" onclick="navTo('section-breaches',this)">Breach Timeline</button>
+  <button class="nav-tab" onclick="navTo('section-cost',this)">Cost &amp; Impact</button>
+  <button class="nav-tab" onclick="navTo('section-approach',this)">Zscaler's Approach</button>
+  <button class="nav-tab" onclick="navTo('section-ai',this)">AI Discovery</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- WHY IT MATTERS -->
+  <div class="section-block" id="section-intro">
+    <div class="section-label">WHY IT MATTERS</div>
+    <h2>Data Security in a cloud-first world</h2>
+    <p>In today's digital landscape, the rapid adoption of SaaS and public cloud services has reshaped enterprise operations. Traditional security tools often fall short in protecting distributed cloud data, leaving organisations vulnerable to user errors and malicious threats.</p>
+
+    <div class="key-concept">
+      <strong>Core principle:</strong> Data Security is essential to protect privacy and maintain trust in a digital world. Without a consistent security layer across every channel, sensitive data will find a way out.
+    </div>
+
+    <p>Zscaler addresses these challenges with a comprehensive data security solution that protects data at rest, in motion, across cloud environments, and on unmanaged and BYOD devices — ensuring compliance across the enterprise.</p>
+
+    <div class="diagram-wrap">
+      <img src="diagram-intro.png" alt="Zscaler data security platform overview showing protection across cloud, SaaS, endpoints, and BYOD" class="diagram-img">
+      <div class="diagram-caption">Zscaler Zero Trust Exchange — unified data protection across Cyberthreat Protection, Data Security, Zero Trust Networking, and Security Operations</div>
+    </div>
+
+    <h3>Course Overview</h3>
+    <p>This course is organised into three sections:</p>
+    <ul class="content-list">
+      <li><strong>Zscaler Data Security Overview</strong> — Current state of data security, how Zscaler addresses it, and AI-driven data identification and classification.</li>
+      <li><strong>Advanced Data Security Services Suite</strong> — Advanced features that protect data across multiple channels including data in motion, cloud environments, and BYOD devices.</li>
+      <li><strong>Incident Management Capabilities</strong> — Incident handling through role assignments, administrative tasks, and Zscaler Workflow Automation for efficient incident response.</li>
+    </ul>
+
+    <h3>Learning Outcomes</h3>
+    <p>By the end of this course, you'll be able to:</p>
+    <ul class="content-list">
+      <li>Identify the need for a modern approach to data security</li>
+      <li>Explain how Zscaler provides data security using the Zero Trust Exchange framework</li>
+      <li>Identify Zscaler's AI-driven auto data discovery and classification capabilities</li>
+      <li>Configure Zscaler Data Security policies to meet organisational requirements</li>
+      <li>Leverage Zscaler Workflow Automation for efficient incident handling</li>
+    </ul>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-intro" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('intro','Why It Matters')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-intro" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-intro"></span></div></div>
+    </div>
+  </div>
+
+  <!-- BREACH TIMELINE -->
+  <div class="section-block" id="section-breaches">
+    <div class="section-label">BREACH TIMELINE</div>
+    <h2>Major data breaches: 2021 – 2025</h2>
+    <p>Over the years, numerous high-profile data breaches have underscored the critical need for robust data security measures to protect sensitive information and maintain organisational trust.</p>
+
+    <div class="breach-timeline">
+      <div class="breach-item">
+        <div class="breach-year">
+          <div class="breach-year-label">2021</div>
+          <div class="breach-dot"></div>
+          <div class="breach-line"></div>
+        </div>
+        <div class="breach-body">
+          <div class="breach-name">LinkedIn Data Breach</div>
+          <div class="breach-desc">Data from <strong>700 million users</strong> was scraped and posted online, exposing names, email addresses, phone numbers, and professional details.</div>
+        </div>
+      </div>
+      <div class="breach-item">
+        <div class="breach-year">
+          <div class="breach-year-label">2021</div>
+          <div class="breach-dot"></div>
+          <div class="breach-line"></div>
+        </div>
+        <div class="breach-body">
+          <div class="breach-name">T-Mobile Data Breach</div>
+          <div class="breach-desc">Personal data of over <strong>50 million customers</strong> was stolen — including Social Security numbers, names, addresses, dates of birth, and driver's licence numbers — raising major concerns about identity theft.</div>
+        </div>
+      </div>
+      <div class="breach-item">
+        <div class="breach-year">
+          <div class="breach-year-label">2022</div>
+          <div class="breach-dot"></div>
+          <div class="breach-line"></div>
+        </div>
+        <div class="breach-body">
+          <div class="breach-name">Crypto.com Breach</div>
+          <div class="breach-desc">Hackers stole an estimated <strong>$35 million</strong> worth of cryptocurrency from <strong>483 customer accounts</strong> despite Crypto.com's use of two-factor authentication — exposing vulnerabilities in even well-known digital financial platforms.</div>
+        </div>
+      </div>
+      <div class="breach-item">
+        <div class="breach-year">
+          <div class="breach-year-label">2023</div>
+          <div class="breach-dot"></div>
+          <div class="breach-line"></div>
+        </div>
+        <div class="breach-body">
+          <div class="breach-name">MOVEit Transfer Software Breach</div>
+          <div class="breach-desc">A <strong>critical vulnerability</strong> in the MOVEit file-transfer software compromised sensitive data for millions of people and organisations worldwide.</div>
+        </div>
+      </div>
+      <div class="breach-item">
+        <div class="breach-year">
+          <div class="breach-year-label">2025</div>
+          <div class="breach-dot"></div>
+        </div>
+        <div class="breach-body">
+          <div class="breach-name">Tesla Internal Breach</div>
+          <div class="breach-desc">Internal whistleblowers at Tesla leaked private data belonging to over <strong>75,000 employees</strong>, including Social Security numbers, wages, and personal details. Tesla confirmed that <strong>insider misconduct</strong> — rather than external hacking — caused the breach.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="diagram-wrap">
+      <img src="diagram-timeline.png" alt="Breach timeline showing LinkedIn, T-Mobile, Crypto.com, MOVEit, and Tesla Internal breaches from 2021 to 2025" class="diagram-img">
+      <div class="diagram-caption">Major breach timeline 2021–2025: LinkedIn → T-Mobile → Crypto.com → MOVEit Transfer → Tesla Internal</div>
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">!</div>KEY OBSERVATION</div>
+      <div class="callout-body">Breaches come from multiple vectors — external hackers, software vulnerabilities, and malicious insiders. No single control layer is sufficient. The Tesla breach in particular highlights that <strong>insider threats are just as dangerous as external attacks</strong>.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-breaches" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('breaches','Breach Timeline')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-breaches" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-breaches"></span></div></div>
+    </div>
+  </div>
+
+  <!-- COST & IMPACT -->
+  <div class="section-block" id="section-cost">
+    <div class="section-label">COST &amp; IMPACT</div>
+    <h2>The rising cost of a data breach</h2>
+    <p>Data breaches are becoming more costly and harder to manage. With security teams struggling to fill skill gaps, the global average cost of a breach has jumped <strong>10% in a year</strong>, reaching <strong>USD 4.88 million</strong> in 2024. Business disruptions and post-breach fixes are driving these costs higher.</p>
+
+    <div class="diagram-wrap">
+      <img src="diagram-cost.png" alt="Line chart showing global average total cost of a data breach rising from $3.86M in 2018 to $4.88M in 2024" class="diagram-img">
+      <div class="diagram-caption">Global average total cost of a data breach (USD millions) 2018–2024 — up 10% to $4.88M in 2024</div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num">$4.88M</div>
+        <div class="stat-unit">USD — 2024</div>
+        <div class="stat-label">Global average total cost of a data breach — up 10% year on year</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">258</div>
+        <div class="stat-unit">DAYS — 2024</div>
+        <div class="stat-label">Mean time to identify and contain a breach (194 days to identify + 64 to contain)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">$169M</div>
+        <div class="stat-unit">GLOBAL AVG</div>
+        <div class="stat-label">Average cost across all stolen record types — Employee PII is the costliest</div>
+      </div>
+    </div>
+
+    <h3>Time to Identify and Contain</h3>
+    <p>The average time to identify and contain a breach now stands at <strong>258 days</strong>, showing some progress compared to 277 days the previous year. Yet this timeline remains long enough to cause significant damage to affected organisations, emphasising the need for stronger preventive measures and faster response strategies.</p>
+
+    <div class="diagram-wrap">
+      <img src="diagram-time.png" alt="Bar chart showing mean time to identify (MTTI) and mean time to contain (MTTC) by year from 2018 to 2024, totalling 258 days in 2024" class="diagram-img">
+      <div class="diagram-caption">Mean time to identify (MTTI) + mean time to contain (MTTC) by year — 258 total days in 2024 (194 MTTI + 64 MTTC)</div>
+    </div>
+
+    <h3>Types of Data at Risk</h3>
+    <p>Customer Personally Identifiable Information (PII) was the most commonly breached data type in 2024, accounting for <strong>48% of all incidents</strong>. This includes sensitive data such as tax ID numbers, emails, and home addresses.</p>
+
+    <div class="diagram-wrap">
+      <img src="diagram-data-types.png" alt="Bar chart comparing types of data compromised by percentage in 2023 vs 2024 — Customer PII, Intellectual Property, Employee PII, Other Corporate data, Anonymised Customer data" class="diagram-img">
+      <div class="diagram-caption">Types of data compromised by percentage (2023 vs 2024) — Customer PII most common at 48%, Employee PII costliest</div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Data Type</th><th>2023 %</th><th>2024 %</th><th>Risk Level</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Customer PII</td><td>52%</td><td>48%</td><td><span class="badge badge-high">HIGH</span></td></tr>
+        <tr><td>Intellectual Property</td><td>34%</td><td>43%</td><td><span class="badge badge-high">HIGH</span></td></tr>
+        <tr><td>Employee PII</td><td>40%</td><td>37%</td><td><span class="badge badge-high">COSTLIEST</span></td></tr>
+        <tr><td>Other Corporate Data</td><td>21%</td><td>31%</td><td><span class="badge badge-mid">MEDIUM</span></td></tr>
+        <tr><td>Anonymised Customer Data (non-PII)</td><td>26%</td><td>24%</td><td><span class="badge badge-mid">MEDIUM</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-cost" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('cost','Cost &amp; Impact')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-cost" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-cost"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ZSCALER'S APPROACH -->
+  <div class="section-block" id="section-approach">
+    <div class="section-label">ZSCALER'S APPROACH</div>
+    <h2>A unified data security platform</h2>
+    <p>Traditional data security relies on multiple disconnected tools — each handling a specific application silo. Updating a single policy often requires changes across multiple systems, creating complexity, inconsistency, and coverage gaps.</p>
+    <p>Zscaler simplifies this by unifying all channels on a <strong>single platform</strong> within the Zero Trust Exchange, handling inline DLP, CASB for SaaS applications, and cloud security posture management from one consistent policy engine.</p>
+
+    <div class="pillar-grid">
+      <div class="pillar-card">
+        <div class="pillar-icon">🔒</div>
+        <div class="pillar-name">Inline DLP</div>
+        <div class="pillar-body">Stops data from leaving the organisation across all web and cloud traffic — a single DLP policy engine for SaaS, cloud, and internet access.</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon">☁️</div>
+        <div class="pillar-name">DSPM</div>
+        <div class="pillar-body">Data Security Posture Management secures dynamic data in public clouds (AWS, Azure) — identifies sensitive data, recognises misconfigurations, and prioritises remediation.</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon">💻</div>
+        <div class="pillar-name">Endpoint DLP</div>
+        <div class="pillar-body">Actively monitors and controls data activity on user devices — protects against data loss via USB, print, and network sharing. Extends DLP policy to end-user activities.</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-icon">📱</div>
+        <div class="pillar-name">Browser Isolation (BYOD)</div>
+        <div class="pillar-body">Secures data access for unmanaged devices and BYOD — partners, contractors, and remote workers — without data landing on the device. Eliminates the need for costly VDI solutions.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>THE UNIFIED ADVANTAGE</div>
+      <div class="callout-body">This unified platform — part of the Zscaler Zero Trust Exchange — offers <strong>AI-driven data visibility and workflow automation</strong>. It quickly identifies data risks, triages incidents, and trains users, ensuring comprehensive data protection across motion, rest, cloud, endpoints, and BYOD from a single pane of glass.</div>
+    </div>
+
+    <h3>Why Traditional Tools Fall Short</h3>
+    <p>The top reasons breaches occur include targeted attacks, data theft by bots, accidental internet exposure, and malicious insiders. Insider threats are particularly hard to detect because they occur through normal-looking activity — emails, apps, and routine file access. Data travels across many places, and security teams often don't have a clear view of the full picture with siloed tools.</p>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-approach" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('approach','Zscaler\'s Approach')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-approach" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-approach"></span></div></div>
+    </div>
+  </div>
+
+  <!-- AI DISCOVERY -->
+  <div class="section-block" id="section-ai">
+    <div class="section-label">AI DISCOVERY &amp; CLASSIFICATION</div>
+    <h2>AI-driven Auto Data Discovery and Classification</h2>
+    <p>To protect data across various channels, accurate identification and classification are essential. Zscaler's AI-powered data discovery and classification capabilities automate the identification of sensitive data — both inline and at rest — enabling accurate classification and stronger data protection across all environments.</p>
+
+    <div class="key-concept">
+      <strong>Scale:</strong> Zscaler's AI discovery has identified over <strong>8,000 total files across 10+ categories</strong>, including Financial, Legal, and Resume data — surfaced automatically without manual tagging effort.
+    </div>
+
+    <div class="diagram-wrap">
+      <img src="diagram-ai-discovery.png" alt="AI-driven auto data discovery diagram showing Shadow IT Discovery, AI-Driven Auto Discovery, and Real-time Discovery with 8000 total files across 10+ categories" class="diagram-img">
+      <div class="diagram-caption">Zscaler AI-driven auto data discovery — Shadow IT, AI Auto Discovery, and Real-time Discovery across 8,000+ files in 10+ categories</div>
+    </div>
+
+    <div class="discovery-grid">
+      <div class="discovery-card">
+        <div class="discovery-tag">FEATURE 1</div>
+        <div class="discovery-name">Shadow IT Discovery</div>
+        <div class="discovery-body">Automatically surfaces unsanctioned cloud applications employees are using, identifying data exposure risks from tools that have never been reviewed by security or governance teams.</div>
+      </div>
+      <div class="discovery-card">
+        <div class="discovery-tag">FEATURE 2</div>
+        <div class="discovery-name">AI-Driven Auto Discovery</div>
+        <div class="discovery-body">Uses AI to automatically discover and classify sensitive data across your environment — no manual tagging required. Identifies sensitive file types, access patterns, and risk categories across all storage: cloud, email, and endpoint.</div>
+      </div>
+      <div class="discovery-card">
+        <div class="discovery-tag">FEATURE 3</div>
+        <div class="discovery-name">Real-time Discovery</div>
+        <div class="discovery-body">Identifies sensitive data as it moves in real time, enabling immediate policy enforcement. Detects insider threats by analysing data access patterns and flagging anomalous behaviour.</div>
+      </div>
+    </div>
+
+    <h3>Endpoint & Cloud Visibility</h3>
+    <p>At the device level, AI-powered endpoint discovery provides a detailed view of data distribution by storage type — including storage buckets, virtual machines, emails, and popular file-sharing apps. This gives security teams a complete picture of where sensitive data lives and how it is being accessed.</p>
+    <p>The <strong>Top Data Securities report</strong> gives organisations visibility across different departments, helping identify which teams carry the most data risk so governance efforts can be prioritised.</p>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>EXAM POINT</div>
+      <div class="callout-body">The key advantage of AI-powered data discovery tools is that <strong>they automate the detection and classification of sensitive data</strong>. They do not replace human oversight, restrict all sharing, or eliminate the need for cybersecurity policies.</div>
+    </div>
+
+    <h3>Knowledge Check</h3>
+    <div class="kcheck">
+      <div class="kcheck-q">What is a key advantage of using AI-powered data discovery tools in organisations?</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>They completely replace human oversight in data security</div>
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>They automate the detection and classification of sensitive data</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>They restrict all external sharing of organisational data</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>They eliminate the need for cybersecurity policies</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-ai" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('ai','AI Discovery')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-ai" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-ai"></span></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-220-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-220 Hub
+    </a>
+    <div class="mod-nav-group-label">SECTION 1</div>
+    <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>Introduction to Data Security</span>
+    <div class="mod-nav-group-label">SECTION 2</div>
+    <a class="mod-nav-link" href="../2A Data in Motion/edu-220-data-in-motion.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>2A — Data in Motion</a>
+    <a class="mod-nav-link" href="../2B Secure SaaS Data/edu-220-secure-saas-data.html"><span class="mod-nav-dot" style="background:#6c35cc;"></span>2B — Secure SaaS Data</a>
+    <a class="mod-nav-link" href="../2C Secure Cloud, Endpoint Data, and BYOD!/edu-220-cloud-endpoint-byod.html"><span class="mod-nav-dot" style="background:#b45309;"></span>2C — Cloud, Endpoint &amp; BYOD</a>
+    <div class="mod-nav-group-label">SECTION 3</div>
+    <a class="mod-nav-link" href="../3 - Incident Management Capabilities/edu-220-incident-management.html"><span class="mod-nav-dot" style="background:#b91c1c;"></span>Incident Management</a>
+    <div class="mod-nav-group-label">RECAP</div>
+    <a class="mod-nav-link" href="../Recap/edu-220-recap.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>Course Recap</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Why data security matters</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Major breach timeline (2021–2025)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Cost of a data breach ($4.88M avg)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Time to identify & contain (258 days)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Types of data at risk (Customer PII #1)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Zscaler unified platform (inline DLP, DSPM, Endpoint, BYOD)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>AI-driven auto data discovery</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Shadow IT, real-time & AI discovery</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Knowledge check answered</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">DLP</div>
+      <div class="quick-ref-def">Data Loss Prevention — controls that detect and prevent sensitive data from leaving the organisation.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">DSPM</div>
+      <div class="quick-ref-def">Data Security Posture Management — identifies and secures sensitive data in public clouds like AWS and Azure.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">CASB</div>
+      <div class="quick-ref-def">Cloud Access Security Broker — enforces security policies between users and cloud services (SaaS apps).</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">BYOD</div>
+      <div class="quick-ref-def">Bring Your Own Device — unmanaged personal or partner devices accessing corporate resources.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Shadow IT</div>
+      <div class="quick-ref-def">Unsanctioned applications used by employees without security review or governance approval.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Insider Threat</div>
+      <div class="quick-ref-def">A security risk originating from within the organisation — employee, contractor, or partner with legitimate access.</div>
+    </div>
+  </div>
+
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-220 · <span>Introduction to Data Security</span></div>
+  <div class="footer-right">Zscaler Study Guide</div>
+</footer>
+
+<script>
+const PAGE_KEY = 'edu220-intro-data-security';
+
+function getStore(){
+  try{return JSON.parse(localStorage.getItem(PAGE_KEY))||{};}catch(e){return{};}
+}
+function saveStore(s){
+  try{localStorage.setItem(PAGE_KEY,JSON.stringify(s));}catch(e){}
+}
+
+/* Questions */
+function addQuestion(sectionId, sectionLabel){
+  const ta=document.getElementById('q-'+sectionId);
+  const text=ta.value.trim();
+  if(!text)return;
+  const s=getStore();
+  if(!s.questions)s.questions=[];
+  s.questions.push({section:sectionLabel,text,id:Date.now()});
+  saveStore(s);
+  ta.value='';
+  renderQPanel();
+}
+function deleteQuestion(id){
+  const s=getStore();
+  s.questions=(s.questions||[]).filter(q=>q.id!==id);
+  saveStore(s);
+  renderQPanel();
+}
+function renderQPanel(){
+  const s=getStore();
+  const qs=s.questions||[];
+  const count=document.getElementById('qpanel-count');
+  const body=document.getElementById('qpanel-body');
+  count.textContent=qs.length;
+  count.style.display=qs.length?'inline':'none';
+  if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Use the boxes below each section to add one.</p>';return;}
+  const groups={};
+  qs.forEach(q=>{if(!groups[q.section])groups[q.section]=[];groups[q.section].push(q);});
+  body.innerHTML=Object.entries(groups).map(([label,items],gi)=>`
+    <div class="q-group">
+      <div class="q-group-label">${label.toUpperCase()}</div>
+      ${items.map((q,i)=>`
+        <div class="q-item">
+          <div class="q-num">${gi*10+i+1}</div>
+          <div class="q-text">${q.text}</div>
+          <button class="q-del" onclick="deleteQuestion(${q.id})">✕</button>
+        </div>`).join('')}
+    </div>`).join('');
+}
+function toggleQPanel(){
+  const body=document.getElementById('qpanel-body');
+  const hdr=document.getElementById('qpanel-header');
+  const chev=document.getElementById('qpanel-chevron');
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);
+  chev.textContent=open?'▴':'▾';
+  const s=getStore();s.qOpen=open;saveStore(s);
+}
+
+/* Notes */
+document.querySelectorAll('.notes-ta').forEach(ta=>{
+  const key=ta.id;
+  const s=getStore();
+  if(s[key])ta.value=s[key];
+  let timer;
+  ta.addEventListener('input',()=>{
+    clearTimeout(timer);
+    timer=setTimeout(()=>{
+      const st=getStore();st[key]=ta.value;saveStore(st);
+      const ns=document.getElementById('ns-'+key.replace('notes-',''));
+      if(ns){ns.textContent='Saved';setTimeout(()=>{ns.textContent='';},1800);}
+    },600);
+  });
+});
+
+/* Checklist */
+function toggleCheck(li){
+  li.classList.toggle('done');
+  const s=getStore();
+  if(!s.checks)s.checks={};
+  s.checks[li.querySelector('span').textContent]=li.classList.contains('done');
+  saveStore(s);
+}
+(function restoreChecks(){
+  const s=getStore();
+  if(!s.checks)return;
+  document.querySelectorAll('#checklist li').forEach(li=>{
+    if(s.checks[li.querySelector('span').textContent])li.classList.add('done');
+  });
+})();
+
+/* Section nav */
+function navTo(id,btn){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* Restore q panel state */
+(function init(){
+  renderQPanel();
+  const s=getStore();
+  if(s.qOpen){
+    const body=document.getElementById('qpanel-body');
+    const hdr=document.getElementById('qpanel-header');
+    const chev=document.getElementById('qpanel-chevron');
+    body.classList.add('open');hdr.classList.add('open');chev.textContent='▴';
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- CUSTOMIZE: page title -->
+<title>HUB NAME · EDU-XXX</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ── TOKENS ──
+     Swap the accent colour vars to theme a hub:
+     Orange theme (ZDTE): --accent / --accent-light / --accent-border = orange values
+     Blue theme  (ZDDC):  --accent / --accent-light / --accent-border = blue values   */
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --border: #ede5d8;
+
+    /* ── CARD 1 accent (left card) ── CUSTOMIZE */
+    --c1: #ff6b35;
+    --c1-light: #fff3ec;
+    --c1-border: #ffd5c0;
+
+    /* ── CARD 2 accent (right card) ── CUSTOMIZE */
+    --c2: #1a6bcc;
+    --c2-light: #e8f0fb;
+    --c2-border: #b3ccf0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html.pt-init body { opacity: 0; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px 120px;
+    animation: pageEnter 0.45s ease both;
+  }
+
+  @keyframes pageEnter {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+    align-self: flex-start;
+  }
+  .breadcrumb a { color: var(--c1); text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  /* ── PAGE TITLE ── */
+  .page-title { text-align: center; margin-bottom: 48px; }
+  .page-title .day-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+  .day-badge-dot { width: 5px; height: 5px; background: var(--c1); border-radius: 50%; }
+  .page-title h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 48px; font-weight: 700;
+    line-height: 1.0; color: var(--ink);
+  }
+  .page-title h1 em { font-style: italic; font-weight: 400; color: var(--c1); }
+  .page-tagline {
+    font-family: 'Fraunces', serif;
+    font-size: 15px; font-style: italic;
+    color: var(--ink-muted); margin-top: 10px; line-height: 1.6;
+  }
+
+  /* ── CARD ROW ──
+     Default: 2 cards side by side.
+     For more cards change grid-template-columns, e.g. repeat(3, 300px). */
+  .card-row {
+    display: grid;
+    grid-template-columns: repeat(2, 340px); /* CUSTOMIZE: columns × width */
+    gap: 28px;
+  }
+
+  /* ── NAV CARD BASE ── */
+  .nav-card {
+    width: 340px; /* CUSTOMIZE: match column width above */
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.4s ease,
+                border-color 0.3s ease;
+  }
+  .nav-card:hover { z-index: 2; }
+
+  /* Shine sweep on hover */
+  .nav-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -80%;
+    width: 50%; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.22) 50%, transparent);
+    transform: skewX(-15deg);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .nav-card:hover::before { animation: card-shine 0.55s ease forwards; }
+  @keyframes card-shine { to { left: 160%; } }
+
+  /* ── PER-CARD HOVER: add one .c-NAME block per card ── */
+  .nav-card.c-1:hover {
+    transform: translateY(-22px) scale(1.05) rotate(-1.5deg);
+    box-shadow: 0 32px 64px rgba(255,107,53,0.3), 0 0 0 2px var(--c1-border);
+    border-color: var(--c1-border);
+  }
+  .nav-card.c-2:hover {
+    transform: translateY(-22px) scale(1.05) rotate(1.5deg);
+    box-shadow: 0 32px 64px rgba(26,107,204,0.3), 0 0 0 2px var(--c2-border);
+    border-color: var(--c2-border);
+  }
+
+  /* Image tint on hover — CUSTOMIZE colours */
+  .nav-card.c-1:hover .card-img { background: #ffd4b8 !important; }
+  .nav-card.c-2:hover .card-img { background: #b8d5f5 !important; }
+
+  /* ── CARD IMAGE ── */
+  .card-img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--cream-dark);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease;
+  }
+  .card-img svg { width: 100%; height: 100%; display: block; }
+
+  /* ── CARD BODY ── */
+  .card-body {
+    padding: 20px 24px 24px;
+    flex: 1; display: flex; flex-direction: column; gap: 6px;
+  }
+  .card-label  { font-size: 10px; letter-spacing: 0.16em; color: var(--ink-muted); }
+  .card-name   { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700; color: var(--ink); line-height: 1.2; }
+
+  /* Description — hidden until hover */
+  .card-desc {
+    font-size: 12px; color: var(--ink-muted); line-height: 1.6;
+    max-height: 0; overflow: hidden; opacity: 0; margin-top: 0;
+    transition: max-height 0.35s ease, opacity 0.25s ease, margin-top 0.3s ease;
+  }
+  .nav-card:hover .card-desc { max-height: 100px; opacity: 1; margin-top: 2px; }
+
+  /* Arrow CTA — hidden until hover */
+  .card-arrow {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    max-height: 0; overflow: hidden; opacity: 0; margin-top: 0;
+    transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
+  }
+  .nav-card:hover .card-arrow { max-height: 40px; opacity: 1; margin-top: 8px; }
+  .nav-card:hover .card-arrow svg {
+    animation: arrow-nudge 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+  }
+  @keyframes arrow-nudge { to { transform: translateX(5px); } }
+
+  /* Arrow colours — one per card class */
+  .nav-card.c-1 .card-arrow { color: var(--c1); }
+  .nav-card.c-2 .card-arrow { color: var(--c2); }
+
+  /* ── OPTIONAL: SVG illustration animation ──
+     Add a class to the <g> inside your SVG and define a keyframe here.
+     Example: .nav-card.c-1:hover .my-illustration { animation: rise 0.5s ... } */
+  /* .nav-card.c-1:hover .my-illustration { animation: rise 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; } */
+  /* @keyframes rise { to { transform: translateY(-6px) scale(1.03); } } */
+
+  /* ── FOOTER ── */
+  footer {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 14px 40px;
+    border-top: 1px solid var(--border);
+    background: var(--cream-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+  .footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; color: var(--ink); }
+  .footer-left span { color: var(--c1); }
+  .footer-centre { font-family: 'Fraunces', serif; font-size: 13px; font-style: italic; color: var(--ink-muted); }
+  .footer-right { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.06em; }
+</style>
+</head>
+<body>
+
+<!-- ── BREADCRUMB ── CUSTOMIZE: href and labels -->
+<div class="breadcrumb">
+  <a href="../index.html">Cert Schedule</a> › Hub Name
+</div>
+
+<!-- ── PAGE TITLE ── CUSTOMIZE: badge, h1, tagline -->
+<div class="page-title">
+  <div class="day-badge">
+    <span class="day-badge-dot"></span>
+    EDU-XXX · LEVEL
+  </div>
+  <h1>CODE <em>Hub</em></h1>
+  <p class="page-tagline">Full certification name · N questions · N minutes</p>
+</div>
+
+<!-- ── CARD ROW ── Add/remove <a class="nav-card"> blocks as needed -->
+<div class="card-row">
+
+  <!-- CARD 1 — e.g. Study Plan (c-1 = left/accent colour) -->
+  <a class="nav-card c-1" href="path/to/page.html">
+    <div class="card-img">
+      <!-- CUSTOMIZE: replace with your SVG illustration.
+           Wrap animated elements in a <g class="my-illustration"> and add a CSS keyframe above. -->
+      <svg viewBox="0 0 340 255" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="340" height="255" fill="var(--c1-light)"/>
+        <!-- Add illustration shapes here -->
+        <rect x="80" y="60" width="180" height="130" rx="10" fill="white" stroke="var(--c1)" stroke-width="2" fill-opacity="0.8"/>
+        <rect x="100" y="80" width="100" height="8"  rx="3" fill="var(--c1)" fill-opacity="0.5"/>
+        <rect x="100" y="96" width="140" height="6"  rx="3" fill="var(--c1)" fill-opacity="0.25"/>
+        <rect x="100" y="110" width="120" height="6" rx="3" fill="var(--c1)" fill-opacity="0.2"/>
+        <rect x="100" y="124" width="80"  height="6" rx="3" fill="var(--c1)" fill-opacity="0.15"/>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label">CODE · EDU-XXX</div>      <!-- CUSTOMIZE -->
+      <div class="card-name">Card Title</div>            <!-- CUSTOMIZE -->
+      <div class="card-desc">Brief description of what this card links to — shown on hover.</div>
+      <div class="card-arrow">
+        Open Card Title                                   <!-- CUSTOMIZE -->
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
+      </div>
+    </div>
+  </a>
+
+  <!-- CARD 2 — e.g. Study Resources (c-2 = right/secondary colour) -->
+  <a class="nav-card c-2" href="path/to/page.html">
+    <div class="card-img">
+      <!-- CUSTOMIZE: replace with your SVG illustration -->
+      <svg viewBox="0 0 340 255" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="340" height="255" fill="var(--c2-light)"/>
+        <rect x="36"  y="28"  width="82" height="58" rx="8" fill="white" stroke="var(--c2)" stroke-width="1.8"/>
+        <rect x="131" y="28"  width="82" height="58" rx="8" fill="white" stroke="var(--c2)" stroke-width="1.8"/>
+        <rect x="226" y="28"  width="82" height="58" rx="8" fill="white" stroke="var(--c2)" stroke-width="1.8"/>
+        <rect x="36"  y="101" width="82" height="58" rx="8" fill="white" stroke="var(--c2)" stroke-width="1.8"/>
+        <rect x="131" y="101" width="82" height="58" rx="8" fill="white" stroke="var(--c2)" stroke-width="1.8"/>
+        <rect x="226" y="101" width="82" height="58" rx="8" fill="white" stroke="var(--c2)" stroke-width="1.8"/>
+        <rect x="131" y="174" width="82" height="58" rx="8" fill="white" stroke="var(--c2)" stroke-width="1.8"/>
+      </svg>
+    </div>
+    <div class="card-body">
+      <div class="card-label">CODE · EDU-XXX</div>      <!-- CUSTOMIZE -->
+      <div class="card-name">Card Title</div>            <!-- CUSTOMIZE -->
+      <div class="card-desc">Brief description of what this card links to — shown on hover.</div>
+      <div class="card-arrow">
+        Open Card Title                                   <!-- CUSTOMIZE -->
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h8M7 3l4 4-4 4"/></svg>
+      </div>
+    </div>
+  </a>
+
+</div>
+
+<!-- ── FOOTER ── CUSTOMIZE: code, tagline, full name -->
+<footer>
+  <div class="footer-left">CODE<span>.</span></div>
+  <span class="footer-centre">Your motivational tagline here.</span>
+  <div class="footer-right">Full Certification Name · EDU-XXX</div>
+</footer>
+
+<script src="../transitions.js"></script>
+</body>
+</html>

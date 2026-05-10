@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 3 — Deploy and Administer Zero Trust Branch · EDU-280</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#fff;--surface-2:#e8f0fb;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0a1628;--text-soft:#1e3a5c;--text-muted:#4a6fa8;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#1e3a5c;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#60a5fa;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#1e3a5c;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#60a5fa;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#60a5fa;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#60a5fa;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--blue);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#60a5fa;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--blue);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--blue-glow);border:1px solid var(--blue-dim);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--blue);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+.callout-note{background:var(--amber-light);border-color:var(--amber-border);}
+.callout-note .callout-header{color:var(--amber);}
+.callout-note .callout-icon{background:var(--amber-border);color:var(--amber);}
+.callout-note .callout-body{color:#5a3200;}
+.callout-tip{background:var(--surface-2);border-color:var(--border);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-tip .callout-icon{background:var(--blue-dim);color:var(--blue);}
+.callout-tip .callout-body{color:var(--text-soft);}
+/* Objective cards */
+.obj-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.obj-row{display:flex;gap:14px;align-items:flex-start;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+.obj-num{width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.obj-text{font-size:13px;color:var(--text-soft);line-height:1.6;padding-top:3px;}
+.obj-text strong{color:var(--text);}
+/* Field reference */
+.field-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.field-row{display:grid;grid-template-columns:160px 1fr;gap:12px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;align-items:start;}
+.field-name{font-size:12px;font-weight:700;color:var(--blue);letter-spacing:0.04em;}
+.field-desc{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Port table / spec table */
+.spec-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+.spec-table th{background:var(--text);color:#fff;padding:10px 14px;text-align:left;font-weight:500;font-size:11px;letter-spacing:0.08em;}
+.spec-table th:first-child{border-radius:10px 0 0 0;}
+.spec-table th:last-child{border-radius:0 10px 0 0;}
+.spec-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-soft);vertical-align:top;line-height:1.6;}
+.spec-table tr:nth-child(even) td{background:var(--surface-2);}
+.spec-table tr:last-child td:first-child{border-radius:0 0 0 10px;}
+.spec-table tr:last-child td:last-child{border-radius:0 0 10px 0;}
+.port-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;display:inline-block;white-space:nowrap;}
+.port-mgmt{background:#fee2e2;color:#b91c1c;}
+.port-wan{background:#fef9c3;color:#b45309;}
+.port-lan{background:#ece8ff;color:#5c35cc;}
+.port-ha{background:var(--blue-dim);color:var(--blue);}
+.port-console{background:var(--surface-2);color:var(--text-muted);}
+/* Code block */
+.code-block{background:var(--text);border-radius:12px;padding:16px 20px;font-family:monospace;font-size:12px;color:#90b4e0;line-height:1.8;margin-bottom:16px;overflow-x:auto;}
+.code-block .label{color:#60a5fa;font-weight:700;}
+/* Steps */
+.step-list{display:flex;flex-direction:column;gap:14px;margin-bottom:20px;}
+.step-row{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+.step-num{width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-content{flex:1;}
+.step-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.step-body{font-size:12px;color:var(--text-soft);line-height:1.65;}
+/* Feature cards */
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 18px;}
+.feature-tag{font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--blue);margin-bottom:6px;}
+.feature-title{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.feature-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+.feature-benefit{font-size:11px;color:var(--blue);margin-top:8px;font-style:italic;}
+/* Ports grid */
+.ports-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.port-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.port-card-label{font-size:10px;font-weight:700;letter-spacing:0.14em;margin-bottom:6px;}
+.port-card-title{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.port-card-body{font-size:12px;color:var(--text-soft);line-height:1.5;}
+/* Knowledge check */
+.kcheck{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
+.kcheck-q{background:var(--text);padding:16px 20px;font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;line-height:1.4;}
+.kcheck-options{padding:16px 20px;display:flex;flex-direction:column;gap:8px;}
+.kcheck-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;color:var(--text-soft);line-height:1.5;}
+.kcheck-option.correct{background:var(--green-light);border-color:var(--green-border);color:var(--green);}
+.kcheck-option.wrong{background:var(--red-light);border-color:var(--red-border);color:var(--red);text-decoration:line-through;}
+.kcheck-opt-badge{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.correct .kcheck-opt-badge{background:var(--green);color:#fff;}
+.wrong .kcheck-opt-badge{background:var(--red);color:#fff;}
+.kcheck-option:not(.correct):not(.wrong) .kcheck-opt-badge{background:var(--border);color:var(--text-muted);}
+/* Lesson tools */
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--blue);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#60a5fa;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#1e3a5c;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+/* Sidebar */
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#60a5fa;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#90b4e0;line-height:1.6;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--blue);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.feature-grid,.ports-grid{grid-template-columns:1fr;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}.field-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../zero-trust-branch-hub.html">Zero Trust Branch</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-280-hub.html">EDU-280</a>
+      <span class="breadcrumb-sep">›</span>
+      Section 3
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> EDU-280 · Section 3 · 30 min</div>
+    <h1>Deploy and Administer <em>Zero Trust Branch</em></h1>
+    <p>Site registration, interface roles, console access, and enrolling appliances via Simple Device Activation or Activation Code.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">From portal to powered on — <em>Zero Trust from minute one</em>.</div>
+  <p class="motivation-sub">Deploying a Zero Trust Branch site isn't just about plugging in hardware. The onboarding workflow ensures every device receives its configuration and policies through a controlled, outbound-managed process — no inbound exposure, no implicit trust, consistent security from the moment the appliance comes online.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-sites',this)">Register Sites</button>
+  <button class="nav-tab" onclick="navTo('section-interfaces',this)">Interfaces &amp; Console</button>
+  <button class="nav-tab" onclick="navTo('section-sda',this)">Simple Device Activation</button>
+  <button class="nav-tab" onclick="navTo('section-code',this)">Activation Code</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="section-block" id="section-overview">
+    <div class="section-label">MODULE OVERVIEW</div>
+    <h2>What you'll be able to do</h2>
+    <p>This module covers the operational workflow for bringing a Zero Trust Branch site online — from portal registration through device activation. By the end, you'll be able to execute the full deployment process using repeatable, scalable onboarding workflows.</p>
+
+    <div class="obj-grid">
+      <div class="obj-row">
+        <div class="obj-num">1</div>
+        <div class="obj-text"><strong>Register</strong> a Zero Trust Branch site in the admin portal with all required fields</div>
+      </div>
+      <div class="obj-row">
+        <div class="obj-num">2</div>
+        <div class="obj-text"><strong>Understand</strong> interface roles used during deployment — LAN, WAN, Management, and HA</div>
+      </div>
+      <div class="obj-row">
+        <div class="obj-num">3</div>
+        <div class="obj-text"><strong>Establish</strong> basic console-level connection and validate appliance readiness before activation</div>
+      </div>
+      <div class="obj-row">
+        <div class="obj-num">4</div>
+        <div class="obj-text"><strong>Enroll and activate</strong> a Zero Trust Branch appliance using Simple Device Activation or an Activation Code</div>
+      </div>
+      <div class="obj-row">
+        <div class="obj-num">5</div>
+        <div class="obj-text"><strong>Verify</strong> successful activation states — Standalone or Active/Standby for HA deployments</div>
+      </div>
+    </div>
+
+    <div class="key-concept">
+      <strong>Zero Trust registration principle:</strong> A Zero Trust-aligned onboarding approach avoids inbound exposure and implicit trust. Devices onboard via controlled, outbound-managed connectivity so they receive the correct configuration and policies from the start — no inbound ports opened, no manual policy configuration on the device.
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- REGISTER SITES -->
+  <div class="section-block" id="section-sites">
+    <div class="section-label">REGISTER SITES</div>
+    <h2>Registering a Zero Trust Branch site</h2>
+    <p>Before a physical appliance can be enrolled, a <strong>Site</strong> must be created in the admin portal. The site is the logical representation of a branch location — it defines the template, DNS, and location binding that the appliance will download on activation.</p>
+
+    <div class="key-concept">
+      <strong>Navigation path:</strong> Infrastructure › Connectors › Edge › Zero Trust Branch › Sites
+    </div>
+
+    <h3>Site Table Columns</h3>
+    <div class="field-grid">
+      <div class="field-row">
+        <div class="field-name">Site Name</div>
+        <div class="field-desc">The logical name of the branch — used for identification and monitoring. Should follow organisational naming conventions.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">Template</div>
+        <div class="field-desc">The provisioning template applied to the site, defining DNS forwarding and DHCP behaviour (e.g. zt600-ha-lab-custom).</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">Gateway Name</div>
+        <div class="field-desc">The name of each physical ZT-series appliance enrolled to this site. HA sites show two gateways per row.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">State</div>
+        <div class="field-desc">Indicates the current HA role of each gateway: <strong>Active</strong> or <strong>Standby</strong>.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">IP Address</div>
+        <div class="field-desc">The management or WAN IP address of each gateway appliance.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">Version</div>
+        <div class="field-desc">Firmware version currently running on the appliance (e.g. 8.0, 8P1).</div>
+      </div>
+    </div>
+
+    <h3>Add Site — Required Fields</h3>
+    <div class="field-grid">
+      <div class="field-row">
+        <div class="field-name">Name <span style="color:var(--red);">*</span></div>
+        <div class="field-desc">Unique site identifier — e.g. EDU-280-LAB-1. Follow your organisation's naming convention for consistency.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">Platform <span style="color:var(--red);">*</span></div>
+        <div class="field-desc">Select the appliance model that will be deployed at this site (e.g. zt800).</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">Template <span style="color:var(--red);">*</span></div>
+        <div class="field-desc">Choose the provisioning template (e.g. zt800-standalone-default). Clone the default template via Resources › Templates if a custom version is needed.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">WAN DNS Servers <span style="color:var(--red);">*</span></div>
+        <div class="field-desc">Specify DNS servers the appliance will use for WAN resolution (e.g. 1.1.1.1, 8.8.8.8). Must be reachable from the branch.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">Location <span style="color:var(--red);">*</span></div>
+        <div class="field-desc">Select or create the geographic/logical location — links the site to a ZIA location, which automates PSC tunnel creation.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>CRITICAL DEPENDENCY</div>
+      <div class="callout-body">Zero Trust Branch must be linked with both <strong>ZIA and ZPA</strong> in the backend before site creation.<br><br>
+      • If ZIA is <strong>not linked</strong>: the location will not appear under site configuration in the portal<br>
+      • If ZIA is linked but ZPA is <strong>not linked</strong>: the strongswan container will not run — IPSec tunnels cannot be established</div>
+    </div>
+
+    <h3>Required Firewall Ports for Activation</h3>
+    <p>The upstream firewall at the branch must allow the following outbound traffic before activation. Blocked ports are the most common cause of activation failure.</p>
+    <table class="spec-table">
+      <thead>
+        <tr><th>Port</th><th>Protocol</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>UDP 500</strong></td><td>IPSec IKE</td><td>Key exchange for IPSec tunnel establishment</td></tr>
+        <tr><td><strong>UDP 4500</strong></td><td>IPSec NAT-T</td><td>IPSec traversal when NAT is present between branch and Zscaler</td></tr>
+        <tr><td><strong>TCP 443</strong></td><td>HTTPS</td><td>Management channel and control plane communication</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Registration Workflow Summary</h3>
+    <ul class="content-list">
+      <li><strong>Navigate</strong> — Infrastructure › Connectors › Edge › Zero Trust Branch › Sites</li>
+      <li><strong>Create</strong> — Click Add Site, fill Name, Platform, Template, WAN DNS, and Location</li>
+      <li><strong>Bind</strong> — Link to a ZIA Location to automate PSC tunnel creation</li>
+      <li><strong>Enroll</strong> — Use the generated Activation URL or Activation Code (via console)</li>
+      <li><strong>Verify</strong> — Confirm gateway states show Active/Standby and site shows Connected</li>
+    </ul>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-sites" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('sites','Register Sites')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-sites" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-sites"></span></div></div>
+    </div>
+  </div>
+
+  <!-- INTERFACES & CONSOLE -->
+  <div class="section-block" id="section-interfaces">
+    <div class="section-label">INTERFACES &amp; CONSOLE</div>
+    <h2>Interface roles and console access</h2>
+    <p>Each ZT-series appliance provides dedicated ports for management, LAN, WAN, HA, and console access. Assigning the correct interface roles is essential for secure and reliable branch connectivity.</p>
+
+    <h3>Port Mapping Reference (ZT-800)</h3>
+    <table class="spec-table">
+      <thead>
+        <tr><th>Port</th><th>Interface</th><th>Role</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>C</td><td>Console</td><td><span class="port-badge port-console">CONSOLE</span> Serial console access (RJ45-to-DB9 or USB)</td></tr>
+        <tr><td>ge1 / enp2s0f0</td><td>Port 1</td><td><span class="port-badge port-wan">WAN</span> 1GbE WAN uplink</td></tr>
+        <tr><td>ge2 / enp2s0f1</td><td>Port 2</td><td><span class="port-badge port-wan">WAN</span> 1GbE WAN uplink (dual ISP)</td></tr>
+        <tr><td>ge3 / enp2s0f2</td><td>Port 3</td><td><span class="port-badge port-mgmt">MGMT</span> Dedicated management — segregated from data traffic</td></tr>
+        <tr><td>ge4 / enp2s0f3</td><td>Port 4</td><td><span class="port-badge port-lan">LAN</span> / <span class="port-badge port-ha">HA*</span> 1GbE LAN or HA sync (HA configs)</td></tr>
+        <tr><td>ge5–ge8</td><td>Ports 5–8</td><td><span class="port-badge port-lan">LAN</span> 1GbE LAN ports for branch switch connectivity</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Interface Role Definitions</h3>
+    <div class="ports-grid">
+      <div class="port-card">
+        <div class="port-card-label" style="color:var(--red);">MANAGEMENT (RED)</div>
+        <div class="port-card-title">Admin &amp; Control</div>
+        <div class="port-card-body">Dedicated port for device management and administrative tasks. Segregated from data-forwarding traffic for improved security and reduced exposure.</div>
+      </div>
+      <div class="port-card">
+        <div class="port-card-label" style="color:var(--purple);">LAN (PURPLE)</div>
+        <div class="port-card-title">Branch Internal</div>
+        <div class="port-card-body">Connects the ZT appliance to the branch switch — enabling communication across internal branch devices. Facilitates secure connectivity within the local branch network.</div>
+      </div>
+      <div class="port-card">
+        <div class="port-card-label" style="color:var(--amber);">WAN (ORANGE)</div>
+        <div class="port-card-title">Internet Uplink</div>
+        <div class="port-card-body">Connects to the WAN router for internet access. Routes branch traffic to Zscaler PoPs for ZIA inspection and ZPA private app access.</div>
+      </div>
+    </div>
+
+    <h3>Setting Up Console Access</h3>
+    <p>Console access is required for initial configuration and troubleshooting before the appliance is network-reachable. Use a serial cable (RJ45-to-DB9 or USB) connected to the console port.</p>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>PUTTY CONSOLE SETTINGS (WINDOWS)</div>
+      <div class="callout-body">
+        <strong>Baud Rate:</strong> 115200 &nbsp;·&nbsp; <strong>Data Bits:</strong> 8 &nbsp;·&nbsp; <strong>Stop Bits:</strong> 1 &nbsp;·&nbsp; <strong>Parity:</strong> None &nbsp;·&nbsp; <strong>Flow Control:</strong> XON/XOFF
+      </div>
+    </div>
+
+    <h3>Validating Configuration via Console</h3>
+    <p>From the appliance main menu, type <strong>4</strong> to run Show Configuration and verify the appliance settings before activation:</p>
+    <div class="code-block">
+<span class="label">Site Name:</span>       FD002-Student-Lab
+<span class="label">Gateway Name:</span>    FD002-student-lab-gw-01
+<span class="label">Mgmt IP:</span>         not configured
+<span class="label">WAN Interface:</span>   ge1
+<span class="label">WAN IP:</span>           DHCP (Current: 10.120.1.1/24)
+<span class="label">WAN Nameservers:</span> 8.8.8.8, 1.1.1.1
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">!</div>MANAGEMENT IP NOTE</div>
+      <div class="callout-body">The management interface IP <strong>192.168.0.99/24</strong> is a temporary address used only during initial setup. It is automatically removed after the appliance is successfully activated — so do not rely on it for ongoing management access.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-interfaces" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('interfaces','Interfaces & Console')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-interfaces" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-interfaces"></span></div></div>
+    </div>
+  </div>
+
+  <!-- SIMPLE DEVICE ACTIVATION -->
+  <div class="section-block" id="section-sda">
+    <div class="section-label">SIMPLE DEVICE ACTIVATION</div>
+    <h2>Method 1 — Simple Device Activation</h2>
+    <p>Simple Device Activation (SDA) is the preferred enrollment method. It combines centralized templates with a secure onboarding URL, enabling quick and error-free provisioning without any manual device configuration at the branch.</p>
+
+    <h3>Three Key Features</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-tag">FEATURE 1 OF 3</div>
+        <div class="feature-title">Single URL Click Setup</div>
+        <div class="feature-body">Administrators share a single activation URL with local on-site staff. The setup completes in minutes — no IT expertise required at the branch location.</div>
+        <div class="feature-benefit">Reduces time-to-connect from days to minutes.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-tag">FEATURE 2 OF 3</div>
+        <div class="feature-title">Centralised Management</div>
+        <div class="feature-body">All configurations managed from a single portal. Security teams can monitor, update, and audit every gateway from one pane of glass — regardless of how many sites exist.</div>
+        <div class="feature-benefit">Eliminates configuration drift across remote sites.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-tag">FEATURE 3 OF 3</div>
+        <div class="feature-title">Predefined Templates</div>
+        <div class="feature-body">Templates capture best-practice settings and approved policies. Every new gateway deployment starts from a validated baseline — not from scratch.</div>
+        <div class="feature-benefit">Reduces human error and accelerates rollout.</div>
+      </div>
+    </div>
+
+    <h3>Step-by-Step: Simple Device Activation</h3>
+    <div class="step-list">
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Validate Configuration</div>
+          <div class="step-body">From the appliance main menu, type <strong>4</strong> (Show Configuration) to verify the site name, gateway name, WAN interface, DHCP settings, and DNS nameservers are correct before proceeding.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Validate Management Interface</div>
+          <div class="step-body">From the ZT shell (Main Menu › Troubleshooting › Shell), run <strong>ifconfig</strong> or <strong>ip addr</strong> to confirm the management interface shows IP <strong>192.168.0.99/24</strong>. This confirms the appliance is ready for activation.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Generate and Share the Activation Link</div>
+          <div class="step-body">In the Experience Center portal, navigate to the site and select the gateway. Generate the Activation Link. Share the URL with on-site staff — or email it directly from the portal. On-site staff open the URL on a client machine connected to the appliance management port (192.168.0.x network).</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Verify Activation Status</div>
+          <div class="step-body">The browser shows "<strong>Gateway Provisioned</strong>" on success. The portal site entry transitions from inactive to "<strong>Connecting (1 of 2 tunnels)</strong>" then to <strong>Connected</strong>. Full registration completes within <strong>~15 minutes</strong> — network settings are configured automatically.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>ACTIVATION CONFIRMATION</div>
+      <div class="callout-body">After successful activation, the portal shows each enrolled gateway's assigned role — <strong>Active</strong> or <strong>Standby</strong> — confirming that policy has been downloaded and data tunnels are established. A standalone deployment shows a single gateway in the <strong>Active</strong> state.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-sda" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('sda','Simple Device Activation')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-sda" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-sda"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ACTIVATION CODE -->
+  <div class="section-block" id="section-code">
+    <div class="section-label">ACTIVATION CODE</div>
+    <h2>Method 2 — Activation Code</h2>
+    <p>The Activation Code is an alternative enrollment method for situations where Simple Device Activation (URL-based) is not practical. It is a unique, time-limited code entered directly into the appliance console — producing the same outcome as SDA.</p>
+
+    <h3>When to Use Activation Code</h3>
+    <ul class="content-list">
+      <li>When remote sites lack browser access or portal connectivity</li>
+      <li>In air-gapped or highly restricted network environments</li>
+      <li>As a fallback when URL-based activation encounters firewall or proxy issues</li>
+      <li>When the activation URL cannot be shared with on-site staff</li>
+    </ul>
+
+    <h3>Key Characteristics</h3>
+    <div class="field-grid">
+      <div class="field-row">
+        <div class="field-name">Code Type</div>
+        <div class="field-desc">Single-use, time-limited code generated from the Experience Center portal alongside the activation URL.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">Entry Method</div>
+        <div class="field-desc">Entered directly via the appliance console interface — no browser or network portal access required.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">Outcome</div>
+        <div class="field-desc">Identical to Simple Device Activation — device receives configuration and policies, tunnels are established, state transitions to Connected.</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">Typical Completion</div>
+        <div class="field-desc">~15 minutes from code entry to fully registered and Connected state.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>TIP</div>
+      <div class="callout-body">You can email the activation link and code directly from the Experience Center portal to share with remote staff or a managed service provider handling the physical installation. Both the URL and code are available from the same activation dialog.</div>
+    </div>
+
+    <h3>Knowledge Check</h3>
+    <div class="kcheck">
+      <div class="kcheck-q">A branch appliance powers on and you begin registration. The portal shows the site as created, but the device cannot reach the registration portal. What is the most likely cause?</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>The site name in the portal is not descriptive enough for the device to identify itself</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>The device must be registered only after an established tunnel has been active for 24 hours</div>
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>The required outbound firewall ports (UDP 500, UDP 4500, TCP 443) are not open at the branch — blocked ports are the most common reason for activation failure</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>The activation URL can only be used once and has already expired</div>
+      </div>
+    </div>
+
+    <div class="kcheck">
+      <div class="kcheck-q">Which statement best reflects the Zero Trust principle for device registration and initial enrollment?</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Zero Trust applies only after the first connection is established — pre-enrollment is implicitly trusted</div>
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>Registration should avoid "network extension" patterns — devices onboard via outbound-managed connectivity, receive validated configuration from the start, and are never implicitly trusted</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Once a device is registered it is implicitly trusted and can be placed directly into unprotected internal networks</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Registration is only secure if the device's security posture is unverified before the first connection</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-code" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('code','Activation Code')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-code" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-code"></span></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-280-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-280 Hub
+    </a>
+    <div class="mod-nav-group-label">SECTIONS</div>
+    <a class="mod-nav-link" href="../1 Introduce Zero Trust Branch Concepts/edu-280-intro.html"><span class="mod-nav-dot" style="background:#0d7d8a;"></span>1 · Introduce ZTB Concepts</a>
+    <a class="mod-nav-link" href="../2 Segment Branches and Devices/edu-280-segment.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>2 · Segment Branches</a>
+    <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:var(--blue);"></span>3 · Deploy &amp; Administer</span>
+    <a class="mod-nav-link" href="../4 Integrate Zscaler and Third-Party Security Services/edu-280-integrate-security.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>4 · Integrate Security</a>
+    <a class="mod-nav-link" href="../5 Manage Branch Administration and Policies/edu-280-admin-policies.html"><span class="mod-nav-dot" style="background:#b45309;"></span>5 · Admin &amp; Policies</a>
+    <a class="mod-nav-link" href="../6 Configure Advanced Network Services/edu-280-advanced-network.html"><span class="mod-nav-dot" style="background:var(--blue);"></span>6 · Advanced Network</a>
+    <a class="mod-nav-link" href="../7 Deploy App Connector for Zero Trust Access/edu-280-app-connector.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>7 · App Connector</a>
+    <a class="mod-nav-link" href="../8 Monitor Network Activity and Analytics/edu-280-monitor.html"><span class="mod-nav-dot" style="background:#b91c1c;"></span>8 · Monitor &amp; Analytics</a>
+    <a class="mod-nav-link" href="../9 Integrate Third-Party Security Platforms/edu-280-third-party.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>9 · Third-Party Platforms</a>
+    <a class="mod-nav-link" href="../10 Troubleshoot and Diagnose Branch Issues/edu-280-troubleshoot.html"><span class="mod-nav-dot" style="background:#b45309;"></span>10 · Troubleshoot</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>5 module learning objectives</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>ZIA + ZPA backend linking requirement</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Navigation path to Sites page</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>6 site table column definitions</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Add Site — 5 required fields</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Firewall ports: UDP 500, 4500 + TCP 443</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Port roles: Mgmt, LAN, WAN, HA</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>PuTTY console settings (115200 baud)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>SDA — 3 key features</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>SDA — 4 activation steps</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Activation Code — use cases</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Zero Trust registration principle</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Both knowledge checks answered</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Required Ports</div>
+      <div class="quick-ref-def">UDP 500 (IPSec IKE) · UDP 4500 (NAT-T) · TCP 443 (Management). All must be open outbound before activation. Blocked ports = most common activation failure.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Simple Device Activation</div>
+      <div class="quick-ref-def">URL-based enrollment method. Share one link with on-site staff → browser opens on mgmt network → Gateway Provisioned → ~15 min to Connected.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Activation Code</div>
+      <div class="quick-ref-def">Alternative to SDA — single-use, time-limited code entered via console. Same outcome. Used when URL access isn't available (air-gapped, restricted environments).</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Active / Standby</div>
+      <div class="quick-ref-def">HA role indicators shown in the Sites table after successful enrollment. Active = primary gateway. Standby = hot backup. Standalone = single gateway, Active only.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">ZIA + ZPA Dependency</div>
+      <div class="quick-ref-def">Both must be linked in the backend. Without ZIA → location won't appear. Without ZPA → strongswan container won't run → no IPSec tunnels.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Mgmt IP (Temporary)</div>
+      <div class="quick-ref-def">192.168.0.99/24 — used only during initial setup. Automatically removed after successful activation. Do not rely on this for ongoing access.</div>
+    </div>
+  </div>
+
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-280 · <span>Deploy and Administer Zero Trust Branch</span></div>
+  <div class="footer-right">Zscaler Study Guide</div>
+</footer>
+
+<script>
+const PAGE_KEY = 'edu280-deploy-administer';
+
+function getStore(){try{return JSON.parse(localStorage.getItem(PAGE_KEY))||{};}catch(e){return{};}}
+function saveStore(s){try{localStorage.setItem(PAGE_KEY,JSON.stringify(s));}catch(e){}}
+
+function addQuestion(sectionId,sectionLabel){
+  const ta=document.getElementById('q-'+sectionId);
+  const text=ta.value.trim();if(!text)return;
+  const s=getStore();if(!s.questions)s.questions=[];
+  s.questions.push({section:sectionLabel,text,id:Date.now()});
+  saveStore(s);ta.value='';renderQPanel();
+}
+function deleteQuestion(id){
+  const s=getStore();s.questions=(s.questions||[]).filter(q=>q.id!==id);
+  saveStore(s);renderQPanel();
+}
+function renderQPanel(){
+  const s=getStore();const qs=s.questions||[];
+  const count=document.getElementById('qpanel-count');
+  const body=document.getElementById('qpanel-body');
+  count.textContent=qs.length;count.style.display=qs.length?'inline':'none';
+  if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Use the boxes below each section to add one.</p>';return;}
+  const groups={};qs.forEach(q=>{if(!groups[q.section])groups[q.section]=[];groups[q.section].push(q);});
+  body.innerHTML=Object.entries(groups).map(([label,items],gi)=>`
+    <div class="q-group"><div class="q-group-label">${label.toUpperCase()}</div>
+    ${items.map((q,i)=>`<div class="q-item"><div class="q-num">${gi*10+i+1}</div><div class="q-text">${q.text}</div><button class="q-del" onclick="deleteQuestion(${q.id})">✕</button></div>`).join('')}
+    </div>`).join('');
+}
+function toggleQPanel(){
+  const body=document.getElementById('qpanel-body');
+  const hdr=document.getElementById('qpanel-header');
+  const chev=document.getElementById('qpanel-chevron');
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);chev.textContent=open?'▴':'▾';
+  const s=getStore();s.qOpen=open;saveStore(s);
+}
+
+document.querySelectorAll('.notes-ta').forEach(ta=>{
+  const key=ta.id;const s=getStore();if(s[key])ta.value=s[key];
+  let timer;
+  ta.addEventListener('input',()=>{
+    clearTimeout(timer);timer=setTimeout(()=>{
+      const st=getStore();st[key]=ta.value;saveStore(st);
+      const ns=document.getElementById('ns-'+key.replace('notes-',''));
+      if(ns){ns.textContent='Saved';setTimeout(()=>{ns.textContent='';},1800);}
+    },600);
+  });
+});
+
+function toggleCheck(li){
+  li.classList.toggle('done');const s=getStore();if(!s.checks)s.checks={};
+  s.checks[li.querySelector('span').textContent]=li.classList.contains('done');saveStore(s);
+}
+(function restoreChecks(){
+  const s=getStore();if(!s.checks)return;
+  document.querySelectorAll('#checklist li').forEach(li=>{
+    if(s.checks[li.querySelector('span').textContent])li.classList.add('done');
+  });
+})();
+
+function navTo(id,btn){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+(function init(){
+  renderQPanel();const s=getStore();
+  if(s.qOpen){
+    document.getElementById('qpanel-body').classList.add('open');
+    document.getElementById('qpanel-header').classList.add('open');
+    document.getElementById('qpanel-chevron').textContent='▴';
+  }
+})();
+</script>
+</body>
+</html>

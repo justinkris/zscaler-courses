@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 7 — Deploy App Connector for Zero Trust Access · EDU-280</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f0fdf6;--surface:#fff;--surface-2:#d4f0e0;--border:#a7e0c0;--border-dim:#c8eedb;
+  --text:#041f0e;--text-soft:#0d4a2a;--text-muted:#3d8c5a;
+  --green:#1a7c4a;--green-glow:rgba(26,124,74,0.07);--green-dim:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+  --teal:#0d7d8a;--teal-light:#d0f0f4;--teal-border:#9adde6;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#0d4a2a;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#4ade80;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#0d4a2a;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#4ade80;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#4ade80;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#4ade80;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--green);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#4ade80;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--green);border-bottom-color:var(--green);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--green);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--green-glow);border:1px solid var(--green-dim);border-left:3px solid var(--green);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--green);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+.callout-note{background:var(--surface-2);border-color:var(--border);}
+.callout-note .callout-header{color:var(--green);}
+.callout-note .callout-icon{background:var(--green-dim);color:var(--green);}
+.callout-note .callout-body{color:var(--text-soft);}
+/* Data table */
+.data-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+.data-table th{background:var(--text);color:#fff;padding:9px 12px;text-align:left;font-weight:500;font-size:11px;letter-spacing:0.06em;}
+.data-table th:first-child{border-radius:10px 0 0 0;}
+.data-table th:last-child{border-radius:0 10px 0 0;}
+.data-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text-soft);vertical-align:middle;}
+.data-table tr:nth-child(even) td{background:var(--surface-2);}
+/* Feature grid */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.feat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.feat-card-title{font-size:12px;font-weight:700;color:var(--green);margin-bottom:4px;}
+.feat-card-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Step rows */
+.step-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.step-row{display:flex;gap:14px;align-items:flex-start;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-content{flex:1;}
+.step-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.step-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Phase strip */
+.phase-strip{display:flex;gap:0;margin-bottom:20px;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.phase-block{flex:1;padding:14px 16px;background:var(--surface-2);border-right:1px solid var(--border);}
+.phase-block:last-child{border-right:none;}
+.phase-tag{font-size:10px;font-weight:700;color:var(--green);letter-spacing:0.12em;margin-bottom:4px;}
+.phase-desc{font-size:12px;color:var(--text-soft);}
+/* BGP params */
+.param-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.param-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.param-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.param-badge{display:inline-block;font-size:10px;padding:1px 7px;border-radius:10px;font-weight:600;margin-left:4px;}
+.badge-req{background:#fce7f3;color:#be185d;}
+.badge-def{background:var(--blue-light);color:var(--blue);}
+.badge-opt{background:var(--surface-2);color:var(--text-muted);}
+.param-desc{font-size:11px;color:var(--text-muted);line-height:1.5;}
+/* Tunnel diagram */
+.tunnel-viz{background:var(--text);border-radius:12px;padding:20px;margin-bottom:16px;display:flex;align-items:center;gap:0;overflow-x:auto;}
+.tunnel-node{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:90px;}
+.tunnel-node-box{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:8px 10px;text-align:center;}
+.tunnel-node-label{font-size:11px;font-weight:700;color:#fff;}
+.tunnel-node-sub{font-size:10px;color:rgba(255,255,255,0.45);}
+.tunnel-line{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 8px;}
+.tunnel-line-bar{width:100%;height:4px;background:linear-gradient(90deg,#4ade80,#7c3aed,#60a5fa);border-radius:2px;}
+.tunnel-line-label{font-size:9px;color:#4ade80;text-align:center;}
+/* Code block */
+.code-block{background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:10px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.6;overflow-x:auto;margin-bottom:14px;}
+code{background:var(--surface-2);border-radius:4px;padding:1px 6px;font-family:'Courier New',monospace;font-size:12px;color:var(--green);}
+/* Knowledge check */
+.kcheck{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
+.kcheck-q{background:var(--text);padding:16px 20px;font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;line-height:1.4;}
+.kcheck-options{padding:16px 20px;display:flex;flex-direction:column;gap:8px;}
+.kcheck-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;color:var(--text-soft);line-height:1.5;}
+.kcheck-option.correct{background:var(--green-light);border-color:var(--green-dim);color:var(--green);}
+.kcheck-option.wrong{background:var(--red-light);border-color:var(--red-border);color:var(--red);text-decoration:line-through;}
+.kcheck-opt-badge{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.correct .kcheck-opt-badge{background:var(--green);color:#fff;}
+.wrong .kcheck-opt-badge{background:var(--red);color:#fff;}
+.kcheck-option:not(.correct):not(.wrong) .kcheck-opt-badge{background:var(--border);color:var(--text-muted);}
+/* Lesson tools */
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--green);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#4ade80;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#0d4a2a;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+/* Sidebar */
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#4ade80;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#86c8a0;line-height:1.6;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--green);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.feat-grid,.param-grid{grid-template-columns:1fr;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}.phase-strip{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../zero-trust-branch-hub.html">Zero Trust Branch</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-280-hub.html">EDU-280</a>
+      <span class="breadcrumb-sep">›</span>
+      Section 7
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> EDU-280 · Section 7 · 40 min</div>
+    <h1>Deploy App Connector for <em>Zero Trust Access</em></h1>
+    <p>ZPA private access flow, App Connector deployment and validation, BGP/OSPF dynamic routing, and routed tunnels for private site-to-site connectivity.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Private apps, dynamic routing, encrypted tunnels — <em>connectivity without the network exposure</em>.</div>
+  <p class="motivation-sub">Zero Trust isn't just about who can access what — it's about how that access happens. App Connectors bring ZPA to the branch without opening inbound ports, BGP keeps routing adaptive, and routed tunnels preserve the source IP visibility that legacy apps depend on.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-appc',this)">App Connector</button>
+  <button class="nav-tab" onclick="navTo('section-routing',this)">BGP &amp; OSPF</button>
+  <button class="nav-tab" onclick="navTo('section-tunnels',this)">Routed Tunnels</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- OVERVIEW -->
+<div class="section-block" id="section-overview">
+  <div class="section-label">MODULE OVERVIEW</div>
+  <h2>ZPA private access and dynamic routing in a ZTB environment</h2>
+  <p>This module covers how to extend Zero Trust principles into branch connectivity — enabling secure private application access through ZPA App Connectors, keeping routing dynamic and resilient with BGP/OSPF, and linking branches together with encrypted routed tunnels that preserve source IP.</p>
+
+  <h3>Learning Objectives</h3>
+  <ul class="content-list">
+    <li>Explain the high-level ZPA private access flow and the role of App Connectors</li>
+    <li>Deploy an App Connector and confirm it is running on the gateway</li>
+    <li>Create a ZPA App Segment (FQDN-based) and restrict access by ports as required</li>
+    <li>Configure BGP peering parameters and describe how BGP supports route exchange</li>
+    <li>Configure OSPF in ZTB and verify neighbors/routes using "Show Status"</li>
+    <li>Describe routed tunnel use cases and outline the hub/spoke configuration workflow</li>
+  </ul>
+
+  <h3>ZPA Private Access Flow</h3>
+  <p>Every private application access request in ZPA goes through four stages:</p>
+
+  <div class="step-rows">
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">User + Client Connector — Initiation</div>
+        <div class="step-body">A user at a branch initiates a request to access a private application (ERP, file share, web app). The Zscaler Client Connector intercepts the request and forwards it to the Zero Trust Exchange — <strong>without extending the corporate network</strong> to the user device. Eliminates the VPN broad-access model.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Zero Trust Exchange — Policy Decision</div>
+        <div class="step-body">Cloud-delivered policy broker evaluating: <strong>Identity-based access</strong> (IdP integration), <strong>Context-based policy</strong> (device posture: OS version, patch level, certificate), and <strong>App segmentation</strong> (access granted only to the specific application — never the broader network). If conditions are met, a secure micro-tunnel is brokered. If not, access is denied immediately.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">ZPA App Connector — Secure Tunnel</div>
+        <div class="step-body">Lightweight software component deployed close to the private app (DC, private cloud, or public cloud). Key principle: <strong>inside-out connectivity</strong> — the connector initiates outbound to the Zero Trust Exchange; it never opens inbound ports. No attack surface exposed. The per-session micro-tunnel is scoped to the specific application only and terminated when the session ends.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Private Application — Access Granted</div>
+        <div class="step-body">User reaches the app but is never placed on the underlying network segment. Access is <strong>application-scoped only</strong> (no IP-level access, no lateral movement), <strong>identity- and policy-bound</strong> (revocable in real time if posture changes), and <strong>hosted anywhere</strong> (DC, AWS, Azure, GCP, or hybrid).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-header"><div class="callout-icon">!</div>DENIED ACCESS</div>
+    <div class="callout-body">If identity or context does not meet policy, access is denied immediately. App segmentation prevents lateral movement — the user is never placed on the broader network.</div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP CONNECTOR -->
+<div class="section-block" id="section-appc">
+  <div class="section-label">APP CONNECTOR DEPLOYMENT</div>
+  <h2>Deploy and validate a ZPA App Connector in a ZTB site</h2>
+  <p>Deploying an App Connector involves three phases: creating the provisioning key in ZPA, defining the App Segments and Access Policy, then integrating the key into the ZTB portal and validating connectivity.</p>
+
+  <div class="phase-strip">
+    <div class="phase-block"><div class="phase-tag">PHASE 1 — ZPA CONSOLE</div><div class="phase-desc">Create provisioning key + assign connector group</div></div>
+    <div class="phase-block"><div class="phase-tag">PHASE 2 — ZPA CONSOLE</div><div class="phase-desc">Create App Segments + Access Policy</div></div>
+    <div class="phase-block"><div class="phase-tag">PHASE 3 — ZTB PORTAL</div><div class="phase-desc">Integrate key into site + validate</div></div>
+  </div>
+
+  <h3>Phase 1: Create the Provisioning Key</h3>
+  <div class="step-rows">
+    <div class="step-row"><div class="step-num">1</div><div class="step-content"><div class="step-title">Confirm no App Connector exists</div><div class="step-body">Navigate to the ZTB site's ZPA tab to confirm no App Connector is currently integrated.</div></div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-content"><div class="step-title">Create provisioning key in ZPA</div><div class="step-body">Private Access &gt; App Connectors &gt; create a new provisioning key. Select the connector certificate, assign a connector group, and choose the deployment location.</div></div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-content"><div class="step-title">Copy and save the key</div><div class="step-body">Review settings, save the provisioning key, copy the generated key value, and select Done.</div></div></div>
+  </div>
+
+  <div class="key-concept">
+    <strong>Key Concept:</strong> The Provisioning Key is generated in the App Connectors section of the Private Access console. It is used to authenticate and register the connector with the ZPA cloud, then pasted into the ZTB portal to complete the connection.
+  </div>
+
+  <h3>Phase 2: Configure App Segments &amp; Access Policy</h3>
+  <div class="step-rows">
+    <div class="step-row"><div class="step-num">1</div><div class="step-content"><div class="step-title">Create App Segments</div><div class="step-body">Define the application domain/FQDN (e.g., subnets like 10.20/30) and required protocols and ports. Port examples: RDP = 3389, SSH = 22, Web Server = 80.</div></div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-content"><div class="step-title">Select segment &amp; server group</div><div class="step-body">Associate the App Segment with the appropriate segment group and server group.</div></div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-content"><div class="step-title">Create an Access Policy rule</div><div class="step-body">Allow the target user group to access the application — specify user group, server group, and the intended connector group.</div></div></div>
+  </div>
+
+  <h3>Phase 3: Integrate &amp; Validate</h3>
+  <div class="step-rows">
+    <div class="step-row"><div class="step-num">1</div><div class="step-content"><div class="step-title">Add connector key to ZTB site</div><div class="step-body">In the ZTB portal: Sites view → select your site → open the ZPA section → add a connector key → paste the provisioning key → save.</div></div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-content"><div class="step-title">Confirm Connected status</div><div class="step-body">After a few minutes, the connector status should update to Connected in both the ZTB site view and the Private Access console App Connectors view.</div></div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-content"><div class="step-title">Optional: validate on gateway</div><div class="step-body">Run on the gateway console to confirm the App Connector container is running:</div></div></div>
+  </div>
+  <div class="code-block">docker ps -a</div>
+  <p>Look for the App Connector container (e.g., <code>pod06Appc</code>) showing a recent start time.</p>
+
+  <div class="kcheck">
+    <div class="kcheck-q">What is the primary purpose of generating a Provisioning Key in the ZPA console during an App Connector deployment?</div>
+    <div class="kcheck-options">
+      <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>To set up a link between the segment group, server group, and connector group so traffic is permitted to the application</div>
+      <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>To generate a unique key that enables the App Connector to register and authenticate with the ZPA cloud during deployment</div>
+      <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>To define the application domain, specify protocols and port ranges, and assign subnets for RDP, SSH, and web access</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-appc" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('appc','App Connector')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-appc" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-appc"></span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BGP & OSPF -->
+<div class="section-block" id="section-routing">
+  <div class="section-label">BGP &amp; OSPF ROUTING</div>
+  <h2>Dynamic routing for resilient branch networks</h2>
+  <p>BGP and OSPF replace static routing with adaptive path discovery — keeping branches connected, redundant, and scalable as the network evolves.</p>
+
+  <h3>Border Gateway Protocol (BGP)</h3>
+  <ul class="content-list">
+    <li><strong>Dynamic route adjustments:</strong> Routing tables update automatically when changes occur — new routes or failures</li>
+    <li><strong>Redundancy:</strong> Continuous connectivity by rerouting through alternative paths during WAN link failures</li>
+    <li><strong>Scalable branch management:</strong> Supports multiple locations and integrates with cloud services like ZIA</li>
+    <li><strong>BGP with Airgap:</strong> ZTB dynamically advertises routes to the network perimeter; static routes are no longer required for onboarded VLANs</li>
+  </ul>
+
+  <div class="key-concept">
+    <strong>BGP Config Path:</strong> Infrastructure › Connectors › Edge › Zero Trust Branch › Sites › {YOUR-SITE} › Settings › BGP
+  </div>
+
+  <h3>BGP Peer Parameters</h3>
+  <table class="data-table">
+    <thead><tr><th>Field</th><th>What to Enter</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Name</strong></td><td>A name for this BGP configuration</td></tr>
+      <tr><td><strong>Neighbor IP</strong></td><td>IP address of the peer router for this configuration</td></tr>
+      <tr><td><strong>Neighbor AS</strong></td><td>Autonomous System number that identifies the peer router's network</td></tr>
+      <tr><td><strong>Local IP</strong></td><td>IP address of the local network</td></tr>
+      <tr><td><strong>Local AS</strong></td><td>AS number that identifies the local network</td></tr>
+      <tr><td><strong>Password</strong></td><td>Password shared between the two networks</td></tr>
+      <tr><td><strong>Graceful Restart Time</strong></td><td>Milliseconds to allow peer router to restart before timing out</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Open Shortest Path First (OSPF)</h3>
+  <p>OSPFv2 is a link-state dynamic routing protocol that automatically learns and advertises routes between routers to maintain optimal paths. In ZTB, OSPFv2 can be activated on both the <strong>global routing table</strong> and the <strong>VRF routing table</strong>, exchanging routes over both LAN and WAN interfaces.</p>
+
+  <div class="key-concept">
+    <strong>OSPF Config Path:</strong> Infrastructure › Connectors › Edge › Zero Trust Branch › Sites › &lt;YOUR-SITE&gt; › Settings › OSPF › Add
+  </div>
+
+  <h3>OSPF Configuration Parameters</h3>
+  <div class="param-grid">
+    <div class="param-card"><div class="param-name">Area <span class="param-badge badge-req">Required</span></div><div class="param-desc">Backbone (Area 0) and Non-Backbone areas. Every OSPF router must belong to at least one area; all non-backbone areas must connect to Area 0.</div></div>
+    <div class="param-card"><div class="param-name">Network <span class="param-badge badge-req">Required</span></div><div class="param-desc">Define networks to advertise to OSPF neighbors. Specifies which interfaces participate in OSPF and which prefixes are in the LSDB.</div></div>
+    <div class="param-card"><div class="param-name">Router ID <span class="param-badge badge-def">Default</span></div><div class="param-desc">Unique 32-bit number per OSPF router. Recommend using the interface IP — avoids conflicts and ensures stable neighbor relationships.</div></div>
+    <div class="param-card"><div class="param-name">Cost <span class="param-badge badge-def">Default</span></div><div class="param-desc">Cost = Reference BW / Interface BW. Lower cost = preferred path. Primary tool for traffic engineering.</div></div>
+    <div class="param-card"><div class="param-name">Redistribution <span class="param-badge badge-opt">Optional</span></div><div class="param-desc">Redistribute directly connected routes into OSPF for cross-protocol route sharing and extended reachability.</div></div>
+    <div class="param-card"><div class="param-name">VRF <span class="param-badge badge-opt">Optional</span></div><div class="param-desc">Virtual Routing and Forwarding. Isolated routing contexts for multi-tenant or segmented deployments.</div></div>
+    <div class="param-card"><div class="param-name">Gateway Interface <span class="param-badge badge-req">Required</span></div><div class="param-desc">Interface for OSPF Hello packets and neighbor adjacency formation. Select LAN or WAN interface.</div></div>
+    <div class="param-card"><div class="param-name">Hello Interval <span class="param-badge badge-def">Default: 10s</span></div><div class="param-desc">Frequency of Hello packets. Must match on both ends. Reducing enables faster failure detection but increases overhead.</div></div>
+    <div class="param-card"><div class="param-name">Dead Interval <span class="param-badge badge-def">Default: 40s</span></div><div class="param-desc">Time before declaring a neighbor down (4× Hello). Triggers SPF recalculation when exceeded.</div></div>
+    <div class="param-card"><div class="param-name">Authentication <span class="param-badge badge-req">Required</span></div><div class="param-desc">MD5 or SHA keys per interface; must match on both sides. Prevents rogue routers from injecting false routing updates.</div></div>
+  </div>
+
+  <p><strong>OSPF Show Status</strong> displays: Interfaces · Neighbors · Database · Routes</p>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-routing" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('routing','BGP & OSPF')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-routing" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-routing"></span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ROUTED TUNNELS -->
+<div class="section-block" id="section-tunnels">
+  <div class="section-label">ROUTED TUNNELS</div>
+  <h2>Encrypted tunnels with source IP preservation</h2>
+  <p>Routed tunnels provide a secure way to connect branch locations over IP networks while <strong>preserving the source IP address</strong> required by legacy applications running in branches — such as VoIP, TACACS+, ATMs, and Active FTP.</p>
+
+  <div class="tunnel-viz">
+    <div class="tunnel-node"><div class="tunnel-node-box"><div class="tunnel-node-label">Branch</div><div class="tunnel-node-sub">(Spoke)</div></div></div>
+    <div class="tunnel-line"><div class="tunnel-line-bar"></div><div class="tunnel-line-label">Preserved Source IP + Encrypted · Public IP Network</div></div>
+    <div class="tunnel-node"><div class="tunnel-node-box"><div class="tunnel-node-label">Hub / DC</div><div class="tunnel-node-sub">(Hub)</div></div></div>
+  </div>
+
+  <h3>How Tunnels Are Established</h3>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-title">Automatic Tunnel Creation</div>
+      <div class="feat-card-body">ZTB appliance automatically creates routed tunnels toward the hub(s) — no manual configuration required.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Cryptokey Routing</div>
+      <div class="feat-card-body">Associates public keys with allowed tunnel IP addresses. Each peer has a private key and public key for authentication, passed via out-of-band method.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Scale Limit</div>
+      <div class="feat-card-body">Maximum number of routed tunnels is constrained by the BGP peering scale. Plan tunnel capacity accordingly before deployment.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Source IP Preserved</div>
+      <div class="feat-card-body">Tunnel preserves the original client IP — required for legacy applications such as VoIP, TACACS+, ATMs, and Active FTP.</div>
+    </div>
+  </div>
+
+  <h3>Hub-and-Spoke Configuration</h3>
+  <p>Typical topology: branch spokes (e.g., Pod 30 &amp; Pod 50) connect to Primary and Secondary Hubs over the Internet/WAN, with BGP peering providing redundancy and inter-spoke encrypted connectivity.</p>
+
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-title">Hub Configuration</div>
+      <div class="feat-card-body">
+        1. Add On-Prem Hub: Infrastructure › Connectors › Edge › Zero Trust Branch › Hubs<br>
+        2. Enter Gateway Name &amp; User-Reachable IP (public IP accessible by all spokes)<br>
+        3. Activate with Generated Key (auto-generated; launches ZTB Gateway)<br>
+        <em style="font-size:11px;color:#b91c1c;">⚠ Hubs cannot be deployed in public cloud. Incorrect user-reachable IP causes end-to-end failure.</em>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-title">Spoke Configuration</div>
+      <div class="feat-card-body">
+        1. Configure Routed Tunnels: Sites › Routing Tunnels › select WAN interface → Connect To Hub<br>
+        2. Static Routes: steer spoke traffic to hub via WAN interface<br>
+        3. Share Over All (v8.8.5+): share at VLAN level for BGP advertisement<br>
+        4. BGP: auto-configures after above steps
+      </div>
+    </div>
+  </div>
+
+  <h3>Centralized DHCP Over Routed Tunnel</h3>
+  <p>Branch sites can obtain IPs from a centralized DHCP server in the DC. ZTB acts as a DHCP relay — forwarding requests across the routed tunnel using unicast encapsulation.</p>
+
+  <div class="step-rows">
+    <div class="step-row"><div class="step-num">1</div><div class="step-content"><div class="step-title">Client Broadcast</div><div class="step-body">Device broadcasts a DHCP Discover message on the local network.</div></div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-content"><div class="step-title">Relay Agent</div><div class="step-body">ZTB (configured as DHCP relay) encapsulates the broadcast into a unicast packet with the DC DHCP server as the relay target.</div></div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-content"><div class="step-title">Encapsulation &amp; Forwarding</div><div class="step-body">Gateway encapsulates the broadcast and forwards it through the encrypted routed tunnel to the hub, which forwards to the DC DHCP server.</div></div></div>
+    <div class="step-row"><div class="step-num">4</div><div class="step-content"><div class="step-title">Server Response</div><div class="step-body">DC DHCP server processes the unicast request and sends a DHCP Offer back over the routed tunnel to the branch gateway.</div></div></div>
+    <div class="step-row"><div class="step-num">5</div><div class="step-content"><div class="step-title">Delivery to Client</div><div class="step-body">Relay delivers the response, replaces the subnet with /32 (for airgap devices), and delivers the final IP configuration to the client.</div></div></div>
+  </div>
+
+  <div class="kcheck">
+    <div class="kcheck-q">In Zero Trust Branch, what does Cryptokey Routing do when a routed tunnel is established?</div>
+    <div class="kcheck-options">
+      <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>It encrypts all traffic using symmetric keys generated at the hub and distributed to all spokes</div>
+      <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>It associates public keys with a list of tunnel IP addresses — each peer uses a private key and public key for authentication, enabling zero-touch secure tunnel formation</div>
+      <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>It automatically configures BGP peering between all hub and spoke nodes based on discovered IP addresses</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-tunnels" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('tunnels','Routed Tunnels')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-tunnels" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-tunnels"></span></div></div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-280-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-280 Hub
+    </a>
+    <div class="mod-nav-group-label">SECTIONS</div>
+    <a class="mod-nav-link" href="../1 Introduce Zero Trust Branch Concepts/edu-280-intro.html"><span class="mod-nav-dot" style="background:#0d7d8a;"></span>1 · Introduce ZTB Concepts</a>
+    <a class="mod-nav-link" href="../2 Segment Branches and Devices/edu-280-segment.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>2 · Segment Branches</a>
+    <a class="mod-nav-link" href="../3 Deploy and Administer Zero Trust Branch/edu-280-deploy.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>3 · Deploy &amp; Administer</a>
+    <a class="mod-nav-link" href="../4 Integrate Zscaler and Third-Party Security Services/edu-280-integrate-security.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>4 · Integrate Security</a>
+    <a class="mod-nav-link" href="../5 Manage Branch Administration and Policies/edu-280-admin-policies.html"><span class="mod-nav-dot" style="background:#b45309;"></span>5 · Admin &amp; Policies</a>
+    <a class="mod-nav-link" href="../6 Configure Advanced Network Services/edu-280-advanced-network.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>6 · Advanced Network</a>
+    <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>7 · App Connector</span>
+    <a class="mod-nav-link" href="../8 Monitor Network Activity and Analytics/edu-280-monitor.html"><span class="mod-nav-dot" style="background:#b91c1c;"></span>8 · Monitor &amp; Analytics</a>
+    <a class="mod-nav-link" href="../9 Integrate Third-Party Security Platforms/edu-280-third-party.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>9 · Third-Party Platforms</a>
+    <a class="mod-nav-link" href="../10 Troubleshoot and Diagnose Branch Issues/edu-280-troubleshoot.html"><span class="mod-nav-dot" style="background:#b45309;"></span>10 · Troubleshoot</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>ZPA private access flow (4 steps)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Zero Trust Exchange — 3 enforcement layers</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>App Connector inside-out connectivity</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Create provisioning key in ZPA</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>App Segments &amp; Access Policy</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Integrate key into ZTB + validate (docker ps -a)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>BGP benefits &amp; peer parameters (7 fields)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>OSPF — global &amp; VRF routing tables</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>OSPF config parameters (10 fields)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>OSPF Show Status — 4 views</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Routed tunnels — cryptokey routing</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Hub-and-spoke config workflow</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>DHCP relay over routed tunnel (5 steps)</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Validate App Connector</div>
+      <div class="quick-ref-def">docker ps -a — look for the App Connector container with recent start time.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">BGP Config Path</div>
+      <div class="quick-ref-def">Sites › Settings › BGP. BGP replaces static routes for onboarded VLANs in Airgap mode.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">OSPF Timers</div>
+      <div class="quick-ref-def">Hello Interval = 10s (default). Dead Interval = 40s (4× Hello). Both ends must match.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Tunnel Scale</div>
+      <div class="quick-ref-def">Limited by BGP peering scale. Plan capacity before deployment.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">App Segment Ports</div>
+      <div class="quick-ref-def">RDP = 3389, SSH = 22, Web Server = 80. Port-level access control enforced by Access Policy.</div>
+    </div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-280 · <span>Section 7</span></div>
+  <div class="footer-right">Deploy App Connector for Zero Trust Access</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu280-s7-app-connector';
+function getStore(){try{return JSON.parse(localStorage.getItem(PAGE_KEY))||{};}catch(e){return{};}}
+function saveStore(s){try{localStorage.setItem(PAGE_KEY,JSON.stringify(s));}catch(e){}}
+function addQuestion(sectionId,sectionLabel){
+  const ta=document.getElementById('q-'+sectionId);
+  const text=ta.value.trim();if(!text)return;
+  const s=getStore();if(!s.questions)s.questions=[];
+  s.questions.push({section:sectionLabel,text,id:Date.now()});
+  saveStore(s);ta.value='';renderQPanel();
+}
+function deleteQuestion(id){
+  const s=getStore();s.questions=(s.questions||[]).filter(q=>q.id!==id);
+  saveStore(s);renderQPanel();
+}
+function renderQPanel(){
+  const s=getStore();const qs=s.questions||[];
+  const count=document.getElementById('qpanel-count');
+  const body=document.getElementById('qpanel-body');
+  count.textContent=qs.length;count.style.display=qs.length?'inline':'none';
+  if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Use the boxes below each section to add one.</p>';return;}
+  const groups={};qs.forEach(q=>{if(!groups[q.section])groups[q.section]=[];groups[q.section].push(q);});
+  body.innerHTML=Object.entries(groups).map(([label,items],gi)=>`
+    <div class="q-group"><div class="q-group-label">${label.toUpperCase()}</div>
+    ${items.map((q,i)=>`<div class="q-item"><div class="q-num">${gi*10+i+1}</div><div class="q-text">${q.text}</div><button class="q-del" onclick="deleteQuestion(${q.id})">✕</button></div>`).join('')}
+    </div>`).join('');
+}
+function toggleQPanel(){
+  const body=document.getElementById('qpanel-body');
+  const hdr=document.getElementById('qpanel-header');
+  const chev=document.getElementById('qpanel-chevron');
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);chev.textContent=open?'▴':'▾';
+  const s=getStore();s.qOpen=open;saveStore(s);
+}
+document.querySelectorAll('.notes-ta').forEach(ta=>{
+  const key=ta.id;const s=getStore();if(s[key])ta.value=s[key];
+  let timer;
+  ta.addEventListener('input',()=>{
+    clearTimeout(timer);timer=setTimeout(()=>{
+      const st=getStore();st[key]=ta.value;saveStore(st);
+      const ns=document.getElementById('ns-'+key.replace('notes-',''));
+      if(ns){ns.textContent='Saved';setTimeout(()=>{ns.textContent='';},1800);}
+    },600);
+  });
+});
+function toggleCheck(li){
+  li.classList.toggle('done');const s=getStore();if(!s.checks)s.checks={};
+  s.checks[li.querySelector('span').textContent]=li.classList.contains('done');saveStore(s);
+}
+(function restoreChecks(){
+  const s=getStore();if(!s.checks)return;
+  document.querySelectorAll('#checklist li').forEach(li=>{
+    if(s.checks[li.querySelector('span').textContent])li.classList.add('done');
+  });
+})();
+function navTo(id,btn){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+(function init(){
+  renderQPanel();const s=getStore();
+  if(s.qOpen){
+    document.getElementById('qpanel-body').classList.add('open');
+    document.getElementById('qpanel-header').classList.add('open');
+    document.getElementById('qpanel-chevron').textContent='▴';
+  }
+})();
+</script>
+</body>
+</html>

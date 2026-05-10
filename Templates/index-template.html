@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- CUSTOMIZE: page title -->
+<title>NAME — Certification Schedule</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f0;
+    --cream-dark: #f5eddb;
+    --ink: #1a1209;
+    --ink-soft: #5a4a35;
+    --ink-muted: #8a7660;
+    --orange: #ff6b35;
+    --orange-light: #fff3ec;
+    --orange-border: #ffd5c0;
+    --green: #3a7d44;
+    --green-light: #edf7ee;
+    --green-border: #b2dfb4;
+    --red: #cc2020;
+    --red-light: #fef0ef;
+    --red-border: #f5c0bc;
+    --border: #ede5d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Epilogue', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 80px 40px 60px;
+  }
+
+  /* ── HEADER ── */
+  .page-header { text-align: center; margin-bottom: 64px; }
+  .page-header .name-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--ink); color: var(--cream);
+    padding: 6px 16px; border-radius: 20px;
+    font-size: 11px; letter-spacing: 0.18em; margin-bottom: 18px;
+    text-transform: uppercase;
+  }
+  .name-tag-dot { width: 5px; height: 5px; background: var(--orange); border-radius: 50%; }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 56px; font-weight: 700;
+    line-height: 1.0; color: var(--ink); letter-spacing: -0.02em;
+  }
+  h1 em { font-style: italic; font-weight: 400; color: var(--orange); }
+  .subtitle {
+    font-family: 'Fraunces', serif; font-style: italic;
+    font-size: 22px; color: var(--ink-muted); margin-top: 8px; font-weight: 400;
+  }
+
+  /* ── VENDOR FILTERS ── */
+  .vendor-filters { display: flex; gap: 10px; justify-content: center; margin-top: 22px; }
+  .vendor-btn {
+    padding: 6px 20px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; font-family: 'Epilogue', sans-serif;
+    border: 1.5px solid var(--border);
+    background: transparent; color: var(--ink-muted); cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  }
+  .vendor-btn:hover { border-color: var(--ink-muted); color: var(--ink); transform: translateY(-1px); }
+  /* CUSTOMIZE: add active colour rules per vendor as needed */
+  .vendor-btn.active[data-vendor="all"]     { background: var(--ink); border-color: var(--ink); color: var(--cream); }
+  .vendor-btn.active[data-vendor="zscaler"] { background: #5b9de8; border-color: #5b9de8; color: #fff; }
+  .vendor-btn.active[data-vendor="fortinet"]{ background: var(--red); border-color: var(--red); color: #fff; }
+  .vendor-btn.active:hover { transform: none; }
+
+  /* ── CARD GRID ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* CUSTOMIZE: columns */
+    gap: 28px;
+    width: 100%;
+    max-width: 1500px;
+  }
+
+  /* ── CARD BASE ── */
+  .course-card {
+    position: relative;
+    background: var(--cream);
+    border: 2px solid var(--border);
+    border-radius: 24px;
+    padding: 36px 32px 30px;
+    overflow: hidden;
+    cursor: pointer;
+    transition:
+      transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 0.4s ease,
+      border-color 0.3s ease,
+      background 0.35s ease;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    will-change: transform;
+  }
+  /* Sheen sweep */
+  .course-card::before {
+    content: ''; position: absolute;
+    top: 0; left: -80%; width: 50%; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.28) 50%, transparent);
+    transform: skewX(-15deg); pointer-events: none; z-index: 2;
+  }
+  @keyframes card-shine { to { left: 160%; } }
+  /* Glow halo */
+  .course-card::after {
+    content: ''; position: absolute; inset: -2px; border-radius: 26px;
+    transition: box-shadow 0.5s ease, opacity 0.5s ease; pointer-events: none; opacity: 0;
+  }
+  .course-card:hover { background: #fff; z-index: 10; }
+  .course-card:hover::before { animation: card-shine 0.55s ease forwards; }
+  .course-card:hover::after  { opacity: 1; }
+
+  /* ── STATUS HOVER VARIANTS ── */
+  .course-card.status-complete:hover {
+    border-color: var(--green);
+    transform: translateY(-22px) scale(1.05) rotate(-1.5deg);
+    box-shadow: 0 32px 64px rgba(58,125,68,0.3), 0 0 0 2px var(--green-border);
+  }
+  .course-card.status-complete:hover::after { box-shadow: 0 0 80px 20px rgba(58,125,68,0.25); }
+
+  .course-card.status-progress:hover {
+    border-color: var(--orange);
+    transform: translateY(-22px) scale(1.05) rotate(1.5deg);
+    box-shadow: 0 32px 64px rgba(255,107,53,0.32), 0 0 0 2px var(--orange-border);
+  }
+  .course-card.status-progress:hover::after { box-shadow: 0 0 80px 20px rgba(255,107,53,0.3); }
+
+  .course-card.status-soon:hover {
+    border-color: #1a6bcc;
+    transform: translateY(-22px) scale(1.05) rotate(-1deg);
+    box-shadow: 0 32px 64px rgba(26,107,204,0.3), 0 0 0 2px #b3ccf0;
+  }
+  .course-card.status-soon:hover::after { box-shadow: 0 0 80px 20px rgba(26,107,204,0.22); }
+
+  .course-card.status-fortinet:hover {
+    border-color: var(--red);
+    transform: translateY(-22px) scale(1.05) rotate(1.5deg);
+    box-shadow: 0 32px 64px rgba(204,32,32,0.3), 0 0 0 2px var(--red-border);
+  }
+  .course-card.status-fortinet:hover::after { box-shadow: 0 0 80px 20px rgba(204,32,32,0.25); }
+
+  /* ── CARD CONTENT ── */
+  .card-content { position: relative; z-index: 3; display: flex; flex-direction: column; }
+
+  .cert-code-row { display: flex; align-items: center; gap: 14px; margin-bottom: 4px; }
+
+  .cert-code {
+    font-family: 'Fraunces', serif;
+    font-size: 48px; font-weight: 700;
+    line-height: 1; letter-spacing: -0.02em; margin-bottom: 4px;
+    transform-origin: left center;
+    transition: color 0.35s ease, transform 0.5s cubic-bezier(0.15, 0.85, 0.2, 1.2), letter-spacing 0.4s ease;
+  }
+  .course-card:hover .cert-code          { transform: scale(1.08); letter-spacing: 0.02em; color: var(--orange); }
+  .course-card.status-complete:hover .cert-code { color: var(--green); }
+  .course-card.status-soon:hover .cert-code     { color: #1a6bcc; }
+  .course-card.status-fortinet:hover .cert-code { color: var(--red); }
+
+  .cert-edu {
+    font-size: 11px; letter-spacing: 0.12em;
+    color: var(--ink-muted); text-transform: uppercase; font-weight: 500; margin-bottom: 14px;
+  }
+
+  .cert-name {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 400;
+    font-size: 17px; color: var(--ink-soft); line-height: 1.35;
+    display: flex; align-items: baseline; white-space: nowrap; overflow: hidden;
+  }
+  /* Prefix hidden by default, reveals on hover */
+  .cert-prefix { display: inline-block; overflow: hidden; white-space: nowrap; max-width: 0; transition: none; }
+  .cert-suffix { display: inline-block; flex-shrink: 0; transition: color 0.4s ease; }
+  .cert-version {
+    display: inline-block; overflow: hidden; white-space: nowrap;
+    max-width: 0; transition: none; color: var(--ink-muted); font-style: normal; font-size: 0.85em;
+  }
+  /* Prefix expand on hover */
+  .status-complete:hover .cert-prefix,
+  .status-progress:hover .cert-prefix,
+  .status-fortinet:hover .cert-prefix { max-width: 400px; transition: max-width 1.8s steps(34, end) 0.3s; }
+  .status-soon .cert-prefix { color: #000; }
+  .status-soon:hover .cert-prefix     { max-width: 230px; transition: max-width 1.6s steps(28, end) 0.3s; }
+  .status-fortinet:hover .cert-version{ max-width: 60px;  transition: max-width 0.7s steps(5, end) 0.55s; }
+  /* Suffix colour on hover */
+  .status-complete:hover .cert-suffix { color: var(--green); }
+  .status-progress:hover .cert-suffix { color: var(--orange); }
+  .status-soon:hover .cert-suffix     { color: #1a6bcc; }
+  .status-fortinet:hover .cert-suffix { color: var(--red); }
+
+  /* ── CERT ICON (top-right of card) ── */
+  .cert-icon {
+    width: 46px; height: 46px; border-radius: 13px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-left: auto;
+    transition: transform 0.5s cubic-bezier(0.15, 0.85, 0.2, 1.2),
+                background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.4s ease;
+  }
+  .course-card:hover .cert-icon { animation: icon-spin 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  @keyframes icon-spin {
+    0%   { transform: scale(1)    rotate(0deg); }
+    60%  { transform: scale(1.26) rotate(760deg); }
+    80%  { transform: scale(1.16) rotate(712deg); }
+    100% { transform: scale(1.18) rotate(720deg); }
+  }
+  .status-complete .cert-icon  { background: var(--green-light); border: 1.5px solid var(--green-border); color: var(--green); }
+  .status-complete:hover .cert-icon { background: var(--green); border-color: var(--green); color: #fff; box-shadow: 0 8px 24px rgba(58,125,68,0.45); }
+  .status-progress .cert-icon  { background: var(--orange-light); border: 1.5px solid var(--orange-border); color: #cc4a18; }
+  .status-progress:hover .cert-icon { background: var(--orange); border-color: var(--orange); color: #fff; box-shadow: 0 8px 24px rgba(255,107,53,0.5); }
+  .status-soon .cert-icon      { background: #eef3fc; border: 1.5px solid #b8d0f0; color: #1a6bcc; }
+  .status-soon:hover .cert-icon{ background: #1a6bcc; border-color: #1a6bcc; color: #fff; box-shadow: 0 8px 24px rgba(26,107,204,0.4); }
+  .status-fortinet .cert-icon  { background: var(--red-light); border: 1.5px solid var(--red-border); color: var(--red); }
+  .status-fortinet:hover .cert-icon { background: var(--red); border-color: var(--red); color: #fff; box-shadow: 0 8px 24px rgba(204,32,32,0.45); }
+
+  /* ── CARD DETAILS ── */
+  .card-details { overflow: visible; max-height: none; opacity: 1; transform: none; margin-top: 16px; }
+
+  /* ── STATUS BADGE ── */
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
+    padding: 6px 14px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    border: 1px solid; margin-bottom: 14px;
+  }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .status-complete .status-badge { background: var(--green-light);  color: var(--green); border-color: var(--green-border); }
+  .status-complete .status-dot   { background: var(--green); }
+  .status-progress .status-badge { background: var(--orange-light); color: #cc4a18; border-color: var(--orange-border); }
+  .status-progress .status-dot   { background: var(--orange); animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,53,0.55); }
+    50%      { box-shadow: 0 0 0 6px rgba(255,107,53,0); }
+  }
+  .status-soon .status-badge { background: #f3ece0; color: var(--ink-muted); border-color: var(--border); }
+  .status-soon .status-dot   { background: var(--ink-muted); }
+  .status-fortinet .status-badge { background: var(--red-light); color: var(--red); border-color: var(--red-border); }
+  .status-fortinet .status-dot   { background: var(--red); animation: pulse-red 1.8s ease-in-out infinite; }
+  @keyframes pulse-red {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(204,32,32,0.55); }
+    50%      { box-shadow: 0 0 0 6px rgba(204,32,32,0); }
+  }
+
+  /* ── EXAM DATE / CAPTION ── */
+  .exam-date {
+    font-size: 11px; color: var(--ink-muted);
+    letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500;
+  }
+  .exam-date strong { color: var(--ink); font-weight: 600; margin-left: 4px; }
+
+  /* ── CREDLY LINK (status-complete cards) ── */
+  .credly-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border-radius: 10px;
+    background: transparent; border: 1px solid var(--green-border);
+    color: var(--green); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.06em; text-decoration: none; transition: all 0.25s ease;
+  }
+  .credly-link:hover { background: var(--green); color: var(--cream); }
+  .credly-link svg { transition: transform 0.25s ease; }
+  .credly-link:hover svg { transform: translateX(2px); }
+
+  /* ── CORNER FLAG (active/in-progress cards) ── */
+  .corner-flag {
+    position: absolute; top: 18px; right: 18px; z-index: 4;
+    font-size: 10px; letter-spacing: 0.1em; color: var(--orange); font-weight: 600;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 80px; font-size: 11px;
+    letter-spacing: 0.12em; color: var(--ink-muted); text-transform: uppercase;
+  }
+  footer span { color: var(--orange); }
+
+  /* ── FILTER FADE ANIMATION ── */
+  @keyframes sectionFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section-fade { animation: sectionFadeIn 0.4s ease forwards; }
+
+  /* ── PAGE ENTER ── */
+  @keyframes pageEnter {
+    from { opacity: 0; transform: scale(1.05) translateY(-25px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  body { animation: pageEnter 0.6s cubic-bezier(0.15, 0.85, 0.2, 1.08) both; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .card-grid { grid-template-columns: 1fr; max-width: 460px; }
+    h1 { font-size: 40px; }
+    body { padding: 60px 24px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <div class="page-header">
+    <div class="name-tag">
+      <span class="name-tag-dot"></span>
+      YOUR NAME <!-- CUSTOMIZE -->
+    </div>
+    <h1>Certification <em>Schedule</em></h1> <!-- CUSTOMIZE -->
+    <div class="subtitle">The Study Road</div> <!-- CUSTOMIZE -->
+    <div class="vendor-filters">
+      <button class="vendor-btn" data-vendor="all">All</button>
+    </div>
+  </div>
+
+  <div class="card-grid" id="cert-grid">
+
+    <!-- ═══════════════════════════════════════════════════════════
+         CARD VARIANTS — copy the block you need, fill in values
+         ═══════════════════════════════════════════════════════════ -->
+
+    <!-- VARIANT A: COMPLETE — links externally (e.g. Credly badge) -->
+    <div class="course-card status-complete" data-vendor="zscaler"
+         onclick="window.open('CREDLY_URL','_blank')" role="link" tabindex="0"
+         onkeydown="if(event.key==='Enter')window.open('CREDLY_URL','_blank')">
+      <div class="card-content">
+        <div class="cert-code-row">
+          <div class="cert-code">CODE</div> <!-- e.g. ZDTA -->
+          <div class="cert-icon">
+            <!-- Shield + check icon (used for completed Zscaler certs) -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+          </div>
+        </div>
+        <div class="cert-edu">EDU-XXX</div>
+        <div class="cert-name">
+          <span class="cert-prefix">Long Certification Name&nbsp;—&nbsp;</span>
+          <span class="cert-suffix">Short Suffix</span>
+        </div>
+        <div class="status-badge" style="margin-top:14px;"><span class="status-dot"></span>Complete</div>
+        <a href="CREDLY_URL" target="_blank" rel="noopener" class="credly-link" style="margin-top:8px;" onclick="event.stopPropagation()">
+          View on Credly
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+        <div class="card-details">
+          <div class="exam-date">Issued <strong>Month DD, YYYY</strong></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CUSTOMIZE: footer tagline -->
+  <footer>
+    Your tagline<span>.</span> Here<span>.</span>
+  </footer>
+
+<script>
+  /* ── VENDOR FILTER ──
+     Each .course-card must have data-vendor="zscaler" or data-vendor="fortinet"
+     Add/remove buttons above and update the filter logic below if you add vendors. */
+  const certGrid   = document.getElementById('cert-grid');
+  const vendorBtns = document.querySelectorAll('.vendor-btn');
+
+  function setFilter(vendor) {
+    vendorBtns.forEach(b => b.classList.remove('active'));
+    const active = document.querySelector(`.vendor-btn[data-vendor="${vendor}"]`);
+    if (active) active.classList.add('active');
+
+    document.querySelectorAll('#cert-grid .course-card').forEach(card => {
+      card.style.display = (vendor === 'all' || card.dataset.vendor === vendor) ? '' : 'none';
+    });
+
+    certGrid.classList.remove('section-fade');
+    void certGrid.offsetWidth;
+    certGrid.classList.add('section-fade');
+  }
+
+  vendorBtns.forEach(btn => btn.addEventListener('click', () => setFilter(btn.dataset.vendor)));
+
+  setFilter('all'); // default on load
+</script>
+<script src="transitions.js"></script>
+</body>
+</html>

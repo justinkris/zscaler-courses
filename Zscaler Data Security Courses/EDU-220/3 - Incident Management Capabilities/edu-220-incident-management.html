@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Incident Management Capabilities — EDU-220</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff5f5;--surface:#fff;--surface-2:#fff0f0;--border:#fecaca;--border-dim:#fee2e2;
+  --text:#200808;--text-soft:#501010;--text-muted:#9a3030;
+  --red:#b91c1c;--red-glow:rgba(185,28,28,0.07);--red-dim:#fecaca;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --purple:#5c35cc;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#9a3030;letter-spacing:0.08em;margin-bottom:12px;}
+.breadcrumb a{color:#f87171;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#501010;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#f87171;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#f87171;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#f87171;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--red);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#f87171;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--border-dim);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--red);border-bottom-color:var(--red);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--red);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--red-glow);border:1px solid var(--red-dim);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--red);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-tip{background:var(--surface-2);border-color:var(--border);}
+.callout-tip .callout-header{color:var(--red);}
+.callout-tip .callout-icon{background:var(--red-dim);color:var(--red);}
+.callout-tip .callout-body{color:var(--text-soft);}
+.callout-green{background:var(--green-light);border-color:var(--green-border);}
+.callout-green .callout-header{color:var(--green);}
+.callout-green .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-green .callout-body{color:#0f4a28;}
+/* Notification methods */
+.notif-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.notif-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.notif-icon{font-size:18px;margin-bottom:6px;}
+.notif-name{font-size:12px;font-weight:700;color:var(--red);margin-bottom:4px;letter-spacing:0.06em;}
+.notif-body{font-size:13px;color:var(--text-soft);line-height:1.6;}
+/* WFA features */
+.wfa-features{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.wfa-feat{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:12px;padding:12px 16px;}
+.wfa-feat-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.wfa-feat-body{font-size:13px;color:var(--text-soft);line-height:1.65;}
+/* Knowledge check */
+.kcheck{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.kcheck-q{background:var(--text);padding:14px 20px;font-size:13px;color:#fff;line-height:1.6;}
+.kcheck-options{padding:12px 20px;display:flex;flex-direction:column;gap:8px;}
+.kcheck-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;color:var(--text-soft);line-height:1.5;}
+.kcheck-option.correct{background:var(--green-light);border-color:var(--green-border);color:var(--green);font-weight:600;}
+.kcheck-option.wrong{background:var(--border-dim);border-color:var(--border);color:var(--text-muted);text-decoration:line-through;opacity:0.7;}
+.kcheck-opt-badge{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.correct .kcheck-opt-badge{background:var(--green);color:#fff;}
+.wrong .kcheck-opt-badge{background:var(--red);color:#fff;}
+/* Diagrams */
+.diagram-wrap{margin:20px 0 24px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface);}
+.diagram-img{width:100%;display:block;}
+.diagram-caption{font-size:11px;color:var(--text-muted);padding:10px 16px;border-top:1px solid var(--border);background:var(--surface-2);letter-spacing:0.04em;}
+/* Sidebar */
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#f87171;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#d08080;line-height:1.6;}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--red);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#f87171;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#501010;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--red);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+@media(max-width:900px){header{padding:24px 20px 20px;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.notif-grid,.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="breadcrumb"><a href="../../index.html">Zscaler Courses</a><span class="breadcrumb-sep">›</span>Incident Management · EDU-220</div>
+  <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Section 3: Incident Management Capabilities · EDU-220</div>
+  <h1>Incident <em>Management</em></h1>
+  <p>Notification options for end users and admins, Zscaler Workflow Automation, DLP incident management, and the final knowledge check.</p>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text"><em>Identify, assess, and respond</em> to security incidents and service disruptions swiftly.</div>
+  <p class="motivation-sub">Zscaler Workflow Automation streamlines data protection workflows by automating incident management — enabling quick remediation of DLP and CASB incidents across the organisation.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span><span class="qpanel-count" id="qpanel-count">0</span><span class="qpanel-hint">— click to expand</span><span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-what',this)">What is Incident Management?</button>
+  <button class="nav-tab" onclick="navTo('section-notify',this)">Notification Methods</button>
+  <button class="nav-tab" onclick="navTo('section-wfa',this)">Workflow Automation</button>
+  <button class="nav-tab" onclick="navTo('section-kcheck',this)">Knowledge Check</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- WHAT IS INCIDENT MANAGEMENT -->
+  <div class="section-block" id="section-what">
+    <div class="section-label">WHAT IS INCIDENT MANAGEMENT?</div>
+    <h2>Identifying, analysing, and resolving incidents</h2>
+    <p><strong>Incident Management</strong> is a process of identifying, analysing, and resolving critical incidents which could lead to issues in an organisation. It is a critical component of any security framework — helping organisations mitigate the impact of security incidents, minimise downtime, and prevent future occurrences.</p>
+
+    <p>Incidents can involve:</p>
+    <ul class="content-list">
+      <li>Security threats (e.g., malware, phishing attempts)</li>
+      <li>Network or application failures</li>
+      <li>Unusual or suspicious activity flagged for investigation</li>
+    </ul>
+
+    <div class="key-concept">
+      <strong>In data security context:</strong> When adopting DLP and CASB (SaaS Security API) capabilities, alerts are generated that require administrator teams to investigate and respond. Zscaler provides tools to manage these alerts through multiple channels — delegating violations to end users where appropriate.
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-what" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('what','What is Incident Management')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-what" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-what"></span></div></div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATION METHODS -->
+  <div class="section-block" id="section-notify">
+    <div class="section-label">NOTIFICATION METHODS</div>
+    <h2>How Zscaler notifies users and admins</h2>
+    <p>The first priority in incident management is enabling end users to self-serve on violations — delegating responsibility and reducing admin burden. Zscaler provides several notification channels that can be customised with your organisation's logo and messaging.</p>
+
+    <h3>End-User Notification Options</h3>
+    <div class="notif-grid">
+      <div class="notif-card">
+        <div class="notif-icon">🌐</div>
+        <div class="notif-name">Browser-Based Notification</div>
+        <div class="notif-body">Customisable page shown when a user attempts a blocked action. Can block or allow the transaction while notifying the user. Supports form POST for justification feedback back to the admin.</div>
+      </div>
+      <div class="notif-card">
+        <div class="notif-icon">💬</div>
+        <div class="notif-name">Slack / Teams Connector</div>
+        <div class="notif-body">Notifies users via Slack or Microsoft Teams when a violation is detected. Users can provide justification directly within the chat platform — many organisations prefer this over browser notifications.</div>
+      </div>
+      <div class="notif-card">
+        <div class="notif-icon">🖥️</div>
+        <div class="notif-name">Zscaler Client Connector Pop-Up</div>
+        <div class="notif-body">A pop-up on the endpoint via the Zscaler Client Connector — even for endpoint DLP violations. Same idea: block or allow, ask for justification, or coach the user not to repeat the violation.</div>
+      </div>
+    </div>
+
+    <h3>Administrator Notification and Integration Options</h3>
+    <ul class="content-list">
+      <li><strong>Email notifications</strong> — SMTP-based alerts sent to DLP admins when incidents are triggered</li>
+      <li><strong>Secure ICAP protocol</strong> — for integration with on-premises systems</li>
+      <li><strong>SIEM integration</strong> — real-time log streaming to Splunk, QRadar, and other SIEM tools</li>
+      <li><strong>ServiceNow integration</strong> — automated ticket creation for incident tracking</li>
+      <li><strong>On-premises incident receiver</strong> — for archiving incidents locally</li>
+    </ul>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>KEY ANSWER</div>
+      <div class="callout-body">When asked how Zscaler notifies users about policy violations: the answer is <strong>browser-based notifications, Slack/Teams connectors, or the Zscaler Client Connector</strong> — NOT by sending personal emails, shutting down systems, or requiring calls to IT support.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-notify" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('notify','Notification Methods')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-notify" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-notify"></span></div></div>
+    </div>
+  </div>
+
+  <!-- WORKFLOW AUTOMATION -->
+  <div class="section-block" id="section-wfa">
+    <div class="section-label">ZSCALER WORKFLOW AUTOMATION</div>
+    <h2>Automated, closed-loop incident management</h2>
+    <p>Zscaler Workflow Automation (WFA) streamlines data security workflows by automating incident management — enabling quick remediation of data protection incidents. It automatically groups incidents based on various attributes and provides a complete audit trail.</p>
+
+    <p>WFA integrates with:</p>
+    <ul class="content-list">
+      <li><strong>Zscaler Internet Access (ZIA)</strong> — captures Data Protection incidents generated from DLP policies</li>
+      <li><strong>Zscaler Digital Experience (ZDX)</strong> — generates enriched tickets for different events triggered by data defined in ZIA</li>
+      <li><strong>Business Insights</strong> — manages usage of SaaS application licences provisioned to end users</li>
+    </ul>
+
+    <h3>Key Features</h3>
+    <div class="wfa-features">
+      <div class="wfa-feat">
+        <div class="wfa-feat-name">Incident Grouping</div>
+        <div class="wfa-feat-body">Automatically groups incidents into prioritised incident groups based on the originating user, the user's manager, and the triggering activity or policy. Groups can be assigned to different admins for parallel handling.</div>
+      </div>
+      <div class="wfa-feat">
+        <div class="wfa-feat-name">Workflow Management Tools</div>
+        <div class="wfa-feat-body">Notifies users for incident justification or escalates incidents to managers for approval. Admins can view the triggering content, apply remediation notes, and track the full lifecycle of each incident.</div>
+      </div>
+      <div class="wfa-feat">
+        <div class="wfa-feat-name">Automated Workflows</div>
+        <div class="wfa-feat-body">Manages and remediates DLP incidents efficiently — escalating violations to relevant personnel, automating ticket creation, and resolving incidents with a full audit trail of every action taken.</div>
+      </div>
+    </div>
+
+    <h3>Incidents Page</h3>
+    <div class="diagram-wrap">
+      <img src="diagram-incidents.png" alt="Zscaler Workflow Automation Incidents page showing 502 total incidents with columns for Transaction ID, Last Change Date, Priority, Severity, DLP Admin, Source DLP Type" class="diagram-img">
+      <div class="diagram-caption">Workflow Automation Incidents page — All: 502, Open: 26, Unassigned: 488, Resolved: 68, Waiting Feedback: 408, Escalated: 51</div>
+    </div>
+
+    <h3>Incident Analytics</h3>
+    <div class="diagram-wrap">
+      <img src="diagram-analytics.png" alt="Incident Analytics dashboard showing open/resolved counts, Time to Triage/Resolve charts, Incident by Status, False Positive Incidents by Rule and Dictionary" class="diagram-img">
+      <div class="diagram-caption">Incident Analytics — Time to Triage/Resolve, Incident by Status, False Positive Incidents by Rule and Dictionary. Helps identify patterns and improve DLP policy accuracy.</div>
+    </div>
+
+    <div class="callout callout-green">
+      <div class="callout-header"><div class="callout-icon">✓</div>INCIDENT LIFECYCLE</div>
+      <div class="callout-body">
+        1. Incident triggered → admin reviews policy and triggering content.<br>
+        2. Admin notifies end user (email/Slack/browser) requesting justification.<br>
+        3. User submits justification → admin reviews feedback.<br>
+        4. If escalated → manager/approver receives escalation with higher detail.<br>
+        5. Manager can accept, escalate further, or deny.<br>
+        6. Resolution recorded → count updated → incident closed.
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-wfa" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('wfa','Workflow Automation')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-wfa" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-wfa"></span></div></div>
+    </div>
+  </div>
+
+  <!-- KNOWLEDGE CHECK -->
+  <div class="section-block" id="section-kcheck">
+    <div class="section-label">KNOWLEDGE CHECK</div>
+    <h2>Final check before the course recap</h2>
+    <div class="kcheck">
+      <div class="kcheck-q">How can Zscaler notify users about policy violations, such as attempting to upload sensitive data to a personal Dropbox account?</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>By sending personal emails</div>
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>Using browser-based notifications, Slack/Teams connectors, or the Zscaler Client Connector</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>By automatically shutting down the user's system upon detecting a violation</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>By requiring the user to call IT support to report the incident manually</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-kcheck" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('kcheck','Knowledge Check')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-kcheck" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-kcheck"></span></div></div>
+    </div>
+  </div>
+
+</div>
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-220-hub.html"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> EDU-220 Hub</a>
+    <div class="mod-nav-group-label">SECTION 1</div>
+    <a class="mod-nav-link" href="../1 - Introduction to Data Security/edu-220-intro-data-security.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>Introduction to Data Security</a>
+    <div class="mod-nav-group-label">SECTION 2</div>
+    <a class="mod-nav-link" href="../2A Data in Motion/edu-220-data-in-motion.html"><span class="mod-nav-dot" style="background:#1a7c4a;"></span>2A — Data in Motion</a>
+    <a class="mod-nav-link" href="../2B Secure SaaS Data/edu-220-secure-saas-data.html"><span class="mod-nav-dot" style="background:#6c35cc;"></span>2B — Secure SaaS Data</a>
+    <a class="mod-nav-link" href="../2C Secure Cloud, Endpoint Data, and BYOD!/edu-220-cloud-endpoint-byod.html"><span class="mod-nav-dot" style="background:#b45309;"></span>2C — Cloud, Endpoint &amp; BYOD</a>
+    <div class="mod-nav-group-label">SECTION 3</div>
+    <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:#b91c1c;"></span>Incident Management</span>
+    <div class="mod-nav-group-label">RECAP</div>
+    <a class="mod-nav-link" href="../Recap/edu-220-recap.html"><span class="mod-nav-dot" style="background:#6c35cc;"></span>Course Recap</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>What incident management is</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Browser-based user notifications</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Slack/Teams connectors</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Zscaler Client Connector pop-up</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Admin options (SMTP, ICAP, SIEM)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>ServiceNow integration</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Workflow Automation purpose</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Incident grouping feature</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Incident lifecycle (6 steps)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Knowledge check completed</span></li>
+    </ul>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+    <div class="quick-ref"><div class="quick-ref-term">Workflow Automation</div><div class="quick-ref-def">Zscaler's automated incident management system — groups, assigns, escalates, and resolves DLP/CASB incidents with full audit trails.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Confirm Allow</div><div class="quick-ref-def">Soft block — user must justify the action before proceeding. Justification is logged and returned to the admin.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">ICAP</div><div class="quick-ref-def">Secure ICAP protocol — used for admin integration with on-premises incident receivers or SIEM systems.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">False Positive</div><div class="quick-ref-def">An incident triggered by a DLP rule that doesn't represent an actual policy violation — tracked in Incident Analytics by Rule and Dictionary.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Escalation</div><div class="quick-ref-def">When an incident is passed to the user's manager for approval — the manager receives more detailed context and can accept, deny, or escalate further.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-220 · <span>Section 3 — Incident Management</span></div>
+  <div class="footer-right">Zscaler Study Guide</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu220-incident-management';
+function getStore(){try{return JSON.parse(localStorage.getItem(PAGE_KEY))||{};}catch(e){return{};}}
+function saveStore(s){try{localStorage.setItem(PAGE_KEY,JSON.stringify(s));}catch(e){}}
+function addQuestion(sId,sLabel){const ta=document.getElementById('q-'+sId);const text=ta.value.trim();if(!text)return;const s=getStore();if(!s.questions)s.questions=[];s.questions.push({section:sLabel,text,id:Date.now()});saveStore(s);ta.value='';renderQPanel();}
+function deleteQuestion(id){const s=getStore();s.questions=(s.questions||[]).filter(q=>q.id!==id);saveStore(s);renderQPanel();}
+function renderQPanel(){const s=getStore();const qs=s.questions||[];const count=document.getElementById('qpanel-count');const body=document.getElementById('qpanel-body');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet.</p>';return;}const groups={};qs.forEach(q=>{if(!groups[q.section])groups[q.section]=[];groups[q.section].push(q);});body.innerHTML=Object.entries(groups).map(([label,items],gi)=>`<div class="q-group"><div class="q-group-label">${label.toUpperCase()}</div>${items.map((q,i)=>`<div class="q-item"><div class="q-num">${gi*10+i+1}</div><div class="q-text">${q.text}</div><button class="q-del" onclick="deleteQuestion(${q.id})">✕</button></div>`).join('')}</div>`).join('');}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const hdr=document.getElementById('qpanel-header');const chev=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');hdr.classList.toggle('open',open);chev.textContent=open?'▴':'▾';const s=getStore();s.qOpen=open;saveStore(s);}
+document.querySelectorAll('.notes-ta').forEach(ta=>{const key=ta.id;const s=getStore();if(s[key])ta.value=s[key];let timer;ta.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(()=>{const st=getStore();st[key]=ta.value;saveStore(st);const ns=document.getElementById('ns-'+key.replace('notes-',''));if(ns){ns.textContent='Saved';setTimeout(()=>{ns.textContent='';},1800);}},600);});});
+function toggleCheck(li){li.classList.toggle('done');const s=getStore();if(!s.checks)s.checks={};s.checks[li.querySelector('span').textContent]=li.classList.contains('done');saveStore(s);}
+(function restoreChecks(){const s=getStore();if(!s.checks)return;document.querySelectorAll('#checklist li').forEach(li=>{if(s.checks[li.querySelector('span').textContent])li.classList.add('done');});})();
+function navTo(id,btn){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');}
+(function init(){renderQPanel();const s=getStore();if(s.qOpen){const body=document.getElementById('qpanel-body');const hdr=document.getElementById('qpanel-header');const chev=document.getElementById('qpanel-chevron');body.classList.add('open');hdr.classList.add('open');chev.textContent='▴';}})();
+</script>
+</body>
+</html>

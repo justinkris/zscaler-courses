@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 2 — Segment Branches and Devices · EDU-280</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f0fdf6;--surface:#fff;--surface-2:#d4f0e0;--border:#a7e0c0;--border-dim:#c8eedb;
+  --text:#041f0e;--text-soft:#0d4a2a;--text-muted:#3d8c5a;
+  --green:#1a7c4a;--green-glow:rgba(26,124,74,0.07);--green-dim:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+  --teal:#0d7d8a;--teal-light:#d0f0f4;--teal-border:#9adde6;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#1a4a2a;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#5adda0;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#1a4a2a;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(90,221,160,0.1);border:1px solid rgba(90,221,160,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#5adda0;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#5adda0;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#5adda0;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--green);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#5adda0;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--green);border-bottom-color:var(--green);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--green);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--green-glow);border:1px solid var(--green-dim);border-left:3px solid var(--green);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--green);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+.callout-note{background:var(--amber-light);border-color:var(--amber-border);}
+.callout-note .callout-header{color:var(--amber);}
+.callout-note .callout-icon{background:var(--amber-border);color:var(--amber);}
+.callout-note .callout-body{color:#5a3200;}
+.callout-tip{background:var(--surface-2);border-color:var(--border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-dim);color:var(--green);}
+.callout-tip .callout-body{color:var(--text-soft);}
+/* Segmentation type grid */
+.seg-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.seg-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;}
+.seg-num{width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.seg-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.seg-body{font-size:13px;color:var(--text-soft);line-height:1.65;}
+/* Steps */
+.step-list{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+.step-row{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-content{flex:1;}
+.step-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.step-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Benefits grid */
+.benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.benefit-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+.benefit-label{font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--green);margin-bottom:6px;}
+.benefit-title{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.benefit-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+/* Spec table */
+.spec-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px;}
+.spec-table th{background:var(--text);color:#fff;padding:10px 12px;text-align:left;font-weight:500;font-size:11px;letter-spacing:0.06em;}
+.spec-table th:first-child{border-radius:10px 0 0 0;}
+.spec-table th:last-child{border-radius:0 10px 0 0;}
+.spec-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text-soft);vertical-align:top;line-height:1.5;}
+.spec-table tr:nth-child(even) td{background:var(--surface-2);}
+.spec-table tr:last-child td:first-child{border-radius:0 0 0 10px;}
+.spec-table tr:last-child td:last-child{border-radius:0 0 10px 0;}
+.badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;display:inline-block;}
+.badge-sm{background:var(--teal-light);color:var(--teal);}
+.badge-md{background:var(--blue-light);color:var(--blue);}
+.badge-lg{background:var(--amber-light);color:var(--amber);}
+.badge-xl{background:var(--red-light);color:var(--red);}
+/* Use case cards */
+.usecase-block{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--green);border-radius:14px;padding:18px 20px;margin-bottom:16px;}
+.usecase-tag{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--green);margin-bottom:4px;}
+.usecase-title{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.usecase-scenario{font-size:13px;color:var(--text-soft);line-height:1.7;margin-bottom:10px;}
+.usecase-benefits{display:flex;flex-direction:column;gap:4px;}
+.usecase-benefit{font-size:12px;color:var(--text-soft);padding-left:14px;position:relative;}
+.usecase-benefit::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700;font-size:11px;}
+/* Knowledge check */
+.kcheck{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
+.kcheck-q{background:var(--text);padding:16px 20px;font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;line-height:1.4;}
+.kcheck-options{padding:16px 20px;display:flex;flex-direction:column;gap:8px;}
+.kcheck-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-size:13px;color:var(--text-soft);line-height:1.5;}
+.kcheck-option.correct{background:var(--surface-2);border-color:var(--green-dim);color:var(--green);}
+.kcheck-option.wrong{background:var(--red-light);border-color:var(--red-border);color:var(--red);text-decoration:line-through;}
+.kcheck-opt-badge{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.correct .kcheck-opt-badge{background:var(--green);color:#fff;}
+.wrong .kcheck-opt-badge{background:var(--red);color:#fff;}
+.kcheck-option:not(.correct):not(.wrong) .kcheck-opt-badge{background:var(--border);color:var(--text-muted);}
+/* Lesson tools */
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--green);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#5adda0;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#0d4a2a;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+/* Sidebar */
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:var(--text);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#5adda0;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#90d4a8;line-height:1.6;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+.mod-nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:4px;margin-top:10px;padding-left:2px;}
+.mod-nav-link{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:6px 10px;border-radius:8px;transition:background 0.15s;font-weight:500;line-height:1.35;}
+.mod-nav-link:hover{background:var(--surface);}
+.mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
+.mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--green);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.seg-grid,.benefit-grid{grid-template-columns:1fr;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../zero-trust-branch-hub.html">Zero Trust Branch</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-280-hub.html">EDU-280</a>
+      <span class="breadcrumb-sep">›</span>
+      Section 2
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> EDU-280 · Section 2 · 60 min</div>
+    <h1>Segment Branches <em>and Devices</em></h1>
+    <p>Device segmentation using /32 subnet masks, hardware appliance sizing, and use cases for east-west firewall replacement, IoT/OT isolation, and M&amp;A acceleration.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Every device its own island — that's the power of a <em>segment of one</em>.</div>
+  <p class="motivation-sub">Traditional VLANs trust devices on the same segment. Zero Trust Branch gives every device its own /32 network identity, forces all traffic through the gateway, and enforces policy before anything talks to anything else — eliminating lateral movement at the source.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-basics',this)">Segmentation Basics</button>
+  <button class="nav-tab" onclick="navTo('section-how',this)">How It Works</button>
+  <button class="nav-tab" onclick="navTo('section-hardware',this)">Hardware &amp; Virtual</button>
+  <button class="nav-tab" onclick="navTo('section-internal',this)">Internal Use Cases</button>
+  <button class="nav-tab" onclick="navTo('section-external',this)">External Use Cases</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- SEGMENTATION BASICS -->
+  <div class="section-block" id="section-basics">
+    <div class="section-label">SEGMENTATION BASICS</div>
+    <h2>Zero Trust segmentation fundamentals</h2>
+    <p>Zscaler Zero Trust Branch applies segmentation at four distinct layers. Each layer restricts communication to what is explicitly authorised, removing the implicit trust that makes flat networks so dangerous.</p>
+
+    <div class="seg-grid">
+      <div class="seg-card">
+        <div class="seg-num">1</div>
+        <div class="seg-title">User Segmentation</div>
+        <div class="seg-body">Restrict user access to only the resources essential for their role. No user can reach anything not explicitly permitted — regardless of which network segment they sit on.</div>
+      </div>
+      <div class="seg-card">
+        <div class="seg-num">2</div>
+        <div class="seg-title">Workload Segmentation</div>
+        <div class="seg-body">Prevent cross-application threats in data centres and clouds. Workloads are isolated from each other — a compromised app cannot pivot to adjacent systems.</div>
+      </div>
+      <div class="seg-card">
+        <div class="seg-num">3</div>
+        <div class="seg-title">Branch / Campus Zones</div>
+        <div class="seg-body">Secure branches and campuses through isolated zones. Users, IoT, and OT are grouped by function and restricted from communicating outside their authorised zone.</div>
+      </div>
+      <div class="seg-card">
+        <div class="seg-num">4</div>
+        <div class="seg-title">Device Segmentation</div>
+        <div class="seg-body">Apply granular security policies to isolate individual devices — even IoT and OT that cannot run agents. Each device gets its own isolated identity, reducing internal risks to near zero.</div>
+      </div>
+    </div>
+
+    <div style="background:var(--surface-2);border:2px dashed var(--border);border-radius:12px;padding:24px 20px;margin:16px 0;text-align:center;">
+      <div style="font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px;">Diagram</div>
+      <div style="font-size:12px;color:var(--text-muted);font-style:italic;max-width:480px;margin:0 auto;line-height:1.6;">[Generate: flat minimalist illustration of airgap microsegmentation — multiple endpoint boxes each isolated with a /32 host route arrow pointing to a central gateway node, then to a cloud, minimalist flat green palette, no text labels]</div>
+    </div>
+
+    <h3>The "Segment of One" Concept</h3>
+    <div class="key-concept">
+      <strong>Core principle:</strong> Zero Trust Branch assigns a <strong>/32 subnet mask</strong> to each device — making every device its own network. This forces all traffic to route through the Zero Trust gateway, where segmentation policies restrict any unauthorised east-west communication. No device can talk to another without explicit policy permission.
+    </div>
+
+    <p>Think of it like an office building with a smart access control system. Each employee (device) gets a personalised badge (/32 identity) that only opens the doors they're authorised to use. Even if an attacker steals one badge, they can't access any other floor. The Zero Trust gateway is the security desk that validates every movement.</p>
+
+    <h3>What Zero Trust Branch Eliminates</h3>
+    <ul class="content-list">
+      <li>Static firewall rules and manual ACL configurations</li>
+      <li>East-west firewall appliances at branch locations</li>
+      <li>Dependency on NAC (Network Access Control) appliances</li>
+      <li>Agent-based segmentation methods</li>
+      <li>Risk of lateral threat propagation inside the network</li>
+      <li>Operational overhead for managing device and policy changes</li>
+    </ul>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-basics" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('basics','Segmentation Basics')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-basics" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-basics"></span></div></div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section-block" id="section-how">
+    <div class="section-label">HOW IT WORKS</div>
+    <h2>The 5-step Zero Trust Branch security framework</h2>
+    <p>Zero Trust Branch operates as the default gateway for all branch traffic. Every device must pass through it before communicating with any other device. The framework executes five steps automatically — no manual configuration required for day-to-day operations.</p>
+
+    <div class="step-list">
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Act as the Security Desk</div>
+          <div class="step-body">Zero Trust Branch becomes the default gateway for the branch — like the main security desk at the entrance of each floor. Every device must pass through it before talking to another device. No direct device-to-device communication is permitted.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Assign Unique Badges (/32 Identity)</div>
+          <div class="step-body">Each device receives its own isolated network identity via a /32 subnet mask — like a personalised access badge. This uniquely identifies every device and forces all its traffic through the gateway for policy evaluation.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Sort by Department (Auto-Classify)</div>
+          <div class="step-body">The system automatically classifies devices in real time into groups: IT, IoT, OT, guests. Like employees grouped into departments. Group-based policies are applied automatically — no manual VLAN configuration or ACL updates needed.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Enforce Access Rules</div>
+          <div class="step-body">Access rules are enforced per group — like only certain employees being able to open certain doors. Example: only authorised admins can access camera feeds. IoT devices cannot reach corporate servers. OT systems are isolated from user networks.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Emergency Response — Ransomware Kill Switch</div>
+          <div class="step-body">If a threat is detected (such as ransomware activity), the system triggers an emergency stop — instantly isolating risky traffic across the entire branch. The Ransomware Kill Switch contains a threat before it can spread laterally to other devices.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Key ZTB Capabilities</h3>
+    <div class="benefit-grid">
+      <div class="benefit-card">
+        <div class="benefit-label">LEGACY SERVER PROTECTION</div>
+        <div class="benefit-title">Agentless Coverage</div>
+        <div class="benefit-body">Secures legacy servers, headless IoT/OT, and endpoints that can't support agent installation — no configuration overhead required.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-label">NO LEGACY FIREWALLS</div>
+        <div class="benefit-title">Simplified Infrastructure</div>
+        <div class="benefit-body">Removes east-west firewalls, NAC appliances, DHCP complexity, and VLAN configurations — reducing IT costs and operational overhead.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-label">NO OT DOWNTIME</div>
+        <div class="benefit-title">Zero-Disruption Deployment</div>
+        <div class="benefit-body">Deploy into existing networks without downtime, disruptions, or significant hardware upgrades. OT systems continue operating during rollout.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>GLOBAL INFRASTRUCTURE</div>
+      <div class="callout-body">Zscaler has built its cloud security platform in <strong>more than 150 data centres worldwide</strong> — strategically placed where customers are located. Built-in high availability provides seamless failover to the next available PoP if a service point goes offline.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-how" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('how','How It Works')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-how" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-how"></span></div></div>
+    </div>
+  </div>
+
+  <!-- HARDWARE & VIRTUAL -->
+  <div class="section-block" id="section-hardware">
+    <div class="section-label">HARDWARE &amp; VIRTUAL APPLIANCES</div>
+    <h2>Sizing your Zero Trust Branch deployment</h2>
+    <p>Zero Trust Branch is available as four hardware appliances and two virtual appliance configurations. The right choice depends on branch size, endpoint count, and throughput requirements. All are deployed in <strong>Gateway Mode</strong> — inline as the branch gateway, enabling secure direct access to cloud applications and the internet over one or more ISP connections.</p>
+
+    <h3>Hardware Appliances</h3>
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Ideal For</th>
+          <th>CPU / RAM / Storage</th>
+          <th>Ports</th>
+          <th>Throughput</th>
+          <th>Endpoints</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ZT-400</strong></td>
+          <td><span class="badge badge-sm">Small Branch</span></td>
+          <td>4C / 16GB / 256GB</td>
+          <td>4x 1GbE, 1x USB 3.1</td>
+          <td>200 Mbps</td>
+          <td>200</td>
+        </tr>
+        <tr>
+          <td><strong>ZT-600</strong></td>
+          <td><span class="badge badge-md">Small–Medium</span></td>
+          <td>4C / 16GB / 256GB</td>
+          <td>6x 1GbE, 2x USB 2.0</td>
+          <td>500 Mbps</td>
+          <td>500</td>
+        </tr>
+        <tr>
+          <td><strong>ZT-800</strong></td>
+          <td><span class="badge badge-lg">Branch / Factory</span></td>
+          <td>8C / 32GB / 512GB</td>
+          <td>4x 1GbE + 2x 10G SFP, 2x USB 2.0</td>
+          <td>1 Gbps</td>
+          <td>1,000</td>
+        </tr>
+        <tr>
+          <td><strong>ZT-8010</strong></td>
+          <td><span class="badge badge-xl">Large Campus</span></td>
+          <td>16C / 128GB / 1TB</td>
+          <td>15x 1GbE + 8x 100G SFP+, 2x USB 3.0</td>
+          <td>10 Gbps</td>
+          <td>4,000</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Power Consumption Reference</h3>
+    <ul class="content-list">
+      <li><strong>ZT-400:</strong> 12W idle / 30W full load — fanless desktop form factor</li>
+      <li><strong>ZT-600:</strong> 21W idle / 50W full load — desktop form factor</li>
+      <li><strong>ZT-800:</strong> 24W idle / 60W full load — desktop form factor</li>
+      <li><strong>ZT-8010:</strong> 108W idle / 226W full load — 1U rack with redundant power supply</li>
+    </ul>
+
+    <h3>Virtual Appliance</h3>
+    <p>The virtual appliance runs on VMware, Hyper-V, KVM, and public cloud platforms. It offers two configurations:</p>
+
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>Config</th>
+          <th>vCPU</th>
+          <th>Memory</th>
+          <th>Storage</th>
+          <th>vNICs</th>
+          <th>Throughput</th>
+          <th>Sessions</th>
+          <th>Endpoints</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Standard</strong></td>
+          <td>4</td>
+          <td>16 GB</td>
+          <td>256 GB</td>
+          <td>4</td>
+          <td>10 Gbps</td>
+          <td>500K</td>
+          <td>500</td>
+        </tr>
+        <tr>
+          <td><strong>High Performance</strong></td>
+          <td>8</td>
+          <td>32 GB</td>
+          <td>256 GB</td>
+          <td>8</td>
+          <td>20 Gbps</td>
+          <td>1M</td>
+          <td>1,000</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">!</div>GATEWAY MODE</div>
+      <div class="callout-body">All appliances deploy in <strong>Gateway Mode (Inline)</strong> — the appliance serves as a local router for branch devices while an existing WAN device handles internet connectivity. It intelligently selects the best link quality across dual ISP connections and provides seamless failover for high availability.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-hardware" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('hardware','Hardware & Virtual')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-hardware" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-hardware"></span></div></div>
+    </div>
+  </div>
+
+  <!-- INTERNAL USE CASES -->
+  <div class="section-block" id="section-internal">
+    <div class="section-label">INTERNAL USE CASES</div>
+    <h2>Securing internal branch communication</h2>
+    <p>Zero Trust Branch addresses three core internal security scenarios — each replacing a legacy approach with dynamic, policy-driven segmentation that requires no manual ACLs, no static VLANs, and no agent installation.</p>
+
+    <div class="usecase-block">
+      <div class="usecase-tag">USE CASE 1</div>
+      <div class="usecase-title">East-West Firewall Replacement</div>
+      <div class="usecase-scenario">A manufacturing facility with OT systems, patient monitors, and lab equipment all connected to the corporate network. By deploying Zero Trust Branch, the facility automatically groups these devices, isolates each into its own segment of one, and enforces policy — no downtime, no hardware changes.</div>
+      <div class="usecase-benefits">
+        <div class="usecase-benefit">Eliminates static firewall appliances and fixed VLAN security</div>
+        <div class="usecase-benefit">Dynamic segmentation adapts automatically to network changes</div>
+        <div class="usecase-benefit">No manual ACLs or rule updates needed</div>
+        <div class="usecase-benefit">Easier to scale and support as the network grows</div>
+      </div>
+    </div>
+
+    <div class="usecase-block">
+      <div class="usecase-tag">USE CASE 2</div>
+      <div class="usecase-title">IoT / OT Segmentation</div>
+      <div class="usecase-scenario">A smart factory needs to isolate IoT/OT devices without disrupting operations. Zero Trust Branch automatically groups these devices, identifies access boundaries around critical systems, and enforces segmentation — no downtime, no disruptions, no NAC appliances required.</div>
+      <div class="usecase-benefits">
+        <div class="usecase-benefit">Automatic IoT/OT device discovery and classification</div>
+        <div class="usecase-benefit">Each OT system isolated into its own segment of one</div>
+        <div class="usecase-benefit">Restrict factory floor access to known MAC addresses</div>
+        <div class="usecase-benefit">Autonomous grouping eliminates need for manual VLAN management</div>
+      </div>
+    </div>
+
+    <div class="usecase-block">
+      <div class="usecase-tag">USE CASE 3</div>
+      <div class="usecase-title">Automatic Device Discovery and Classification</div>
+      <div class="usecase-scenario">A factory struggles to track all connected devices — sensors, barcode scanners, and IoT devices go undetected and unmonitored. Zero Trust Branch automatically identifies and classifies every device in real time, creates accurate inventory, and detects anomalies through traffic flow analysis.</div>
+      <div class="usecase-benefits">
+        <div class="usecase-benefit">Automatic network asset discovery and classification</div>
+        <div class="usecase-benefit">Real-time automapping and policy management</div>
+        <div class="usecase-benefit">Device-to-device and user-to-device traffic mapping</div>
+        <div class="usecase-benefit">Reduces blind spots in IoT/OT/IT asset visibility</div>
+        <div class="usecase-benefit">Enables precise segmentation policies based on real device behaviour</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-internal" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('internal','Internal Use Cases')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-internal" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-internal"></span></div></div>
+    </div>
+  </div>
+
+  <!-- EXTERNAL USE CASES -->
+  <div class="section-block" id="section-external">
+    <div class="section-label">EXTERNAL USE CASES</div>
+    <h2>Securing external branch connectivity</h2>
+    <p>Zero Trust Branch also handles three key external connectivity scenarios — replacing legacy site-to-site VPNs, accelerating M&amp;A integrations, and providing AI-powered IoT visibility across distributed locations.</p>
+
+    <div class="usecase-block">
+      <div class="usecase-tag">USE CASE 4</div>
+      <div class="usecase-title">Replace Site-to-Site VPN</div>
+      <div class="usecase-scenario">Connect branches directly to private applications in data centres or public clouds — without extending the corporate network or exposing VPN infrastructure. Applications are hidden from discovery behind the Zero Trust Exchange. Access is restricted to named, verified entities only — identity, context, and policy adherence are verified before any connection is allowed.</div>
+      <div class="usecase-benefits">
+        <div class="usecase-benefit">Direct, secure branch-to-app connections without VPN tunnels</div>
+        <div class="usecase-benefit">Zero Trust network overlay prevents lateral movement</div>
+        <div class="usecase-benefit">Private apps are hidden — not discoverable from the internet</div>
+        <div class="usecase-benefit">Eliminates the attack surface that VPN gateways create</div>
+      </div>
+    </div>
+
+    <div class="usecase-block">
+      <div class="usecase-tag">USE CASE 5</div>
+      <div class="usecase-title">Accelerate M&amp;A Integration</div>
+      <div class="usecase-scenario">Company A is integrating with Company B, which uses an identical IP address scheme. By deploying Zero Trust Branch, the acquiring company connects and provisions applications across both networks without IP address changes, overlaps, or lateral threat movement. Organisation-based policies control access across sites from Day 1.</div>
+      <div class="usecase-benefits">
+        <div class="usecase-benefit">No IP address changes required — works even with overlapping schemes</div>
+        <div class="usecase-benefit">Onboard new sites in days, not months</div>
+        <div class="usecase-benefit">Operational simplicity — no network reconfiguration needed</div>
+        <div class="usecase-benefit">Successful Day 1 operations with full policy enforcement</div>
+      </div>
+    </div>
+
+    <div class="usecase-block">
+      <div class="usecase-tag">USE CASE 6</div>
+      <div class="usecase-title">AI-Powered IoT Discovery &amp; Classification</div>
+      <div class="usecase-scenario">Teams face blind spots when unsanctioned, undiscoverable devices connect to branch office networks — increasing vulnerability and expanding the attack surface. Zscaler identifies and classifies devices using AI to give IT teams deeper visibility into behaviour, enabling accurate access control policies.</div>
+      <div class="usecase-benefits">
+        <div class="usecase-benefit">Create non-routable IoT islands — devices cannot reach outside their zone</div>
+        <div class="usecase-benefit">AI-powered IoT Discovery Report with full device classification</div>
+        <div class="usecase-benefit">Deeper visibility and control over unmanaged device behaviour</div>
+        <div class="usecase-benefit">Policies automatically adapt as new devices are discovered</div>
+      </div>
+    </div>
+
+    <h3>Knowledge Check</h3>
+    <div class="kcheck">
+      <div class="kcheck-q">What is the primary mechanism Zero Trust Branch uses to prevent lateral movement between devices on the same branch network?</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Installing security agents on every device to monitor east-west traffic</div>
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>Assigning each device a /32 subnet mask so all traffic must route through the Zero Trust gateway for policy enforcement</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Configuring static VLANs with strict ACLs between each device segment</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Deploying a NAC appliance to authenticate devices before they join the network</div>
+      </div>
+    </div>
+
+    <div class="kcheck">
+      <div class="kcheck-q">A company is merging with another organisation that uses the same IP address range. Which Zero Trust Branch use case directly addresses this challenge?</div>
+      <div class="kcheck-options">
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>East-West Firewall Replacement</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>AI-Powered IoT Discovery and Classification</div>
+        <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>Accelerate M&amp;A Integration — connects both networks without IP changes or lateral threat movement</div>
+        <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>Replace Site-to-Site VPN</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-external" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('external','External Use Cases')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-external" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-external"></span></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-280-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-280 Hub
+    </a>
+    <div class="mod-nav-group-label">SECTIONS</div>
+    <a class="mod-nav-link" href="../1 Introduce Zero Trust Branch Concepts/edu-280-intro.html"><span class="mod-nav-dot" style="background:#0d7d8a;"></span>1 · Introduce ZTB Concepts</a>
+    <span class="mod-nav-link current"><span class="mod-nav-dot" style="background:var(--green);"></span>2 · Segment Branches</span>
+    <a class="mod-nav-link" href="../3 Deploy and Administer Zero Trust Branch/edu-280-deploy.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>3 · Deploy &amp; Administer</a>
+    <a class="mod-nav-link" href="../4 Integrate Zscaler and Third-Party Security Services/edu-280-integrate-security.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>4 · Integrate Security</a>
+    <a class="mod-nav-link" href="../5 Manage Branch Administration and Policies/edu-280-admin-policies.html"><span class="mod-nav-dot" style="background:#b45309;"></span>5 · Admin &amp; Policies</a>
+    <a class="mod-nav-link" href="../6 Configure Advanced Network Services/edu-280-advanced-network.html"><span class="mod-nav-dot" style="background:#1a6dcc;"></span>6 · Advanced Network</a>
+    <a class="mod-nav-link" href="../7 Deploy App Connector for Zero Trust Access/edu-280-app-connector.html"><span class="mod-nav-dot" style="background:var(--green);"></span>7 · App Connector</a>
+    <a class="mod-nav-link" href="../8 Monitor Network Activity and Analytics/edu-280-monitor.html"><span class="mod-nav-dot" style="background:#b91c1c;"></span>8 · Monitor &amp; Analytics</a>
+    <a class="mod-nav-link" href="../9 Integrate Third-Party Security Platforms/edu-280-third-party.html"><span class="mod-nav-dot" style="background:#5c35cc;"></span>9 · Third-Party Platforms</a>
+    <a class="mod-nav-link" href="../10 Troubleshoot and Diagnose Branch Issues/edu-280-troubleshoot.html"><span class="mod-nav-dot" style="background:#b45309;"></span>10 · Troubleshoot</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>4 types of segmentation</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>/32 subnet mask — segment of one</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>5-step ZTB security framework</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Ransomware Kill Switch</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Hardware: ZT-400 specs (200 endpoints)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Hardware: ZT-600 specs (500 endpoints)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Hardware: ZT-800 specs (1000 endpoints)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Hardware: ZT-8010 specs (4000 endpoints)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Virtual appliance: Standard vs High Performance</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Gateway Mode deployment</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Internal use cases (3)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>External use cases (3)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>Both knowledge checks answered</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">QUICK REFERENCE</div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">/32 Subnet Mask</div>
+      <div class="quick-ref-def">Assigns each device its own isolated network identity, forcing all traffic through the Zero Trust gateway for policy enforcement — the basis of "segment of one."</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">East-West Traffic</div>
+      <div class="quick-ref-def">Communication between devices within the same network (as opposed to north-south traffic going to the internet). Zero Trust Branch controls and restricts all east-west movement.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Ransomware Kill Switch</div>
+      <div class="quick-ref-def">Emergency feature that instantly isolates risky traffic across the branch when a threat (e.g. ransomware) is detected — contains the threat before it spreads.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">Gateway Mode</div>
+      <div class="quick-ref-def">The inline deployment mode where the appliance acts as the branch's default gateway and local router, handling dual-ISP failover and traffic steering.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">ZT-8010</div>
+      <div class="quick-ref-def">Largest hardware appliance: 16C, 128GB RAM, 1TB, 15x 1GbE + 8x 100G SFP+, 10 Gbps throughput, supports up to 4,000 endpoints. 1U rack with redundant power.</div>
+    </div>
+    <div class="quick-ref">
+      <div class="quick-ref-term">M&amp;A Integration</div>
+      <div class="quick-ref-def">Zero Trust Branch connects merging companies' networks without IP address changes — even with overlapping address schemes. Enables Day 1 operations securely.</div>
+    </div>
+  </div>
+
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-280 · <span>Segment Branches and Devices</span></div>
+  <div class="footer-right">Zscaler Study Guide</div>
+</footer>
+
+<script>
+const PAGE_KEY = 'edu280-segment-branches';
+
+function getStore(){
+  try{return JSON.parse(localStorage.getItem(PAGE_KEY))||{};}catch(e){return{};}
+}
+function saveStore(s){
+  try{localStorage.setItem(PAGE_KEY,JSON.stringify(s));}catch(e){}
+}
+
+function addQuestion(sectionId, sectionLabel){
+  const ta=document.getElementById('q-'+sectionId);
+  const text=ta.value.trim();
+  if(!text)return;
+  const s=getStore();
+  if(!s.questions)s.questions=[];
+  s.questions.push({section:sectionLabel,text,id:Date.now()});
+  saveStore(s);
+  ta.value='';
+  renderQPanel();
+}
+function deleteQuestion(id){
+  const s=getStore();
+  s.questions=(s.questions||[]).filter(q=>q.id!==id);
+  saveStore(s);
+  renderQPanel();
+}
+function renderQPanel(){
+  const s=getStore();
+  const qs=s.questions||[];
+  const count=document.getElementById('qpanel-count');
+  const body=document.getElementById('qpanel-body');
+  count.textContent=qs.length;
+  count.style.display=qs.length?'inline':'none';
+  if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Use the boxes below each section to add one.</p>';return;}
+  const groups={};
+  qs.forEach(q=>{if(!groups[q.section])groups[q.section]=[];groups[q.section].push(q);});
+  body.innerHTML=Object.entries(groups).map(([label,items],gi)=>`
+    <div class="q-group">
+      <div class="q-group-label">${label.toUpperCase()}</div>
+      ${items.map((q,i)=>`
+        <div class="q-item">
+          <div class="q-num">${gi*10+i+1}</div>
+          <div class="q-text">${q.text}</div>
+          <button class="q-del" onclick="deleteQuestion(${q.id})">✕</button>
+        </div>`).join('')}
+    </div>`).join('');
+}
+function toggleQPanel(){
+  const body=document.getElementById('qpanel-body');
+  const hdr=document.getElementById('qpanel-header');
+  const chev=document.getElementById('qpanel-chevron');
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);
+  chev.textContent=open?'▴':'▾';
+  const s=getStore();s.qOpen=open;saveStore(s);
+}
+
+document.querySelectorAll('.notes-ta').forEach(ta=>{
+  const key=ta.id;
+  const s=getStore();
+  if(s[key])ta.value=s[key];
+  let timer;
+  ta.addEventListener('input',()=>{
+    clearTimeout(timer);
+    timer=setTimeout(()=>{
+      const st=getStore();st[key]=ta.value;saveStore(st);
+      const ns=document.getElementById('ns-'+key.replace('notes-',''));
+      if(ns){ns.textContent='Saved';setTimeout(()=>{ns.textContent='';},1800);}
+    },600);
+  });
+});
+
+function toggleCheck(li){
+  li.classList.toggle('done');
+  const s=getStore();
+  if(!s.checks)s.checks={};
+  s.checks[li.querySelector('span').textContent]=li.classList.contains('done');
+  saveStore(s);
+}
+(function restoreChecks(){
+  const s=getStore();
+  if(!s.checks)return;
+  document.querySelectorAll('#checklist li').forEach(li=>{
+    if(s.checks[li.querySelector('span').textContent])li.classList.add('done');
+  });
+})();
+
+function navTo(id,btn){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+(function init(){
+  renderQPanel();
+  const s=getStore();
+  if(s.qOpen){
+    document.getElementById('qpanel-body').classList.add('open');
+    document.getElementById('qpanel-header').classList.add('open');
+    document.getElementById('qpanel-chevron').textContent='▴';
+  }
+})();
+</script>
+</body>
+</html>
