@@ -279,6 +279,26 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <h3>How Risk Scores Drive Conditional Access</h3>
+  <!-- CrowdStrike Integration Flow Diagram -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;overflow-x:auto;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:6px;min-width:480px;">
+      <div style="text-align:center;min-width:80px;">
+        <div style="background:#f0fdf4;border:2px solid #a7e0c0;border-radius:10px;padding:10px;font-size:11px;font-weight:700;color:#1a7c4a;">CrowdStrike<br>Falcon Cloud</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">ZTA score 0–100</div>
+      </div>
+      <div style="text-align:center;font-size:14px;color:var(--purple);">⇌</div>
+      <div style="text-align:center;min-width:80px;">
+        <div style="background:var(--surface-2);border:2px solid var(--border);border-radius:10px;padding:10px;font-size:11px;font-weight:700;color:var(--purple);">Zero Trust<br>Branch API</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">Continuous pull</div>
+      </div>
+      <div style="text-align:center;font-size:14px;color:var(--purple);">→</div>
+      <div style="display:flex;flex-direction:column;gap:4px;min-width:100px;">
+        <div style="background:#fee2e2;border:1px solid #fecaca;border-radius:6px;padding:5px 8px;font-size:10px;font-weight:700;color:#b91c1c;text-align:center;">&lt;30 → Blocked</div>
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;padding:5px 8px;font-size:10px;font-weight:700;color:#1a6dcc;text-align:center;">30–70 → ICMP only</div>
+        <div style="background:#f0fdf4;border:1px solid #a7e0c0;border-radius:6px;padding:5px 8px;font-size:10px;font-weight:700;color:#1a7c4a;text-align:center;">&gt;70 → Full access</div>
+      </div>
+    </div>
+  </div>
   <table class="data-table">
     <thead><tr><th>Device Object</th><th>ZTA Score Range</th><th>Policy</th><th>Result</th></tr></thead>
     <tbody>
@@ -358,6 +378,10 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <p>Armis is an <strong>agentless cyber asset intelligence and security platform</strong> that discovers, classifies, and continuously assesses risk across connected devices — managed and unmanaged — in enterprise environments including IT, IoT, OT, and medical devices.</p>
 
   <h3>How Armis Intelligence Drives Conditional Access Policies</h3>
+  <div style="background:var(--surface-2);border:2px dashed var(--border);border-radius:12px;padding:24px 20px;margin:16px 0;text-align:center;">
+    <div style="font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px;">Diagram</div>
+    <div style="font-size:12px;color:var(--text-muted);font-style:italic;max-width:480px;margin:0 auto;line-height:1.6;">[Generate: flat minimalist diagram showing multiple device type icons (laptop, camera, industrial machine, medical device) each with a colored tag underneath (green=compliant, yellow=unmanaged, red=high risk), arrows pointing to a central policy engine, which routes to three access levels — full, limited, blocked — purple palette, no text labels]</div>
+  </div>
   <p>ZTB leverages Armis device intelligence such as asset classification, security tags, and risk insights to enforce dynamic, conditional access policies:</p>
 
   <table class="data-table">

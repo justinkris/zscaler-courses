@@ -238,6 +238,38 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </ul>
 
   <h3>ZPA Private Access Flow</h3>
+  <!-- ZPA Flow Diagram -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;overflow-x:auto;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:0;min-width:540px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;min-width:90px;">
+        <div style="background:#dcfce7;border:2px solid #a7e0c0;border-radius:10px;padding:10px 12px;text-align:center;">
+          <div style="font-size:20px;">💻</div>
+          <div style="font-size:10px;font-weight:700;color:#1a7c4a;margin-top:4px;">User + Client<br>Connector</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;padding:0 8px;"><div style="font-size:16px;color:var(--green);">→</div><div style="font-size:9px;color:var(--text-muted);text-align:center;">App request</div></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;min-width:90px;">
+        <div style="background:#ede9fe;border:2px solid #c8bbff;border-radius:10px;padding:10px 12px;text-align:center;">
+          <div style="font-size:20px;">🛡️</div>
+          <div style="font-size:10px;font-weight:700;color:#5c35cc;margin-top:4px;">Zero Trust<br>Exchange</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;padding:0 8px;"><div style="font-size:16px;color:var(--green);">→</div><div style="font-size:9px;color:var(--text-muted);text-align:center;">Micro-tunnel</div></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;min-width:90px;">
+        <div style="background:#f0fdf6;border:2px solid #a7e0c0;border-radius:10px;padding:10px 12px;text-align:center;">
+          <div style="font-size:20px;">🔌</div>
+          <div style="font-size:10px;font-weight:700;color:#1a7c4a;margin-top:4px;">ZPA App<br>Connector</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;padding:0 8px;"><div style="font-size:16px;color:var(--green);">→</div><div style="font-size:9px;color:var(--text-muted);text-align:center;">Inside-out</div></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;min-width:90px;">
+        <div style="background:#dcfce7;border:2px solid #a7e0c0;border-radius:10px;padding:10px 12px;text-align:center;">
+          <div style="font-size:20px;">🏢</div>
+          <div style="font-size:10px;font-weight:700;color:#1a7c4a;margin-top:4px;">Private<br>Application</div>
+        </div>
+      </div>
+    </div>
+  </div>
   <p>Every private application access request in ZPA goes through four stages:</p>
 
   <div class="step-rows">

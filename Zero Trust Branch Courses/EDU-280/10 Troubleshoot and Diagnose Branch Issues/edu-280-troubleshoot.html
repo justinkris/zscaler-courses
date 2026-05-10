@@ -280,6 +280,10 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <h3>Essential Diagnostic Commands</h3>
+  <div style="background:var(--surface-2);border:2px dashed var(--border);border-radius:12px;padding:24px 20px;margin:16px 0;text-align:center;">
+    <div style="font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px;">Diagram</div>
+    <div style="font-size:12px;color:var(--text-muted);font-style:italic;max-width:480px;margin:0 auto;line-height:1.6;">[Generate: troubleshooting decision flow — five command icons in a vertical stack (ping, traceroute, show ip route, monitor traffic, tcpdump) each connected by a downward arrow, with a magnifying glass icon at the bottom representing root cause found, flat minimalist, amber/gold palette, no text labels]</div>
+  </div>
 
   <div class="step-rows">
     <div class="step-row"><div class="step-num">1</div><div class="step-content">
@@ -361,6 +365,22 @@ tcpdump -i GE8 icmp</div>
   </div>
 
   <h3>VRRP Command Verification Flow</h3>
+  <!-- VRRP HA Diagram -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;overflow-x:auto;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;min-width:440px;flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <div style="background:#fef9c3;border:2px solid #fde68a;border-radius:10px;padding:10px 14px;font-size:11px;font-weight:700;color:#b45309;">Gateway 1<br><span style="font-size:10px;font-weight:400;">MASTER</span></div>
+      </div>
+      <div style="font-size:18px;color:var(--amber);">⇌</div>
+      <div style="text-align:center;">
+        <div style="background:var(--surface-2);border:2px dashed var(--border);border-radius:10px;padding:10px 14px;font-size:11px;font-weight:700;color:var(--text-muted);">Gateway 2<br><span style="font-size:10px;font-weight:400;">STANDBY</span></div>
+      </div>
+      <div style="font-size:14px;color:var(--text-muted);padding:0 8px;">Switchover →</div>
+      <div style="text-align:center;">
+        <div style="background:var(--surface-2);border:2px solid #fde68a;border-radius:10px;padding:10px 14px;font-size:11px;font-weight:700;color:#b45309;">Gateway 2<br><span style="font-size:10px;font-weight:400;">→ NEW MASTER</span></div>
+      </div>
+    </div>
+  </div>
   <p>Use this sequence to verify the HA and VRRP configuration, confirm the runtime VRRP role, validate keepalived health, and check Conntrack synchronization:</p>
 
   <div class="step-rows">

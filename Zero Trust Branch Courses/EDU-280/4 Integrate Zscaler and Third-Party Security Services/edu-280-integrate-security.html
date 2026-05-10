@@ -265,6 +265,11 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <p><strong>Internet Protocol Security (IPSec)</strong> is a suite of protocols that provides network-layer security to a Virtual Private Network (VPN). A VPN is a virtual network connection that provides a secure communication path between two peers on a public network.</p>
     <p>Peers in an IPSec VPN can be: two hosts (host-to-host), a remote host and a network gateway, or the gateways of two networks — for example, the gateway of your corporate network and a ZIA Public Service Edge.</p>
 
+    <div style="background:var(--surface-2);border:2px dashed var(--border);border-radius:12px;padding:24px 20px;margin:16px 0;text-align:center;">
+      <div style="font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px;">Diagram</div>
+      <div style="font-size:12px;color:var(--text-muted);font-style:italic;max-width:480px;margin:0 auto;line-height:1.6;">[Generate: flat minimalist illustration of an IPSec tunnel between a branch gateway box and a Zscaler cloud node, encrypted tunnel shown as a dashed line with a lock symbol, simple geometric shapes, purple palette, no text labels]</div>
+    </div>
+
     <h3>Three Key Protections</h3>
     <div class="cia-grid">
       <div class="cia-card">
@@ -366,6 +371,32 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="packet-layer layer-gre">GRE Header</div>
       <div class="packet-layer layer-payload">Payload</div>
     </div>
+
+    <!-- GRE encapsulation inline diagram: nested colored boxes -->
+    <div style="margin:16px 0 20px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);text-transform:uppercase;">GRE Encapsulation</div>
+      </div>
+      <div style="position:relative;border:2px solid var(--blue-border);border-radius:10px;padding:10px;background:var(--blue-light);">
+        <div style="font-size:10px;font-weight:700;color:var(--blue);letter-spacing:0.1em;margin-bottom:6px;">OUTER IP HEADER</div>
+        <div style="position:relative;border:2px solid var(--purple-dim);border-radius:8px;padding:10px;background:var(--surface-2);">
+          <div style="font-size:10px;font-weight:700;color:var(--purple);letter-spacing:0.1em;margin-bottom:6px;">GRE HEADER</div>
+          <div style="border:2px solid var(--border-dim);border-radius:6px;padding:10px;background:var(--text);text-align:center;">
+            <div style="font-size:11px;font-weight:600;color:#a78bfa;letter-spacing:0.08em;">INNER PAYLOAD</div>
+            <div style="font-size:10px;color:rgba(167,139,250,0.7);margin-top:3px;">original packet</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap;">
+        <span style="font-size:11px;font-weight:600;color:var(--blue);">Outer IP Header</span>
+        <span style="font-size:11px;color:var(--text-muted);">→</span>
+        <span style="font-size:11px;font-weight:600;color:var(--purple);">GRE Header</span>
+        <span style="font-size:11px;color:var(--text-muted);">→</span>
+        <span style="font-size:11px;font-weight:600;color:var(--text-muted);">Inner Payload</span>
+        <span style="font-size:11px;color:var(--text-muted);">— no encryption</span>
+      </div>
+    </div>
+
     <p>Traffic flows: <strong>Router → GRE Tunnel → ZIA Public Service Edge</strong></p>
 
     <h3>GRE Key Concepts</h3>
