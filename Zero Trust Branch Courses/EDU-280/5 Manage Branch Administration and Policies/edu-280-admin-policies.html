@@ -453,9 +453,8 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <h3>Firewall Policy Scope and Evaluation Order</h3>
     <p>Policies can be applied at four scope levels. Evaluation starts at the most specific (site) and falls back through template, global, then system default. <strong>Evaluation stops at the first match</strong> — rule order and scope placement directly determine which policy controls traffic.</p>
 
-    <div style="background:var(--surface-2);border:2px dashed var(--border);border-radius:12px;padding:24px 20px;margin:16px 0;text-align:center;">
-      <div style="font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px;">Diagram</div>
-      <div style="font-size:12px;color:var(--text-muted);font-style:italic;max-width:480px;margin:0 auto;line-height:1.6;">[Generate: funnel diagram showing firewall policy evaluation order — wide band at top narrowing to bottom, four horizontal layers from wide to narrow representing site policies at top, template below, global below that, and system default at the narrowest bottom — amber/orange palette, flat minimalist, no text]</div>
+    <div style="text-align:center;margin:16px 0;">
+      <img src="1.png" alt="Firewall policy evaluation order: funnel showing Site → Template → Global → System default from widest to narrowest" style="max-width:360px;border-radius:10px;border:1px solid var(--border);">
     </div>
 
     <div class="fw-levels">
@@ -545,9 +544,11 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       </div>
     </div>
 
-    <div style="background:var(--surface-2);border:2px dashed var(--border);border-radius:12px;padding:24px 20px;margin:16px 0;text-align:center;">
-      <div style="font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px;">Diagram</div>
-      <div style="font-size:12px;color:var(--text-muted);font-style:italic;max-width:480px;margin:0 auto;line-height:1.6;">[Generate: flat minimalist illustration of four colored circles in a horizontal row — green, yellow, orange, red — like traffic lights but side-by-side, each circle glowing slightly with its color, simple geometric shapes, no text labels]</div>
+    <div style="display:flex;gap:16px;justify-content:center;margin:20px 0;">
+      <div style="width:52px;height:52px;border-radius:50%;background:#22c55e;box-shadow:0 0 16px rgba(34,197,94,0.5);"></div>
+      <div style="width:52px;height:52px;border-radius:50%;background:#eab308;box-shadow:0 0 16px rgba(234,179,8,0.5);"></div>
+      <div style="width:52px;height:52px;border-radius:50%;background:#f97316;box-shadow:0 0 16px rgba(249,115,22,0.5);"></div>
+      <div style="width:52px;height:52px;border-radius:50%;background:#ef4444;box-shadow:0 0 16px rgba(239,68,68,0.5);"></div>
     </div>
 
     <p>The default color is <strong>Green</strong>. During incidents, only policies associated with the <strong>active color code</strong> are evaluated, in top-down order, stopping at the first match.</p>
