@@ -127,6 +127,12 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
 .analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
 @media(max-width:520px){.analogy-img img{max-width:100% !important;}}
 
+/* DIAGRAM IMG ZOOM */
+.img-display-block img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.img-display-block img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.img-display-block img{max-width:100% !important;}}
+.img-display-block .img-missing-msg{display:none !important;}
+
 </style>
 </head>
 <body>
@@ -436,6 +442,22 @@ function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAt
   } else {
     init();
   }
+})();
+
+/* DIAGRAM-IMG-ZOOM-JS */
+(function(){
+  function init(){
+    document.querySelectorAll('.img-display-block img').forEach(function(img){
+      if(img.dataset.diagZoomInit) return;
+      img.dataset.diagZoomInit = '1';
+      img.addEventListener('click', function(){
+        img.classList.toggle('zoomed');
+      });
+    });
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else { init(); }
 })();
 
 </script>
