@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connectivity Services — EDU-302</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#ffffff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --amber:#b45309;--amber-light:#fef9ec;--amber-border:#fde68a;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+html.pt-init body{opacity:0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:#0d1a2e;display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#5a7a9a;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#60a5fa;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#1e3a5c;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#60a5fa;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#60a5fa;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#60a5fa;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--blue);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#0d1a2e;color:#60a5fa;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 16px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--blue);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--blue-glow);border:1px solid var(--blue-dim);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--blue);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--blue-glow);border-color:var(--blue-dim);}
+.callout-note .callout-header{color:var(--blue);}
+.callout-note .callout-icon{background:var(--blue-dim);color:var(--blue);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-warn{background:var(--amber-light);border-color:var(--amber-border);}
+.callout-warn .callout-header{color:var(--amber);}
+.callout-warn .callout-icon{background:var(--amber-border);color:var(--amber);}
+.callout-warn .callout-body{color:#7a3a00;}
+.callout-tip{background:var(--green-light);border-color:var(--green-border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-tip .callout-body{color:#0f4a28;}
+
+/* METHOD CARDS */
+.method-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:20px;}
+.method-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;}
+.method-card-title{font-size:14px;font-weight:700;color:var(--blue);margin-bottom:10px;}
+.method-brl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.method-brl-col{font-size:12.5px;color:var(--text-soft);line-height:1.6;}
+.method-brl-label{font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:6px;}
+.method-brl-col.b .method-brl-label{color:var(--green);}
+.method-brl-col.r .method-brl-label{color:var(--blue);}
+.method-brl-col.l .method-brl-label{color:var(--red);}
+.method-brl-col ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:4px;}
+.method-brl-col ul li{padding-left:12px;position:relative;font-size:12px;line-height:1.5;}
+.method-brl-col ul li::before{content:'·';position:absolute;left:0;font-weight:700;}
+@media(max-width:720px){.method-brl{grid-template-columns:1fr;}}
+
+/* SCENARIO CARDS */
+.scenario-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:0 14px 14px 0;padding:16px 20px;margin-bottom:14px;}
+.scenario-num{display:inline-block;font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--blue);margin-bottom:6px;}
+.scenario-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--text);margin-bottom:10px;}
+.scenario-body{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.scenario-rec{margin-top:10px;padding:10px 14px;background:var(--blue-glow);border-radius:8px;font-size:12.5px;}
+.scenario-rec strong{color:var(--blue);}
+
+/* PDF REFERENCE CARDS */
+.pdf-ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.pdf-ref{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;text-decoration:none;transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;}
+.pdf-ref:hover{transform:translateY(-3px);border-color:var(--blue);box-shadow:0 8px 18px rgba(26,109,204,0.12);}
+.pdf-ref-icon{display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--blue);text-transform:uppercase;margin-bottom:8px;}
+.pdf-ref-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3;}
+.pdf-ref-body{font-size:12px;color:var(--text-muted);line-height:1.55;}
+.pdf-ref-cta{margin-top:auto;padding-top:8px;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--blue);}
+@media(max-width:700px){.pdf-ref-grid{grid-template-columns:1fr;}}
+
+/* BP CARDS */
+.bp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.bp-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.bp-card-title{font-size:12px;font-weight:700;color:var(--blue);margin-bottom:6px;}
+.bp-card-body{font-size:12px;color:var(--text-soft);line-height:1.6;}
+@media(max-width:700px){.bp-grid{grid-template-columns:1fr;}}
+
+/* SOCRATIC */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--blue-glow);border:1px solid var(--blue-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img .img-missing-msg{display:none !important;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+.img-display-block{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-display-block img.zoomed{max-width:100% !important;cursor:zoom-out;}
+.img-display-block .img-missing-msg{display:none !important;}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--blue);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:#0d1a2e;color:#60a5fa;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{background:#1e3a5c;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--blue);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#0d1a2e;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
+.mod-nav-hub:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#60a5fa;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#7aa8cc;line-height:1.6;}
+.sidebar-pdf{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-decoration:none;color:var(--text);margin-bottom:8px;transition:border-color 0.15s,background 0.15s;}
+.sidebar-pdf:hover{border-color:var(--blue);background:var(--blue-glow);}
+.sidebar-pdf-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--blue);margin-bottom:2px;}
+.sidebar-pdf-title{font-size:12px;font-weight:600;line-height:1.35;color:var(--text);}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../digital-delivery-consultant-hub.html">Digital Delivery Consultant</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-302-hub.html">EDU-302</a>
+      <span class="breadcrumb-sep">›</span>
+      Connectivity Services
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Section 4 · EDU-302</div>
+    <h1>Connectivity <em>Services</em></h1>
+    <p>Advanced traffic forwarding, deep ZCC authentication and forwarding troubleshooting, App Connector design under HA constraints, and Zero Trust Branch deployment — the largest section in the course because every later service depends on these pipes being right.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Connectivity is the <em>plumbing under the platform</em>.</div>
+  <p class="motivation-sub">Every other Zscaler decision — policy, DLP, posture, ZDX — assumes traffic actually reaches the cloud. This section is where that assumption gets tested in real customer environments and broken designs get caught early.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-recap',this)">Recap</button>
+  <button class="nav-tab" onclick="navTo('section-forwarding',this)">Traffic Forwarding</button>
+  <button class="nav-tab" onclick="navTo('section-zcc-auth',this)">ZCC Auth Troubleshooting</button>
+  <button class="nav-tab" onclick="navTo('section-zcc-fwd',this)">ZCC Forwarding</button>
+  <button class="nav-tab" onclick="navTo('section-app-connectors',this)">App Connectors</button>
+  <button class="nav-tab" onclick="navTo('section-ztb',this)">Zero Trust Branch</button>
+  <button class="nav-tab" onclick="navTo('section-recap-final',this)">Recap</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · OVERVIEW</span></div>
+    <p class="socratic-insight">Connectivity is the longest section of EDU-302 (22 lessons). The reason isn't depth in one topic — it's that connectivity decisions ripple through every other service. A bad ZCC auth config breaks ZIA traffic and ZPA access simultaneously. Before reading on, think about why connectivity has more "diagnostic" lessons than any other section.</p>
+    <ul class="socratic-questions">
+      <li>The course is structured around five blocks: traffic forwarding · ZCC auth troubleshooting · ZCC forwarding troubleshooting · App Connector deployment · Zero Trust Branch. Why are two of those five about troubleshooting rather than design?</li>
+      <li>Every previous section in EDU-302 builds toward "configuring correctly". This one spends nearly half its time on "what to do when it's wrong". What's the consultant's role specifically in those troubleshooting moments — and what's the customer's?</li>
+      <li>If you could only retain one thing from this entire section after a year, what should it be — and why?</li>
+    </ul>
+    <div class="answer-area" data-section="overview">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Because connectivity is where the customer's real environment first collides with Zscaler's assumptions — firewalls, NAT, MTU, MFA prompts, captive portals, antivirus, certificate stores. The configuration looks right on paper but pilot users hit edge cases on Day 1. Two troubleshooting blocks reflect the reality: you'll spend more time un-breaking connectivity than designing it.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">The consultant brings the diagnostic framework — what to check first, what the log paths are, which symptoms map to which root causes. The customer brings the environment knowledge — what changed last week, which AV vendor is deployed, which SAML group memberships shifted. Without the framework the customer flounders; without the environment knowledge the consultant is blind. Troubleshooting is a partnership, not a handover.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">The location of the Client Connector logs (Windows: <code>C:\ProgramData\Zscaler</code>, macOS: <code>/Library/Application Support/com.zscaler.Zscaler</code>, Linux: <code>/var/log/zscaler/.Zscaler/Logs</code>). Almost every real-world ZCC troubleshooting session starts by pulling these. Knowing exactly where to look saves the first 30 minutes of every diagnostic call.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-overview">
+    <div class="section-label">COURSE OVERVIEW</div>
+    <h2>Welcome to Connectivity Services</h2>
+    <p>This is Course 4 of the Zscaler for Users — Delivery Consultant (EDU-302) Learning Path. The course covers <strong>advanced connectivity strategies and best practices</strong> — large-scale traffic forwarding, complex troubleshooting for Zscaler Client Connector, in-depth App Connector configurations, and Zero Trust Branch deployment.</p>
+
+    <div class="key-concept">
+      <strong>Five main course sections (5 learning outcomes):</strong>
+      <br>1. <strong>Traffic Forwarding Best Practices</strong> — Zscaler's recommended approach for forwarding user, IoT, server, and guest traffic to the Zero Trust Exchange.
+      <br>2. <strong>Troubleshoot ZCC Authentication Issues</strong> — learn to isolate, diagnose, and resolve common Client Connector authentication errors.
+      <br>3. <strong>Troubleshoot ZCC Forwarding Issues</strong> — understand the intricacies of traffic routing and how to identify forwarding blockages.
+      <br>4. <strong>App Connector configuration</strong> — provisioning keys, group configurations, and best practices for redundancy and diversity.
+      <br>5. <strong>Deploy Zero Trust Branch Devices</strong> — verifying the prerequisites, deployment steps, and operational best practices for secure branch connectivity.
+    </div>
+
+    <h3>Course objectives</h3>
+    <ul class="content-list">
+      <li><strong>Implement</strong> advanced traffic forwarding strategies tailored to specific business and technical requirements</li>
+      <li><strong>Resolve</strong> Zscaler Client Connector authentication issues, interpreting log files and enrollment processes in complex deployment scenarios</li>
+      <li><strong>Troubleshoot</strong> traffic forwarding blockages, using advanced diagnostic tools to pinpoint and address endpoint or network-level conflicts</li>
+      <li><strong>Deploy</strong> App Connectors with an emphasis on redundancy, high availability, and secure application access across data centers, clouds, and hybrid environments</li>
+      <li><strong>Manage</strong> Zero Trust Branch Devices, from verifying prerequisites and configuring virtual appliances to overseeing ongoing device operations and maintenance</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">22 lessons, 5 outcome areas. Verbs to recognise: <strong>Implement / Resolve / Troubleshoot / Deploy / Manage</strong>. Two of five outcomes are diagnostic (Resolve, Troubleshoot) — this is the most diagnostic-heavy section in EDU-302.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Connectivity Services is the plumbing inspection module of a building-construction course. You can design beautiful rooms (policies, identity, dashboards) — but if the pipes leak, freeze, or aren't installed to code, none of it matters. Half the inspector's training is "how to find a leak"; only half is "how to lay pipe correctly". That ratio is intentional.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a building inspector with a clipboard checking plumbing pipes throughout a multi-storey cutaway house as an analogy for connectivity inspection in Zscaler deployments. Wide composition with visible cross-section of a friendly cartoon house. Different storeys show colourful rooms — office, kitchen, server-room labelled with tiny app icons — but the focus is the pipes running through walls between them. A cheerful inspector in a hard hat and overalls holds a glowing flashlight on a leaking joint while their assistant ticks off a long checklist. Other pipes glow green where they're correctly installed. Mood of careful, focused diagnosis. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div class="section-block" id="section-recap">
+    <div class="section-label">QUICK RECAP</div>
+    <h2>Recap from EDU-200 + EDU-202</h2>
+    <p>Three building blocks of connectivity that EDU-302 assumes you've already learned:</p>
+
+    <h3>From EDU-200 Administrator</h3>
+    <ul class="content-list">
+      <li><strong>Connectivity Services Basics</strong> — the fundamentals of tunneling methods, PAC files, and the essential components of Zscaler's connectivity services</li>
+      <li><strong>Zscaler Client Connector</strong> — the bridge between user devices and the Zero Trust Exchange, covering enrollment processes, key features, and best practices for deployment and configuration</li>
+      <li><strong>App Connectors</strong> — design, deployment, and the critical role they play in connecting users to applications</li>
+    </ul>
+
+    <h3>From EDU-202 Engineer</h3>
+    <ul class="content-list">
+      <li><strong>Advanced connectivity functionalities</strong> — applying Zero Trust principles to create secure and seamless connections across users, devices, and applications</li>
+      <li><strong>Provisioning details</strong> at the architecture level — connector groups, server groups, segment groups, application segments and their relationships</li>
+      <li><strong>Integration patterns</strong> — SD-WAN co-existence, Branch Connector, Cloud Connector, Browser Access</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">EDU-200 = connectivity primitives. EDU-202 = architectural composition (groups, integrations). EDU-302 = recommendation + diagnostics under real customer pressure. The deeper you go, the less time you spend on "what is it" and the more on "what does this customer need + why is theirs broken".</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap','Recap')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap"></span></div></div>
+    </div>
+  </div>
+
+  <!-- TRAFFIC FORWARDING -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · TRAFFIC FORWARDING</span></div>
+    <p class="socratic-insight">Three traffic-forwarding methods (GRE, IPSec, PAC) each have their own bandwidth ceiling, encryption posture, and infrastructure requirement. Before reading on, think about which constraint usually decides the choice in a real customer engagement.</p>
+    <ul class="socratic-questions">
+      <li>GRE tunnels go up to 1 Gb per tunnel. IPSec tops out at 500 Mb (250 Mb encrypted). If a customer needs 3 Gb of forwarding bandwidth, what's actually being decided — and what extra infrastructure work does that imply on the customer side?</li>
+      <li>The course explicitly warns about ZCC + GRE coexistence: "ensure Client Connector traffic bypasses the GRE or IPSec tunnels". Why is double-tunneling bad enough to warrant a callout — what specifically goes wrong if you don't bypass?</li>
+      <li>A customer wants to switch from MPLS-backhauled-to-HQ to local internet breakout via SD-WAN. How does that change shift the traffic forwarding recommendation?</li>
+    </ul>
+    <div class="answer-area" data-section="forwarding">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">You need to load-balance multiple tunnels — 3 GRE tunnels of 1 Gb each, or 6 IPSec tunnels of 500 Mb. The decision is encryption posture (do you need traffic between branch and Zscaler edge encrypted?) and operational complexity. Load-balancing multiple tunnels on the customer's edge router (typically by hashing on source IP or port) is a customer-side configuration burden — the consultant must ensure their network team is aware.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">When ZCC traffic enters a GRE/IPSec tunnel, you double-encapsulate — DTLS inside GRE inside IP. Performance degrades, MTU fragmentation issues appear, and troubleshooting becomes nightmarish because packets look "right" at one layer and "wrong" at another. The fix is to route ZCC traffic directly to the internet (it already authenticates and tunnels to Zscaler on its own), letting only non-ZCC traffic ride the GRE/IPSec tunnels.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">It shifts the design from "single HQ tunnel + backhaul" to "per-site tunnels at every remote office". You now need to think about per-site bandwidth, per-site tunnel provisioning, and per-site "known location" registration in the Zscaler portal. SD-WAN co-existence also means more devices to configure, and per-site failover. The consultant moves from designing one big pipe to many smaller pipes — a different conversation entirely.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-forwarding">
+    <div class="section-label">TRAFFIC FORWARDING</div>
+    <h2>Best Practices and Methods</h2>
+    <p>Traffic Forwarding defines how traffic gets from the end-user machine to Zscaler. Because ZIA is a cloud-based solution, customers must forward traffic from their end-user machine to Zscaler for security policies to apply. <strong>Unless traffic is forwarded to the Zscaler platform, it isn't subject to Zscaler's security.</strong></p>
+
+    <h3>Important pre-design considerations</h3>
+    <div class="bp-grid">
+      <div class="bp-card">
+        <div class="bp-card-title">NAT Address Requirements</div>
+        <div class="bp-card-body">If you have more than <strong>1,000 Client Connectors</strong>, you may need additional NAT addresses.</div>
+      </div>
+      <div class="bp-card">
+        <div class="bp-card-title">Client Connector + GRE Coexistence</div>
+        <div class="bp-card-body">When a location uses both ZCC and GRE tunnels, ensure ZCC traffic <strong>bypasses</strong> the GRE/IPSec tunnels. Critical when ZCC uses DTLS — tunnelling secure traffic within another tunnel causes performance and complexity issues.</div>
+      </div>
+    </div>
+
+    <h3>Three traffic-forwarding methods</h3>
+    <div class="method-grid">
+      <div class="method-card">
+        <div class="method-card-title">GRE Tunnels</div>
+        <div class="method-brl">
+          <div class="method-brl-col b">
+            <div class="method-brl-label">Benefits</div>
+            <ul><li>Multiple local network segments over a single tunnel</li><li>Up to 1 Gb per tunnel</li><li>Can be load balanced (from customer's location)</li><li>Self-provisionable in management console (enable with Zscaler support)</li></ul>
+          </div>
+          <div class="method-brl-col r">
+            <div class="method-brl-label">Requirements</div>
+            <ul><li>Static public IP per tunnel</li><li>Non-NATed IPs preferred</li><li>Must be associated with a "known location"</li></ul>
+          </div>
+          <div class="method-brl-col l">
+            <div class="method-brl-label">Limitations</div>
+            <ul><li>Not encrypted</li></ul>
+          </div>
+        </div>
+      </div>
+      <div class="method-card">
+        <div class="method-card-title">IPSec Tunnels</div>
+        <div class="method-brl">
+          <div class="method-brl-col b">
+            <div class="method-brl-label">Benefits</div>
+            <ul><li>Up to 500 Mb per tunnel</li><li>Egress IPs from customer's location can be dynamic</li><li>Provisioned in ZIA online management console</li></ul>
+          </div>
+          <div class="method-brl-col r">
+            <div class="method-brl-label">Requirements</div>
+            <ul><li>Public IP / FQDN per tunnel</li><li>Multiple tunnels need load balancing on customer end</li><li>Phase2 preferred unencrypted (encryption optional / additional charge)</li><li>Non-NATed IPs preferred</li><li>Must be associated with a "known location"</li></ul>
+          </div>
+          <div class="method-brl-col l">
+            <div class="method-brl-label">Limitations</div>
+            <ul><li>Encryption cuts bandwidth from 500 Mb to 250 Mb per tunnel</li><li>No multi-segment over single tunnel unless built with a transit network linked to the Zscaler DC</li></ul>
+          </div>
+        </div>
+      </div>
+      <div class="method-card">
+        <div class="method-card-title">PAC Files</div>
+        <div class="method-brl">
+          <div class="method-brl-col b">
+            <div class="method-brl-label">Benefits</div>
+            <ul><li>Fastest way to check ZIA access (not comprehensive)</li><li>No client software needed</li><li>Can bypass specific web traffic from being forwarded</li><li>Testable on any browser</li></ul>
+          </div>
+          <div class="method-brl-col r">
+            <div class="method-brl-label">Requirements</div>
+            <ul><li>Limited to HTTP-based proxy-aware apps (browsers)</li><li>Best practice: host on Zscaler cloud for precise geo-IP routing</li><li>Proxy Port subscription for SSL inspection</li></ul>
+          </div>
+          <div class="method-brl-col l">
+            <div class="method-brl-label">Limitations</div>
+            <ul><li>Can become complex</li><li>Only works with browser-based traffic</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="img-display-block">
+      <img src="1.png" alt="Traffic forwarding methods comparison" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;"><strong>1.png</strong></div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Flat blue minimalist illustration comparing three traffic-forwarding methods (GRE, IPSec, PAC) as parallel pipelines from a customer site on the left to a Zscaler cloud on the right. GRE pipe is the widest with a "1 Gb" badge floating above it, drawn as an open pipe (unencrypted). IPSec pipe is medium width with a small padlock icon and a "500 Mb" badge. PAC pipe is the narrowest with a small browser icon and a faint dashed line indicating browser-only traffic. Each pipe has a customer-side connector and a cloud-side connector. Clean simple shapes, no text labels.</div>
+    </div>
+
+    <h3>Customer scenarios — what to recommend</h3>
+    <p>The Design Questionnaire surfaces several scenarios that drive the forwarding recommendation. Below are the canonical patterns from Safemarch Corp:</p>
+
+    <div class="scenario-card">
+      <div class="scenario-num">SCENARIO 1 · LARGE PAYROLL PROVIDER</div>
+      <div class="scenario-title">10 Gb uplink, 4 Gb peak machine-to-machine REST traffic + 3–4 Gb employee</div>
+      <div class="scenario-body">REST endpoints and REST-aware clients. Backend-heavy with bursty payroll generation. Need to secure machine-to-machine traffic plus variable employee traffic.</div>
+      <div class="scenario-rec"><strong>Recommend:</strong> ZCC for employees (removes their traffic from bandwidth math), multiple GRE tunnels for server-to-server. Work with network team to size GRE bandwidth based on actual server-side usage.</div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-num">SCENARIO 2 · HQ-CENTRALISED ENTERPRISE</div>
+      <div class="scenario-title">Employees at many locations, SaaS-heavy, all user traffic backhauled to HQ, numerous unauthenticated sources, 1 Gb business class internet</div>
+      <div class="scenario-body">All unauthenticated traffic egresses HQ. Static IP at HQ. SaaS use is widespread.</div>
+      <div class="scenario-rec"><strong>Recommend:</strong> GRE/IPSec tunnels at HQ for unauthenticated traffic, ZCC for authenticated employees to remove them from the HQ backhaul. Plan known-location registration.</div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-num">SCENARIO 3 · HOSTING PROVIDER + SD-WAN BREAKOUT</div>
+      <div class="scenario-title">Similar to Scenario 2 but adopting SD-WAN at remote offices for local internet breakout</div>
+      <div class="scenario-body">Customer has fewer than 1,000 employees but redundant 20 Gb internet links; employee traffic estimated &lt;1 Gb. Now wants local breakout via SD-WAN per remote office.</div>
+      <div class="scenario-rec"><strong>Recommend:</strong> Per-site GRE/IPSec tunnels from each SD-WAN edge to Zscaler. ZCC for employees. Each branch becomes a known-location entry. Coordinate with the SD-WAN vendor on tunnel provisioning.</div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>KNOWLEDGE CHECK</div>
+      <div class="callout-body">A customer says "we want to forward user traffic using GRE tunnels from HQ and nothing else for now". Is the customer right? <strong>No</strong> — that's typically the wrong design for user traffic. Users should be on ZCC. GRE is more appropriate for server-to-server or unauthenticated office egress. The DC's job is to redirect that conversation toward the right pattern.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">GRE = 1 Gb / unencrypted / multi-segment OK. IPSec = 500 Mb (250 if encrypted) / static or dynamic egress / single segment. PAC = browser-only / fastest to validate. <strong>Users → ZCC; servers/IoT/unauthenticated office traffic → GRE or IPSec.</strong> Never double-tunnel ZCC inside GRE/IPSec.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Traffic forwarding is like choosing the right delivery service for different parcels. ZCC = personal courier who escorts each user individually (encrypted, authenticated, follows them everywhere). GRE = a high-capacity freight truck running between two depots (cheap, big, but unlocked back). IPSec = the armoured truck (smaller, locked, slower). PAC files = the local taxi driver who only handles people going to the high street (browser-only). Putting a personal courier inside a freight truck inside an armoured truck is just three layers of unnecessary handling — and that's exactly what double-tunneling ZCC does.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of four different delivery services as an analogy for Zscaler traffic forwarding methods. Wide composition along a single street. Foreground left to right: (1) a cheerful personal courier on a scooter with a single backpack escorting a customer in business attire (ZCC) — small, agile, individual. (2) A large blue freight truck with its rear cargo door open, packages clearly visible inside (GRE) — high capacity, unencrypted. (3) A small armoured truck with a glowing padlock decal and a thicker frame (IPSec) — smaller, slower, secure. (4) A yellow taxi with a smiling browser-icon passenger (PAC files) — handles only one neighbourhood. All four are heading right toward a friendly cartoon depot labelled with a soft Zscaler-style cloud icon on the far right. Mood of efficient logistical choice. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-forwarding" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('forwarding','Traffic Forwarding')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-forwarding" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-forwarding"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ZCC AUTH TROUBLESHOOTING -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZCC AUTHENTICATION TROUBLESHOOTING</span></div>
+    <p class="socratic-insight">Authentication is the first step in setting up Client Connector tunnels — which means it's also the first thing to fail. Before reading on, think about why the course leads troubleshooting with auth specifically, rather than starting with traffic forwarding.</p>
+    <ul class="socratic-questions">
+      <li>If a user reports "I can't use the internet through Zscaler", how do you decide whether the root cause is auth or forwarding — and what's the first piece of evidence you'd ask for?</li>
+      <li>The course gives you three OS-specific log paths (Windows, macOS, Linux). Why is "where are the logs" the single most repeatable consultant skill from this entire section?</li>
+      <li>The Safemarch case study features a user who's been working fine "until now" — they hit re-authentication, hit Retry, and the error persists. What does "worked until now" tell you about the likely root cause class?</li>
+    </ul>
+    <div class="answer-area" data-section="zcc-auth">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Open the ZCC client. Check the Service Status row first — if it says "Authentication Error" or similar, it's auth. If it says "Connected" but the user still can't reach a site, it's forwarding (or policy). The auth/forwarding split is the very first triage decision; the rest of the diagnostic flow forks from there.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Because every other diagnostic step depends on having the logs. You can't read a stack trace you haven't pulled. Once you know the three paths cold, you can talk a user through pulling logs over the phone in 30 seconds — which is the difference between a 10-minute call and a two-hour one. It's the highest-leverage piece of trivia in the course.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">It means the root cause is likely environmental or temporal — something changed on the user's machine, in the IdP, or in the local network. Common culprits: AV/endpoint protection update broke trust, certificate expired, IdP group membership changed, captive portal in the way (coffee shop), MFA enrolment device changed. The "worked until now" framing rules out structural config issues — you're looking for what changed.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-zcc-auth">
+    <div class="section-label">ZSCALER CLIENT CONNECTOR — AUTHENTICATION TROUBLESHOOTING</div>
+    <h2>Why ZCC matters</h2>
+    <p>The Zscaler Client Connector is the key that unlocks access to private applications through ZPA — it's the bridge that connects the client to the ZPA Cloud. It also forwards user-bound internet traffic to ZIA. When ZCC fails, both private and internet access fail together.</p>
+
+    <h3>Fundamentals to remember</h3>
+    <ul class="content-list">
+      <li><strong>SAML is Zscaler's recommended authentication method</strong> and is fundamental to understand for effectively troubleshooting authentication issues</li>
+      <li><strong>Authentication is the first step</strong> in setting up Client Connector tunnels — so the <strong>Z-Tunnel log files</strong> are where to look for troubleshooting details</li>
+    </ul>
+
+    <h3>Tips &amp; tricks for faster diagnosis</h3>
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>QUICK REFERENCE — ZCC LOG LOCATIONS</div>
+      <div class="callout-body">
+        Keep these three log paths memorised — they save the first 30 minutes of every diagnostic call:
+        <br>· <strong>Windows:</strong> <code>C:\ProgramData\Zscaler</code>
+        <br>· <strong>macOS:</strong> <code>/Library/Application Support/com.zscaler.Zscaler</code>
+        <br>· <strong>Linux:</strong> <code>/var/log/zscaler/.Zscaler/Logs</code>
+        <br>· <strong>Also:</strong> <code>Config.zscaler.com</code> for up-to-date Client Connector hosts, IPs, and network connectivity details
+      </div>
+    </div>
+
+    <h3>The Safemarch authentication-error case study</h3>
+    <p>A user in the Safemarch deployment had a positive experience with Zscaler — until now. They're hitting authentication errors when prompted to reauthenticate in Zscaler Client Connector on their laptop. They've hit "Retry" several times and the error persists.</p>
+
+    <p>The ZCC client shows: <strong>Service Status = Endpoint FW/AV Error · Off-Trusted Network</strong>. The rest of the connectivity rows (Authentication Status, Broker, Time Connected, Protocol) are blank.</p>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">i</div>SYSTEMATIC TROUBLESHOOTING STEPS</div>
+      <div class="callout-body">
+        <strong>1. Confirm the symptom in the ZCC UI.</strong> Service Status + Authentication Status tell you whether it's an auth path issue, a network-trust issue, or a forwarding issue.
+        <br><strong>2. Pull the Z-Tunnel log file</strong> from the OS-specific path above. Search for <code>authenticate</code> in the most recent log.
+        <br><strong>3. Identify the failure type</strong> — endpoint security blocking the tunnel, certificate trust failure, captive portal, IdP MFA timeout, or token expiry.
+        <br><strong>4. Confirm against config.zscaler.com</strong> — Client Connector should be able to reach the documented hosts/IPs. Local firewall or AV rules often block them after an update.
+        <br><strong>5. Resolve at the right layer</strong> — sometimes it's a ZCC client setting, sometimes it's a customer-side AV exclusion, sometimes it's an IdP policy that the customer's identity team needs to update.
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Auth is step 1 of ZCC, so it's bug 1 of ZCC. Log paths to memorise: <strong>Windows ProgramData\Zscaler · macOS /Library/Application Support/com.zscaler.Zscaler · Linux /var/log/zscaler/.Zscaler/Logs</strong>. <strong>Config.zscaler.com</strong> = canonical source of host/IP/connectivity info.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">ZCC auth troubleshooting is medical triage. The ZCC UI is the patient's face — a quick visual tells you whether they're conscious, breathing, in pain. The log files are the bloodwork — you don't make a diagnosis without them. Config.zscaler.com is the medical reference book — what's "normal" for this patient. And like medicine, "worked until now" almost always means something else changed — recent medication, recent travel, recent injury. Find what changed and you find the diagnosis.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of medical triage as an analogy for ZCC authentication troubleshooting. Wide composition in a friendly emergency-room setting. Left scene: a cheerful doctor at the bedside checking the patient's face and vital signs on a small monitor (representing the ZCC UI status check). Middle scene: a nurse holding up a small vial of blood next to a clipboard reading "labs" (representing the log files). Right scene: the doctor flipping through a large medical reference book labelled with a subtle config-style icon on the cover (representing config.zscaler.com). Below all three scenes a faint thought-bubble shows the patient looking puzzled and saying through speech lines "but I was fine yesterday" (representing the "worked until now" framing). Soft warm medical lighting, mood of calm methodical diagnosis. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zcc-auth" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zcc-auth','ZCC Auth Troubleshooting')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-zcc-auth" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-zcc-auth"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ZCC FORWARDING -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZCC FORWARDING TROUBLESHOOTING</span></div>
+    <p class="socratic-insight">Once authentication is solved, forwarding becomes the next failure mode. ZCC has its own UI hints (connectivity status, tunnel version, throughput), plus the same OS log paths. The diagnostic mode shifts from "is the user authenticated?" to "is the user's traffic actually reaching the right place?".</p>
+    <ul class="socratic-questions">
+      <li>If ZCC reports "Connected" but a user can't reach Salesforce, what are the three most likely root causes, in order?</li>
+      <li>The ZCC UI exposes IP addresses and tunnel versions. Why are those specifically the diagnostic data the consultant should be drawing from — what do they tell you that the log files don't immediately?</li>
+      <li>How would a consultant differentiate between "Zscaler-side outage" and "customer-side issue" when investigating a forwarding problem?</li>
+    </ul>
+    <div class="answer-area" data-section="zcc-fwd">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">(1) Policy — URL filtering or App Control is blocking the Salesforce hostname. (2) SSL inspection breaking the cert chain — Salesforce uses cert pinning in some flows. (3) Local network interference — captive portal, host file override, MTU fragmentation on a flaky Wi-Fi. Always start with policy logs in the Zscaler portal; they're the quickest to rule in or out.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">The IP addresses tell you which Zscaler edge the user is hitting — and whether they're hitting the right one (a US user pointing at an EU edge often means broken geo-IP). Tunnel version tells you whether ZCC is using DTLS, TLS, or fallback mode — version mismatches map to specific known issues. They're "first-impression" data that frames the rest of the investigation; the logs come second, to confirm.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Check status.zscaler.com (or the equivalent status page for the customer's cloud) — if Zscaler reports degradation in the user's region, that's the answer. Otherwise: have a different user on a different network try the same app. If they succeed, it's environment-specific to the original user; if they fail, it's a wider issue. The cross-user comparison is the cheapest test you have.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-zcc-fwd">
+    <div class="section-label">ZSCALER CLIENT CONNECTOR — FORWARDING TROUBLESHOOTING</div>
+    <h2>Diagnosing traffic forwarding blockages</h2>
+    <p>Forwarding traffic from the user's device to the Zscaler Cloud is the fundamental job of ZCC. The Client Connector UI shows connectivity status and authentication status — giving you obvious things to check in terms of <strong>IP addresses and tunnel versions in play</strong>. Troubleshooting tools within ZCC also enable examination and capture of useful traffic details for deeper analysis.</p>
+
+    <h3>Where to look in the ZCC UI</h3>
+    <ul class="content-list">
+      <li><strong>Connectivity panel</strong> — Username, Service Status, Authentication Status, Broker, Time Connected, Protocol</li>
+      <li><strong>Statistics panel</strong> — Total Packets Sent, Total Packets Received (zero packets sent = forwarding broken)</li>
+      <li><strong>Settings panel</strong> — Service status detail, Service Status, ZApp Logs entry point, Captive Portal indicator</li>
+      <li><strong>About panel</strong> — App version, ZCC tunnel/configuration time</li>
+    </ul>
+
+    <h3>Common forwarding failure modes</h3>
+    <ul class="content-list">
+      <li><strong>Captive portal</strong> — coffee shop or hotel Wi-Fi requires browser-based sign-in before traffic flows; ZCC has a captive-portal indicator</li>
+      <li><strong>MTU fragmentation</strong> — DTLS tunnels are sensitive to MTU; flaky Wi-Fi often manifests here</li>
+      <li><strong>Endpoint AV/EDR</strong> — antivirus or EDR can block the DTLS tunnel after an update</li>
+      <li><strong>Wrong edge</strong> — user pointing at the wrong regional edge (broken geo-IP, VPN to another country, residential DNS)</li>
+      <li><strong>Policy block</strong> — URL filtering, App Control, or Cloud App Control silently dropping traffic</li>
+      <li><strong>SSL inspection</strong> — cert chain interception breaks pinned apps</li>
+    </ul>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">i</div>THE THREE-WAY TRIAGE</div>
+      <div class="callout-body">When forwarding fails, run this triage to localise the fault:
+        <br>· Same user, <strong>different network</strong> — if it works, blame the network.
+        <br>· <strong>Different user</strong>, same network, same app — if they succeed, blame the user's environment (AV, profile, certs).
+        <br>· Same user, same network, <strong>different app</strong> — if the other app works, blame policy or app-specific behaviour (pinning, MTU, IP allow-listing).
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">ZCC UI gives you Service Status + IPs + tunnel version + protocol — read it first. Logs second. <strong>Three-way triage</strong>: different network / different user / different app — isolates the fault to network, environment, or policy.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Forwarding troubleshooting is like a plumber finding a clogged pipe in a multi-storey building. The plumber doesn't tear out walls — they swap one variable at a time. Try a different tap in the same room (different app, same path). Try the same tap from a different room (same app, different network). Try someone else's identical tap (different user). Each test rules out a branch of the pipe-tree until only one possible blockage remains.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a plumber finding a clogged pipe via systematic three-way testing as an analogy for forwarding troubleshooting. Wide composition with a cutaway view of a friendly three-storey cartoon house. The plumber in overalls and a hard hat stands in the centre with a wrench, looking thoughtful at three taps highlighted at three different points: tap A in the kitchen (different app, same path), tap B in the upstairs bathroom (same app, different network), tap C labelled with a second cartoon resident also trying their tap (different user). Pipes connect all three through visible internal plumbing painted in soft blue. The plumber's thought bubble shows three small ticks and crosses indicating which tests passed and which failed. Mood of methodical isolation. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zcc-fwd" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zcc-fwd','ZCC Forwarding')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-zcc-fwd" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-zcc-fwd"></span></div></div>
+    </div>
+  </div>
+
+  <!-- APP CONNECTORS -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · APP CONNECTORS</span></div>
+    <p class="socratic-insight">App Connectors provide the secure authenticated interface between a customer's private applications and the ZPA Cloud. They act as the client machine's proxy when interacting with private applications. The design decisions are about <em>where to place them</em>, <em>how many to deploy</em>, and <em>how to group them</em> — all under high-availability constraints.</p>
+    <ul class="socratic-questions">
+      <li>The course says App Connectors running in VMs <strong>should never be cloned</strong>. What specifically breaks if you clone an App Connector VM, and why is that worse than just re-deploying?</li>
+      <li>Best practice is "minimum of two App Connectors per site, ideally N+1 redundancy". Why N+1 specifically — and what does that imply about peak-load planning?</li>
+      <li>An App Connector supports up to 500 Mbps throughput. If a customer's site needs 1.5 Gbps to private apps, how many App Connectors do you recommend — and why not exactly three?</li>
+    </ul>
+    <div class="answer-area" data-section="app-connectors">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Cloning copies the provisioning key + identity fingerprint, but the new clone's hardware fingerprint differs. The provisioning key will no longer match — ZPA Cloud rejects the clone, and worse, can confuse the original's identity tracking. Re-deploying fresh with a new provisioning key is always cleaner; cloning saves five minutes and costs a day of confusion.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">N+1 means you can lose one App Connector at peak load and still serve users. Capacity-planning for "exactly N" means any failure is a customer-visible outage; planning for "N+1" gives you graceful degradation. Implication: you must size for the <em>second-highest</em> usage moment, not the average — otherwise N+1 doesn't actually cover your real peak.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Four. Three connectors at 500 Mbps each totals 1.5 Gbps — exactly your peak — so any failure puts you under capacity. Four gives you N+1: three running connectors covering 1.5 Gbps plus one redundant. Also leaves room for the inevitable usage growth between deployment and next review cycle.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-app-connectors">
+    <div class="section-label">APP CONNECTORS · CONFIGURATION &amp; DEPLOYMENT</div>
+    <h2>Design + best practices</h2>
+    <p>App Connectors provide the secure authenticated interface between a customer's private applications and the ZPA Cloud. The App Connector acts as the client machine's proxy when interacting with private applications. <strong>Every App Connector belongs to a specific App Connector Group, and every App Connector Group should always be associated with a provisioning key and one Server Group to serve any application.</strong></p>
+
+    <h3>Recommended approach</h3>
+    <ul class="content-list">
+      <li><strong>Deploy in groups for high availability and horizontal scaling.</strong></li>
+      <li><strong>App Connectors should be grouped within Data Centers (DCs)</strong> and not span different DCs to ensure load sharing will be consistent</li>
+      <li>Create a <strong>new provisioning key for each new Connector Group</strong></li>
+    </ul>
+
+    <h3>Best-practice cards</h3>
+    <div class="bp-grid">
+      <div class="bp-card"><div class="bp-card-title">App Connector Placement</div><div class="bp-card-body">Place the App Connector as close to the destination applications as possible for the fastest communication path and best user experience. Minimises firewall changes.</div></div>
+      <div class="bp-card"><div class="bp-card-title">Two App Connectors Per Site</div><div class="bp-card-body">Configure a minimum of two App Connectors per site, ideally <strong>N+1 redundancy</strong> for the estimated bandwidth. Supports rolling updates and host failures. <strong>500 Mbps per Connector.</strong></div></div>
+      <div class="bp-card"><div class="bp-card-title">Unrestricted Access</div><div class="bp-card-body">Connectors should have unrestricted access to applications — no protocol or port limitations or restrictions, including ICMP access.</div></div>
+      <div class="bp-card"><div class="bp-card-title">Internal DNS Server</div><div class="bp-card-body">Configure the App Connector to contact an internal DNS server capable of resolving hosts for all supported applications, and for internet hosts as fallback. <strong>FQDN resolution failure = user can't reach the app.</strong></div></div>
+      <div class="bp-card"><div class="bp-card-title">Regularly Update</div><div class="bp-card-body">Regularly <strong>manually update</strong> the App Connector host OS and third-party software packages.</div></div>
+      <div class="bp-card"><div class="bp-card-title">Never Clone VMs</div><div class="bp-card-body">App Connectors running in VM environments <strong>should never be cloned</strong> — the provisioning key will no longer match the virtual hardware fingerprint.</div></div>
+    </div>
+
+    <div class="img-display-block">
+      <img src="2.png" alt="ZPA configuration relationship map" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;"><strong>2.png</strong></div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Flat blue minimalist illustration of the ZPA configuration relationship chain — five horizontal stacked rounded rectangles from left to right with arrows between them: "Segment Groups" → "Application Segments" → "Server Groups" → "App Connector Groups" → "App Connectors". Each rectangle has a tiny pictogram inside (folder, app icon, server rack, network folder, plug). Many-to-many lines drawn between Server Groups and App Connector Groups; many-to-one arrows between others. Clean simple shapes, no text labels.</div>
+    </div>
+
+    <h3>Safemarch customer scenario</h3>
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">i</div>SCENARIO SOLUTION</div>
+      <div class="callout-body">Safemarch needs App Connectors at two data-centre locations. The minimal correct solution:
+        <br>· <strong>At least 2 App Connectors at both locations</strong>
+        <br>· <strong>2 Connector Groups</strong> to bind ZPA Connectors for the separate sites
+        <br>This satisfies N+1 redundancy per site and prevents cross-site failover (which would defeat the placement-close-to-apps principle).
+      </div>
+    </div>
+
+    <h3>Reference deployment guides</h3>
+    <p>Zscaler provides additional deployment guides for various supported platforms. Use these during the Configure phase:</p>
+    <div class="pdf-ref-grid">
+      <a class="pdf-ref" href="app-connector-deployment-prerequisites.html">
+        <div class="pdf-ref-icon">📄 PDF Reference</div>
+        <div class="pdf-ref-title">App Connector Deployment Prerequisites</div>
+        <div class="pdf-ref-body">Sizing requirements, OS, hypervisor, certificate, and firewall prerequisites for any App Connector deployment.</div>
+        <div class="pdf-ref-cta">Open reference →</div>
+      </a>
+      <a class="pdf-ref" href="app-connector-deployment-guide-vmware.html">
+        <div class="pdf-ref-icon">📄 PDF Reference</div>
+        <div class="pdf-ref-title">App Connector Deployment Guide for VMware</div>
+        <div class="pdf-ref-body">Step-by-step deployment on VMware (vSphere, vCenter, ESXi) — OVA, network configuration, provisioning-key entry, validation, HA pairing.</div>
+        <div class="pdf-ref-cta">Open reference →</div>
+      </a>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">App Connectors: <strong>500 Mbps each · minimum 2/site · N+1 redundancy · close to apps · unrestricted access · internal DNS · regular updates · never clone VMs · group within a single DC</strong>. Every Connector Group needs its own provisioning key + Server Group association.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">App Connectors are bouncers stationed at private function rooms inside a venue. Each room (application) has its bouncer (Connector) standing at the door. You always station <em>at least two</em> bouncers per room so one can take a break without leaving the door unattended. They wait until a verified guest approaches (outbound-only). They never leave their assigned room (close to the app). And cloning a bouncer's badge doesn't make a real second bouncer — it just confuses the security manager.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of bouncers stationed at multiple private function rooms inside a venue as an analogy for App Connector deployment best practices. Wide composition cutaway showing two distinct private rooms in a venue. Each room labelled with a tiny application icon (one with a database, the other with a server) has two cheerful bouncers in matching uniforms standing at its door — one alert, one relaxed (N+1 redundancy). Each pair has a small clipboard with a single provisioning-key badge attached. A confused security manager off to the side holds up a cloned bouncer ID card with a red question mark over it — emphasising "never clone". Soft warm venue lighting, cheerful round-faced characters, plush carpet. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-app-connectors" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('app-connectors','App Connectors')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-app-connectors" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-app-connectors"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ZTB -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZERO TRUST BRANCH</span></div>
+    <p class="socratic-insight">Zero Trust Branch Devices are important hardware/virtual appliances installed within an organisation's data centre or branch. Used to manage the organisation's traffic. Despite being located within the customer's infrastructure, they are <strong>overseen and maintained by Zscaler Cloud Operations</strong>. Zscaler uses <strong>Zero Touch Provisioning (ZTP)</strong> to seamlessly integrate them.</p>
+    <ul class="socratic-questions">
+      <li>Customer infrastructure that's managed by Zscaler — what's the operational model on the customer side, and where are the boundaries of responsibility?</li>
+      <li>Zero Touch Provisioning means the customer doesn't need to image, configure, or manually onboard the device. What does the customer still have to do?</li>
+      <li>Before deploying a Zero Trust Branch Device, you need to establish a connection between ZIA, ZPA, and the Branch and Cloud Connector Portal. Why is the order of those integrations significant?</li>
+    </ul>
+    <div class="answer-area" data-section="ztb">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The customer hosts the appliance, provides power and network, and grants Zscaler operational visibility. Zscaler Cloud Ops handles patching, monitoring, version management, and break-fix. The boundary is roughly: customer owns the physical/host layer, Zscaler owns the software/services layer. The DC's job is to set the customer's expectations correctly — many customers initially think they need a dedicated network engineer on the device 24/7.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Provide the physical / virtual environment (rack space, power, hypervisor), provide IP addressing and DNS, open the required firewall paths for the device to reach Zscaler's portal for ZTP enrollment, and provide IDs (ZIA ID, ZPA ID, Branch/Cloud Connector ID) for the verification step. Everything else is genuinely zero-touch.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">You need ZIA and ZPA tenants integrated with the Branch/Cloud Connector Portal first, because the Branch device's policies are sourced from those tenants. If you deploy the device before integrating, the device has no policies to enforce and effectively does nothing until the integration completes. Wire the back-end first, then deploy the appliance.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-ztb">
+    <div class="section-label">ZERO TRUST BRANCH DEVICES</div>
+    <h2>Enhancing operational efficiency with Zero Trust Branch</h2>
+    <p>Zero Trust Branch Devices are important components installed within an organisation's data centre. They manage the organisation's traffic at the branch / data centre edge. Despite being located within the customer's infrastructure, they are <strong>overseen and maintained by Zscaler Cloud Operations</strong>. Zscaler uses <strong>Zero Touch Provisioning (ZTP)</strong> to seamlessly integrate the devices into the organisation's network.</p>
+
+    <h3>Connection between ZIA, ZPA, and Branch/Cloud Connector Portal</h3>
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">i</div>PRE-DEPLOYMENT INTEGRATION STEPS</div>
+      <div class="callout-body">
+        <strong>1.</strong> Integrate the Branch and Cloud Connector Tenants with the Zscaler Internet Access (ZIA) and Zscaler Private Access (ZPA) tenants.
+        <br><strong>2.</strong> Establish the linkage as a prerequisite — it facilitates retrieval of crucial settings and policies required for deployment.
+        <br><strong>3.</strong> Determine the linkage status by providing a verification token created via the <strong>Zscaler Support portal</strong>, providing the <strong>IDs of the ZIA, ZPA, and Branch and Cloud Connector tenants</strong>.
+        <br><strong>4.</strong> Tenant IDs unknown? They can be found within their respective portals. Although not all portals directly display this information, the Administrator Management section in each tenant provides access to the Tenant's ID. The default admin login ID typically contains the Tenant's ID after the <strong>"@" symbol</strong>.
+      </div>
+    </div>
+
+    <h3>Operational management post-deployment</h3>
+    <p>Following successful deployment, administrators gain access to a range of management options for Zero Trust Branch Devices — overseen by Zscaler Cloud Operations as part of the ZTP model. Click through the tabs in the original course content to see Health Monitoring, Configuration, Updates, and Lifecycle Management options that admins retain visibility into.</p>
+
+    <div class="img-display-block">
+      <img src="3.png" alt="Zero Trust Branch deployment flow" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;"><strong>3.png</strong></div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Flat blue minimalist illustration of the Zero Trust Branch deployment flow — a customer site on the left containing a small server rack labelled with a "branch device" icon, a glowing arrow labelled with a small ZTP gear icon going upward to a central Zscaler Cloud Operations cloud shield with three connecting links to ZIA, ZPA, and the Branch/Cloud Connector Portal arranged in a triangle around the cloud. A small verification token icon hovers between the customer site and the portal. Clean simple shapes, no text labels.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Zero Trust Branch Devices: <strong>customer-hosted, Zscaler-managed</strong>, deployed via <strong>Zero Touch Provisioning</strong>. Pre-deployment requires integrating ZIA + ZPA tenants with the Branch/Cloud Connector Portal — Tenant ID is in the admin login after the "@" symbol. Verification token comes from the Zscaler Support portal.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Zero Trust Branch Devices are like leased smart electricity meters. The meter sits in your house (customer infrastructure), but the energy company (Zscaler Cloud Ops) owns it, monitors it, updates its firmware, and replaces it when it dies. You provide a wall socket and an internet connection; they provide everything else. Zero-touch provisioning is the technician plugging it in once and the meter coming online automatically — no setup wizard, no manuals to read.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A6.png" alt="Analogy illustration A6" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A6.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a leased smart electricity meter as an analogy for Zero Trust Branch Devices. Wide composition. Left scene: a cheerful homeowner stands in front of their house pointing proudly at a glowing smart meter installed on the wall, which has a small "leased" tag dangling off it. Right scene: a power-company technician up in a cloud-themed dispatch centre monitors many such meters from a glowing dashboard, occasionally pushing a firmware-update button. A subtle dashed line connects the meter to the dispatch centre overhead. Mood of effortless operational division: homeowner owns the wall, company owns the meter. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-ztb" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('ztb','Zero Trust Branch')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-ztb" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-ztb"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div class="section-block" id="section-recap-final">
+    <div class="section-label">RECAP &amp; RESOURCES</div>
+    <h2>In Summary</h2>
+    <p>You explored advanced connectivity strategies and best practices to equip you with the skills needed for complex deployments and secure access scenarios. By mastering these advanced concepts, you are now better prepared to design, implement, and troubleshoot Zscaler's solutions in dynamic enterprise environments.</p>
+
+    <ul class="content-list">
+      <li><strong>Traffic Forwarding Best Practices</strong> — Examined advanced traffic forwarding methods, including ZCC, GRE, and IPSec tunnels. Provided insights into scalable configurations and design recommendations tailored to complex environments.</li>
+      <li><strong>Advanced Troubleshooting for Authentication Issues</strong> — Focused on diagnosing and resolving ZCC authentication issues. You learned to utilise logs, analyse errors, and apply systematic troubleshooting techniques to ensure seamless user connectivity.</li>
+      <li><strong>Troubleshooting Traffic Forwarding Issues</strong> — Delved into common forwarding challenges, such as firewall and antivirus interference, and explored effective tools like ZCC logs and routing diagnostics to identify and resolve these issues.</li>
+      <li><strong>App Connector Configuration &amp; Deployment</strong> — Covered App Connectors' critical role in providing secure access to private applications. Best deployment design, provisioning keys, and best practices for high availability and redundancy.</li>
+      <li><strong>Deploy Zero Trust Branch Devices</strong> — Covered the prerequisites and configuration steps, showing how Zscaler Cloud Operations oversees installation, updates, and ongoing maintenance through Zero Touch Provisioning and remote management.</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">The 5-point summary — <strong>Forwarding best practice · Auth troubleshooting · Forwarding troubleshooting · App Connector design · Zero Trust Branch deployment</strong>. Two diagnostic outcomes (Auth + Forwarding) bracket three design outcomes (Forwarding methods + App Connectors + Branch). The diagnostic outcomes are where consultant value lives.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Connectivity Services is the consultant's <em>field kit</em>. Everything in here gets opened during real customer work, not just exam prep — log paths memorised, tunnel ceilings cached, N+1 sizing rules at the tip of your tongue, ZTP integration checklist drilled. The other EDU-302 sections give you a map; this one gives you the tools to fix the road as you drive it.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A7.png" alt="Analogy illustration A7" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A7.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a consultant's open field kit as an analogy for the connectivity services course takeaways. Wide composition. Foreground: a worn-leather rolled-out field kit on a workbench. Inside the kit, neatly arranged in pockets: a small tunnel-meter dial (forwarding methods), a magnifying glass with a clipboard (troubleshooting), a tape measure ruler with "N+1" markings (App Connector sizing), a small smart-meter icon (Zero Trust Branch), and a labelled folder with three OS icons (log paths). Background: a softly out-of-focus customer site visible through a doorway with a friendly consultant just stepping in carrying the kit, ready for the job. Warm afternoon light through a window, mood of practical preparedness. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap-final" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap-final','Recap')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap-final" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap-final"></span></div></div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-302-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-302 Hub
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PDF REFERENCES</div>
+    <a class="sidebar-pdf" href="app-connector-deployment-prerequisites.html">
+      <div class="sidebar-pdf-label">📄 PDF</div>
+      <div class="sidebar-pdf-title">App Connector Deployment Prerequisites</div>
+    </a>
+    <a class="sidebar-pdf" href="app-connector-deployment-guide-vmware.html">
+      <div class="sidebar-pdf-label">📄 PDF</div>
+      <div class="sidebar-pdf-title">App Connector Deployment Guide for VMware Platforms</div>
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleDone(this,0)"><div class="subtopic-check"></div><span>5 course outcomes (Implement / Resolve / Troubleshoot / Deploy / Manage)</span></li>
+      <li onclick="toggleDone(this,1)"><div class="subtopic-check"></div><span>3 traffic forwarding methods + bandwidth ceilings (GRE 1Gb / IPSec 500Mb / PAC browser-only)</span></li>
+      <li onclick="toggleDone(this,2)"><div class="subtopic-check"></div><span>NAT-address gotcha (&gt;1,000 ZCC clients)</span></li>
+      <li onclick="toggleDone(this,3)"><div class="subtopic-check"></div><span>Never double-tunnel ZCC inside GRE/IPSec</span></li>
+      <li onclick="toggleDone(this,4)"><div class="subtopic-check"></div><span>Safemarch 3 customer scenarios + recommended designs</span></li>
+      <li onclick="toggleDone(this,5)"><div class="subtopic-check"></div><span>ZCC log paths (Windows / macOS / Linux)</span></li>
+      <li onclick="toggleDone(this,6)"><div class="subtopic-check"></div><span><code>config.zscaler.com</code> for canonical host/IP info</span></li>
+      <li onclick="toggleDone(this,7)"><div class="subtopic-check"></div><span>Three-way forwarding triage (different network / different user / different app)</span></li>
+      <li onclick="toggleDone(this,8)"><div class="subtopic-check"></div><span>App Connector: 500 Mbps, 2/site min, N+1 redundancy, never clone VMs</span></li>
+      <li onclick="toggleDone(this,9)"><div class="subtopic-check"></div><span>Connector Groups within single DC + new provisioning key per group</span></li>
+      <li onclick="toggleDone(this,10)"><div class="subtopic-check"></div><span>ZTB: customer-hosted, Zscaler-managed, Zero Touch Provisioning</span></li>
+      <li onclick="toggleDone(this,11)"><div class="subtopic-check"></div><span>ZTB pre-deployment: ZIA+ZPA integration with Branch/Cloud Connector Portal first</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="quick-ref"><div class="quick-ref-term">GRE Tunnel</div><div class="quick-ref-def">Generic Routing Encapsulation. 1 Gb/tunnel, unencrypted, multi-segment OK, requires static public IP.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">IPSec Tunnel</div><div class="quick-ref-def">Encrypted IP tunnel. 500 Mb (250 Mb encrypted) per tunnel, supports dynamic egress IPs.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">PAC File</div><div class="quick-ref-def">Proxy Auto-Config — browser-only forwarding. Fastest to validate ZIA, but limited scope.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">DTLS</div><div class="quick-ref-def">Datagram Transport Layer Security — the protocol ZCC uses for its tunnel. Sensitive to MTU and double-tunneling.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">N+1 Redundancy</div><div class="quick-ref-def">Deploy one more App Connector than peak load requires, so any single failure doesn't degrade service.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Provisioning Key</div><div class="quick-ref-def">Unique key tied to a Connector Group; binds an App Connector to its group and verifies its identity.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Zero Touch Provisioning</div><div class="quick-ref-def">Automatic onboarding of Zero Trust Branch Devices into Zscaler Cloud Ops — no manual imaging required.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Tenant ID</div><div class="quick-ref-def">Per-tenant identifier needed when linking ZIA/ZPA to the Branch/Cloud Connector Portal. Found after the "@" in the default admin login.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-302 · <span>Section 4</span></div>
+  <div class="footer-right">Connectivity Services · Section 4 of 11</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu302-connectivity';
+const SECTIONS={overview:'Overview',recap:'Recap',forwarding:'Traffic Forwarding','zcc-auth':'ZCC Auth Troubleshooting','zcc-fwd':'ZCC Forwarding','app-connectors':'App Connectors',ztb:'Zero Trust Branch','recap-final':'Recap'};
+
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();initNotes();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
+  document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
+  document.querySelectorAll('.analogy-img img, .img-display-block img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Identity Services — EDU-302</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5f0ff;--surface:#ffffff;--surface-2:#f8f5ff;--border:#c8bbff;--border-dim:#e0d9ff;
+  --text:#130a2e;--text-soft:#2a1a5c;--text-muted:#6a5a9a;
+  --purple:#5c35cc;--purple-glow:rgba(92,53,204,0.07);--purple-dim:#c8bbff;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --amber:#b45309;--amber-light:#fef9ec;--amber-border:#fde68a;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+}
+html.pt-init body{opacity:0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:#130a2e;display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#6a5a9a;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#a78bfa;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#2a1a5c;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#a78bfa;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#a78bfa;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#a78bfa;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--purple);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--purple);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#130a2e;color:#a78bfa;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 18px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--purple);border-bottom-color:var(--purple);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--purple);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--purple-glow);border:1px solid var(--purple-dim);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--purple);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--purple-glow);border-color:var(--purple-dim);}
+.callout-note .callout-header{color:var(--purple);}
+.callout-note .callout-icon{background:var(--purple-dim);color:var(--purple);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-warn{background:var(--amber-light);border-color:var(--amber-border);}
+.callout-warn .callout-header{color:var(--amber);}
+.callout-warn .callout-icon{background:var(--amber-border);color:var(--amber);}
+.callout-warn .callout-body{color:#7a3a00;}
+.callout-tip{background:var(--green-light);border-color:var(--green-border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-tip .callout-body{color:#0f4a28;}
+
+/* TWO-COLUMN METHOD CARDS */
+.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.method-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.method-card-title{font-size:12px;font-weight:700;color:var(--purple);letter-spacing:0.06em;margin-bottom:6px;text-transform:uppercase;}
+.method-card-body{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+.method-card-body ul{list-style:none;padding:0;margin-top:6px;display:flex;flex-direction:column;gap:4px;}
+.method-card-body ul li{padding-left:14px;position:relative;font-size:12.5px;}
+.method-card-body ul li::before{content:'›';position:absolute;left:0;color:var(--purple);font-weight:700;}
+
+/* BRL TABS */
+.brl-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:18px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.brl-table th{background:#130a2e;color:#a78bfa;padding:10px 14px;text-align:left;font-weight:600;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;}
+.brl-table td{padding:10px 14px;border-top:1px solid var(--border);vertical-align:top;color:var(--text-soft);line-height:1.6;}
+.brl-table td:first-child{font-weight:600;color:var(--text);width:130px;}
+
+/* SAML FLOW STEPS */
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
+.flow-step{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.flow-num{width:26px;height:26px;border-radius:50%;background:var(--purple);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.flow-text{font-size:13px;color:var(--text-soft);line-height:1.6;}
+.flow-text strong{color:var(--text);}
+
+/* SOCRATIC */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--purple);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--purple);}
+/* MENTAL */
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--purple-glow);border:1px solid var(--purple-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--purple);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+/* ANALOGY */
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img .img-missing-msg{display:none !important;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+/* DIAGRAM */
+.img-display-block{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-display-block img.zoomed{max-width:100% !important;cursor:zoom-out;}
+.img-display-block .img-missing-msg{display:none !important;}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+/* ANSWER */
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+/* TOOLS */
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--purple);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:#130a2e;color:#a78bfa;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{background:#2a1a5c;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--purple);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#130a2e;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
+.mod-nav-hub:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:#130a2e;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#a78bfa;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#8a70cc;line-height:1.6;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}.method-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../digital-delivery-consultant-hub.html">Digital Delivery Consultant</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-302-hub.html">EDU-302</a>
+      <span class="breadcrumb-sep">›</span>
+      Identity Services
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Section 3 · EDU-302</div>
+    <h1>Identity <em>Services</em></h1>
+    <p>Recommended authentication and provisioning per service — SAML + SCIM for ZIA and ZPA, plus the unique first-time provisioning and role-based administration flow that ZDX uses.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Identity decisions ripple through <em>every later phase</em>.</div>
+  <p class="motivation-sub">Pilot tests, policy enforcement, group-based access, and SIEM correlation all depend on getting auth and provisioning right at the start. A weak identity decision in Phase 2 is the most expensive thing to fix in Phase 5.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-recap',this)">Quick Recap</button>
+  <button class="nav-tab" onclick="navTo('section-dc-tasks',this)">DC Tasks</button>
+  <button class="nav-tab" onclick="navTo('section-zia',this)">ZIA Auth</button>
+  <button class="nav-tab" onclick="navTo('section-zpa',this)">ZPA Auth</button>
+  <button class="nav-tab" onclick="navTo('section-zdx',this)">ZDX Auth + RBA</button>
+  <button class="nav-tab" onclick="navTo('section-recap-final',this)">Recap</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · OVERVIEW</span></div>
+    <p class="socratic-insight">Every Zscaler service depends on knowing who the user is — but each service answers that question slightly differently. Before reading on, think about why a single auth/provisioning approach can't simply be inherited across ZIA, ZPA, and ZDX without per-service consideration.</p>
+    <ul class="socratic-questions">
+      <li>If SAML + SCIM is the recommended combination for both ZIA and ZPA, why does each service still get its own dedicated identity lesson rather than one shared chapter?</li>
+      <li>The Delivery Consultant's job is described as "designing and deploying ZIA, ZPA, and ZDX authentication and provisioning". Which of these three services produces the most consultant-time per engagement, and why?</li>
+      <li>The course says authentication is a prerequisite to the Pilot phase. What specifically can't you test in a pilot until identity is settled — and what's the cost of trying anyway?</li>
+    </ul>
+    <div class="answer-area" data-section="overview">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Each service exposes identity differently: ZIA uses identity for policy lookup on inline traffic; ZPA uses identity AND device posture to broker private app access through Connectors; ZDX has no user traffic but still needs admin identity for portal access and data scoping. Same primitives (SAML/SCIM), different consequences if you mis-configure — so each service gets its own design conversation.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">ZPA usually wins. ZPA's End-user auth + Admin portal auth are separate flows, SCIM gates the entitlement set, and SAML attribute mapping drives access policy criteria. ZIA is usually inherited from the existing IdP integration and just turned on. ZDX is mostly admin auth + role-based admin. ZPA simply has more moving parts.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Without identity you can't validate any policy that references users, groups, departments, or device posture — which is almost every policy. You also can't test SCIM-driven entitlements, group-based DLP exceptions, or step-up auth flows. Trying to pilot before identity is settled means you're testing default-allow behaviour, not the real customer policy — and signing off on a pilot that doesn't reflect production.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-overview">
+    <div class="section-label">COURSE OVERVIEW</div>
+    <h2>Welcome to Identity Services</h2>
+    <p>Identity Services is one section organised around a single thread: the <strong>recommended authentication and provisioning approach for each Zscaler service</strong>. The course covers what a Delivery Consultant (DC) must do for ZIA, ZPA, and ZDX identity — plus the unique first-time provisioning + role-based administration flow ZDX uses.</p>
+
+    <div class="key-concept">
+      <strong>Five course objectives:</strong> Describe ZDDC tasks and related basic concepts · Explain the recommended authentication and provisioning method for ZIA · Describe the recommended approach for end-user and administrator portal authentication for ZPA · Explain first-time provisioning for ZDX admins · Define role-based administration for ZDX deployment.
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">3 DC tasks: <strong>ZIA user auth + provisioning</strong>; <strong>ZPA end-user + admin portal auth + provisioning</strong>; <strong>ZDX user auth + provisioning</strong>. Default recommendation across the board = <strong>SAML for auth + SCIM for provisioning</strong>. ZDX is the outlier (different first-time provisioning flow + RBA).</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Identity is the building's reception desk. ZIA is the desk in the lobby that scans you on the way out (internet-bound). ZPA is the concierge that personally escorts you to specific rooms (private apps). ZDX is the security cameras and dashboards in the back office — nobody walks through them, but they watch everything. Each desk needs the same staff badge system (SAML + SCIM) but the staff doing the checks have different jobs.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a single corporate building with three different reception desks as an analogy for ZIA, ZPA, and ZDX identity. Wide composition cutaway view. Lobby desk on the left: a cheerful receptionist scanning a staff badge on a person walking outside through a revolving door labelled "internet" (ZIA). Concierge in the middle: a smartly-dressed concierge personally escorting a visitor down a hallway, holding their badge and pointing to one specific door among many (ZPA). Back-office monitoring station on the right: a friendly security analyst at a wall of glowing monitors watching dashboards full of vitals icons (ZDX). All three reception staff wear the same uniform with the same badge-scanning system on their belts. Warm interior lighting, plush carpet, cheerful round-faced characters. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · QUICK RECAP</span></div>
+    <p class="socratic-insight">Identity concepts span Administrator (EDU-200) and Engineer (EDU-202). The administrator learns the primitives (auth/authz, SAML, SCIM, MFA, OIDC); the engineer learns the configuration depth (step-up auth, multi-IdP, hosted file fallback). The Delivery Consultant builds on both — but applies them under customer pressure.</p>
+    <ul class="socratic-questions">
+      <li>If the EDU-200 administrator can configure SAML, and the EDU-202 engineer can configure step-up MFA — what specifically does the EDU-302 consultant add on top of those two?</li>
+      <li>OIDC was introduced as the modern alternative to SAML in EDU-202. Why does EDU-302 still recommend SAML as the default rather than OIDC?</li>
+      <li>"Identity Federation Using SAML" appears in both the authentication and provisioning method lists. How can the same technology be both? What's actually happening in each case?</li>
+    </ul>
+    <div class="answer-area" data-section="recap">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The consultant adds <em>recommendation judgement</em>: knowing when SAML auto-provisioning is appropriate vs SCIM, when to advise a customer to add SailPoint alongside Forgerock, when to phase in MFA vs step-up. The admin and engineer know how to configure; the consultant knows what to recommend, why, and how to defend it in a customer workshop.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">SAML is the more widely supported standard across enterprise IdPs and is universally compatible with Zscaler. OIDC is modern and lighter, but not all enterprise IdPs implement it consistently for the depth of attribute mapping ZPA policy needs. SAML's maturity + universal vendor support makes it the safer default — OIDC is reserved for greenfield deployments where the IdP is known to support it well.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">For authentication, SAML proves who the user is (signed assertion of identity at login). For provisioning, "Identity Federation Using SAML" usually refers to SAML Auto-Provisioning (Just-In-Time) — the assertion's metadata (groups, departments, email) is read and used to <em>create</em> the user record in Zscaler on first login. Same protocol, two different uses: identity proof vs. identity birth.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-recap">
+    <div class="section-label">QUICK RECAP</div>
+    <h2>Recap from EDU-200 + EDU-202</h2>
+    <p>Identity Services in EDU-302 builds directly on what was covered earlier. Before diving into recommendations, refresh the foundation:</p>
+
+    <h3>From EDU-200 Administrator — 10 core identity primitives</h3>
+    <ul class="content-list">
+      <li><strong>Authentication</strong> — verifying user identity by username/password, biometric, etc.</li>
+      <li><strong>Authorization</strong> — granting/denying access to resources (apps, networks, hardware)</li>
+      <li><strong>Identity Provider (IdP)</strong> — system that authenticates users, identifies them, and authorises access by managing/verifying credentials</li>
+      <li><strong>Service provider (SP)</strong> — system that receives users' identity credentials from an IdP and uses that to grant access</li>
+      <li><strong>SAML</strong> — common, language-independent two points for information about who you are and what you're allowed to access</li>
+      <li><strong>SCIM</strong> — standardised provisioning method (OAuth 2.0 framework) ensuring consistent up-to-date information</li>
+      <li><strong>OIDC</strong> — authentication protocol on top of OAuth 2.0; provides single sign-on</li>
+      <li><strong>ZIdentity</strong> — central identity service for Zscaler products; centralised platform managing admin roles + entitlements across all Zscaler services</li>
+      <li><strong>User group</strong> — a logical entity that includes several users</li>
+      <li><strong>Audit logs</strong> — records of activities performed by users in the ZIdentity Admin Portal</li>
+    </ul>
+
+    <h3>From EDU-202 Engineer — SAML workflow + advanced concepts</h3>
+    <p>The SAML authentication workflow (SP-initiated):</p>
+    <div class="flow-steps">
+      <div class="flow-step"><div class="flow-num">1</div><div class="flow-text">Request is made for an application.</div></div>
+      <div class="flow-step"><div class="flow-num">2</div><div class="flow-text">Users are redirected to authenticate at either Zscaler Internet Access or Zscaler Private Access.</div></div>
+      <div class="flow-step"><div class="flow-num">3</div><div class="flow-text">SAML authentication request is sent to the SAML identity provider.</div></div>
+      <div class="flow-step"><div class="flow-num">4</div><div class="flow-text">User is challenged by the identity provider to authenticate. Auth can be a simple username and password, Kerberos, or multifactor authentication.</div></div>
+      <div class="flow-step"><div class="flow-num">5</div><div class="flow-text">Identity provider assembles the SAML assertion and cryptographically secures it using a digital signature. The SAML assertion is delivered to the service provider via the user's browser.</div></div>
+      <div class="flow-step"><div class="flow-num">6</div><div class="flow-text">Service provider validates the digital signature to ensure it came from a trusted source and that the data wasn't tampered with in transit.</div></div>
+      <div class="flow-step"><div class="flow-num">7</div><div class="flow-text">Zscaler issues an auth token (Zscaler Client Connector or a cookie to the user's browser) depending on what client type is being used.</div></div>
+      <div class="flow-step"><div class="flow-num">8</div><div class="flow-text">User is authenticated at Zscaler. User's request for the application can now resume via the Zscaler Zero Trust Exchange.</div></div>
+    </div>
+    <h3 style="margin-top:18px;">Other concepts introduced in EDU-202</h3>
+    <ul class="content-list">
+      <li><strong>OIDC</strong> — a modern alternative to SAML built on OAuth 2.0</li>
+      <li><strong>Step-up authentication</strong> — an additional auth factor enforced when accessing sensitive resources or when compliance mandates it</li>
+      <li><strong>External identity providers</strong> — connecting more than one IdP to support contractors, M&amp;A scenarios, or partner populations</li>
+      <li><strong>Admin SSO</strong> — federated authentication for the admin portal, separate from end-user auth</li>
+      <li><strong>Password policies</strong> — fallback policy controls for hosted-DB users and break-glass accounts</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">EDU-200 = identity primitives (10 concepts). EDU-202 = SAML workflow (8 steps), OIDC, step-up auth, multi-IdP, hosted file fallback, password policy. EDU-302 builds <strong>recommendation judgement</strong> on top — what to suggest to a customer and why.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap','Recap')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap"></span></div></div>
+    </div>
+  </div>
+
+  <!-- DC TASKS -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · DELIVERY CONSULTANT TASKS</span></div>
+    <p class="socratic-insight">Before recommending an auth method to a customer, the consultant has to know the menu — 7 authentication methods, 5 provisioning methods, and the reasons each one exists. Most engagements end up recommending the same two (SAML + SCIM), but knowing the alternatives is what makes the recommendation defensible.</p>
+    <ul class="socratic-questions">
+      <li>If SAML + SCIM is "the answer" almost every time, why does Zscaler list 7 authentication methods including Zscaler Authentication Bridge, One-Time Token, and Passwords? In what scenario would each become the right answer?</li>
+      <li>Hosted User Database appears as a provisioning method. Under what customer constraint would you ever recommend it over SCIM?</li>
+      <li>Authentication and provisioning are described as "crucial because Zscaler Client Connector pilot testing depends on it". What does the Client Connector specifically need that other testing paths don't?</li>
+    </ul>
+    <div class="answer-area" data-section="dc-tasks">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Each fits a real edge case. Kerberos = pure Windows-on-corporate-network. Directory Sync = customers with an existing on-prem AD they're not ready to expose. Zscaler Authentication Bridge = legacy customers that need on-prem auth without exposing their directory. One-Time Link / Token = guest networks, kiosks, contractors. Passwords = small deployments or fallback. The 7 methods aren't equally recommended — but each removes a reason to say "no" to a customer.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Hosted User Database is the answer when the customer has no usable IdP, can't deploy SCIM, and has only a small / static user list to manage. Think small businesses, lab tenants, contractor pools, or migration interim states. It's a manual, file-based fallback — not scalable but useful when nothing else exists.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Zscaler Client Connector establishes a SAML-authenticated tunnel from the user's device to the Zero Trust Exchange. Without working SAML auth, the Client Connector can't establish that tunnel, which means no traffic forwarding, which means you can't pilot test policy enforcement on real devices. Browser-based testing via PAC file might work without it, but the production deployment path almost always uses Client Connector.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-dc-tasks">
+    <div class="section-label">DELIVERY CONSULTANT TASKS</div>
+    <h2>Tasks &amp; Basic Concepts</h2>
+
+    <h3>Three tasks every DC owns</h3>
+    <ul class="content-list">
+      <li><strong>ZIA user authentication and provisioning</strong></li>
+      <li><strong>ZPA user authentication and provisioning</strong>, including user authentication and administrator portal authentication</li>
+      <li><strong>ZDX user authentication and provisioning</strong></li>
+    </ul>
+
+    <h3>Why authentication &amp; provisioning matter</h3>
+    <p>The Zscaler service depends on auth + provisioning to identify users, decide what policies apply, which group they belong to, and whether a user's access needs to be updated or deprovisioned. <strong>Once authentication is set up, you can start using Zscaler Client Connector to test policy applications with a pilot test group</strong> — pilot is gated by identity being right.</p>
+
+    <h3>The recommended approach</h3>
+    <div class="key-concept">
+      <strong>Default recommendation:</strong> Zscaler recommends <strong>SAML for authentication</strong> and <strong>SCIM for provisioning</strong>. Other options are available — and become the right answer in specific customer constraints — but SAML + SCIM is the starting point of every engagement.
+    </div>
+
+    <h3>Authentication menu — 7 methods</h3>
+    <div class="method-grid">
+      <div class="method-card"><div class="method-card-title">Identity Federation Using SAML</div><div class="method-card-body">Default recommendation. Federated identity via an enterprise IdP (Okta, Entra ID, Ping, ADFS, etc.).</div></div>
+      <div class="method-card"><div class="method-card-title">Kerberos Authentication</div><div class="method-card-body">For Windows-on-corporate-network environments. Single sign-on inside the AD domain.</div></div>
+      <div class="method-card"><div class="method-card-title">Directory Server Synchronization</div><div class="method-card-body">Sync user accounts from an on-prem directory (typically AD). Useful when IdP is not in scope.</div></div>
+      <div class="method-card"><div class="method-card-title">Zscaler Authentication Bridge</div><div class="method-card-body">On-prem helper for legacy environments that can't expose their directory to a cloud IdP.</div></div>
+      <div class="method-card"><div class="method-card-title">One-Time Link</div><div class="method-card-body">Email-delivered link for guest / kiosk / contractor scenarios. No persistent credential.</div></div>
+      <div class="method-card"><div class="method-card-title">One-Time Token</div><div class="method-card-body">Short-lived token; used in lightweight onboarding or temporary-access scenarios.</div></div>
+      <div class="method-card"><div class="method-card-title">Passwords</div><div class="method-card-body">Fallback only. Small deployments or interim states.</div></div>
+    </div>
+
+    <h3>Provisioning menu — 5 methods</h3>
+    <div class="method-grid">
+      <div class="method-card"><div class="method-card-title">SCIM</div><div class="method-card-body">Default recommendation. Real-time API-based user/group sync from IdP.</div></div>
+      <div class="method-card"><div class="method-card-title">Identity Federation Using SAML</div><div class="method-card-body">SAML Auto-Provisioning (Just-In-Time) — provision on first login from assertion metadata. Second preference.</div></div>
+      <div class="method-card"><div class="method-card-title">Hosted User Database</div><div class="method-card-body">Manual, file-based. For environments with no usable IdP or small static user lists.</div></div>
+      <div class="method-card"><div class="method-card-title">Directory Server Synchronization</div><div class="method-card-body">Pull from on-prem AD. Useful when the customer is not ready to cloud-host identity.</div></div>
+      <div class="method-card"><div class="method-card-title">Zscaler Authentication Bridge</div><div class="method-card-body">On-prem helper that proxies between the customer's directory and Zscaler.</div></div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">3 DC tasks (ZIA / ZPA / ZDX) — same goal, different shapes. 7 auth methods, 5 provisioning methods. <strong>SAML + SCIM</strong> is the default. The other methods exist to remove a reason the customer can't proceed.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">The auth/provisioning menu is like a hotel front desk's check-in options. Most guests use the QR code on their phone (SAML). VIP loyalty members swipe a permanent card (SCIM-synced from the loyalty system). Conference attendees get a printed badge from a list (Directory Sync). Walk-ins get a one-time wristband (One-Time Link). The point isn't to use everything — it's so no guest has to be turned away because their preferred check-in method isn't available.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a hotel front desk with multiple check-in options as an analogy for the auth/provisioning method menu. Wide composition. Long marble check-in counter with a smiling receptionist. Four queues of guests approach with four different check-in tools: Queue 1 (most common) holds up phones with glowing QR codes (SAML); Queue 2 swipes shiny loyalty cards into a reader (SCIM); Queue 3 carries printed conference badge sheets in clipboards (Directory Sync); Queue 4 has casual walk-in guests receiving one-time wristbands from the receptionist (One-Time Link). Cheerful round-faced characters, suitcases at their feet, soft warm lobby lighting, plush carpet, plant in the corner. Mood of friendly efficiency. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-dc-tasks" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('dc-tasks','DC Tasks')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-dc-tasks" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-dc-tasks"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ZIA -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZIA AUTH &amp; PROVISIONING</span></div>
+    <p class="socratic-insight">SCIM is recommended for ZIA — but Zscaler explicitly says <em>don't enable SAML provisioning AND SCIM sync at the same time</em>. Before reading on, think about what would actually go wrong if both were on simultaneously, and why the recommendation is "pick one".</p>
+    <ul class="socratic-questions">
+      <li>If SCIM sync is real-time and SAML Auto-Provisioning is on-first-login, running both seems redundant rather than destructive. Where's the actual conflict?</li>
+      <li>SCIM sync intervals vary by IdP — Azure syncs every 40 minutes, PingId every 1 minute. What's the operational consequence of that difference for a Delivery Consultant in a customer workshop?</li>
+      <li>SAML Auto-Provisioning's main benefit is "no firewall rules required". Why is that benefit relevant — what firewall change does SCIM require that SAML JIT avoids?</li>
+    </ul>
+    <div class="answer-area" data-section="zia">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Both methods write user records into Zscaler's directory — but they can disagree about what the truth is. SAML Auto-Prov writes whatever's in the assertion at login time; SCIM writes whatever the IdP's directory says, on a schedule. If a group membership changes between SCIM syncs but the user logs in via SAML and gets a stale assertion, the two states diverge — policies fire based on whichever version of "truth" was written last. The fix is to pick one.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">For an Azure-IdP customer, a group change applied at 9:00am may not reach Zscaler until 9:40am — so policy exceptions, group-based DLP, and entitlement changes have an up-to-40-minute lag. For PingId customers it's effectively real-time. The DC needs to set the customer's expectations explicitly and design pilot tests that account for the lag, otherwise pilot reports a "broken" policy that's actually just unsynced.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">SCIM requires an outbound channel from the customer's IdP (or a SCIM enforcer) to Zscaler's SCIM endpoint — sometimes through a firewall that wasn't expecting it. SAML Auto-Provisioning rides on the existing SAML SSO traffic (already user-initiated browser HTTPS), so no new firewall path. For tightly controlled networks, that "no new hole" is the deciding factor.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-zia">
+    <div class="section-label">ZIA USER AUTHENTICATION &amp; PROVISIONING</div>
+    <h2>The Recommended Approach for ZIA</h2>
+    <p>For ZIA, the recommended authentication method is <strong>Identity Federation using SAML</strong>, and the recommended provisioning method is <strong>SCIM</strong>.</p>
+
+    <h3>SCIM — the first choice for provisioning</h3>
+    <table class="brl-table">
+      <thead><tr><th>Benefits</th><th>Requirements</th><th>Limitations</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Real-time updates</td>
+          <td>SCIM 2.0 IdP</td>
+          <td>Sync before auth</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="method-grid">
+      <div class="method-card"><div class="method-card-title">Benefits</div><div class="method-card-body"><ul><li>When group/department membership changes, the Zscaler user database is updated automatically in near real-time</li><li>No inbound connections required from Zscaler to the customer's directory — the SCIM sync process interacts directly with Zscaler</li><li>Integration with major IdPs simplified through Zscaler technology partners</li></ul></div></div>
+      <div class="method-card"><div class="method-card-title">Requirements</div><div class="method-card-body"><ul><li>If customer wants a cloud-based IdP, it should support SCIM 2.0</li><li>SCIM may require a different IdP when SAML auth is not provided/supported with certain IdP providers (e.g. SailPoint for SCIM sync + Forgerock for SAML authentication)</li></ul></div></div>
+      <div class="method-card"><div class="method-card-title">Limitations</div><div class="method-card-body"><ul><li>Synchronization must occur before anyone can authenticate — plan before activation</li><li>Synchronization interval is controlled by the SCIM enforcer</li><li>Some IdP vendors don't support SCIM provisioning</li><li>Near-real-time but with delay: <strong>Azure ≈ 40 min, PingId ≈ 1 min</strong></li></ul></div></div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>NEVER ENABLE BOTH</div>
+      <div class="callout-body">Users and groups are provisioned via APIs. Zscaler's recommendation is <strong>not to have SAML provisioning and SCIM sync enabled at the same time</strong> — the two methods can disagree about the current state of group membership, producing inconsistent policy enforcement.</div>
+    </div>
+
+    <h3>SAML Auto-Provisioning (Just-In-Time) — the second preference</h3>
+    <p>SAML Auto-Provisioning is the second preferred provisioning method. <strong>Do not confuse it with SAML authentication</strong>. When a user logs into a Zscaler service for the very first time, the SAML authentication metadata is used to provision the user in the Zscaler database. SAML auto-provisioning retrieves user, group, and department information from the SAML response and adds it to the database. Subsequent SAML authentications do not trigger provisioning for the same user.</p>
+
+    <div class="method-grid">
+      <div class="method-card"><div class="method-card-title">Benefits</div><div class="method-card-body"><ul><li>No firewall rules required to specifically handle SAML Auto-Provisioning</li></ul></div></div>
+      <div class="method-card"><div class="method-card-title">Requirements</div><div class="method-card-body"><ul><li>Configure SAML on the IdP as well as Zscaler side</li><li>Availability of a cloud-based identity provider in the region (if customer decides to use it)</li></ul></div></div>
+      <div class="method-card"><div class="method-card-title">Limitations</div><div class="method-card-body"><ul><li>Users must re-authenticate for changes in group membership or disabled accounts</li><li>Users are not provisioned until they are authenticated</li><li>Zscaler recommends <strong>not</strong> having SAML provisioning and SCIM sync enabled at the same timestamp</li></ul></div></div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">ZIA = SAML auth + SCIM provisioning (primary). SCIM sync interval is IdP-controlled: <strong>Azure ≈ 40 min, PingId ≈ 1 min</strong>. SAML Auto-Prov (JIT) is the 2nd preference and the right answer when SCIM is blocked by firewall constraints or unsupported by the IdP. <strong>Never enable both simultaneously.</strong></div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zia" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zia','ZIA Auth')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-zia" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-zia"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ZPA -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZPA AUTH &amp; PROVISIONING</span></div>
+    <p class="socratic-insight">ZPA has two separate authentication flows — end-user authentication (used to access private apps) and admin portal authentication (used to configure ZPA itself). Before reading on, think about why those two flows exist as separate concerns and what would go wrong if they were collapsed into one.</p>
+    <ul class="socratic-questions">
+      <li>If the same person can both use ZPA-protected apps AND configure them as an admin, why does ZPA insist on two separate authentication flows for those two activities?</li>
+      <li>"ZPA Entitlement" governs who has access to ZPA. By default <strong>all users provisioned via SCIM</strong> get ZPA access. Why is that the default rather than a more conservative "no one gets access until enabled"?</li>
+      <li>SAML attributes (groups, departments, email) become ZPA policy criteria. What's the design implication if a customer's IdP doesn't expose the group attribute the consultant wants to use?</li>
+    </ul>
+    <div class="answer-area" data-section="zpa">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">End-user auth happens millions of times a day; admin auth happens dozens. Mixing them means an end-user session with a stolen cookie could potentially reach admin functions — collapsing the auth flow collapses the security boundary. Separation lets you enforce stricter MFA, dedicated admin accounts, and least-privilege role assignment on the admin path without overburdening every end-user login.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">The default exists because most customers want frictionless rollout: anyone in the IdP gets access to whatever ZPA exposes. Reversing the default to "explicit enable" would mean manually enabling every user — death by a thousand tickets. The customer can still restrict access at the entitlement level (specific groups/users), and most do — but the default optimises for adoption.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">If the IdP doesn't expose the required attribute, ZPA policy can't reference it — meaning a customer can't write a policy like "Marketing group can access Salesforce". The consultant has two paths: ask the IdP team to add the attribute to the SAML assertion (slow), or import attributes manually / in bulk via the admin portal (faster but maintenance burden). The early-design question "which IdP attributes will be exposed?" usually surfaces this before it becomes a Pilot-phase blocker.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-zpa">
+    <div class="section-label">ZPA USER AUTHENTICATION &amp; PROVISIONING</div>
+    <h2>The Recommended Approach for ZPA</h2>
+    <p>ZPA user authentication and provisioning comprises two distinct flows: <strong>end-user authentication</strong> (used by users to reach private applications) and <strong>administrator portal authentication</strong> (used by admins to configure ZPA). The recommended approach handles them separately.</p>
+
+    <h3>End-user authentication — the recommended approach</h3>
+    <p>Users must first authenticate into the Zscaler Client Connector using any SAML 2.0–compliant IdP with the Service Provider–Initiated (SP-Initiated) mode to access applications via ZPA. As a delivery consultant, you need to configure the IdP to recognise Zscaler as a valid SP, and you must configure the full details for the IdP within the ZPA administrator portal. You can add up to 10 IdP configurations for SSO.</p>
+
+    <h3>Three configuration tasks for end-user auth</h3>
+    <ul class="content-list">
+      <li>Enable Multi-Factor Authentication (MFA) at the IdP configuration level for end-user authentication</li>
+      <li>Clearly define user groups based on the access privileges to facilitate policy configuration</li>
+      <li>Use SCIM provisioning to automate the user management</li>
+    </ul>
+
+    <h3>SP-initiated SAML model — 6 steps</h3>
+    <div class="flow-steps">
+      <div class="flow-step"><div class="flow-num">1</div><div class="flow-text">A user tries to access a resource or secure part of an application on the SP's website.</div></div>
+      <div class="flow-step"><div class="flow-num">2</div><div class="flow-text">The SP checks if the user is authenticated. If not, the user is redirected to the IdP's login page.</div></div>
+      <div class="flow-step"><div class="flow-num">3</div><div class="flow-text">The user enters their credentials and the IdP authenticates their identity.</div></div>
+      <div class="flow-step"><div class="flow-num">4</div><div class="flow-text">The IdP sends the SAML response and assertion, and creates a session for the user.</div></div>
+      <div class="flow-step"><div class="flow-num">5</div><div class="flow-text">The SP receives the SAML response and assertion, and creates a session for the user.</div></div>
+      <div class="flow-step"><div class="flow-num">6</div><div class="flow-text">The user can now access the application or resource, and any other apps whose policy lets them — for the duration of the session.</div></div>
+    </div>
+
+    <h3>Understanding SAML Attributes in ZPA</h3>
+    <p>To authenticate users utilising the recommended approach, you will need to use SAML attributes. SAML attributes are fundamental building blocks of ZPA Access Policy. As an example, SAML attributes include information about groups the user belongs to. This information can be utilised to provide granular identity-based access to specific applications. As a delivery consultant, you must configure SAML attributes that will be sent from an IdP to use them when defining policy access criteria. For example, if you want to define users by your policies using email addresses and SAML attributes, you must configure the users' email addresses, SAML attributes in the ZPA administrator portal.</p>
+
+    <p>You can configure SAML attributes using one of the following methods:</p>
+    <ul class="content-list">
+      <li><strong>Import SAML attributes</strong></li>
+      <li><strong>Manually add SAML attributes</strong></li>
+    </ul>
+
+    <h3>ZPA Entitlement</h3>
+    <div class="key-concept">
+      <strong>Entitlement governs who has access to ZPA.</strong> ZPA does not depend on a provisioning method to determine a user's access. It relies on the SAML attributes received from the IdP perspective done in two steps:
+      <br>· On the IdP side, the ZPA service provider needs to be provisioned with the users/groups that will utilise ZPA.
+      <br>· In the Zscaler Client Connector mobile portal, ZPA entitlement is disabled by default. When enabling ZPA for users, you can enable it for all users or select from a list of user groups.
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">★</div>RECOMMENDATION</div>
+      <div class="callout-body">Zscaler's recommendation is to <strong>configure and turn SCIM sync on</strong>. This allows you to selectively import much quicker for policies that depend on SCIM-synced attributes. In large-scale deployments where SCIM sync is turned on, it can take some time to synchronise the user accounts with ZPA. <strong>For example, when 50,000 users are synced initially, it may take a few days to complete</strong>.</div>
+    </div>
+
+    <h3>Administrator portal authentication</h3>
+    <p>In addition to end-user authentication, it is a recommended practice to configure administrators as part of the ZPA deployment. ZPA initially provides a default administration account for customer's organisation. For example, <code>poweradmin@&lt;customer-org&gt;.domain.com</code> or <code>admin@&lt;organization&gt;.domain.com</code>.</p>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">i</div>WHEN CONFIGURING ADMINS</div>
+      <div class="callout-body">You can configure as many additional admins as necessary. For each admin, you can choose a predefined role or create a custom role. While configuring admin accounts, ensure to follow recommendations listed below:
+        <br>· Reserve the primary account (<code>poweradmin@&lt;customer&gt;.com</code>) as the emergency access account
+        <br>· Create a dedicated admin portal account for each administrator
+        <br>· Administrators must <strong>not</strong> share the same login credentials
+        <br>· Configure the administrator's roles based on principle of least privilege
+        <br>· Regularly review the audit log to monitor the admin portal activity
+      </div>
+    </div>
+
+    <div class="key-concept">
+      <strong>The principle of least privilege</strong> (PoLP) is an information security concept that states that users and applications should only have access to the data and operations they need to perform their jobs.
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">ZPA has 2 auth flows: <strong>end-user</strong> (SAML 2.0 via Client Connector, MFA at IdP, SCIM provisioning) and <strong>admin portal</strong> (dedicated accounts per admin, no shared creds, least privilege, 2FA + IdP SSO with MFA). ZPA can have up to <strong>10 IdP configurations</strong> for SSO. ZPA Entitlement = "who actually gets ZPA". Initial SCIM sync of 50,000 users can take days.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">ZPA's two auth flows are like a museum with two entrances. The <em>front entrance</em> (end-user auth) is wide, well-lit, and processes thousands of visitors with quick badge scans. The <em>staff entrance</em> at the back (admin portal auth) is small, has a biometric lock, requires a named individual badge per person, and logs every single entry. Same building, same staff, same exhibits — but the way you get in depends on what you came to do.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a museum with two contrasting entrances as an analogy for ZPA's end-user vs admin portal authentication. Wide composition split into two scenes. Left scene (visitor / front entrance): a grand neoclassical museum facade with tall columns and a wide welcoming staircase. A cheerful queue of visitors swipes phones at quick badge readers, smiling and entering. Banners overhead. Sun shining, busy mood. Right scene (staff / back entrance): the same building from the side — a small unmarked metal door with a glowing biometric scanner. A single staff member in a smart uniform places a thumb on the reader, badge clipped to their lapel, while a tiny security camera silently logs the event. Cool calm evening light, mood of careful procedure. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zpa" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zpa','ZPA Auth')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-zpa" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-zpa"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ZDX -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZDX AUTH + RBA</span></div>
+    <p class="socratic-insight">ZDX is the outlier — it doesn't have user-facing traffic at all, so its authentication conversation is mostly about admin access and role separation. The first-time provisioning step is also unusual: it depends on a Zscaler Support ticket. Before reading, think about why ZDX is the only Zscaler service that bootstraps through Support.</p>
+    <ul class="socratic-questions">
+      <li>For ZIA and ZPA you can self-serve initial admin setup; for ZDX the first admin is created by Zscaler Support sending an email. Why is the bootstrap pattern different?</li>
+      <li>Role-Based Administration in ZDX lets you "assign admins to multiple or specific roles with varying levels of access" AND "provide obfuscation permissions". What's the use case for obfuscation specifically — and what makes ZDX need it more than ZIA?</li>
+      <li>The default admin user is "not recommended for day-to-day use" but "will still exist". Why not just delete it after the first real admin is set up?</li>
+    </ul>
+    <div class="answer-area" data-section="zdx">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">ZIA and ZPA arrive with a default admin and the customer goes from there. ZDX's tenant has historically required tighter initial validation — Support creates the first admin, sends a password-reset email, and tracks the bootstrap. This is essentially a control gate during onboarding, because ZDX exposes user-level experience data that's sensitive in a different way (productivity surveillance optics, HR concerns, regional privacy law). The Support-driven bootstrap is a deliberate friction point.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Obfuscation hides user-identifying information from certain admin roles. Use case: a regional NOC engineer needs to troubleshoot performance issues but isn't entitled to know <em>which specific employee</em> is suffering. ZDX needs obfuscation more than ZIA because ZDX dashboards are user-by-user by design — it's the only Zscaler service where "Bob in Marketing is having a bad time" is a first-class metric. ZIA shows traffic; ZDX shows people.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Deletion would lose the ability to "break-glass" recover the tenant if all custom admin accounts are accidentally locked out or deleted. The default admin persists as an emergency-only path — not used day-to-day, not tied to a real person, but available if the new admin setup goes wrong. The same logic applies to ZPA's <code>poweradmin@</code> account.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-zdx">
+    <div class="section-label">ZDX USER AUTHENTICATION + ROLE-BASED ADMINISTRATION</div>
+    <h2>The Recommended Approach for ZDX</h2>
+    <p>You may need to assist customers in provisioning first-time ZDX admins. ZDX configuration doesn't require a separate authentication and provisioning step from the customer's organisation — the first step in ZDX configuration is users (auth + admin setup). It is possible to add admins in ZDX who are also admins in ZIA.</p>
+
+    <h3>First-time provisioning for ZDX admins</h3>
+    <p>As a delivery consultant, you may need to assist customers to provision admins in ZDX. The first step in provisioning admins is to reach out to Zscaler customer support. Support will set up a default admin role for you and send an email requesting the password be reset for that role. After successful password reset, you can act as the first default admin to log in and begin creating other admins and roles for ZDX.</p>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>DEFAULT ADMIN CAVEAT</div>
+      <div class="callout-body">As default admin, you will be able to see all functions in the ZDX admin portal. <strong>This default admin role is not recommended for day-to-day use.</strong> The default admin user will still exist but is not recommended for further use. Treat it like a break-glass account.</div>
+    </div>
+
+    <h3>Role-Based Administration for ZDX deployment</h3>
+    <p>ZDX Role-based administration enables you to:</p>
+    <ul class="content-list">
+      <li><strong>Organise and manage administration roles</strong> for specified responsibilities and permissions</li>
+      <li><strong>Assign admins to multiple or specific roles</strong> with varying levels of access</li>
+      <li><strong>Provide obfuscation permissions</strong> to limit functionalities as required</li>
+    </ul>
+
+    <div class="key-concept">
+      <strong>Obfuscation in ZDX</strong> hides user-identifying information from certain admin roles. It exists because ZDX dashboards are user-by-user by design — the only Zscaler service where individual experience metrics are first-class data. Obfuscation lets a NOC engineer troubleshoot patterns without seeing identifying details about the affected employees.
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">ZDX bootstrap: <strong>Zscaler Support sets up default admin → password reset email → use default admin to create real admins → keep default admin as break-glass</strong>. Role-Based Administration capabilities: organise roles, multi-role assignment, <strong>obfuscation permissions</strong> (unique to ZDX because of user-level experience data).</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">ZDX RBA with obfuscation is like a hospital's electronic health record system. A radiologist needs to read the scan but doesn't necessarily need to know the patient's name (obfuscation). The treating doctor sees everything. The billing clerk sees costs but not symptoms. Same data, different views per role — because the data is intrinsically personal. ZDX is the same: experience metrics are tied to specific employees, and not every admin needs to see who.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a hospital records room with role-based views as an analogy for ZDX role-based administration with obfuscation. Wide composition. Centre of the room: a single glowing patient chart hovering above a circular table. Around the table sit three different specialists at three small workstations, each looking at the same chart through a different coloured filter or lens. Radiologist (left): looks through a blue lens — sees only the X-ray and scan portion of the chart, the patient name area is fuzzed out / pixelated (obfuscation). Treating doctor (middle): looks through a clear lens — sees the full chart with name, symptoms, history, treatment plan, everything. Billing clerk (right): looks through a green lens — sees only cost columns and procedure codes; patient name is similarly fuzzed out. Cheerful round-faced characters in scrubs/coats, clipboard icons floating around, soft warm clinical lighting, mood of careful collaboration. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zdx" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zdx','ZDX Auth + RBA')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-zdx" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-zdx"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · RECAP</span></div>
+    <p class="socratic-insight">You've now seen ZIA, ZPA, and ZDX identity end-to-end. The recurring recipe is <em>SAML for auth, SCIM for provisioning, MFA at the IdP</em> — but the consultant's value is knowing when to deviate from the recipe.</p>
+    <ul class="socratic-questions">
+      <li>Of the five learning outcomes, which one is the hardest to assess on paper but the most important in a customer workshop?</li>
+      <li>Looking at the full picture — ZIA SAML+SCIM, ZPA two-flow auth, ZDX Support-bootstrap + RBA — which service's identity setup is the most fragile if the customer changes IdPs mid-deployment?</li>
+      <li>If you were teaching this section to a new consultant in 90 seconds, what's the single sentence about each service's identity approach you'd lead with?</li>
+    </ul>
+    <div class="answer-area" data-section="recap-final">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">"Describe the recommended approach for end-user and administrator portal authentication for ZPA". It's two flows, with multiple sub-decisions (MFA placement, attribute mapping, entitlement scoping, admin role design). The bullet form on paper is innocuous; in a workshop a customer will probe each sub-decision and the consultant's reasoning shows.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">ZPA is most fragile. Its policy fabric directly references SAML attributes from a specific IdP. Switching IdPs mid-deployment means re-mapping every attribute, re-establishing the SCIM connection, possibly re-importing groups. ZIA largely just needs a new SAML SSO target; ZDX admin is decoupled from end-user IdP entirely. ZPA loses the most when the IdP changes.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">ZIA: "SAML for auth, SCIM for provisioning, never both provisioning methods at once." ZPA: "Two auth flows — end-user via SAML+MFA+SCIM, admin portal with named accounts under least privilege." ZDX: "Support bootstraps a default admin, then RBA with obfuscation lets you split user-level visibility by role."</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-recap-final">
+    <div class="section-label">RECAP &amp; RESOURCES</div>
+    <h2>In Summary</h2>
+    <p>You learned the tasks and best practices that delivery consultants should be aware of while designing and deploying ZIA, ZPA, and ZDX authentication and provisioning methods. You also covered ZDDC tasks, recommended authentication and provisioning method for ZIA, recommended approach for end-user and administrator portal authentication for ZPA deployment, first-time provisioning for ZDX admins, and role-based administration for ZDX deployment.</p>
+
+    <h3>From this course, you should now be able to:</h3>
+    <ul class="content-list">
+      <li><strong>Describe</strong> ZDDC tasks and the related basic concepts</li>
+      <li><strong>Explain</strong> the recommended authentication and provisioning method for ZIA</li>
+      <li><strong>Discuss</strong> the recommended approach for end-user and administrator portal authentication for ZPA deployment</li>
+      <li><strong>Explain</strong> first time provisioning for ZDX admins</li>
+      <li><strong>Define</strong> role-based administration for ZDX deployment</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">The 90-second pitch — ZIA: SAML + SCIM, never both provisioning methods. ZPA: end-user (SAML 2.0 + MFA + SCIM) + admin portal (dedicated accounts, least privilege). ZDX: Support bootstrap → RBA with obfuscation. Across all three: SCIM real-time but interval-driven (Azure 40min, PingId 1min); 50,000 users initial SCIM can take days.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Identity Services is the consultant's "first-day-on-site" survival kit. The toolbox has the same five tools in every customer engagement — but knowing which tool to pull out, when, and why is the difference between a thirty-minute conversation and a thirty-day delay.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an experienced consultant's toolbox as an analogy for the identity services takeaways. Wide composition. Foreground: a worn-leather rectangular toolbox lying open on a polished wooden customer-site desk. Inside the toolbox: a labelled SAML wrench, a SCIM screwdriver, an MFA spirit level, a small obfuscation visor, and a folded checklist (default admin caveats). A cheerful consultant in business-casual stands behind the desk in mid-handshake with a customer wearing a hard hat — they're choosing the SCIM screwdriver. Background: a softly out-of-focus customer office with a whiteboard showing a "Day 1" agenda. Warm afternoon light through a window, mood of confident mentorship. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap-final" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap-final','Recap')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap-final" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap-final"></span></div></div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-302-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-302 Hub
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleDone(this,0)"><div class="subtopic-check"></div><span>3 DC tasks: ZIA / ZPA / ZDX auth + provisioning</span></li>
+      <li onclick="toggleDone(this,1)"><div class="subtopic-check"></div><span>7 authentication methods (SAML, Kerberos, Directory Sync, Auth Bridge, OTL, OTT, Passwords)</span></li>
+      <li onclick="toggleDone(this,2)"><div class="subtopic-check"></div><span>5 provisioning methods (SCIM, SAML JIT, Hosted DB, Directory Sync, Auth Bridge)</span></li>
+      <li onclick="toggleDone(this,3)"><div class="subtopic-check"></div><span>SAML + SCIM = default recommendation</span></li>
+      <li onclick="toggleDone(this,4)"><div class="subtopic-check"></div><span>Never enable both SAML provisioning AND SCIM sync at the same time</span></li>
+      <li onclick="toggleDone(this,5)"><div class="subtopic-check"></div><span>SCIM sync intervals: Azure 40min, PingId 1min</span></li>
+      <li onclick="toggleDone(this,6)"><div class="subtopic-check"></div><span>SP-initiated SAML flow (6 steps)</span></li>
+      <li onclick="toggleDone(this,7)"><div class="subtopic-check"></div><span>ZPA has up to 10 IdP configurations for SSO</span></li>
+      <li onclick="toggleDone(this,8)"><div class="subtopic-check"></div><span>ZPA Entitlement = who gets ZPA</span></li>
+      <li onclick="toggleDone(this,9)"><div class="subtopic-check"></div><span>ZPA admin best practices (dedicated, no shared, least privilege, 2FA + IdP)</span></li>
+      <li onclick="toggleDone(this,10)"><div class="subtopic-check"></div><span>ZDX bootstrap requires Zscaler Support (default admin → reset → real admins)</span></li>
+      <li onclick="toggleDone(this,11)"><div class="subtopic-check"></div><span>ZDX RBA capabilities: organise roles + multi-role + obfuscation</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="quick-ref"><div class="quick-ref-term">SAML</div><div class="quick-ref-def">Security Assertion Markup Language — the federated authentication protocol Zscaler recommends as default.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">SCIM</div><div class="quick-ref-def">System for Cross-domain Identity Management — the API-based provisioning protocol Zscaler recommends as default. Sync interval is IdP-controlled.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">SAML Auto-Provisioning (JIT)</div><div class="quick-ref-def">Second-preference provisioning — user is created in Zscaler's DB from the SAML assertion metadata on first login.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">SP-Initiated SAML</div><div class="quick-ref-def">User starts at the service provider, gets redirected to the IdP for auth, comes back with an assertion. 6 steps.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">ZPA Entitlement</div><div class="quick-ref-def">Setting that governs which users actually have access to ZPA. Default = all; can restrict to specific groups/users.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">poweradmin@</div><div class="quick-ref-def">ZPA's default admin account — reserved as the emergency-access "break glass" account.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Principle of Least Privilege (PoLP)</div><div class="quick-ref-def">Users and applications should only have access to the data and operations they need to perform their jobs.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Obfuscation (ZDX)</div><div class="quick-ref-def">Role-based hiding of user-identifying information in ZDX dashboards — protects employee privacy in user-level metrics.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-302 · <span>Section 3</span></div>
+  <div class="footer-right">Identity Services · Section 3 of 11</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu302-identity';
+const SECTIONS={overview:'Overview',recap:'Quick Recap','dc-tasks':'DC Tasks',zia:'ZIA Auth',zpa:'ZPA Auth',zdx:'ZDX Auth + RBA','recap-final':'Recap'};
+
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();initNotes();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
+  document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
+  document.querySelectorAll('.analogy-img img, .img-display-block img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+});
+</script>
+</body>
+</html>
