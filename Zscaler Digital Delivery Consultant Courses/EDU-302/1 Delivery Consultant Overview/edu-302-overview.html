@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delivery Consultant Overview — EDU-302</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#ffffff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --amber:#b45309;--amber-light:#fef9ec;--amber-border:#fde68a;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+html.pt-init body{opacity:0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:#0d1a2e;display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#5a7a9a;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#60a5fa;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#1e3a5c;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#60a5fa;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#60a5fa;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#60a5fa;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--blue);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#60a5fa;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 20px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--blue);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--blue-glow);border:1px solid var(--blue-dim);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--blue);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--blue-glow);border-color:var(--blue-dim);}
+.callout-note .callout-header{color:var(--blue);}
+.callout-note .callout-icon{background:var(--blue-dim);color:var(--blue);}
+.callout-note .callout-body{color:var(--text-soft);}
+.course-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:10px;}
+.course-card-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.course-card-body{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+.course-card-body ul{list-style:none;padding:0;margin-top:6px;display:flex;flex-direction:column;gap:4px;}
+.course-card-body ul li{padding-left:14px;position:relative;font-size:12.5px;}
+.course-card-body ul li::before{content:'›';position:absolute;left:0;color:var(--blue);font-weight:700;}
+.outcome-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:20px;}
+.outcome-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start;}
+.outcome-num{width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.outcome-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.outcome-text strong{color:var(--blue);}
+.prereq-chain{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:18px;}
+.prereq-box{flex:1;min-width:140px;background:#bfdbfe;border:1px solid var(--blue-dim);border-radius:10px;padding:12px;text-align:center;}
+.prereq-box.current{background:#0d1a2e;color:#fff;}
+.prereq-box-label{font-size:10px;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.prereq-box.current .prereq-box-label{color:#60a5fa;}
+.prereq-box-title{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--text);}
+.prereq-box.current .prereq-box-title{color:#fff;}
+.prereq-arrow{color:var(--blue);font-size:18px;flex-shrink:0;}
+/* SOCRATIC */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+/* MENTAL NOTE */
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--blue-glow);border:1px solid var(--blue-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+/* ANALOGY */
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img .img-missing-msg{display:none !important;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+/* IMG PLACEHOLDER */
+.img-display-block{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+/* ANSWER FEATURE */
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+/* LESSON TOOLS */
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--blue);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:#0d1a2e;color:#60a5fa;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{background:#1e3a5c;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--blue);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#0d1a2e;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
+.mod-nav-hub:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#60a5fa;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#7aa8cc;line-height:1.6;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}.prereq-chain{flex-direction:column;}.prereq-arrow{transform:rotate(90deg);}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../digital-delivery-consultant-hub.html">Digital Delivery Consultant</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-302-hub.html">EDU-302</a>
+      <span class="breadcrumb-sep">›</span>
+      Delivery Consultant Overview
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Section 1 · EDU-302</div>
+    <h1>Delivery Consultant <em>Overview</em></h1>
+    <p>The first stop in the EDU-302 learning path — orient yourself to the Zscaler for Users curriculum, recap what EDU-200 and EDU-202 covered, and preview the 11 courses ahead.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Three learning paths. <em>One platform mastery.</em></div>
+  <p class="motivation-sub">Administrator (EDU-200) taught you what Zscaler is. Engineer (EDU-202) taught you how to operate it. Delivery Consultant (EDU-302) teaches you how to design, deploy, and own customer outcomes — the final step before ZDDC certification.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Course Overview</button>
+  <button class="nav-tab" onclick="navTo('section-recap-200',this)">Recap · EDU-200</button>
+  <button class="nav-tab" onclick="navTo('section-recap-202',this)">Recap · EDU-202</button>
+  <button class="nav-tab" onclick="navTo('section-edu302-path',this)">EDU-302 Path</button>
+  <button class="nav-tab" onclick="navTo('section-outcomes',this)">Learning Outcomes</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- COURSE OVERVIEW -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · COURSE OVERVIEW</span></div>
+    <p class="socratic-insight">Zscaler's certification track has three role-based paths — Administrator, Engineer, and Delivery Consultant. Each is built on the last. Before you read this overview, think about why that sequence exists and what role-shift each path represents.</p>
+    <ul class="socratic-questions">
+      <li>Why might Zscaler structure the curriculum as Administrator → Engineer → Delivery Consultant, instead of one combined course? What does each role contribute that the next role builds on?</li>
+      <li>The Delivery Consultant ends with a Capstone Project — not just a multiple-choice exam. What does that tell you about how this role is assessed compared to the previous two?</li>
+      <li>If you skipped EDU-200 and EDU-202 and started straight at EDU-302, what specifically would you struggle with — and why does Zscaler call the prior paths "highly recommended" rather than mandatory?</li>
+    </ul>
+    <div class="answer-area" data-section="overview">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Each path maps to a real customer-facing role. Administrator (EDU-200) owns the day-to-day operation of a tenant — policies, users, logs. Engineer (EDU-202) owns design and integration — building the architecture, integrating IdPs, troubleshooting at the platform level. Delivery Consultant (EDU-302) owns the customer-success outcome — translating a customer's business goals into a Zscaler deployment that actually lands. You can't design a deployment well without first knowing the operational primitives.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">The Capstone Project signals that this is an applied role — you can't fake it by memorising answers. You have to scope, design, and present a deployment end-to-end. That's exactly what a consultant does in front of a customer, so the assessment mirrors the job. The earlier paths test knowledge; this one tests judgement.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">EDU-302 spends very little time defining what ZIA, ZPA, ZDX, and ZIdentity are — it assumes you already know. Without EDU-200/EDU-202, every Access Control or Cyberthreat lesson would land on shaky ground, and the Capstone would be unmanageable. "Highly recommended" gives experienced practitioners a path to skip ahead, but the realistic expectation is that you've built the prior foundation.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-overview">
+    <div class="section-label">COURSE OVERVIEW</div>
+    <h2>Welcome to Zscaler for Users — Delivery Consultant</h2>
+    <p>This is Course 1 of 11 in the <strong>Zscaler for Users — Delivery Consultant (EDU-302)</strong> learning path, the third major path inside the Zscaler Cyber Academy. The Cyber Academy organises training into role-based platform paths (Administrator, Engineer, Delivery Consultant — with Architect "coming soon") plus specialty domain courses (Data Protection, Cyberthreat Protection, Zero Trust Networking, Risk Management) and the Zscaler Digital Experience operational track.</p>
+
+    <div class="key-concept">
+      <strong>Where EDU-302 sits:</strong> Foundation level = ZCCA (Zero Trust Certified Associate). Role-based paths = EDU-200 (Administrator) → EDU-202 (Engineer) → EDU-302 (Delivery Consultant). Specialty courses sit underneath the role paths and dive deep into one solution area at a time.
+    </div>
+
+    <p>In this overview, you'll briefly recap what EDU-200 and EDU-202 covered, then preview the 11 courses inside EDU-302 itself — so you arrive at each subsequent course knowing exactly how the pieces connect.</p>
+
+    <div class="img-display-block">
+      <img src="1.png" alt="Zscaler Cyber Academy catalog" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Flat blue minimalist illustration of the Zscaler Cyber Academy catalog — a horizontal organisation chart with three role-based platform paths in the middle row (Administrator EDU-200, Engineer EDU-202, Delivery Consultant EDU-302) connected by left-to-right arrows, a "Coming Soon" Architect card on the right, a single Foundation Courses (ZCCA) box on the far left, and a row of four Specialty domain cards below (Data Protection, Cyberthreat, Zero Trust Networking, Risk Management). Each card is the same shape with a subtle icon, clean simple shapes, no text labels.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Zscaler Cyber Academy structure: Foundation (ZCCA) → 3 Role Paths (EDU-200 Admin, EDU-202 Engineer, EDU-302 Delivery Consultant) → 4 Specialty Domains (Data Protection, Cyberthreat, ZTN, Risk Mgmt) → ZDX Operationalization. EDU-302 is the third role path and the gateway to ZDDC certification.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">The three learning paths are like training to fly a plane. Administrator (EDU-200) teaches you the pre-flight checklist — every switch, every gauge. Engineer (EDU-202) teaches you to actually fly it — how the systems work together, how to handle weather. Delivery Consultant (EDU-302) teaches you to plan a passenger's journey from one city to another — picking the right aircraft, route, weather window, and contingencies. You wouldn't put a passenger pilot in the cockpit without first mastering the controls and the flying.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of pilot training as an analogy for the three Zscaler learning paths. Three distinct scenes arranged left-to-right in a wide composition. Scene 1 (Administrator / pre-flight): a smiling cartoon trainee standing on the tarmac next to a small propeller plane, carefully ticking off a giant clipboard checklist, with arrows pointing to gauges, switches, and fuel cap — relaxed daytime atmosphere, clipboard, wrench, hi-vis vest. Scene 2 (Engineer / flying): the same character now in the pilot's seat of a slightly larger plane mid-flight, hands on the yoke with multiple cockpit gauges glowing, a small storm cloud being navigated around — focused mood, headphones, sun through the windshield. Scene 3 (Delivery Consultant / planning a passenger journey): the same character at an airport planning desk with a large pinboard wall behind them — flight routes drawn between cities with string and pins, weather charts, a small model airplane, a clipboard listing "passenger goals", soft warm office lighting, mood of strategic confidence. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+
+    <h3>Course Objectives</h3>
+    <p>By the end of this overview course, you should be able to:</p>
+    <ul class="content-list">
+      <li><strong>Recollect</strong> what you learned in the Zscaler for Users — Administrator (EDU-200) learning path</li>
+      <li><strong>Recollect</strong> what you learned in the Zscaler for Users — Engineer (EDU-202) learning path</li>
+      <li><strong>Discuss</strong> what the Zscaler for Users — Delivery Consultant (EDU-302) learning path offers</li>
+    </ul>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Course Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP EDU-200 -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · RECAP EDU-200 ADMINISTRATOR</span></div>
+    <p class="socratic-insight">EDU-200 covered ten courses — from the Zero Trust Exchange platform overview all the way to Zero Trust Automation. Before reading the recap, see if you can predict which ten domains a Zscaler administrator must know cold. The list itself tells you what an administrator owns day-to-day.</p>
+    <ul class="socratic-questions">
+      <li>Of the ten EDU-200 courses, which three do you think show up most frequently in real day-to-day administrator work — and which one is most easily forgotten between exams?</li>
+      <li>EDU-200 starts with the Zero Trust Exchange overview and ends with Zero Trust Automation. Why is automation positioned last in the curriculum — what does an administrator need to understand first before automating anything?</li>
+      <li>Identity Services (SAML, SCIM, IdPs, ZIdentity) sits very early in the path. What does that placement signal about how Zscaler thinks about identity in the platform architecture?</li>
+    </ul>
+    <div class="answer-area" data-section="recap-200">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Identity Services, Access Control, and Cyberthreat Protection drive the bulk of admin tickets — login problems, blocked applications, policy exceptions. The most easily forgotten is usually Zero Trust Automation, because most admins never write an API call until they hit a scale problem; it's the last to be exercised, so the first to be forgotten.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">You can't automate what you don't understand. Automation is sequenced last because every prior course teaches the policies, objects, and workflows that the API endpoints expose. Trying to automate before you understand the manual workflow produces broken scripts and inconsistent state across tenants.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Identity is the spine of the Zero Trust Exchange — without an authenticated user/device context, every downstream policy (access control, DLP, cyberthreat) loses its anchor. Teaching identity early signals that every later policy decision references "who is this and what posture are they in" before it asks "what should they reach". Identity first is a design principle, not just curriculum ordering.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-recap-200">
+    <div class="section-label">RECAP · EDU-200 ADMINISTRATOR</div>
+    <h2>What EDU-200 Covered</h2>
+    <p>The Administrator learning path is ten courses long. It builds your day-to-day operating knowledge of the Zero Trust Exchange — every term in the rest of this guide assumes you can already define and use what's below.</p>
+
+    <div class="course-card">
+      <div class="course-card-title">1. Zero Trust Exchange (ZTE) Platform Overview</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Need for digital transformation and how ZTE securely supports it</li>
+          <li>Difference between ZTE and perimeter / hub-and-spoke architecture</li>
+          <li>Four main solutions Zscaler offers as part of the Zscaler for Users platform</li>
+          <li>Key features and services of the ZTE platform</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">2. Identity Services</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Authentication vs authorization concepts</li>
+          <li>Essentials of SAML authentication and SCIM provisioning</li>
+          <li>Why Identity Providers (IdPs) are central to the ZTE</li>
+          <li>ZIdentity and the elements of its dashboard</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">3. Connectivity Services</div>
+      <div class="course-card-body">
+        <ul>
+          <li>How zero trust components are established in the cloud</li>
+          <li>How Zscaler connects users and applications to the ZTE</li>
+          <li>Configuring Zscaler Connectivity Control services and capabilities</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">4. Platform Services</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Fundamental Platform Services and how they apply to the ZTE</li>
+          <li>How policy is consumed, constructed, and passed across Connectivity, Access Control, Security, and Digital Experience</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">5. Access Control Services</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Why traditional firewalls are inadequate for modern security</li>
+          <li>Zscaler Cloud Firewall and how it addresses legacy firewall limits</li>
+          <li>Access Control offering secure browsing through URL filtering</li>
+          <li>Bandwidth control features that optimise network traffic</li>
+          <li>How Zscaler enhances Microsoft 365 user experience through optimised access and security</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">6. Cyberthreat Protection Services</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Cybersecurity fundamentals — current threat landscape and attack stages</li>
+          <li>Types of policies in a comprehensive risk-management framework</li>
+          <li>How Zscaler holistically stops these threats</li>
+          <li>Advanced Threat Protection capabilities</li>
+          <li>How Zscaler protects against malware attacks</li>
+          <li>Detection and response capabilities of the ZIA offering</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">7. Data Protection Services</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Why data protection is needed and how it's provided through the ZTE</li>
+          <li>What Data Protection Services protect in motion and at rest</li>
+          <li>How to configure Data Protection services and capabilities</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">8. Risk Management</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Core principles of cyber risk management in today's digital landscape</li>
+          <li>Key risk factors and how to use Risk360 for assessment</li>
+          <li>Vulnerability management techniques with Zscaler Unified Vulnerability Management</li>
+          <li>EASM for external attack surface analysis</li>
+          <li>Strategic benefits of Zscaler EASM</li>
+          <li>Role of Zscaler ITDR in identity-based threat detection</li>
+          <li>Future security breaches using Zscaler Breach Predictor</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">9. Zscaler Digital Experience (ZDX)</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Primary function of ZDX and how it enhances digital experiences</li>
+          <li>Components that constitute the ZDX architecture</li>
+          <li>Key features of ZDX for seamless digital experiences</li>
+          <li>Categorising ZDX features against specific use cases</li>
+          <li>Navigating the ZDX Dashboard</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">10. Zero Trust Automation</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Essential aspects of APIs</li>
+          <li>Advantages of replacing Legacy APIs with the Zscaler Zero Trust Automation framework</li>
+          <li>Role and importance of OneAPI within the Zscaler Automation Framework</li>
+          <li>ZIdentity — key features and benefits</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">EDU-200 = 10 courses. Memorise the order: ZTE Overview → Identity → Connectivity → Platform → Access Control → Cyberthreat → Data Protection → Risk Mgmt → ZDX → Zero Trust Automation. The flow follows the zero-trust decision path: who are you (Identity), how do you connect (Connectivity), what governs you (Platform), what can you reach (Access Control), how are you protected (Cyberthreat + Data), how is risk measured (Risk Mgmt), how is your experience (ZDX), and how is it all programmable (Automation).</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">EDU-200 is like learning to operate a hospital. First you learn the hospital ID system (Identity), then how patients arrive and move between wards (Connectivity), then the rules and signage of the hospital (Platform), then who can enter which ward (Access Control), then how to spot infections and trauma (Cyberthreat + Data Protection), then how to measure risk across the whole hospital (Risk Mgmt), then how to track patient experience (ZDX), and finally how to automate routine procedures so staff focus on harder cases (Automation). You walk out an operator — someone who keeps the hospital running daily.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a cheerful cartoon hospital cutaway used as an analogy for the EDU-200 Administrator curriculum. Wide composition showing a multi-floor hospital with each floor representing one of the ten admin courses. Floor 1 (foundation): a friendly receptionist scanning an ID badge at a glowing front desk (Identity). Floor 2: pneumatic-tube hallways and patient transport carts moving smoothly between wards (Connectivity). Floor 3: a control room full of switchboards and policy clipboards (Platform). Floor 4: a security guard standing at a coloured-coded door with a clipboard checking who can enter which ward (Access Control). Floor 5: a doctor with a stethoscope and microscope flagging an infection (Cyberthreat). Floor 6: a nurse locking a confidential records cabinet (Data Protection). Floor 7: an analyst at a dashboard with risk meters (Risk Mgmt). Floor 8: a patient with a smiley-face satisfaction tablet (ZDX). Top floor / rooftop: a small robot arm tidying medical trays automatically (Automation). All floors connected by a glass elevator with a glowing arrow rising through them. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap-200" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap-200','Recap EDU-200')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap-200" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap-200"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP EDU-202 -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · RECAP EDU-202 ENGINEER</span></div>
+    <p class="socratic-insight">EDU-202 has eleven courses — one more than EDU-200. The added course at the front is "Zscaler for Users — Engineer Overview". Beyond that, the topics map roughly one-to-one with EDU-200 but go deeper — multi-tenant architecture, step-up auth, SD-WAN integration, AppProtection. Think about what the word "deeper" actually means at this level.</p>
+    <ul class="socratic-questions">
+      <li>An EDU-200 administrator can configure SAML SSO. An EDU-202 engineer can do the same — but additionally configures step-up authentication and external identity providers. What real-world scenario forces an organisation from "basic SAML" up to "step-up + multiple IdPs"?</li>
+      <li>EDU-202 introduces "Sub-clouds and China Premium Access" as architecture features. What customer need does each of these solve — and why are they Engineer-level topics rather than Administrator-level?</li>
+      <li>The Engineer path covers "Workflow Automation" inside Data Protection. How is that different from the API-level Zero Trust Automation at the end of EDU-200?</li>
+    </ul>
+    <div class="answer-area" data-section="recap-202">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Scenarios that force step-up auth + multiple IdPs include: mergers and acquisitions (two IdPs need to coexist while you migrate), contractor populations on a separate directory, compliance regimes requiring stronger auth before reaching sensitive applications, and organisations that need different MFA strengths for different application sensitivities. Administrators inherit those configurations and operate them; engineers design and connect them in the first place.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Sub-clouds let global enterprises pin their tenant to a specific regulatory region (e.g. EU-only data residency) — an architectural decision, not a daily setting. China Premium Access is the equivalent for the unique connectivity and compliance challenges of operating inside the Great Firewall. Both are Engineer-level because they're chosen up-front during architecture design, are operationally expensive to change later, and touch contracting and legal — not just admin UI.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Zero Trust Automation (EDU-200 closing course) is the API and OneAPI framework — the programmable surface. Workflow Automation in EDU-202 is the human-process orchestration within Data Protection — e.g. an alert triggers a ticket, an admin reviews and approves, a remediation runs. One is "how do machines call the platform"; the other is "how do humans + the platform coordinate around an incident".</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-recap-202">
+    <div class="section-label">RECAP · EDU-202 ENGINEER</div>
+    <h2>What EDU-202 Covered</h2>
+    <p>EDU-202 is eleven courses. It's the architectural and integration layer — the engineer can stand up a tenant from scratch, integrate it with the customer's identity, network, SIEM, and SD-WAN, and tune the platform's behaviour. Below are the additional or deeper topics on top of EDU-200's foundation.</p>
+
+    <div class="course-card">
+      <div class="course-card-title">1. Zscaler for Users — Engineer Overview</div>
+      <div class="course-card-body">Recap of EDU-200 plus what Zscaler Experience Center adds — simplifying zero trust administration.</div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">2. Zscaler Architecture</div>
+      <div class="course-card-body">Foundational multi-tenant architecture at global scale. Advanced capabilities including <strong>Sub-clouds</strong> and <strong>China Premium Access</strong>, plus the functionality for programmatic access, control, and configuration of the ZTE.</div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">3. Identity Services (deeper)</div>
+      <div class="course-card-body">SAML + OIDC workflows, <strong>step-up authentication</strong>, sessions and methods, external IdPs, admin SSO and password policy.</div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">4. Connectivity Services (deeper)</div>
+      <div class="course-card-body">Configuring advanced tunnelling modes and traffic forwarding in Zscaler Client Connector. Role of Zscaler Branch Connector in connecting servers and IoT/OT devices. Troubleshooting blockage. Zscaler Cloud Connector for secure access to cloud workloads and Browser Access for clientless access. <strong>SD-WAN integration.</strong></div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">5. Platform Services (deeper)</div>
+      <div class="course-card-body">Private Service Edges in ZIA and ZPA. SSL Inspection and Global Control Policies. Differentiating on-premise vs cloud-based SIEM. Authentication and Idle Connection Timeout policies in ZPA. ZPA Anchoring to enable Private Service Edges + Application Segments + Cloud-to-Cloud Log Streaming.</div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">6. Access Control Services (deeper)</div>
+      <div class="course-card-body">Proxy-based firewall architecture. DNS protection for end-users, machines, and all endpoint types. Configuring <strong>Private Application Access</strong>. Steps for deploying App Connectors.</div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">7. Cyberthreat Protection Services (deeper)</div>
+      <div class="course-card-body">AI Instant Verdict, Quarantine, Deception, Zscaler ITDR, Browser Isolation. Advanced Threat Protection — Cloud Sandbox policies, IPS and Custom IPS Signatures, Deception Campaign, AppProtection in ZPA, Browser Isolation.</div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">8. Data Protection Services (deeper)</div>
+      <div class="course-card-body">Advanced data protection services — full data channel coverage. Managing data protection incidents with Zscaler's administrator portal. <strong>Workflow Automation</strong> for alerting administrators of DLP violations.</div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">9. Risk Management (deeper)</div>
+      <div class="course-card-body">Optimising the Zscaler Risk Management platform — proactive threat detection and mitigation. Advanced features of Risk360. Zscaler Data Fabric for actionable insights. ZUVM for org-wide vulnerability assessment. Strategic EASM. ITDR for identity-based threat detection. Breach Predictor.</div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">10. Zscaler Digital Experience (deeper)</div>
+      <div class="course-card-body">Purpose, core components, and deployment methodology of ZDX. ZDX traffic forwarding, monitoring policies, application probes, alerts. Admin Portal — monitor and analyse issues, troubleshoot. Operationalising ZDX — staged rollout, access control, cloud connectivity. ZDX metrics + AI-driven insights to reduce ticket escalations.</div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">11. Zscaler Zero Trust Automation (deeper)</div>
+      <div class="course-card-body">Architecture and workflow of OneAPI. Configuration of OneAPI using Postman. Authentication and access control via ZIdentity. Integrating OneAPI with the Postman REST API client. Common automation use cases.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">EDU-202 = 11 courses (EDU-200 + one extra at the front — Zscaler for Users Engineer Overview). The Engineer adds <strong>multi-tenant architecture, sub-clouds, China Premium Access, step-up auth, SD-WAN, AppProtection, Workflow Automation, Postman+OneAPI configuration</strong> on top of every EDU-200 topic. EDU-202 is the "stand it up and integrate it" layer; EDU-200 is the "run it day-to-day" layer.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">If EDU-200 taught you to operate a hospital, EDU-202 teaches you to commission a new one. You're not just running wards — you're choosing where the hospital goes (sub-clouds, regions), wiring it into the city's ambulance network (SD-WAN, connectors), deciding what triage protocols apply to which entrances (step-up auth, AppProtection), and standing up the lab equipment (SIEM integrations, OneAPI). The administrator inherits a working hospital; the engineer builds one.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an engineer commissioning a new hospital as an analogy for the EDU-202 curriculum. Wide composition. Left side: a half-built hospital with construction scaffolding around it, a cartoon engineer in hard hat and hi-vis vest standing in front holding a giant rolled-out blueprint. The blueprint shows the floors of the hospital with sticky notes attached: "wing for VIP rooms" (step-up auth), "international wing" (sub-clouds / China Premium Access), "private ambulance dock" (Private Application Access), "automated triage robots" (Workflow Automation). Middle: a network of small ambulances and supply trucks driving along glowing wired routes connecting the hospital to other city facilities (SD-WAN + Branch Connector + Cloud Connector). Right side: the engineer at a control room desk inside the half-finished building, plugging cables into a giant patch-panel labelled with little icons (OneAPI / Postman / SIEM integrations), with a clipboard showing test ticks. Crane in the background, soft daylight, mood of architectural planning. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap-202" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap-202','Recap EDU-202')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap-202" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap-202"></span></div></div>
+    </div>
+  </div>
+
+  <!-- EDU-302 PATH -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · EDU-302 LEARNING PATH</span></div>
+    <p class="socratic-insight">The EDU-302 path has 11 eLearning courses, a hands-on Lab, and a Capstone Project — and the Lab + Capstone are bundled into a single 12-hour session. Before reading on, think about why the Lab and Capstone are deliberately combined rather than separated, and what that says about how Delivery Consultants are expected to work.</p>
+    <ul class="socratic-questions">
+      <li>The Lab and Capstone share one 12-hour session. What's the design intent — and what would change if they were split into two separate sessions on different days?</li>
+      <li>Each EDU-302 course ends with a knowledge check before the next one unlocks. Why is this gating useful for a consulting-track path specifically (compared to a fast-read overview path)?</li>
+      <li>Course 2 is "Zscaler Deployment Methodology". Why is methodology positioned that early — before any specific service like Identity or Connectivity?</li>
+    </ul>
+    <div class="answer-area" data-section="edu302-path">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Real consulting engagements aren't broken into clean stages — labs (configuration) and capstones (design, presentation, decisions) happen interleaved with the customer in the room. Bundling them into a single 12-hour session mirrors a compressed customer workshop: you don't finish all the config and then start the design — you design while you configure and adjust mid-stream. Splitting them would make it feel like exams instead of a real engagement.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">A consultant has to assess a learner's understanding before they bring weak knowledge into a customer conversation. Gating with a knowledge check forces self-correction at each step, so the Capstone isn't the first time a misconception surfaces. For a fast-read overview path it'd just feel like friction; for a path culminating in real customer delivery, the friction is the point.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Without a methodology, the rest of the path is just nine deep dives into services with no scaffold to fit them together. Methodology = how you scope, design, deploy, validate, and handover. It's positioned at Course 2 so every subsequent service course can be read through the lens of "where does this fit in a real deployment phase?". Methodology is the connective tissue of the whole path.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-edu302-path">
+    <div class="section-label">EDU-302 LEARNING PATH</div>
+    <h2>What EDU-302 Offers</h2>
+    <p>EDU-302 builds on the foundation of EDU-200 and EDU-202. The path is 11 eLearning courses + Labs + a Capstone Project. Successfully completing the Capstone awards the <strong>Zscaler Digital Delivery Consultant (ZDDC)</strong> certification.</p>
+
+    <div class="prereq-chain">
+      <div class="prereq-box">
+        <div class="prereq-box-label">PREREQUISITE</div>
+        <div class="prereq-box-title">EDU-200 Administrator</div>
+      </div>
+      <div class="prereq-arrow">→</div>
+      <div class="prereq-box">
+        <div class="prereq-box-label">PREREQUISITE</div>
+        <div class="prereq-box-title">EDU-202 Engineer</div>
+      </div>
+      <div class="prereq-arrow">→</div>
+      <div class="prereq-box current">
+        <div class="prereq-box-label">YOU ARE HERE</div>
+        <div class="prereq-box-title">EDU-302 Delivery Consultant</div>
+      </div>
+    </div>
+
+    <div class="img-display-block">
+      <img src="2.png" alt="EDU-302 learning path" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Flat blue minimalist illustration of the EDU-302 Delivery Consultant learning path — eleven small numbered course cards arranged in two rows (Course 1 to Course 5 on top, Course 6 to Course 11 on bottom) connected by left-to-right arrows, ending in a single purple Lab + Capstone block that flows into a small green "Zscaler Digital Delivery Consultant" certification badge on the far right. Below the lower row, a brace bracket labels Courses 1-11 as eLearning, and the purple block is bracket-labelled as Hands-on Lab + Capstone Project (12-hour session). Clean simple shapes, numbered cards, no text labels.</div>
+    </div>
+
+    <h3>The 11 Courses Ahead</h3>
+
+    <div class="course-card">
+      <div class="course-card-title">Course 1 · Zscaler for Users — Delivery Consultant Overview</div>
+      <div class="course-card-body">Overview of the entire EDU-302 learning path (this course).</div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">Course 2 · Zscaler Deployment Methodology</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Role and responsibilities of a Deployment Specialist</li>
+          <li>Different phases of Design Methodology</li>
+          <li>Primary steps in designing and deploying ZIA, ZPA, and ZDX</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">Course 3 · Identity Services</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Recommended authentication and provisioning method for ZIA</li>
+          <li>Recommended end-user and admin-portal authentication for ZPA</li>
+          <li>Provisioning for ZDX admins; role-based administration for ZDX deployment</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">Course 4 · Connectivity Services</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Advanced traffic forwarding strategies for business and technical needs</li>
+          <li>Zscaler Client Connector auth issues + methods to diagnose and resolve</li>
+          <li>Traffic-forwarding blockage troubleshooting and advanced diagnostic tools</li>
+          <li>App Connectors design and deployment with emphasis on redundancy, HA, and secure application access</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">Course 5 · Platform Services</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Effective Zscaler policies for organisational needs</li>
+          <li>SSL Inspection implementation and Global Control Policies</li>
+          <li>On-premise vs cloud-based SIEM solutions</li>
+          <li>Authentication and Idle Connection Timeout Policies in ZPA</li>
+          <li>Use-case-driven Timeout configuration</li>
+          <li>ZPA policy configurations to address security needs</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">Course 6 · Access Control Services</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Granular Control policy — types and recommendations</li>
+          <li>Application Segments deployment methods</li>
+          <li>Application Tenant Restriction feature</li>
+          <li>Private Application Access Error and Reachability</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">Course 7 · Cyberthreat Protection Services</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Types of policies that apply to cyberthreat protection</li>
+          <li>Leveraging appropriate cyberthreat protection policies</li>
+          <li>Applying cyberthreat policies to common deployment scenarios</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">Course 8 · Data Protection Services</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Policies Zscaler provides to secure data on all channels</li>
+          <li>Importance of policy order and creation considerations for effective DLP deployment</li>
+          <li>DLP policies to reduce false positives and ensure seamless implementation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">Course 9 · Risk Management</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Strategic risk management frameworks using the Zscaler Risk Management suite</li>
+          <li>Automation and integration strategies for comprehensive risk insights</li>
+          <li>Actionable risk-management plans tailored to organisational needs</li>
+          <li>Risk posture analysis and reporting</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">Course 10 · Zscaler Digital Experience</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Purpose, core components, and deployment methodology of ZDX</li>
+          <li>ZDX traffic forwarding, monitoring policies, application probes, and alerts</li>
+          <li>ZDX Admin Portal — monitor, analyse, troubleshoot user experience issues effectively</li>
+          <li>Steps to operationalise ZDX — staged rollout, access control, cloud connectivity</li>
+          <li>ZDX metrics and AI-driven insights to reduce escalations</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="course-card-title">Course 11 · Zscaler Zero Trust Automation</div>
+      <div class="course-card-body">
+        <ul>
+          <li>Key components of the Zero Trust Automation framework</li>
+          <li>Role and responsibilities of a Delivery Consultant</li>
+          <li>Deployment methodologies — manual and automated approaches</li>
+          <li>Common error code responses for OneAPI</li>
+          <li>Automation use cases that improve efficiency and scalability</li>
+          <li>Scripts and workflows for Zscaler API services integration</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Lab + Capstone Project</h3>
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">i</div>HANDS-ON ASSESSMENT</div>
+      <div class="callout-body">After the 11 eLearning courses, the path culminates in a hands-on <strong>Lab</strong> (applies eLearning knowledge to product training scenarios) and a <strong>Capstone Project</strong> (the assessment). Both are combined into a single 12-hour session. Successfully completing the Capstone awards the <strong>Zscaler Digital Delivery Consultant (ZDDC)</strong> certification.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">EDU-302 = 11 eLearning courses + Lab + Capstone Project. Each eLearning course has a knowledge check at the end. Labs apply knowledge to scenarios. Capstone is the assessment. Lab + Capstone are combined in a single <strong>12-hour session</strong>. Outcome: <strong>ZDDC certification</strong>.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">EDU-302 is like a graduate medical residency. The eleven eLearning courses are your specialty rotations — each one a deep clinical area. The Lab + Capstone is the supervised practical year where you finally see real patients (customers) under a senior consultant's watch. The 12-hour session compresses what would be days of patient rounds into a focused stress-test of your judgement. Pass it, and you graduate with the badge that says you can walk into someone else's hospital and deploy.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a medical residency journey as an analogy for the EDU-302 learning path. Wide composition split into two scenes. Left scene (rotations): a long curving hospital corridor with eleven coloured doors along it, each labelled with a small specialty icon — stethoscope, brain, heart, microscope, lungs, kidney, eye, x-ray, robotic arm, dashboard, key. A cheerful young doctor in scrubs walks the corridor with a clipboard, ticking off each door as they go. Right scene (capstone): the same doctor in an emergency-room simulation theatre standing over a patient mannequin, supervised by a senior consultant in a white coat watching from a glass observation booth. A large clock on the wall reads "12 hours" prominently. Bright clean medical lighting, mood of focused responsibility. After the simulation, a graduation cap and a glowing badge hover above the doctor as they exit toward sunlight. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-edu302-path" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('edu302-path','EDU-302 Path')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-edu302-path" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-edu302-path"></span></div></div>
+    </div>
+  </div>
+
+  <!-- LEARNING OUTCOMES -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · LEARNING OUTCOMES</span></div>
+    <p class="socratic-insight">Ten outcomes describe what you'll be able to do at the end of EDU-302. Action verbs matter: "Explain", "Implement", "Define", "Apply", "Discuss", "Illustrate". Before reading the list, think about which verbs are hardest to assess — and which you'd find easiest to fake in a customer conversation.</p>
+    <ul class="socratic-questions">
+      <li>"Explain" and "Discuss" appear repeatedly across the ten outcomes. What's the practical difference between those two verbs in a consulting context? When would a customer notice the difference?</li>
+      <li>Outcome 5 is "Define granular controls, advanced deployment strategies, and real-world use cases". Why is "Define" the right verb here, rather than "Implement" — and what would change if it said "Implement"?</li>
+      <li>If you could only deeply master three of the ten outcomes before sitting the Capstone, which three would give you the most coverage of the others? Justify your pick.</li>
+    </ul>
+    <div class="answer-area" data-section="outcomes">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">"Explain" means you can tell someone how something works in a structured, accurate way. "Discuss" means you can compare options, surface tradeoffs, and engage the customer's pushback — closer to a dialogue than a monologue. Customers notice the difference the moment they ask "but what about my edge case?" — an "explainer" stalls; a "discusser" reframes and brings the conversation forward.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">"Define" forces clarity about what each control is and when it applies — the consultant's job is to draw boundaries, not to push buttons. If the verb were "Implement", the outcome would shrink to a hands-keyboard task; the strategic work of choosing between strategies and arguing for one in a customer workshop would disappear. The Delivery Consultant role is judgement-led; the verb signals that.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Outcomes 1 (Design Methodology), 2 (Identity authentication + provisioning), and 10 (Zero Trust Automation framework + Delivery Consultant role) cover the widest surface. Methodology is the structural frame every other outcome plugs into. Identity is the gatekeeper every downstream service references. Outcome 10 maps directly to the Delivery Consultant role itself and ties automation into deployment. Master those three and you have the spine — the other seven are flesh on bones you already understand.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-outcomes">
+    <div class="section-label">LEARNING OUTCOMES</div>
+    <h2>By the end of the EDU-302 learning path, you'll be able to:</h2>
+
+    <div class="outcome-grid">
+      <div class="outcome-card">
+        <div class="outcome-num">1</div>
+        <div class="outcome-text"><strong>Explain</strong> different phases of Design Methodology and the primary steps in designing and deploying ZIA, ZPA, and ZDX</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">2</div>
+        <div class="outcome-text"><strong>Explain</strong> recommended authentication and provisioning methods for ZIA, authentication for ZPA deployment, and first-time provisioning and deployment for ZDX admins</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">3</div>
+        <div class="outcome-text"><strong>Implement</strong> advanced traffic-forwarding strategies, troubleshooting techniques, and App Connector deployment methods</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">4</div>
+        <div class="outcome-text"><strong>Define</strong> global controls, advanced deployment strategies, and real-world use cases to access and fulfil business requirements</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">5</div>
+        <div class="outcome-text"><strong>Explain</strong> policies to deploy Zscaler's Access Control capabilities</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">6</div>
+        <div class="outcome-text"><strong>Apply</strong> appropriate cyberthreat protection policies based on common deployment scenarios</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">7</div>
+        <div class="outcome-text"><strong>Discuss</strong> how to operationalise and deploy Zscaler data protection policies based on various customer needs</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">8</div>
+        <div class="outcome-text"><strong>Illustrate</strong> the Zscaler Risk Management suite, actionable risk management plans, and risk-posture analysis</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">9</div>
+        <div class="outcome-text"><strong>Discuss</strong> core components and deployment methodology of Zscaler Digital Experience, ZDX metrics, and AI-driven insights</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">10</div>
+        <div class="outcome-text"><strong>Discuss</strong> the key components of the Zero Trust Automation framework, deployment methodologies using manual and automated approaches, and common error code responses for OneAPI</div>
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">10 learning outcomes. Action verbs map to the depth required: <strong>Define / Explain / Discuss</strong> = describe and reason about. <strong>Apply / Implement / Illustrate</strong> = do or demonstrate. Outcome 10 is the keystone — it explicitly names the Delivery Consultant role inside the Zero Trust Automation framework.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">The ten outcomes are the graduation rubric for the residency. Each one is a station on the practical exam — you don't pass by being amazing at one and weak at the others. The Capstone Project is the supervised case where each of the ten gets quietly assessed by someone watching how you handle the patient — the customer — in front of you.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a practical-exam rubric as an analogy for the ten EDU-302 learning outcomes. Wide composition. Left side: a clipboard floating in the air with ten numbered tick boxes, each box accompanied by a tiny pictogram representing the outcome (compass for Design Methodology, key for Identity, road for Connectivity, scales for Platform, gate for Access Control, shield for Cyberthreat, lock for Data Protection, gauge for Risk Mgmt, satisfaction-meter for ZDX, robotic arm for Automation). Right side: an examination room — a friendly cartoon trainee sitting opposite a "customer" cartoon character at a small consulting table, surrounded by a glass observation booth with a senior mentor watching and silently ticking off the floating clipboard. Spotlight on the trainee, soft daylight from large windows, mood of supportive scrutiny. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-outcomes" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('outcomes','Learning Outcomes')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-outcomes" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-outcomes"></span></div></div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-302-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-302 Hub
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleDone(this,0)"><div class="subtopic-check"></div><span>Cyber Academy structure (ZCCA → 3 role paths → specialty)</span></li>
+      <li onclick="toggleDone(this,1)"><div class="subtopic-check"></div><span>EDU-200 = 10 courses (order memorised)</span></li>
+      <li onclick="toggleDone(this,2)"><div class="subtopic-check"></div><span>EDU-202 = 11 courses (Engineer Overview added at the front)</span></li>
+      <li onclick="toggleDone(this,3)"><div class="subtopic-check"></div><span>EDU-202 adds: sub-clouds, China Premium Access, step-up auth, SD-WAN, AppProtection, Workflow Automation, Postman+OneAPI</span></li>
+      <li onclick="toggleDone(this,4)"><div class="subtopic-check"></div><span>EDU-302 = 11 eLearning + Lab + Capstone (12-hour session)</span></li>
+      <li onclick="toggleDone(this,5)"><div class="subtopic-check"></div><span>Capstone → ZDDC certification</span></li>
+      <li onclick="toggleDone(this,6)"><div class="subtopic-check"></div><span>Prerequisites: EDU-200 → EDU-202 → EDU-302</span></li>
+      <li onclick="toggleDone(this,7)"><div class="subtopic-check"></div><span>10 EDU-302 outcomes and their action verbs</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="quick-ref"><div class="quick-ref-term">ZTE</div><div class="quick-ref-def">Zero Trust Exchange — Zscaler's cloud platform that brokers all access using identity + context.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">EDU-200 / 202 / 302</div><div class="quick-ref-def">Role-based learning paths: Administrator → Engineer → Delivery Consultant.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">ZDDC</div><div class="quick-ref-def">Zscaler Digital Delivery Consultant — the certification awarded on successful EDU-302 Capstone completion.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Capstone Project</div><div class="quick-ref-def">Final practical assessment of EDU-302. Combined with Labs into one 12-hour session.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Sub-clouds</div><div class="quick-ref-def">Region-pinned tenant configuration for data residency / compliance (EDU-202 architecture concept).</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">China Premium Access</div><div class="quick-ref-def">Specialised connectivity model for operating inside China's regulatory and network environment.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-302 · <span>Section 1</span></div>
+  <div class="footer-right">Delivery Consultant Overview · Section 1 of 11</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu302-overview';
+const SECTIONS={overview:'Course Overview','recap-200':'Recap EDU-200','recap-202':'Recap EDU-202','edu302-path':'EDU-302 Path',outcomes:'Learning Outcomes'};
+
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+
+/* SOCRATIC ANSWER FEATURE */
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+
+/* IMG PROMPT TOGGLE */
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();initNotes();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
+  document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
+  document.querySelectorAll('.analogy-img img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+});
+</script>
+</body>
+</html>

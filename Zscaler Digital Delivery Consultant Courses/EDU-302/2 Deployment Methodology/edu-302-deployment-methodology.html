@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deployment Methodology — EDU-302</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#edfaf3;--surface:#ffffff;--surface-2:#f0faf5;--border:#a7e0c0;--border-dim:#d4f0e0;
+  --text:#0a1f12;--text-soft:#1a3d24;--text-muted:#4a7a5a;
+  --green:#1a7c4a;--green-glow:rgba(26,124,74,0.07);--green-dim:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --amber:#b45309;--amber-light:#fef9ec;--amber-border:#fde68a;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+html.pt-init body{opacity:0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:#0a1f12;display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#4a7a5a;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#4ade80;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#1a3d24;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#4ade80;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#4ade80;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#4ade80;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--green);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#0a1f12;color:#4ade80;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 18px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--green);border-bottom-color:var(--green);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--green);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--green-glow);border:1px solid var(--green-dim);border-left:3px solid var(--green);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--green);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--green-glow);border-color:var(--green-dim);}
+.callout-note .callout-header{color:var(--green);}
+.callout-note .callout-icon{background:var(--green-dim);color:var(--green);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-tip{background:var(--blue-light);border-color:var(--blue-border);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-tip .callout-icon{background:var(--blue-border);color:var(--blue);}
+.callout-tip .callout-body{color:#1a3a5c;}
+
+/* PHASES PIPELINE */
+.phase-pipeline{display:flex;gap:0;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:18px;}
+.phase-step{flex:1;min-width:120px;text-align:center;padding:10px 8px;border-radius:8px;font-family:'Fraunces',serif;font-size:12px;font-weight:600;color:#fff;margin:2px;}
+.phase-step.s1{background:#9ec5fa;color:#0a1f12;}
+.phase-step.s2{background:#6ba8f5;}
+.phase-step.s3{background:#3b82f6;}
+.phase-step.s4{background:#2563eb;}
+.phase-step.s5{background:#1d4ed8;}
+.phase-step.s6{background:#1e3a8a;}
+
+/* PHASE CARD */
+.phase-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--green);border-radius:0 14px 14px 0;padding:18px 22px;margin-bottom:14px;}
+.phase-card-head{display:flex;align-items:baseline;gap:12px;margin-bottom:10px;}
+.phase-num{width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.phase-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);}
+.phase-card p{margin-bottom:8px;font-size:13px;}
+.phase-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;}
+.phase-col{background:var(--surface-2);border-radius:10px;padding:12px 14px;}
+.phase-col-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--green);margin-bottom:6px;}
+.phase-col ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:4px;}
+.phase-col ul li{font-size:12.5px;color:var(--text-soft);padding-left:14px;position:relative;line-height:1.55;}
+.phase-col ul li::before{content:'›';position:absolute;left:0;color:var(--green);font-weight:700;}
+
+/* ZPA RELATIONSHIPS */
+.zpa-rel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:18px;}
+.zpa-rel-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.zpa-rel-title{font-size:12px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:0.04em;}
+.zpa-rel-body{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+.zpa-rel-rel{margin-top:6px;font-size:11px;color:var(--text-muted);font-style:italic;}
+.zpa-rel-rel strong{color:var(--green);font-style:normal;}
+
+/* AREAS GRID */
+.areas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:16px;}
+.area-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;}
+.area-num{width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.area-text{font-size:13px;color:var(--text-soft);font-weight:500;line-height:1.4;}
+
+/* QA */
+.qa-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
+.qa-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;}
+.qa-q{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.qa-a{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+
+/* SOCRATIC */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--green);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--green);}
+/* MENTAL NOTE */
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--green-glow);border:1px solid var(--green-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--green);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+/* ANALOGY */
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img .img-missing-msg{display:none !important;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+/* IMG PLACEHOLDER */
+.img-display-block{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+/* ANSWER FEATURE */
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+/* LESSON TOOLS */
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--green);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:#0a1f12;color:#4ade80;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{background:#1a3d24;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--green);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#0a1f12;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
+.mod-nav-hub:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:#0a1f12;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#4ade80;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#6aaa80;line-height:1.6;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}.phase-grid{grid-template-columns:1fr;}.phase-step{min-width:80px;font-size:10px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../digital-delivery-consultant-hub.html">Digital Delivery Consultant</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-302-hub.html">EDU-302</a>
+      <span class="breadcrumb-sep">›</span>
+      Deployment Methodology
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Section 2 · EDU-302</div>
+    <h1>Deployment <em>Methodology</em></h1>
+    <p>Zscaler's proven six-phase delivery framework — who runs it, what each phase produces, and how the methodology shapes ZIA, ZPA, and ZDX deployments end-to-end.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Methodology is the <em>connective tissue</em> of every deployment.</div>
+  <p class="motivation-sub">Without a phased framework, every customer engagement reinvents itself — risky, slow, inconsistent. The six phases (Initiate → Plan → Configure → Pilot → Production → Transition) give every Delivery Consultant the same scaffolding to fit ZIA, ZPA, and ZDX work into.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-specialists',this)">Deployment Specialists</button>
+  <button class="nav-tab" onclick="navTo('section-phases',this)">Six Phases</button>
+  <button class="nav-tab" onclick="navTo('section-zia',this)">ZIA</button>
+  <button class="nav-tab" onclick="navTo('section-zpa',this)">ZPA</button>
+  <button class="nav-tab" onclick="navTo('section-zdx',this)">ZDX</button>
+  <button class="nav-tab" onclick="navTo('section-recap',this)">Recap</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · COURSE OVERVIEW</span></div>
+    <p class="socratic-insight">A methodology is just a list of stages on paper — until you understand why each stage is positioned where it is. Before you read this overview, think about why every successful Zscaler deployment passes through the same six gates, and what would break if you tried to skip any of them.</p>
+    <ul class="socratic-questions">
+      <li>If a customer is in a rush and asks you to skip the Pilot phase and go straight to Production, what specifically becomes more expensive — and to whom?</li>
+      <li>Methodology phases look generic on the surface (Initiate, Plan, Configure...). What makes Zscaler's six phases tailored to a SaaS security deployment rather than a generic IT project?</li>
+      <li>Three of the eight lessons in this course are about ZIA, ZPA, and ZDX specifically. Why do those three services need separate design discussions rather than one combined "Zscaler deployment" lesson?</li>
+    </ul>
+    <div class="answer-area" data-section="overview">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Skipping Pilot moves risk from a small, controlled blast radius (a pilot group of ~30 users) to the entire user base. If something is misconfigured — a traffic-forwarding rule, an SSL inspection exception, a policy precedence — you discover it in production with 5,000 users instead of 30. The expense is paid in P1 tickets, lost user trust, and emergency rollbacks. The customer feels the urgency cost; you feel the credibility cost.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Three signals tell you it's SaaS-security-shaped: (1) the Initiate phase explicitly verifies the customer's subscription/edition entitlements — that only matters for SaaS sold by SKU; (2) Configure includes SSL inspection and policy precedence as first-class deliverables — perimeter security concerns; (3) Transition hands the customer a Final Design Document — because the platform is tenant-configured rather than rack-installed, the document IS the deliverable. Generic IT methodology has none of these baked into the phase names.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Each service has fundamentally different deployment surface area. ZIA forwards user traffic via tunnels/PAC files to a cloud edge — its design questions are about traffic forwarding, edition entitlements, SIEM logging. ZPA flips connectivity inside-out via App Connectors and has its own object model (Application Segments, Segment Groups, Connector Groups, Server Groups). ZDX is monitoring-only — no traffic forwarding decisions, but lots of probe configuration. One blended lesson would lose the specific design questions each service forces.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-overview">
+    <div class="section-label">COURSE OVERVIEW</div>
+    <h2>Welcome to Zscaler Deployment Methodology</h2>
+    <p>This course gives you Zscaler's proven approach to running a successful deployment — the same delivery and engagement methodology used across every paid Professional Services engagement. The course is structured in three blocks of content:</p>
+
+    <ul class="content-list">
+      <li><strong>Deployment Specialists</strong> — who they are and what exactly they do</li>
+      <li><strong>Deployment Methodology</strong> — the six phases of delivery: Initiate, Plan, Configure, Pilot Roll-out, Production Roll-out, Transition</li>
+      <li><strong>Design &amp; Deployment Overviews</strong> — ZPA, ZIA, and ZDX deployments, design areas, and considerations</li>
+    </ul>
+
+    <div class="key-concept">
+      <strong>Course objectives:</strong> Describe who Deployment Specialists are and their role · Describe the phases of the Deployment Methodology · Discuss the primary steps in designing and deploying ZIA, ZPA, and ZDX.
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Course = 3 blocks: (1) Role · (2) Six-phase methodology · (3) Per-service design overview for ZIA, ZPA, ZDX. The six phases are the spine — everything in blocks 1 and 3 hangs off it.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Deployment methodology is a recipe. The Initiate phase confirms you have the ingredients (and that you ordered the right kind of flour). Plan is mise en place — measuring everything out before you cook. Configure is the actual cooking. Pilot is a tasting spoon. Production is plating up for the whole dinner party. Transition is teaching the host how to reheat leftovers tomorrow. Skip a step and the dish is fine sometimes — but never reliably.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a cheerful cartoon chef preparing a multi-course dinner as an analogy for deployment methodology. Wide composition with six small scenes arranged left-to-right along a long wooden kitchen counter. Scene 1 (Initiate): the chef opens a delivery box and ticks ingredients off a clipboard — flour, eggs, olive oil. Scene 2 (Plan): mise en place — every ingredient measured out into little glass bowls in a neat row. Scene 3 (Configure): hands kneading dough, pots simmering on the stove, action and steam. Scene 4 (Pilot): the chef offers a single spoonful to one curious diner sitting at the counter — the diner gives a thumbs up. Scene 5 (Production): waiters stream out of the kitchen carrying full plates to a large dining room visible through a doorway. Scene 6 (Transition): the chef hands a host a small folded recipe card and explains how to reheat tomorrow. Warm kitchen lighting, white aprons, cheerful round faces, clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- SPECIALISTS -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · DEPLOYMENT SPECIALISTS</span></div>
+    <p class="socratic-insight">A Deployment Specialist is the person walking the customer through the actual rollout — but they're not the customer's administrator and not Zscaler's sales engineer. They sit in between. Before reading the role description, think about what makes that middle seat different from each of the two seats on either side of it.</p>
+    <ul class="socratic-questions">
+      <li>The Deployment Specialist's mission statement is "ensure services are delivered with the highest level of quality and satisfaction." Why is "satisfaction" included alongside "quality" — when wouldn't a high-quality deployment be a satisfying one?</li>
+      <li>One of the five responsibilities is "maintaining compliance with regulatory requirements." Why does that responsibility sit with the consultant rather than the customer's compliance team?</li>
+      <li>If you had to choose between (a) deploying every Zscaler feature the customer paid for, or (b) deploying only the features that solve the customer's stated business problem — which is the Deployment Specialist's job, and what does that tell you about scope discipline?</li>
+    </ul>
+    <div class="answer-area" data-section="specialists">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Quality is technical correctness — the configuration works as designed. Satisfaction is the customer's felt experience of the deployment — communication, surprises avoided, perceived control, ability to walk away confident. A deployment can be technically flawless and still leave the customer feeling rushed or confused, which damages renewal. Both have to be measured.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">The customer's compliance team owns the regulatory outcome, but they don't know the platform. The Deployment Specialist is the only person in the room who can map a compliance constraint (e.g. "EU-only data residency", "SOC 2 logging retention") to a Zscaler configuration decision (sub-cloud choice, NSS log destination, retention setting). They translate compliance language into platform settings.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">(b) — deploy only what solves the customer's stated problem. Deploying every feature the customer paid for is a vanity exercise that creates surface area without proven value, and almost always leaves the customer overwhelmed and under-trained. Scope discipline means delivering the use cases agreed in the Initiate phase, and parking the rest with a clear post-deployment plan. The Deployment Specialist's job is outcomes, not feature count.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-specialists">
+    <div class="section-label">DEPLOYMENT SPECIALISTS</div>
+    <h2>Who they are and what they do</h2>
+    <p>A Deployment Specialist <strong>deploys and manages Zscaler's cloud security solutions</strong> for a customer engagement. Their mission: ensure services are delivered with the highest level of quality and satisfaction.</p>
+
+    <h3>Five primary responsibilities</h3>
+    <ul class="content-list">
+      <li><strong>Plan and execute deployments</strong> — and configure / optimise security settings</li>
+      <li><strong>Ensure seamless integration</strong> with the customer's existing IT infrastructure</li>
+      <li><strong>Maintain compliance</strong> with regulatory requirements</li>
+      <li><strong>Improve security posture</strong> by staying updated with latest best practices and features</li>
+      <li><strong>Protect the organisation's internet traffic</strong>, secure user access, and enhance overall cyber-security resilience</li>
+    </ul>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">i</div>NOT TO BE CONFUSED WITH</div>
+      <div class="callout-body">A Deployment Specialist is <em>not</em> the customer's day-to-day admin (that's the Administrator from EDU-200) and <em>not</em> the Zscaler sales engineer scoping the deal. They sit between the two, translating the signed scope into a working tenant.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">5 responsibilities — memorise them as <strong>Plan · Integrate · Comply · Improve · Protect</strong>. The mission statement uses two words: <strong>quality</strong> + <strong>satisfaction</strong>. Both, not either.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">A Deployment Specialist is the travel agent who actually flies with you on the trip. The salesperson sold you the holiday package. The hotel concierge will look after you once you arrive. But the agent is the one on the plane next to you, double-checking the itinerary against your real expectations, swapping the boring city tour for the cooking class you'd actually enjoy, and making sure when you land, you know how to use the metro card. Their success is your trip being remembered fondly, not just completed.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a travel agent escorting a happy traveller on an actual trip as an analogy for the Deployment Specialist role. Wide composition with three scenes. Scene 1 (sale): a salesperson at a travel-agency desk handing a colourful holiday brochure to a customer over a counter, smiling — cheerful office. Scene 2 (in flight): the same customer now sitting next to a smiling agent on an airplane, both buckled in, the agent pointing at a printed itinerary on a fold-down tray, with a checklist visible — friendly attentive mood, window showing sky. Scene 3 (arrival): the agent helps the customer at a hotel lobby — handing over a metro pass and pointing toward a "City Tour vs Cooking Class" sign while a hotel concierge waves from behind the desk in the background. Bright sunny travel colours, suitcases with luggage tags, cheerful round faces. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-specialists" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('specialists','Deployment Specialists')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-specialists" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-specialists"></span></div></div>
+    </div>
+  </div>
+
+  <!-- SIX PHASES -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · THE SIX PHASES</span></div>
+    <p class="socratic-insight">Each phase has its own <em>methodology actions</em> (what you do) and <em>deliverables</em> (what the customer ends up holding). The deliverable list is the proof that the phase happened. Before reading the phase details, think about why having a concrete artefact at the end of each phase changes the engagement dynamic.</p>
+    <ul class="socratic-questions">
+      <li>The Initiate phase has only two deliverables: weekly status report cadence + the prerequisite checklist. Why are those two the right anchors for "we have started"?</li>
+      <li>The Configure phase has the most deliverables (Comms Plan, Pilot Test Plan, Initial Roll-out Plan). Why is so much planning artefact-work folded into the "configure" phase rather than the Plan phase?</li>
+      <li>Production Roll-out produces only the Final Design Plan. What signal does that minimalism send about what's happening (and not happening) in the Production phase?</li>
+    </ul>
+    <div class="answer-area" data-section="phases">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Weekly status reports establish the communication ritual — every party knows when the next checkpoint is and what to bring to it. The prerequisite checklist is the operational gate: it lists every item the customer must have ready (subscriptions, IdP details, network info, sponsor availability) before any technical work can usefully begin. Together they're the two minimum guarantees: "we'll talk" and "we have what we need to talk about". Anything else added at Initiate is premature.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Plan produces the <em>design</em> — what the customer will end up with. Configure is where the plan meets reality, and several follow-on plans only become writable once configuration has revealed the real constraints (which users to invite to pilot, what comms cadence makes sense given the timing, how to phase roll-out by region/OS). The artefacts of Configure are the bridge between "designed on paper" and "tested with real users".</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">It signals that Production is almost entirely <em>support</em> — running the rollout the Pilot phase already proved works. There's no design left to do, no new artefacts to write — just scaled execution and the final document update. If you're producing many new artefacts in Production, it usually means the Pilot phase failed to fully prove the design.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-phases">
+    <div class="section-label">DEPLOYMENT METHODOLOGY</div>
+    <h2>The Six Deployment Phases</h2>
+    <p>Zscaler recommends a phased approach to planning and completing deployments. Each phase has its own methodology actions and produces specific deliverables that, together, drive a successful customer outcome.</p>
+
+    <div class="phase-pipeline">
+      <div class="phase-step s1">Initiate</div>
+      <div class="phase-step s2">Plan</div>
+      <div class="phase-step s3">Configure</div>
+      <div class="phase-step s4">Pilot Roll-out</div>
+      <div class="phase-step s5">Production Roll-out</div>
+      <div class="phase-step s6">Transition</div>
+    </div>
+
+    <div class="img-display-block">
+      <img src="1.png" alt="Six-phase deployment pipeline" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Flat green minimalist illustration of the six deployment phases as a horizontal chevron pipeline. Six arrow-shaped boxes pointing right, each a slightly darker shade of green from light mint on the left to deep forest green on the right, with rounded corners and tiny pictogram icons inside each (clipboard for Initiate, blueprint for Plan, gear for Configure, paper airplane for Pilot, factory for Production Roll-out, ribbon-tied folder for Transition). The whole pipeline sits on a clean light background with a subtle dashed timeline beneath. Clean simple shapes, no text labels.</div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-card-head"><div class="phase-num">1</div><div class="phase-title">Initiate Phase</div></div>
+      <p>The Initiation Phase incorporates the steps required for the Professional Services team to be assigned to a project.</p>
+      <div class="phase-grid">
+        <div class="phase-col">
+          <div class="phase-col-label">METHODOLOGY</div>
+          <ul><li>Scope Acceptance</li><li>Review Constraints</li><li>Timeline Acceptance</li></ul>
+        </div>
+        <div class="phase-col">
+          <div class="phase-col-label">DELIVERABLES</div>
+          <ul><li>Weekly Status Report cadence begins</li><li>Prerequisite checklist</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-card-head"><div class="phase-num">2</div><div class="phase-title">Plan Phase</div></div>
+      <p>The Plan Phase incorporates the steps required for the Professional Services team to plan out the project — aligning the project plan, beginning design workshops, and providing any necessary documentation.</p>
+      <div class="phase-grid">
+        <div class="phase-col">
+          <div class="phase-col-label">METHODOLOGY</div>
+          <ul><li>Review Current Configuration</li><li>Execute Design Workshops</li><li>Provide and Review Zscaler Initial Design Document</li></ul>
+        </div>
+        <div class="phase-col">
+          <div class="phase-col-label">DELIVERABLES</div>
+          <ul><li>Zscaler Initial Design Document</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-card-head"><div class="phase-num">3</div><div class="phase-title">Configure Phase</div></div>
+      <p>The Configure Phase incorporates the steps required for the Professional Services team to lead the customer through the configuration of the Zscaler product according to the created design.</p>
+      <div class="phase-grid">
+        <div class="phase-col">
+          <div class="phase-col-label">METHODOLOGY</div>
+          <ul><li>Execute Configuration Deep-Dive Workshops</li><li>Guide and Advise on Leading Practices</li><li>Review and Advise on Pilot Test Plan</li><li>Confirm Functional Testing</li><li>Review &amp; Advise on Customer Roll-out Plan</li></ul>
+        </div>
+        <div class="phase-col">
+          <div class="phase-col-label">DELIVERABLES</div>
+          <ul><li>Comms Plan</li><li>Pilot Test Plan</li><li>Initial Roll-out Plan</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-card-head"><div class="phase-num">4</div><div class="phase-title">Pilot Roll-out Phase</div></div>
+      <p>The Pilot Roll-out Phase is designed to deploy and test the use cases in order to validate functionality in a controlled environment. Ensures the configured use cases function as expected before moving to Production.</p>
+      <div class="phase-grid">
+        <div class="phase-col">
+          <div class="phase-col-label">METHODOLOGY</div>
+          <ul><li>Roll-out Pilot Users</li><li>Provide Pilot Roll-out Support</li><li>Review Pilot User Feedback</li><li>Pilot Acceptance</li><li>Finalize Production Roll-out Plan</li></ul>
+        </div>
+        <div class="phase-col">
+          <div class="phase-col-label">DELIVERABLES</div>
+          <ul><li>Production Roll-out Plan</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-card-head"><div class="phase-num">5</div><div class="phase-title">Production Roll-out Phase</div></div>
+      <p>The Production Roll-out Phase involves increasing the quantity of users on the platform (scaling out) across all use cases within the customer's environment.</p>
+      <div class="phase-grid">
+        <div class="phase-col">
+          <div class="phase-col-label">METHODOLOGY</div>
+          <ul><li>Provide Production Roll-out Support</li></ul>
+        </div>
+        <div class="phase-col">
+          <div class="phase-col-label">DELIVERABLES</div>
+          <ul><li>Final Zscaler Design Plan</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-card-head"><div class="phase-num">6</div><div class="phase-title">Transition Phase</div></div>
+      <p>The final stage of the project — review with the customer all work done to date, provide short-term/long-term recommendations, show a path to resolution of outstanding items, and explain how Zscaler will continue supporting their transformation journey.</p>
+      <div class="phase-grid">
+        <div class="phase-col">
+          <div class="phase-col-label">METHODOLOGY</div>
+          <ul><li>Review Project and Technical Summary</li><li>Review post-deployment plan</li></ul>
+        </div>
+        <div class="phase-col">
+          <div class="phase-col-label">DELIVERABLES</div>
+          <ul><li>Final Zscaler Design Document</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Six phases: <strong>Initiate · Plan · Configure · Pilot · Production · Transition</strong>. Two artefacts always carry forward: the <em>Design Document</em> (starts as "Initial" in Plan, gets refined through every phase, ends as "Final" in Transition) and the <em>Roll-out Plan</em> (drafted in Configure, finalised in Pilot). Configure has the most deliverables (3); Production has the fewest (1).</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">The six phases are like building a house. <strong>Initiate</strong> = signing the contract and surveying the block. <strong>Plan</strong> = an architect drawing the floor plan and you approving it. <strong>Configure</strong> = construction — walls, plumbing, wiring. <strong>Pilot Roll-out</strong> = the family moves in for a weekend to see what works before the housewarming. <strong>Production Roll-out</strong> = the full move-in with every box unpacked. <strong>Transition</strong> = the builder hands you the keys, the manual for the boiler, and the warranty book. Try skipping Pilot and you discover the shower drains backwards while sixty guests are arriving.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of building a family house in six stages as an analogy for the six deployment phases. Wide composition arranged left-to-right with six small scenes flowing into each other on a long grassy block of land. Scene 1 (Initiate): a friendly cartoon couple shaking hands with a builder on an empty lot, with a "Sold" sign and a survey peg. Scene 2 (Plan): the architect at a drafting table showing the couple a colourful floor plan blueprint, both nodding. Scene 3 (Configure): a half-built house with scaffolding, workers hammering and laying bricks, plumbing pipes visible. Scene 4 (Pilot): the same couple with one suitcase doing a "weekend trial stay" — they're inside the nearly-finished house testing the kitchen tap and giving a thumbs up. Scene 5 (Production): the full family with kids and a dog moving in, removal van behind, boxes everywhere, everyone happy. Scene 6 (Transition): the builder hands the homeowner a large brass house key and a bound folder labelled with a small house icon — warm sunset light, mood of completion. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-phases" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('phases','Six Phases')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-phases" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-phases"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ZIA -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZIA DESIGN &amp; DEPLOYMENT</span></div>
+    <p class="socratic-insight">ZIA's deployment success is largely determined by traffic forwarding — how you route customer traffic into the Zscaler edge — and by an Initial Deployment Assessment questionnaire filled out before configuration begins. Before reading on, think about why that questionnaire is the single most leveraged artefact in the entire ZIA design conversation.</p>
+    <ul class="socratic-questions">
+      <li>Why is the customer answering a long questionnaire before the consultant even opens the admin portal? What's the cost of skipping it and discovering the same answers mid-deployment?</li>
+      <li>ZIA traffic can be forwarded via Zscaler Client Connector, PAC file, GRE, or IPSec tunnel. What customer signal pushes a design toward each one?</li>
+      <li>The ZIA design areas include logging via NSS or Cloud NSS to SIEMs like Splunk or ArcSight. Why is logging treated as a first-class design decision rather than something configured later?</li>
+    </ul>
+    <div class="answer-area" data-section="zia">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The questionnaire surfaces design-shaping facts you can't discover from the admin portal: existing proxy infrastructure, branch topology, identity systems, log retention obligations, regulatory regions. Skipping it means discovering them mid-Configure when a wrong assumption has already been baked into a deployed setting — usually costing a re-do of policy hierarchy or traffic forwarding configuration that's now in production use.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">ZCC = managed devices that travel with the user (laptops). PAC file = browser-based forwarding for environments without endpoint control. GRE = high-bandwidth office / branch routers with no encryption needed (Zscaler is the security layer, not the tunnel). IPSec = same use case as GRE but where encryption between branch and Zscaler edge is mandated. The choice is driven by who/what the user is and what infrastructure already exists at the egress point.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Logs are part of the customer's compliance and incident-response posture — both legal/regulated areas. If you defer the logging decision, you risk discovering mid-rollout that the SIEM expects a specific schema, a specific retention window, or a specific transport (TLS, port). Re-routing logs after production users are live is operationally invasive. The design-time decision is "what schema to where and for how long" — and it lives next to ZIA traffic decisions because it's coupled to them.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-zia">
+    <div class="section-label">ZIA DESIGN &amp; DEPLOYMENT</div>
+    <h2>Getting Started with ZIA</h2>
+    <p><strong>Zscaler Internet Access (ZIA)</strong> is the Zscaler-as-a-Service secure internet and web gateway — a globally distributed proxy that inspects all internet/SaaS-bound traffic against integrated threat prevention, URL filtering, sandboxing, DLP, and CASB engines. The default route to the internet runs through the Zscaler edge; that's the design starting point.</p>
+
+    <div class="key-concept">
+      <strong>ZIA fundamental refresh:</strong> Legacy hub-and-spoke architectures backhauled all branch internet traffic to a central data centre to be inspected by appliances — slow, expensive, and limited to users in the corporate network. ZIA replaces that with a cloud edge: a single global policy engine inspects traffic at the user's nearest edge, with SSL inspection, threat prevention, and data protection delivered as a service.</p>
+    </div>
+
+    <h3>How customers get their traffic into ZIA</h3>
+    <ul class="content-list">
+      <li><strong>Zscaler Client Connector (ZCC)</strong> on managed devices for mobile users</li>
+      <li><strong>PAC files</strong> for browsers in environments without endpoint control</li>
+      <li><strong>GRE tunnels</strong> from branch routers for high-bandwidth office traffic</li>
+      <li><strong>IPSec tunnels</strong> when encryption between branch and Zscaler edge is required</li>
+    </ul>
+
+    <h3>Key design decisions for a ZIA deployment</h3>
+    <ul class="content-list">
+      <li><strong>User authentication and provisioning</strong> — IdP integration, SAML, SCIM, hosted DB or hosted file fallback</li>
+      <li><strong>Traffic forwarding method</strong> — ZCC, PAC, GRE, IPSec (often a combination)</li>
+      <li><strong>Policy framework</strong> — URL filtering, file type, cloud app, advanced threat, sandboxing, DLP, CASB</li>
+      <li><strong>Logging and reporting</strong> — Cloud NSS or NSS to SIEM (Splunk, ArcSight) for log correlation and long-term archival</li>
+    </ul>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">i</div>THE QUESTIONNAIRE-FIRST PRINCIPLE</div>
+      <div class="callout-body">Zscaler provides an <strong>Initial Deployment Assessment</strong> (sometimes called the Initial Design Document questionnaire). The customer fills it out <em>before</em> the consultant configures anything. It surfaces existing infrastructure, identity systems, and policy intent — turning the design conversation from "discovery" into "confirmation".</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">ZIA = secure internet/web gateway as a service. Four traffic-forwarding paths: <strong>ZCC · PAC · GRE · IPSec</strong>. Four design areas: <strong>Auth · Traffic Forwarding · Policy · Logging</strong>. The Initial Deployment Assessment questionnaire is the most leveraged artefact in the entire ZIA design.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">ZIA is the security checkpoint at an international airport — but instead of one checkpoint at the main terminal (legacy hub-and-spoke), Zscaler has a checkpoint at every gate worldwide. Every traveller's bag is screened against the same rulebook, by the same engines, no matter where they board. The four traffic-forwarding methods (ZCC / PAC / GRE / IPSec) are the four ways a traveller can be brought to a checkpoint — solo with their own boarding pass, with a group tour ticket, on a chartered bus, or in an armoured shuttle.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a global airport with security checkpoints at every gate as an analogy for ZIA traffic forwarding. Wide composition: a circular world map with multiple small airport terminals dotted across it. Each terminal has a tiny X-ray checkpoint icon labelled with the same rulebook icon (a clipboard with a shield). Foreground: four small cartoon travellers approach four different checkpoints by four different means. Traveller 1 strolls in alone with a single boarding pass clutched in hand (ZCC). Traveller 2 walks with a small group holding one giant group ticket (PAC file). Traveller 3 arrives in a colourful chartered bus marked with a generic transit icon (GRE). Traveller 4 steps out of a small armoured shuttle with padlock decals (IPSec). All four checkpoints have identical X-ray machines and identical guards stamping the same rulebook. Cheerful global-travel mood, soft daylight, multicultural travellers, suitcases with colourful luggage tags. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zia" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zia','ZIA')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-zia" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-zia"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ZPA -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZPA DESIGN &amp; DEPLOYMENT</span></div>
+    <p class="socratic-insight">ZPA inverts the VPN model. Instead of putting the user on the corporate network, ZPA brokers an outbound-initiated connection from an App Connector inside the customer's data centre to the user — never extending the network, never exposing applications to the internet. That inversion changes the object model. Before reading on, think about what a "policy" needs to associate when there's no network to traverse.</p>
+    <ul class="socratic-questions">
+      <li>In a VPN, policy is usually expressed as "this subnet can reach that subnet". In ZPA, policy doesn't reference subnets at all. What does it reference instead, and why is that more secure?</li>
+      <li>An Application Segment can be attached to one Segment Group (many-to-one). A Server Group can attach to multiple Connector Groups (many-to-many). Why is the App Connector → Connector Group relationship deliberately limited to many-to-one?</li>
+      <li>The deployment considerations questionnaire asks "Which ZPA edition did the customer subscribe to?". Why is edition entitlement a Day 0 question rather than a Day 30 question?</li>
+    </ul>
+    <div class="answer-area" data-section="zpa">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">ZPA policy references identity + posture + application segment — never network primitives. That's more secure because (a) the user never sees the network at all, so lateral movement is structurally impossible; (b) policy survives infrastructure changes — moving an application to a new subnet doesn't break the policy; (c) the policy is expressed in terms a security team can defend, not just in terms a network team understands.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">An App Connector belongs to exactly one Connector Group so its identity, provisioning, and policy assignment is unambiguous — there's a single source of truth for "where does this connector live and what does it serve". Making it many-to-many would explode the trust model: which group's failover rules apply when a connector is in two groups? The constraint is a deliberate simplification that makes the platform's behaviour predictable under failure.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Edition entitlement determines the <em>maximum</em> number of App Connectors, Application Segments, and concurrent Browser Access users the customer can deploy. If you design for 50 App Connectors and the edition allows 20, you've designed something you can't deliver. Edition is also the gate on premium features like Log Streaming Service (LSS). Discovering this on Day 30 means re-scoping the design conversation while users wait — a classic avoidable embarrassment.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-zpa">
+    <div class="section-label">ZPA DESIGN &amp; DEPLOYMENT</div>
+    <h2>Getting Started with ZPA</h2>
+    <p><strong>Zscaler Private Access (ZPA)</strong> delivers Zero Trust Network Access (ZTNA) — fast, secure, and reliable private application access for all users from any device or location, without ever putting them on the corporate network. ZPA is easier to deploy, more cost-effective, and more secure than a VPN.</p>
+
+    <div class="key-concept">
+      <strong>The VPN-vs-ZTNA inversion:</strong> A VPN places the user <em>on</em> the network — slow (backhauled traffic), expensive (scale by hardware), and risky (lateral movement). ZPA brokers an outbound App Connector connection that meets the user at the Zero Trust Exchange — direct, fast, no network exposure, no attack surface, no on/off VPN client headaches.
+    </div>
+
+    <h3>ZPA configuration elements and their relationships</h3>
+
+    <div class="zpa-rel-grid">
+      <div class="zpa-rel-card">
+        <div class="zpa-rel-title">Application Segments</div>
+        <div class="zpa-rel-body">Defined when identifying applications the customer wants to expose. Each segment is assigned to a single Segment Group.</div>
+        <div class="zpa-rel-rel">Segment ↔ Segment Group = <strong>many-to-one</strong></div>
+      </div>
+      <div class="zpa-rel-card">
+        <div class="zpa-rel-title">App Connectors</div>
+        <div class="zpa-rel-body">Connection-side primitive. Deployed inside the customer's data centre, assigned to one Connector Group via a provisioning key.</div>
+        <div class="zpa-rel-rel">Connector ↔ Connector Group = <strong>many-to-one</strong></div>
+      </div>
+      <div class="zpa-rel-card">
+        <div class="zpa-rel-title">Server Groups</div>
+        <div class="zpa-rel-body">Folders that hold connection info. Can be empty (auto-discovery) or pre-populated with specific servers. Each Server Group attaches to ≥1 Connector Group.</div>
+        <div class="zpa-rel-rel">Server Group ↔ Connector Group = <strong>many-to-many</strong></div>
+      </div>
+      <div class="zpa-rel-card">
+        <div class="zpa-rel-title">Policy</div>
+        <div class="zpa-rel-body">Explicit or implicit association between identity + Application Segments and/or Segment Groups.</div>
+        <div class="zpa-rel-rel">Policy refers to <strong>App Segment(s) and/or Segment Group(s)</strong></div>
+      </div>
+    </div>
+
+    <div class="img-display-block">
+      <img src="2.png" alt="ZPA configuration relationship map" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Flat green minimalist illustration of the ZPA configuration object model. Two columns connected by lines: left column has stacked rounded rectangles labelled with tiny icons — Application Segments (app icon) connecting to Segment Groups (folder icon) with a "many-to-one" arrow; right column has stacked App Connectors (plug icon) connecting upward to Connector Groups (network-folder icon) with a "many-to-one" arrow, and across to Server Groups (server-rack icon) with a "many-to-many" arrow. A small Policy diamond sits between the two columns linking selected Segment Groups to selected Connector Groups. Soft green gradient connecting lines. Clean simple shapes, no text labels.</div>
+    </div>
+
+    <h3>Six ZPA design areas</h3>
+    <div class="areas-grid">
+      <div class="area-card"><div class="area-num">1</div><div class="area-text">Authentication</div></div>
+      <div class="area-card"><div class="area-num">2</div><div class="area-text">Zscaler Client Connector</div></div>
+      <div class="area-card"><div class="area-num">3</div><div class="area-text">App Connectors</div></div>
+      <div class="area-card"><div class="area-num">4</div><div class="area-text">Applications &amp; Application Segments</div></div>
+      <div class="area-card"><div class="area-num">5</div><div class="area-text">Policy Types</div></div>
+      <div class="area-card"><div class="area-num">6</div><div class="area-text">Logging &amp; Diagnostics</div></div>
+    </div>
+
+    <h3>Pre-customer-meeting questionnaire</h3>
+    <div class="qa-grid">
+      <div class="qa-item"><div class="qa-q">Which ZPA edition did the customer subscribe to?</div><div class="qa-a">Determines App Connector / Application Segment counts and Log Streaming Service (LSS) entitlement.</div></div>
+      <div class="qa-item"><div class="qa-q">What type of authentication / IdP do they use?</div><div class="qa-a">SAML / SSO determines the user-side integration and provisioning model.</div></div>
+      <div class="qa-item"><div class="qa-q">What client machines will use ZPA?</div><div class="qa-a">Windows, macOS, Android — drives the Zscaler Client Connector deployment plan.</div></div>
+      <div class="qa-item"><div class="qa-q">Is DNS available internally and can it resolve external public domains?</div><div class="qa-a">Required so App Connectors can communicate with both internal and external resources.</div></div>
+      <div class="qa-item"><div class="qa-q">What is their data centre infrastructure and the location of their applications?</div><div class="qa-a">Drives Application Connector placement and HA topology.</div></div>
+      <div class="qa-item"><div class="qa-q">Which applications do they want to use with ZPA?</div><div class="qa-a">Drives initial policy creation — known list vs. discovery-based.</div></div>
+      <div class="qa-item"><div class="qa-q">Which SIEM do they use?</div><div class="qa-a">Determines whether LSS is required for log retention &gt;14 days into the customer's SIEM.</div></div>
+    </div>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">!</div>ADDITIONAL CONSIDERATIONS</div>
+      <div class="callout-body">Zscaler's recommended practice is to have a comprehensive configuration <em>before</em> becoming widely deployed. Configuration changes after deployment need to be carefully evaluated — the ordering of Access Policies, Application Segment creation, and Application Definitions can and will usually impact existing access. Maintain a checklist of applications to be verified on every configuration change.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">ZPA's 4 configuration primitives: <strong>Application Segments · App Connectors · Server Groups · Policy</strong>. Relationship cheat-sheet: <strong>App Seg → Segment Group = many-to-one</strong>; <strong>Connector → Connector Group = many-to-one</strong>; <strong>Server Group ↔ Connector Group = many-to-many</strong>; <strong>App Seg ↔ Server Group = many-to-many</strong>. Six design areas: <strong>Auth · ZCC · App Connectors · Apps &amp; Segments · Policy · Logging</strong>.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">ZPA is an exclusive members' club where the door staff never reveals where the rooms are. You arrive, show your member ID + posture badge (auth + device), and the staff personally escorts you to <em>the specific room</em> you're booked into — never down a hallway you don't need to see. The App Connectors are the staff doing the escorting from inside; the Application Segments are the rooms; the Segment Groups are the floors; the Policy is the bookings ledger that maps members to rooms. A VPN, by contrast, hands you a master key and a hallway map and trusts you to wander only where you're allowed.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an exclusive members' club with personal escorts as an analogy for ZPA. Wide composition split into two contrasting scenes. Left scene (VPN): a hotel-like building with a long visible hallway behind a single open door, a traveller standing at the threshold with a large brass master key, a map of the entire floor in their other hand, mood of "wander freely" with subtle question marks above doors. Right scene (ZPA): the same traveller now at the front desk of a sleek private members' club — a friendly concierge in a smart waistcoat checks a small membership card AND a glowing device-posture badge, then personally escorts the traveller through a magic doorway that opens to reveal only the single specific room they booked. The other rooms remain invisible behind featureless walls. A small bookings ledger floats nearby showing a tiny map of which members go to which rooms. Warm interior lighting, plush carpet, cheerful round-faced characters. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zpa" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zpa','ZPA')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-zpa" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-zpa"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ZDX -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZDX DESIGN &amp; DEPLOYMENT</span></div>
+    <p class="socratic-insight">ZDX measures the digital experience of every single user in the organisation — but ZDX itself doesn't carry user traffic. It's purely observation. Yet ZDX deployments use the exact same six-phase methodology as ZIA and ZPA. Before reading on, think about why monitoring needs the same structured phases as a traffic-bearing service.</p>
+    <ul class="socratic-questions">
+      <li>If ZDX doesn't carry user traffic, what's actually being "rolled out" in the Pilot and Production phases of a ZDX deployment?</li>
+      <li>ZDX requires Zscaler Client Connector if it isn't already deployed. Why is ZCC a hard prerequisite — what does ZDX get from the endpoint that it can't get from the cloud edge?</li>
+      <li>The ZDX deployment methodology asks consultants to "configure private and cloud-based applications to monitor and configure probes". Why are probes a design-time decision rather than an ops-time one?</li>
+    </ul>
+    <div class="answer-area" data-section="zdx">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">What's being rolled out is <em>monitoring coverage</em>: enabling ZDX for specific user groups, defining which apps to probe, calibrating alerting thresholds, and integrating dashboards into the customer's NOC/SOC workflow. Pilot validates that probe results match real user experience and that alert volume is manageable. Production scales coverage to the broader user base. The methodology is identical in shape even though no user traffic flows through ZDX.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">ZCC is the only place that can measure end-to-end user experience from the user's actual device: device CPU/memory, Wi-Fi signal, last-hop latency, and the full path through the network. The cloud edge only sees the leg of the journey it's involved in. Without ZCC, ZDX would only know "the user reached our edge" — not whether the user is suffering on the way there.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Probes define what "good" looks like for each application — without a baseline, alerts are noise. Probes also need to be calibrated against business expectations (e.g. Salesforce SLA is &lt;500 ms; Zoom needs &lt;150 ms RTT). Those targets come from the customer's business context, which is a design conversation. Setting probes at ops time means flying blind for the first weeks of production, which is the worst time to be blind.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-zdx">
+    <div class="section-label">ZDX DESIGN &amp; DEPLOYMENT</div>
+    <h2>Getting Started with ZDX</h2>
+    <p><strong>Zscaler Digital Experience (ZDX)</strong> is an intelligent digital experience monitoring solution delivered as a service from the Zscaler cloud. It provides end-to-end visibility and troubleshooting for any user or application, regardless of location — combining continuous user, network, security, application, and help-desk insights into a unified view of performance.</p>
+
+    <div class="key-concept">
+      <strong>ZDX fundamental refresh:</strong> Most organisations carry multiple point-monitoring tools that miss the user's full context — fragmented visibility, extended troubleshooting times, and visibility gaps. ZDX uses a data-centric approach with continuous monitoring across fixed sites <em>and</em> remote workers, with metrics directly from the user's device, the network, and the application.
+    </div>
+
+    <h3>Four steps to enable ZDX</h3>
+    <ul class="content-list">
+      <li><strong>Deploy Zscaler Client Connector</strong> if you haven't already</li>
+      <li><strong>Enable ZDX</strong> for all or selected user groups</li>
+      <li><strong>Select private and cloud-based applications</strong> to monitor and configure probes</li>
+      <li><strong>Review user experience insights</strong> and integrate with the customer's NOC/SOC workflow</li>
+    </ul>
+
+    <div class="img-display-block">
+      <img src="3.png" alt="ZDX architecture flow" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>3.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Flat green minimalist illustration of the ZDX architecture flow. Left side: a user laptop with a tiny ZCC client icon glowing. Centre: an arc of cloud / network / device probes (tiny dots labelled with WiFi / ISP / VPN / app icons) feeding into a central Zero Trust Exchange shield. Right side: an "AI-Powered Root Cause Analysis" small brain icon, then a "User Experience" dashboard with a single happy/neutral/sad face indicator on a colour-graded bar from red through amber to green. Subtle connecting lines from probes into the brain, then out to the dashboard. Clean simple shapes, no text labels.</div>
+    </div>
+
+    <h3>ZDX deployment methodology — same six phases</h3>
+    <p>ZDX deployments use the same six phases as ZIA and ZPA — only the activities inside each phase differ:</p>
+
+    <div class="phase-card">
+      <div class="phase-card-head"><div class="phase-num">1</div><div class="phase-title">Initiate · onboarding + prerequisites</div></div>
+      <p>Initiation activities and onboarding tasks. First-step Deployment Specialist kick-off meeting (30–60 min) between the customer's project sponsor + technical leads and the consultant. Identify key sponsors, review project plan, project sponsor, project manager, possible deflectors and blockers, deadlines, plan to remove blockers.</p>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-card-head"><div class="phase-num">2</div><div class="phase-title">Plan · ZDX Architecture design</div></div>
+      <p>Capture design specifications for configuration tasks, leveraging the Blueprint Design + Reference Architecture artefacts. Use the ZDX reference architecture as the starting point. Gathered during ZDX Architecture workshops, including: <strong>Traffic Forwarding · Authentication · Web Apps · UCaaS Apps · Alerts · Webhooks · SaaS Integration</strong>.</p>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-card-head"><div class="phase-num">3</div><div class="phase-title">Configure · ZDX configuration deep-dive</div></div>
+      <p>All configuration tasks are accounted for during this phase. Targeted at Pilot users, this phase ensures the platform is configured according to the design before any users are onboarded. Authentication (full SAML/SCIM via IdP), Web Apps (app monitors with thresholds tuned), UCaaS Apps (Zoom / Teams probes), Critical Applications (high-priority app set monitored).</p>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-card-head"><div class="phase-num">4</div><div class="phase-title">Pilot · controlled monitoring rollout</div></div>
+      <p>Once the deployment is fine-tuned the Deployment Specialist provides handholding assistance for executing the pilot rollout. The Pilot rollout confirms the readiness of the deployed environment in preparation for the next stage of the rollout. Customers can leverage Pilot users to validate the design against real users, then sign off Pilot acceptance.</p>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-card-head"><div class="phase-num">5</div><div class="phase-title">Production · widen the audience</div></div>
+      <p>The Production phase aims at essentially extending the rollout of ZDX services to a wider range of users in corporate office locations following the successful completion of Pilot rollout. The Deployment Specialist must be prepared to provide emergency rollout support and assistance during this phase. Roll-out cadence is determined by user counts (e.g. 50 → 100 → 1,000 → all).</p>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-card-head"><div class="phase-num">6</div><div class="phase-title">Transition · final closure + knowledge transfer</div></div>
+      <p>The final closure phase of the project, marking the end of the deployment project lifecycle. Schedule a session with the customer for final knowledge transfer of the deployed ZDX solution, review the collected ZDX metrics for users / applications / devices, walk through critical configuration areas, present deployment recap, email project closure summary, hand out all customer-facing completed deliverable documents.</p>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">ZDX = digital experience monitoring as a service. 4 enablement steps: <strong>deploy ZCC · enable ZDX · select apps + probes · review insights</strong>. Same 6 phases as ZIA/ZPA — only the activities inside each phase change. ZCC is a <strong>hard prerequisite</strong> — without it, no endpoint-side metrics.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">ZDX is a hospital vitals monitor strapped to every patient — but the patients in this hospital are the company's users. Heart rate is CPU/memory, blood pressure is network latency, temperature is application response time. Without a monitor on each patient (ZCC on each device), the nurses' station only knows that the patients walked into the hospital — not whether anyone collapsed in the hallway. The "rollout" of monitoring is choosing which patients to monitor first, what thresholds count as an alarm, and which doctor's pager rings when something spikes.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A6.png" alt="Analogy illustration A6" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A6.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a hospital ward with vitals monitors as an analogy for ZDX. Wide composition. Multiple cheerful cartoon patients sit on hospital beds, each wearing a small wrist-strap monitor with a tiny screen showing a colourful heartbeat line and a smiley/neutral/frowny indicator. Above each bed a small overhead dashboard shows mini-graphs labelled with little icons — a heart for CPU, a droplet for latency, a thermometer for response time. Centre of the room: a friendly nurse at a single big central station watching a panoramic dashboard that aggregates every patient's vitals, with a small pager glowing red for the one patient whose vitals just dipped. To the right, a doctor pages a tablet-wielding IT engineer ("specialist on call"). Bright clean medical environment, soft daylight, mood of attentive care. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zdx" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zdx','ZDX')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-zdx" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-zdx"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · RECAP</span></div>
+    <p class="socratic-insight">You've now seen the methodology end-to-end across three services. The pattern is repetitive on purpose — that's how it scales across consultants. Before reading the recap, see if you can summarise the methodology and the three service overviews in just three short sentences each.</p>
+    <ul class="socratic-questions">
+      <li>If you had to teach this entire course to a new consultant in 60 seconds, what's the single sentence about the methodology, and the single sentence about each of ZIA/ZPA/ZDX, that you'd lead with?</li>
+      <li>This course's central claim is "follow the six phases and you'll succeed". What's the strongest counter-argument — when might rigid phase adherence actually hurt the customer?</li>
+      <li>The next 9 courses in EDU-302 each go deep into one service area. What from this Deployment Methodology course should you carry forward as the "frame" through which to read those deeper courses?</li>
+    </ul>
+    <div class="answer-area" data-section="recap">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Methodology: "Six phases — Initiate, Plan, Configure, Pilot, Production, Transition — each producing a specific artefact that survives the engagement." ZIA: "Internet/web gateway as a service — pick a traffic-forwarding method per user population." ZPA: "ZTNA via outbound App Connectors — policy references identity + app, never network." ZDX: "Digital experience monitoring — ZCC is mandatory, probes are the design decision."</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Rigid phase adherence hurts when the customer's reality changes faster than the phase plan. A merger announced mid-Configure, a new regulatory deadline, an executive sponsor change — these break the plan's assumptions. Strong consultants treat the six phases as a default scaffold, not a contract, and explicitly re-plan when reality shifts. Following the methodology dogmatically when the world has changed produces a technically correct deployment that solves the wrong problem.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Carry forward the <em>phase lens</em>: every later deep-dive (Identity, Connectivity, Access Control, Cyberthreat, etc.) is best read by asking "in which phase does this design decision get locked in, and what's the deliverable that captures it?". That reframes feature deep-dives as engagement artefacts rather than abstract product walks — exactly the consultant's view.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-recap">
+    <div class="section-label">RECAP &amp; RESOURCES</div>
+    <h2>In Summary</h2>
+    <p>You've learned Zscaler's proven approach to successful deployment — the people, the phases, and the per-service design conversation:</p>
+
+    <ul class="content-list">
+      <li><strong>Deployment Specialists</strong> are the consultants who deploy and manage Zscaler's cloud security solutions — quality + satisfaction; five core responsibilities.</li>
+      <li><strong>Six phases</strong>: Initiate · Plan · Configure · Pilot Roll-out · Production Roll-out · Transition. Each has methodology actions and deliverables.</li>
+      <li><strong>ZIA</strong>: cloud secure internet/web gateway. Four traffic forwarding paths (ZCC, PAC, GRE, IPSec). Four design areas: Auth, Forwarding, Policy, Logging. Initial Deployment Assessment is the central artefact.</li>
+      <li><strong>ZPA</strong>: ZTNA via outbound App Connectors. Four configuration primitives with explicit relationships (many-to-one, many-to-many). Six design areas. Edition entitlement is a Day 0 question.</li>
+      <li><strong>ZDX</strong>: digital experience monitoring. ZCC is mandatory. Same six phases — different activities. Probes are a design-time decision because they encode business expectations.</li>
+    </ul>
+
+    <p>Next course: <strong>Identity Services</strong> — the recommended authentication and provisioning methods for ZIA, end-user and admin-portal authentication for ZPA, and provisioning + role-based administration for ZDX.</p>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">The 60-second elevator pitch — <strong>Methodology</strong>: 6 phases, each with deliverables. <strong>Specialists</strong>: quality + satisfaction. <strong>ZIA</strong>: 4 forwarding paths, 4 design areas. <strong>ZPA</strong>: 4 primitives, 6 design areas, identity-not-subnet policy. <strong>ZDX</strong>: ZCC mandatory, monitoring rollout, same 6 phases.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">This course is the consultant's playbook — the binder every senior delivery person keeps under their arm. The six phases are the running order. The per-service overviews are the scouting reports on the three opponents you'll face most often. The questionnaires are the pre-game intel forms. None of it tells you how to play the game on the day — but if you walk in without it, you're improvising. Every subsequent EDU-302 course is a deeper play in the same book.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A7.png" alt="Analogy illustration A7" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A7.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a sports playbook binder as an analogy for the deployment methodology course. Wide composition. Foreground: a thick three-ring binder lying open on a wooden table, with colourful tabbed dividers visible — six tabs labelled with small phase icons (clipboard, blueprint, gear, paper airplane, factory, ribbon-tied folder) and three more tabs at the back showing three service icons (cloud-shield for ZIA, lock-key for ZPA, vitals-monitor for ZDX). Pages show small annotated diagrams and pre-game intel checklists with handwritten ticks. Background: a relaxed senior coach in a tracksuit pointing at a whiteboard with a younger trainee scribbling notes. Warm afternoon light through a window, mood of mentorship. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap','Recap')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap"></span></div></div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-302-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-302 Hub
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleDone(this,0)"><div class="subtopic-check"></div><span>Course = 3 blocks (Role · Methodology · Per-service)</span></li>
+      <li onclick="toggleDone(this,1)"><div class="subtopic-check"></div><span>Deployment Specialist's 5 responsibilities</span></li>
+      <li onclick="toggleDone(this,2)"><div class="subtopic-check"></div><span>Six phases in order: Initiate → Plan → Configure → Pilot → Production → Transition</span></li>
+      <li onclick="toggleDone(this,3)"><div class="subtopic-check"></div><span>Each phase's methodology actions + deliverables</span></li>
+      <li onclick="toggleDone(this,4)"><div class="subtopic-check"></div><span>ZIA's 4 traffic forwarding methods (ZCC / PAC / GRE / IPSec)</span></li>
+      <li onclick="toggleDone(this,5)"><div class="subtopic-check"></div><span>Initial Deployment Assessment questionnaire = ZIA central artefact</span></li>
+      <li onclick="toggleDone(this,6)"><div class="subtopic-check"></div><span>ZPA's 4 configuration primitives + their relationships</span></li>
+      <li onclick="toggleDone(this,7)"><div class="subtopic-check"></div><span>ZPA's 6 design areas</span></li>
+      <li onclick="toggleDone(this,8)"><div class="subtopic-check"></div><span>ZPA pre-meeting questionnaire (7 questions)</span></li>
+      <li onclick="toggleDone(this,9)"><div class="subtopic-check"></div><span>ZDX's 4 enablement steps + ZCC as prerequisite</span></li>
+      <li onclick="toggleDone(this,10)"><div class="subtopic-check"></div><span>ZDX uses the same 6 phases</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="quick-ref"><div class="quick-ref-term">Deployment Specialist</div><div class="quick-ref-def">The consultant who plans, configures, and runs the customer's Zscaler deployment from kickoff to handover.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Six Phases</div><div class="quick-ref-def">Initiate · Plan · Configure · Pilot Roll-out · Production Roll-out · Transition.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Initial Design Document</div><div class="quick-ref-def">First deliverable of Plan; refined every phase; becomes the Final Zscaler Design Document at Transition.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Initial Deployment Assessment</div><div class="quick-ref-def">Pre-Configure questionnaire that surfaces a customer's existing infrastructure, identity systems, and policy intent.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Application Segment</div><div class="quick-ref-def">ZPA primitive — the unit of application exposure, attached many-to-one to a Segment Group.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">App Connector</div><div class="quick-ref-def">ZPA primitive — outbound-only connector inside the data centre; one connector belongs to exactly one Connector Group.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">LSS</div><div class="quick-ref-def">Log Streaming Service — premium ZPA entitlement for streaming logs &gt;14 days into a customer SIEM.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Probe (ZDX)</div><div class="quick-ref-def">A monitoring target on a specific application with thresholds; design-time decision because thresholds encode business SLAs.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-302 · <span>Section 2</span></div>
+  <div class="footer-right">Deployment Methodology · Section 2 of 11</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu302-deployment-methodology';
+const SECTIONS={overview:'Overview',specialists:'Deployment Specialists',phases:'Six Phases',zia:'ZIA',zpa:'ZPA',zdx:'ZDX',recap:'Recap'};
+
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();initNotes();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
+  document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
+  document.querySelectorAll('.analogy-img img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+});
+</script>
+</body>
+</html>
