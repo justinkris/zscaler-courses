@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zscaler Digital Delivery Consultant Courses</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#fef9f0;--cream-dark:#f5eddb;--ink:#1a1209;--ink-soft:#5a4a35;--ink-muted:#8a7660;
+  --orange:#ff6b35;--orange-light:#fff3ec;--orange-border:#ffd5c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+  --border:#ede5d8;
+}
+html.pt-init body{opacity:0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px 100px;animation:pageEnter 0.45s ease both;}
+@keyframes pageEnter{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--ink-muted);letter-spacing:0.08em;margin-bottom:12px;align-self:flex-start;}
+.breadcrumb a{color:var(--blue);text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:var(--ink-muted);}
+.page-title{text-align:center;margin-bottom:48px;}
+.category-badge{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:var(--cream);padding:5px 14px;border-radius:20px;font-size:11px;letter-spacing:0.1em;margin-bottom:14px;}
+.badge-dot{width:5px;height:5px;background:var(--blue);border-radius:50%;}
+h1{font-family:'Fraunces',serif;font-size:48px;font-weight:700;line-height:1.0;color:var(--ink);}
+h1 em{font-style:italic;font-weight:400;color:var(--blue);}
+.page-tagline{font-family:'Fraunces',serif;font-size:15px;font-style:italic;color:var(--ink-muted);margin-top:10px;line-height:1.6;}
+.hub-layout{display:grid;grid-template-columns:1fr 260px;gap:32px;width:100%;max-width:1000px;align-items:start;}
+.card-col{display:flex;flex-direction:column;gap:20px;}
+.nav-card{background:var(--cream);border:1px solid var(--border);border-radius:20px;overflow:hidden;text-decoration:none;display:flex;flex-direction:column;position:relative;transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.4s ease,border-color 0.3s ease;}
+.nav-card:hover{z-index:2;}
+.nav-card::before{content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(to right,transparent,rgba(255,255,255,0.22) 50%,transparent);transform:skewX(-15deg);pointer-events:none;z-index:2;}
+.nav-card:hover::before{animation:shine 0.55s ease forwards;}
+@keyframes shine{to{left:160%;}}
+.nav-card.c-blue:hover{transform:translateY(-16px) scale(1.03) rotate(-1deg);box-shadow:0 28px 56px rgba(26,109,204,0.28),0 0 0 1.5px var(--blue-border);border-color:var(--blue-border);}
+.nav-card.c-blue:hover .card-img{background:#b8d5f5!important;}
+.nav-card.c-blue .card-arrow{color:var(--blue);}
+.card-img{width:100%;height:80px;background:var(--cream-dark);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:background 0.3s ease;}
+.card-img-icon{font-size:32px;opacity:0.7;}
+.nav-card.c-blue .card-img-icon{color:var(--blue);}
+.nav-card.c-blue{border-color:var(--blue-border);}.nav-card.c-blue .card-img{background:var(--blue-light);}
+.card-body{padding:18px 22px 20px;flex:1;display:flex;flex-direction:column;gap:5px;}
+.card-label{font-size:10px;letter-spacing:0.16em;color:var(--ink-muted);}
+.card-name{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--ink);line-height:1.2;}
+.card-sub{font-size:13px;color:var(--ink-muted);margin-top:2px;}
+.card-desc{font-size:12px;color:var(--ink-muted);line-height:1.6;max-height:0;overflow:hidden;opacity:0;margin-top:0;transition:max-height 0.35s ease,opacity 0.25s ease,margin-top 0.3s ease;}
+.nav-card:hover .card-desc{max-height:120px;opacity:1;margin-top:4px;}
+.card-arrow{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;letter-spacing:0.08em;max-height:0;overflow:hidden;opacity:0;margin-top:0;transition:max-height 0.3s ease,opacity 0.25s ease,margin-top 0.3s ease;}
+.nav-card:hover .card-arrow{max-height:32px;opacity:1;margin-top:8px;}
+.nav-card:hover .card-arrow svg{animation:nudge 0.35s cubic-bezier(0.34,1.56,0.64,1) 0.1s both;}
+@keyframes nudge{to{transform:translateX(4px);}}
+.sidebar{background:#fff;border:1px solid var(--border);border-radius:20px;padding:24px 22px;position:sticky;top:24px;}
+.sidebar-title{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.sidebar-links{display:flex;flex-direction:column;gap:2px;}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;text-decoration:none;color:var(--ink-soft);font-size:13px;font-weight:500;transition:background 0.15s,color 0.15s;}
+.sidebar-link:hover{background:var(--cream-dark);color:var(--ink);}
+.sidebar-link-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.sidebar-divider{height:1px;background:var(--border);margin:12px 0;}
+.sidebar-back{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--blue);font-size:12px;font-weight:600;padding:8px 12px;border-radius:10px;border:1px solid var(--blue-border);transition:background 0.15s;}
+.sidebar-back:hover{background:var(--blue-light);}
+.coming-soon{background:#fff;border:1.5px dashed var(--border);border-radius:20px;padding:32px 24px;text-align:center;color:var(--ink-muted);}
+.coming-soon-label{font-size:10px;letter-spacing:0.16em;color:var(--ink-muted);text-transform:uppercase;margin-bottom:8px;}
+.coming-soon-title{font-family:'Fraunces',serif;font-size:18px;color:var(--ink-soft);margin-bottom:6px;}
+.coming-soon-body{font-size:12px;color:var(--ink-muted);line-height:1.6;}
+@media(max-width:800px){.hub-layout{grid-template-columns:1fr;}.sidebar{position:static;}}
+</style>
+</head>
+<body>
+
+<div class="breadcrumb">
+  <a href="../index.html">Zscaler Courses</a>
+  <span class="breadcrumb-sep">›</span>
+  Digital Delivery Consultant
+</div>
+
+<div class="page-title">
+  <div class="category-badge"><span class="badge-dot"></span> Digital Delivery Consultant</div>
+  <h1>Digital Delivery <em>Consultant</em></h1>
+  <p class="page-tagline">The third role in the Zscaler for Users learning track — design, deploy, and deliver customer outcomes.</p>
+</div>
+
+<div class="hub-layout">
+  <div class="card-col">
+
+    <a class="nav-card c-blue" href="EDU-302/edu-302-hub.html">
+      <div class="card-img"><div class="card-img-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div></div>
+      <div class="card-body">
+        <div class="card-label">EDU-302 · LEARNING PATH</div>
+        <div class="card-name">Zscaler for Users — Delivery Consultant</div>
+        <div class="card-sub">11 courses + Lab + Capstone Project → ZDDC certification</div>
+        <div class="card-desc">Deployment methodology, identity, connectivity, platform, access control, cyberthreat protection, data security, risk management, digital experience, and Zero Trust automation — applied through a hands-on capstone engagement.</div>
+        <div class="card-arrow">Open EDU-302 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </a>
+
+    <div class="coming-soon">
+      <div class="coming-soon-label">Coming Later</div>
+      <div class="coming-soon-title">Architect Track</div>
+      <div class="coming-soon-body">The next role-based path in the Zscaler Cyber Academy — currently flagged as "coming soon" in the official catalog.</div>
+    </div>
+
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-title">Courses</div>
+    <div class="sidebar-links">
+      <a class="sidebar-link" href="EDU-302/edu-302-hub.html">
+        <span class="sidebar-link-dot" style="background:var(--blue);"></span>EDU-302 — Delivery Consultant
+      </a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <a class="sidebar-back" href="../index.html">← Back to All Courses</a>
+  </aside>
+</div>
+
+<script src="../transitions.js"></script>
+</body>
+</html>
