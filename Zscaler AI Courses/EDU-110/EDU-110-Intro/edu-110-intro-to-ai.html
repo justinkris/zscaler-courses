@@ -202,6 +202,21 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .img-prompt-label{font-size:9px;letter-spacing:0.18em;font-weight:600;opacity:0.5;text-transform:uppercase;}
 .img-prompt-text{font-size:12px;line-height:1.7;font-style:italic;text-align:center;opacity:0.8;max-width:440px;color:inherit;}
 .img-size{font-size:10px;font-weight:600;letter-spacing:0.14em;opacity:0.45;margin-top:2px;}
+/* COLLAPSIBLE ANALOGIES */
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+/* Image missing: never show the placeholder message — only prompt button remains visible */
+.analogy-img .img-missing-msg{display:none !important;}
+
+/* ANALOGY IMG ZOOM */
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+
 </style>
 </head>
 <body>
@@ -926,6 +941,45 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 });
 function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+/* COLLAPSIBLE-ANALOGIES-JS */
+(function(){
+  function init(){
+    document.querySelectorAll('.analogy-box').forEach(function(box){
+      if(box.dataset.collapsibleInit) return;
+      box.dataset.collapsibleInit = '1';
+      box.classList.add('expanded'); // expanded by default
+      var label = box.querySelector(':scope > .analogy-label');
+      if(!label) return;
+      label.addEventListener('click', function(){
+        box.classList.toggle('expanded');
+      });
+    });
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
+/* ANALOGY-IMG-ZOOM-JS */
+(function(){
+  function init(){
+    document.querySelectorAll('.analogy-img img').forEach(function(img){
+      if(img.dataset.zoomInit) return;
+      img.dataset.zoomInit = '1';
+      img.addEventListener('click', function(){
+        img.classList.toggle('zoomed');
+      });
+    });
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
 </script>
 </body>
 </html>

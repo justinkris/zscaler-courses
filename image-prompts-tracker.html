@@ -37,6 +37,12 @@ h1 em{font-style:italic;color:var(--accent);}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--success),var(--accent));border-radius:6px;transition:width 0.3s ease;}
 
 .controls{display:flex;gap:12px;padding:18px 48px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center;}
+.course-filters{display:flex;gap:6px;padding:14px 48px;background:var(--surface-2);border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center;}
+.course-filters-label{font-size:10px;letter-spacing:0.14em;color:var(--text-muted);text-transform:uppercase;font-weight:700;margin-right:6px;}
+.course-btn{background:var(--surface);color:var(--text-soft);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-family:'Epilogue',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.04em;cursor:pointer;transition:all 0.15s;}
+.course-btn:hover{color:var(--text);border-color:var(--accent);}
+.course-btn.active{background:var(--accent-2);color:#0d1626;border-color:var(--accent-2);}
+.course-btn .count{font-size:9px;opacity:0.7;margin-left:4px;}
 .search-box{flex:1;min-width:220px;}
 .search-box input{width:100%;background:var(--surface-2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-family:'Epilogue',sans-serif;font-size:13px;outline:none;}
 .search-box input::placeholder{color:var(--text-muted);}
@@ -114,6 +120,10 @@ footer a{color:var(--accent);text-decoration:none;}
   <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
 </div>
 
+<div class="course-filters" id="course-filters">
+  <span class="course-filters-label">Course</span>
+</div>
+
 <div class="controls">
   <div class="search-box">
     <input type="text" id="search" placeholder="Search by section, filename, or prompt text...">
@@ -143,7 +153,32 @@ function saveDone(s){try{localStorage.setItem(STORE_KEY,JSON.stringify(s));}catc
 
 let done = loadDone();
 let activeFilter = 'all';
+let activeCourse = 'all';
 let searchQuery = '';
+
+// Build course filter buttons dynamically from entries
+function buildCourseFilters(){
+  const counts = {};
+  ENTRIES.forEach(e => { counts[e.course] = (counts[e.course] || 0) + 1; });
+  const courses = Object.keys(counts);
+  const container = document.getElementById('course-filters');
+  let html = '<span class="course-filters-label">Course</span>';
+  html += '<button class="course-btn active" data-course="all">All<span class="count">' + ENTRIES.length + '</span></button>';
+  courses.forEach(c => {
+    // Shorten label: take the EDU-XXX prefix only
+    const short = c.split('·')[0].trim();
+    html += '<button class="course-btn" data-course="' + esc(c) + '" title="' + esc(c) + '">' + esc(short) + '<span class="count">' + counts[c] + '</span></button>';
+  });
+  container.innerHTML = html;
+  container.querySelectorAll('.course-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      container.querySelectorAll('.course-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCourse = btn.dataset.course;
+      render();
+    });
+  });
+}
 
 const CHECK_SVG = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 8 7 12 13 4"/></svg>';
 
@@ -206,6 +241,7 @@ function render(){
 }
 
 function matchesFilters(e){
+  if(activeCourse !== 'all' && e.course !== activeCourse) return false;
   if(activeFilter === 'diagram' && e.kind !== 'Diagram') return false;
   if(activeFilter === 'analogy' && e.kind !== 'Analogy') return false;
   if(activeFilter === 'todo' && done[e.id]) return false;
@@ -304,6 +340,7 @@ document.getElementById('reset-btn').addEventListener('click', () => {
   }
 });
 
+buildCourseFilters();
 render();
 </script>
 </body>
