@@ -141,6 +141,54 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .quick-ref{background:#0a1f12;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
 .quick-ref-term{font-size:11px;font-weight:600;color:#4ade80;letter-spacing:0.06em;margin-bottom:4px;}
 .quick-ref-def{font-size:12px;color:#6aaa80;line-height:1.6;}
+/* SOCRATIC COACHING */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--green);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--green);}
+/* MENTAL NOTES & ANALOGIES */
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--green-glow);border:1px solid var(--green-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--green);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2);border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -190,6 +238,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <div class="main-content">
 
   <!-- ZIA APIs -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZIA APIs</span></div>
+  <p class="socratic-insight">ZIA gives you programmatic control over your organization's internet security policies — every URL filtering rule, every user configuration, every security policy. Think about what it means for a security team when those controls are accessible through an API call from a script.</p>
+  <ul class="socratic-questions">
+    <li>ZIA's Cloud Service API is "limited availability" and requires contacting support to enable. Why would Zscaler restrict access to certain APIs rather than making them universally available to all admins?</li>
+    <li>The Sandbox Submission API lets you submit files for behavioral analysis. At what point in a security workflow would you want this to happen automatically — without a human analyst initiating each submission?</li>
+    <li>Third-Party App Governance API manages SaaS app consent. Why does controlling which SaaS apps employees can use need to happen at the network level rather than just through IT policy or HR rules?</li>
+  </ul>
+  <div class="answer-area" data-section="zia">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Limited-availability APIs like Cloud Service give powerful, low-level control that can break a tenant if misused — so Zscaler gates them behind a support conversation to confirm the customer actually needs that capability and understands the operational risk. It also lets Zscaler track adoption, support edge cases properly, and stagger rollout on infrastructure that wasn't designed for unbounded admin self-service. Universal availability would turn a niche power-user feature into a default attack surface.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">You'd want automatic Sandbox submission when a file is downloaded or attached but hasn't been seen by the cloud before — that's the "unknown file" moment where human-in-the-loop is too slow. Triggering Sandbox from a SIEM rule, an EDR detection, or an inline policy means the verdict comes back before the file ever executes on an endpoint. The whole point of automation here is closing the gap between exposure and analysis to near-zero.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">IT policy and HR rules only work if employees follow them; the network layer enforces them whether the user complies or not. A user can ignore a "don't sign up for random SaaS apps" memo, but they can't OAuth-grant a shadow SaaS app if the Third-Party App Governance API has blocked consent at the proxy. Network-level enforcement converts policy into a technical control instead of a request.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-zia">
     <div class="section-label">ZIA APIs</div>
     <h2>Zscaler Internet Access APIs</h2>
@@ -220,6 +289,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">ZIA API enables automation of URL filtering, policy management, user and group configurations, traffic forwarding, and reporting. Prerequisites: Add an API key — only admins with the API Key Management role can create these.</div>
     </div>
   </div>
+  <div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">ZIA API = 3 components: (1) Cloud Service API — limited, contact Zscaler Support to enable; (2) Sandbox Submission API — submit files for zero-day behavioral analysis; (3) Third-Party App Governance API — SaaS consent + catalog search. Only admins with the API Key Management role can create ZIA API keys — exam gotcha.</div>
+  </div>
+</div>
+<div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">ZIA API is like giving a security guard a programmable rulebook. Instead of checking each visitor manually, you hand the guard an API call that says "anyone heading to gambling sites — turn them around; anything that looks like malware — send it to the inspection lab." The guard follows the rules exactly, at scale, without fatigue.</div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zia" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zia','ZIA APIs')">Add Question</button></div></div>
@@ -228,6 +308,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- ZPA APIs -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZPA APIs</span></div>
+  <p class="socratic-insight">ZPA provides access to private applications without putting users on the corporate network. Its API lets you automate everything you'd otherwise click through in the admin portal. Think about which of the 10 manageable features would benefit most from automation at scale.</p>
+  <ul class="socratic-questions">
+    <li>Provisioning keys for App Connectors can be created via API. Why would you want to automate key creation rather than manually generating one for each new branch deployment?</li>
+    <li>SCIM attribute management can be automated via API. What happens to user access if SCIM deprovisioning is delayed when an employee leaves — and why does response time matter in that specific scenario?</li>
+    <li>Version Profiles control which App Connector version runs. Why would you want programmatic control over software versioning rather than just enabling auto-updates for everything?</li>
+  </ul>
+  <div class="answer-area" data-section="zpa">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Manual key creation doesn't scale and introduces human error: someone forgets to rotate, someone pastes the wrong key, someone emails a key insecurely. Automating provisioning-key creation lets a Terraform run, a CI pipeline, or a zero-touch branch image fetch its own key, register the connector, and start passing health checks in minutes — without an admin ever touching the portal. It also produces an audit trail that's impossible to forge.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Every minute between an employee's exit and their SCIM deprovisioning is a window where ZPA still trusts their session token to reach private apps — payroll, HR, source code, customer data. In an involuntary termination scenario, that's the highest-risk moment for sabotage or data exfil, so seconds matter. Automating SCIM via API closes that window in near real time instead of waiting for a help-desk ticket to be worked the next morning.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Blanket auto-updates assume every connector can tolerate a same-day version change, which isn't true for connectors fronting critical apps where you want to soak a release in dev/staging first. Programmatic Version Profile control lets you pin production connectors to a known-good build, push the new build to canary connectors via API, then promote — the same staged-rollout discipline you'd apply to any other production software.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-zpa">
     <div class="section-label">ZPA APIs</div>
     <h2>Zscaler Private Access APIs</h2>
@@ -256,6 +357,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">ZPA API enables automation of: managing application access policies, configuring App Connector groups, retrieving user device information, monitoring system health. Demo: Use Postman REST client with ZPA Postman collection to create an App Connector group using the customer ID from the ZPA Admin Portal.</div>
     </div>
   </div>
+  <div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">ZPA API manages 10 areas: Certificates, Provisioning Keys, IdP Configurations, SAML Attributes, Access Policies, SCIM Attributes, AppProtection Policies, SCIM Groups, Segment Groups, Version Profiles. Demo creates an App Connector group — requires Customer ID from ZPA Admin Portal → Administration → Company Details.</div>
+  </div>
+</div>
+<div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">App Connectors are like unmarked service entrances in a corporate building. Visitors never see them. Each connector makes an outbound call — "I'm ready to accept work" — and traffic flows inward through that channel. The API lets you automate the creation and management of those entrances across all your buildings simultaneously.</div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zpa" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zpa','ZPA APIs')">Add Question</button></div></div>
@@ -264,6 +376,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- ZDX & CLIENT CONNECTOR -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZDX &amp; CLIENT CONNECTOR APIs</span></div>
+  <p class="socratic-insight">ZDX measures the digital experience of your users — is Zoom actually working well for them, or is there latency they're struggling through? The API lets you pull this data programmatically. Think about what you could build if you had real-time experience scores for every user, automatically triggering actions.</p>
+  <ul class="socratic-questions">
+    <li>ZDX + ServiceNow is the key integration example: a Zoom quality problem automatically creates a ticket. What does this tell you about the relationship between observability data and operational workflows?</li>
+    <li>Client Connector API provides device OTPs (one-time passwords). In what scenario would you need to retrieve OTPs for many devices at scale rather than one at a time?</li>
+    <li>Branch/Cloud Connector API includes Activation and Provisioning capabilities. What's the advantage of automating branch connector activation rather than doing it manually at each physical location?</li>
+  </ul>
+  <div class="answer-area" data-section="zdx">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Observability data is only valuable if it triggers action — a dashboard nobody watches is wasted telemetry. The ZDX-to-ServiceNow pattern shows that the ZDX Score isn't just a metric to look at; it's an event that should automatically start the help-desk workflow before the user even calls IT. This collapses mean-time-to-detect and mean-time-to-resolve into the same step because detection itself files the ticket.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">OTPs are needed when a user has to disable Client Connector temporarily — for troubleshooting, for a personal hotspot situation, or during certain VPN handovers. At scale, you'd want to retrieve OTPs in bulk when staging a fleet of new laptops, building a self-service help-desk portal, or pre-generating recovery credentials during an outage. Doing it one device at a time through the UI is fine for ten users; it falls apart at ten thousand.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Manual branch activation requires a technician at every site, which is impossible for organisations with hundreds of small offices or retail locations where no IT person is on-site. Automating activation lets you ship a pre-configured appliance, have it phone home, register against the API, and be ready for traffic — true zero-touch provisioning. The hardware becomes generic; the configuration becomes code.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-zdx">
     <div class="section-label">ZDX &amp; CLIENT CONNECTOR APIS</div>
     <h2>ZDX and Client Connector APIs</h2>
@@ -301,6 +434,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="diagram-caption">Branch/Cloud Connector API: Authentication, Activation, Admin &amp; Role Management, Provisioning</div>
     </div>
   </div>
+  <div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">ZDX API = 6 areas: Authentication, Alerts, Reports, Administration, Inventory, Troubleshooting. Client Connector = Login API + Device API (v1/getDevices returns all devices + OTP credentials). ZDX → ServiceNow (Zoom quality → auto-create ticket) is the canonical integration example — know it for the exam.</div>
+  </div>
+</div>
+<div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">ZDX APIs are like a health-monitoring wristband for your entire workforce. Instead of asking "is everyone OK?", the wristband continuously measures vitals (latency, packet loss, app performance scores) and automatically pages the doctor (creates a ServiceNow ticket) when readings go outside safe ranges — without anyone having to notice and manually escalate.</div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zdx" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zdx','ZDX &amp; Client Connector')">Add Question</button></div></div>
@@ -309,6 +453,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- ZIDENTITY -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZIDENTITY</span></div>
+  <p class="socratic-insight">Before ZIdentity, managing multiple Zscaler products meant multiple credential sets, multiple portals, and multiple ways for access to fall through the cracks when someone joined, changed roles, or left. Think about the security and operational risks that creates at enterprise scale.</p>
+  <ul class="socratic-questions">
+    <li>If an admin has separate credentials for ZIA, ZPA, and ZDX — and they leave the company — what does IT have to do to fully revoke their access? How does ZIdentity fundamentally change that process?</li>
+    <li>SCIM automates deprovisioning when a user leaves. What happens during the gap between an employee's last day and when IT manually removes their access — and why does that window create risk?</li>
+    <li>Source IP restrictions in ZIdentity let you lock admin access to specific IP ranges. What attack does this defend against — what specific threat does restricting source IPs stop?</li>
+  </ul>
+  <div class="answer-area" data-section="zidentity">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Without ZIdentity, IT has to log into every product portal separately and delete the admin from each — and if they miss one, that admin retains backdoor access indefinitely. ZIdentity collapses that to a single deactivation in the unified identity layer, which propagates to ZIA, ZPA, ZDX, and ZCC at once. It turns offboarding from a checklist that can fail silently into a single, auditable event.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">During that gap, the departing user still has live sessions, valid tokens, and policy entitlements — which is exactly the period when disgruntled or financially motivated insiders do the most damage. Even with no malice, dormant accounts are prime takeover targets for attackers who phished credentials weeks earlier and are waiting for the right moment. SCIM closes the gap to whatever the IdP-to-Zscaler sync latency is, typically seconds rather than days.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Source IP restrictions defend against credential theft — phishing, infostealer malware, or a leaked password ending up in a credential dump. Even if an attacker has the right username, password, and MFA-bypass technique, the ZIdentity gate refuses the login because the request isn't coming from the corporate office or the bastion IP range. It turns the admin console from a globally reachable target into something only reachable from a known network perimeter.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-zidentity">
     <div class="section-label">ZIDENTITY FUNDAMENTALS</div>
     <h2>What is ZIdentity?</h2>
@@ -338,6 +503,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <p>ZIdentity uses <strong>OIDC (OpenID Connect)</strong> as the preferred method for authentication with Zscaler using SSO. <strong>SCIM</strong> automates user provisioning and deprovisioning, building on the OAuth 2.0 framework that allows an IdP to authenticate a user and pass credentials to ZIA and ZPA.</p>
     <p>An example is gaining access to both ZIA and ZPA using the same credentials once instead of separately for each. When a user leaves an organisation, SCIM automatically deactivates them from all associated databases across all ZIA and ZPA tenants.</p>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">ZIdentity is like an all-access employee badge for a multi-building corporate campus. Before ZIdentity, each building (ZIA, ZPA, ZDX) issued its own badge and had its own reader. ZIdentity replaces all building-specific cards with one universal badge — and when someone leaves, HR deactivates a single card instead of sending someone to revoke access at every building separately.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">ZIdentity = SSO + MFA (required by default, supports TOTP/FIDO/SMS OTP) + SCIM provisioning + centralized role management. OIDC = preferred for SSO authentication. SCIM = automates user provisioning and deprovisioning across ALL ZIA and ZPA tenants simultaneously. OAuth 2.0 = programmatic token-based access.</div>
+  </div>
+</div>
+<div class="img-display-block">
+  <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+  <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+  <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+  <div class="prompt-content" hidden>[Generate: flat green illustration of a central ZIdentity shield/badge in the middle, with four radiating arrows pointing outward to building icons representing ZIA, ZPA, ZDX, and ZCC — representing a single identity controlling access to all four products, clean minimalist, no text labels]</div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zidentity" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zidentity','ZIdentity')">Add Question</button></div></div>
@@ -346,6 +528,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- ONEAPI -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ONEAPI</span></div>
+  <p class="socratic-insight">Before OneAPI, writing automation scripts for Zscaler meant managing separate authentication flows, separate endpoint URLs, and different rate-limiting logic for each product. Think about what a "unified gateway" actually needs to do in order to make all products feel consistent to a script developer.</p>
+  <ul class="socratic-questions">
+    <li>OneAPI acts as a gateway between your client and the actual backend APIs. What functions does this gateway need to perform that each backend used to handle independently — and why is centralizing those functions better?</li>
+    <li>"Globally distributed with GeoProximity routing" means your request goes to the nearest gateway. What performance problem does this solve — and what would happen to a script running in Sydney if all gateways were in the US?</li>
+    <li>"Cloud Agnostic" means a single endpoint for all product clouds. If Zscaler migrates a backend API to a new infrastructure, does your script need to change? What does this tell you about where complexity is absorbed?</li>
+  </ul>
+  <div class="answer-area" data-section="oneapi">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The gateway has to handle authentication and token validation, rate limiting, request routing, tenant access policy enforcement, caching, and consistent error formatting — all things each backend used to implement on its own with subtle differences. Centralising means one place to update OAuth flows, one rate-limit algorithm to reason about, and one place to instrument logging. For the client developer, it means every Zscaler API behaves the same way, which dramatically lowers the cognitive cost of integrating new products.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">GeoProximity routing solves the round-trip-latency problem: every API call has to traverse the physical distance between client and gateway, and on a chatty automation script doing thousands of calls, that latency compounds. A Sydney script hitting only US gateways would pay ~150ms per round trip, turning a 60-second job into a 10-minute one. Routing to a nearby Sydney/APAC gateway drops that to single-digit milliseconds and keeps performance predictable globally.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">No — your script keeps calling api.zsapi.net and the gateway transparently routes to the new backend. The complexity of cloud migration, version cutover, and backend topology is absorbed inside the OneAPI layer instead of leaking out to every customer's automation code. That's the whole value of a gateway abstraction: it makes change on the provider side invisible to the consumer.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-oneapi">
     <div class="section-label">ONEAPI OVERVIEW</div>
     <h2>What is OneAPI?</h2>
@@ -399,6 +602,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="diagram-caption">Complete OneAPI flow: API Client Registration and Token Request through ZIdentity → Token Grant → OneAPI Gateway enforces scope validation → API Resources (ZIA, ZPA, ZDX, Client Connector)</div>
     </div>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">OneAPI is like an international airport hub. Instead of flying direct between every pair of cities (fragmented, each route its own rules), all flights go through the hub (api.zsapi.net). The hub handles security screening (authentication), customs (rate limits), routing (GeoProximity), and connections to all destinations (ZIA, ZPA, ZDX, ZCC). You learn one airport, and every destination is reachable.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">OneAPI = 1 endpoint (api.zsapi.net) + 1 auth (ZIdentity OAuth) + consistent rate limits. The 4 gateway benefits — know all four: Globally Distributed (low latency everywhere), Geographic Aware (GeoProximity routing), Cloud Agnostic (single endpoint regardless of backend), Authenticate Once (one ZIdentity token for all products).</div>
+  </div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-oneapi" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('oneapi','OneAPI')">Add Question</button></div></div>
@@ -407,6 +621,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- ACCESSING ONEAPI -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ACCESSING ONEAPI</span></div>
+  <p class="socratic-insight">There are exactly 3 steps to use OneAPI. But each step has a prerequisite — something that must already be true before that step can succeed. Think backwards from "I want to make an API call" and reason out what must exist before you can even start.</p>
+  <ul class="socratic-questions">
+    <li>Step 2 is "authenticate and get a token." What must already exist in ZIdentity before you can authenticate — what setup must have happened before you run the first line of your script?</li>
+    <li>Bearer tokens are time-sensitive. If your script runs for 90 minutes and the token expires after 60 minutes, what happens at the 61-minute mark — and how do you prevent it from causing a failure?</li>
+    <li>ZPA has multiple base paths: /mgmtconfig/v1, /v2, and /userconfig/v1. How would you know which base path to use for a specific ZPA operation — where would you look?</li>
+  </ul>
+  <div class="answer-area" data-section="accessing">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Before you can authenticate, an admin must have registered an API Client in the ZIdentity dashboard, assigned it the right scopes (which products and resources it can touch), and generated client credentials — either a client secret or a public-key/JWK pair. Your script then exchanges those credentials at the token endpoint for a Bearer token. Without that pre-registered client and its scope grants, the token request will be rejected at step zero.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">At the 61-minute mark, the next API call comes back with a 401 Unauthorized because the token's exp claim is in the past. The standard fix is to wrap API calls in a small helper that catches 401s (or proactively checks token expiry before each call) and re-runs the OAuth client-credentials exchange to refresh the token automatically. Long-running scripts should never assume a token is still valid — they should treat token acquisition as a refreshable operation, not a one-shot setup.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">The ZPA API reference documentation tells you, per endpoint, which base path to use. As a rule of thumb: most management operations live under /mgmtconfig/v1 or /v2, while SCIM attribute and SCIM group detail lookups live under /userconfig/v1. Don't guess — the docs are authoritative because Zscaler shifts endpoints between versions over time, and copying a base path from an old StackOverflow answer is how scripts break in production.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-accessing">
     <div class="section-label">ACCESSING ONEAPI</div>
     <h2>How to Access OneAPI</h2>
@@ -431,6 +666,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <h3>Authorize Access Token</h3>
     <p>When an API request is received, the Zscaler service validates the access token. It extracts the JWT/Secret Key from the request's Authorization header, validates the JWT signature using the client's public key or X.509 certificate, and verifies the JWT claims. After successful validation, the client is allowed to access the requested API resources.</p>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">Accessing OneAPI is like entering a secure corporate building. Step 1 = know the address and which floor you need (base URL). Step 2 = go to reception, show your ID, receive a temporary visitor badge (authenticate + get Bearer token). Step 3 = swipe your badge at each door you want to open (include Authorization: Bearer token in every request). Without the badge, every door stays locked regardless of who you are.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">3 steps to OneAPI — say them in order: (1) Locate base URL: api.zsapi.net/{product}/api/v1/{resource}. (2) POST to &lt;VanityDomain&gt;.zslogin.net/oauth2/v1/token to get Bearer token. (3) Include Authorization: Bearer {token} in every API request header. These 3 steps apply every time, for every product, every session.</div>
+  </div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-accessing" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('accessing','Accessing OneAPI')">Add Question</button></div></div>
@@ -439,6 +685,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- API COMPONENTS -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · API COMPONENTS</span></div>
+  <p class="socratic-insight">API Client, API Resources, and Access Tokens form a hierarchy — each layer depends on the one above it. Think about the access control implications of each level, and why controlling access at three separate levels (not just one) provides stronger security.</p>
+  <ul class="socratic-questions">
+    <li>An API Client has "scopes" — specific resources it's authorized to access. Why is it better to create separate API clients for different automation workflows rather than one super-admin client that can do everything?</li>
+    <li>Access Tokens are JWTs that are "time-sensitive." If a token is stolen by an attacker, what's the maximum damage window — and what design decision built into the token limits that window?</li>
+    <li>You can revoke tokens from the ZIdentity dashboard. Under what specific circumstances would you need to revoke a token before it naturally expires on its own?</li>
+  </ul>
+  <div class="answer-area" data-section="components">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Separate API clients enforce least privilege: a reporting script doesn't need write access to policies, and a policy-update job doesn't need to read user PII. If one client's credentials leak, the blast radius is bounded to whatever scopes that client had — instead of handing the attacker full tenant control. It also makes audit logs meaningful, because you can attribute every action to a named automation workflow rather than to a single shared super-admin.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">The maximum damage window is the remaining lifetime in the JWT's exp claim — typically up to an hour. Short expiry is the design decision that bounds the risk: even with the raw token, the attacker can't use it indefinitely, and they can't mint a new one without the original client credentials. That's why JWT-based bearer tokens are short-lived by convention — you trade convenience for blast-radius containment.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">You'd revoke before natural expiry whenever you have reason to believe a token is compromised or no longer trustworthy — a developer laptop stolen, a CI/CD pipeline log leaked, an API client's secret accidentally committed to a public repo, or an employee with access to the script offboarded. Revocation is the kill switch that doesn't depend on waiting for the clock to run out; for any breach response, you pull the token first and investigate second.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-components">
     <div class="section-label">API COMPONENTS</div>
     <h2>Exploring OneAPI in Detail</h2>
@@ -472,6 +739,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">In the demo, the ZCCBase variable is set based on the base URL (api.zsapi.net/zcc/papi/public). The v1/getDevices endpoint is called. The client ID and client secret are loaded in the Authorization section. The call retrieves all devices registered in the tenant, including OTP credentials — iterating through each device's details.</div>
     </div>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">API Client, API Resources, and Access Tokens are like a hotel guest's access system. The API Client = your hotel booking record (registered identity). API Resources = which areas you're authorized to use (gym, pool, business center — your specific scope). Access Token = the physical keycard that only works for your stay duration. It expires when you check out — it can't be extended indefinitely without re-registering.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">3 OneAPI components: API Client (registered application in ZIdentity, has Client ID + Secret, controls scopes), API Resources (specific ZIA/ZPA/ZDX endpoints accessible to that client), Access Token (time-limited JWT, obtained by exchanging Client ID + Secret at the token endpoint). Postman demo: set ZCCBase = api.zsapi.net/zcc/papi/public/v1, call v1/getDevices.</div>
+  </div>
+</div>
+<div class="img-display-block">
+  <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+  <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+  <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+  <div class="prompt-content" hidden>[Generate: flat green illustration of three stacked horizontal layers — top layer: registered application icon with ID badge (API Client), middle layer: shield with four product logos (API Resources/Scopes), bottom layer: a time-limited JWT card with expiry clock — downward arrows connecting each layer showing the dependency flow, minimalist, no text labels]</div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-components" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('components','API Components')">Add Question</button></div></div>
@@ -542,6 +826,10 @@ function renderQPanel(){const qs=getQuestions();const count=document.getElementB
 function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
 function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
 document.addEventListener('DOMContentLoaded',()=>{renderQPanel();initNotes();initChecks();if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}});
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>

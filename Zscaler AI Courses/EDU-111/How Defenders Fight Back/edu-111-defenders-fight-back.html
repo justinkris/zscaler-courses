@@ -182,6 +182,44 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .img-frame{border:1.5px dashed rgba(0,0,0,0.18);border-radius:12px;overflow:hidden;padding:4px;background:rgba(255,255,255,0.38);}
 .img-frame img{width:100%;border-radius:9px;display:block;}
 
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted,#5a7a9a);}
+.socratic-insight{font-size:13px;color:var(--text-soft,#1e3a5c);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim,var(--border));line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.prompt-cols,.technique-grid,.lesson-tools-grid{grid-template-columns:1fr;}.prompt-col+.prompt-col{border-left:none;border-top:1px solid var(--border);}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -227,6 +265,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <main>
 <div class="main-content">
 
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · THE DEFENDER'S IMPERATIVE</span></div>
+    <p class="socratic-insight">Attackers already operate at machine speed — generating phishing variants, scanning configurations, and rewriting malware in seconds. Defenders working manually are bringing a stopwatch to a sprint. The decision is no longer whether to use AI, but how skillfully you wield it.</p>
+    <ul class="socratic-questions">
+      <li>If an attacker can generate 10,000 phishing variants per hour, what manual defender process becomes obsolete first?</li>
+      <li>Why is "having access to AI" not the same as "defending effectively with AI"?</li>
+      <li>What single skill turns an AI tool from noise generator into intelligence engine?</li>
+    </ul>
+    <div class="answer-area" data-section="imperative">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Manual phishing triage collapses first. A SOC analyst can review maybe a hundred suspicious emails an hour with care; against 10,000 variants per hour, the queue grows faster than the team can drain it. Every other manual workflow that depends on human pattern-matching at attacker scale — manual log review, manual IOC research, manual report writing — fails next. The minute an attacker industrialises a step, defenders must industrialise the same step or lose.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Access is the licence; skill is the execution. Two analysts with identical AI subscriptions produce wildly different outputs because one writes vague natural-language requests and the other writes structured, contextual, output-formatted prompts. Without that craft, the AI returns competent-sounding paragraphs that fail to plug into your tooling — it generates work rather than reducing it.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Prompt Engineering. It is the single discipline that converts the same model from a generic chatbot into a security analyst's force multiplier. The model does not change; the instructions do — and that gap between vague and engineered prompts is where every operational improvement in defender productivity comes from.</div></div>
+      </div>
+    </div>
+  </div>
   <!-- THE DEFENDER'S IMPERATIVE -->
   <div class="section-block" id="section-imperative">
     <div class="section-label">THE DEFENDER'S IMPERATIVE</div>
@@ -245,6 +304,21 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li><strong>Adversarial Prompt Attacks</strong> — how attackers manipulate AI security tools</li>
       <li><strong>Defensive techniques</strong> — how to harden AI systems against manipulation</li>
     </ul>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">An attacker with AI is a sniper using a thermal scope. A defender without AI is a guard with binoculars in the dark. You can match their gear, or you can keep losing in the time it takes to focus.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">The Defender's Dilemma: access to AI is table stakes — Prompt Engineering is what turns access into advantage.</div>
+      </div>
+    </div>
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat blue minimalist illustration of two figures facing off — one with futuristic AI visor seeing rich data streams, the other holding outdated binoculars in fog, suggesting the speed-and-vision gap defenders must close, no text labels.</div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -261,6 +335,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     </div>
   </div>
 
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · PROMPT ENGINEERING</span></div>
+    <p class="socratic-insight">An AI does not read your mind — it reads your words. The same model that produces vague paragraphs for one analyst can produce ATT&CK-mapped, table-ready intelligence for another. The variable is never the model. It is the precision of the instruction.</p>
+    <ul class="socratic-questions">
+      <li>Why is "check the logs for anything weird" almost guaranteed to waste your time?</li>
+      <li>What three traits separate a polite request from a security-grade prompt?</li>
+      <li>If your output needs to drop straight into a SIEM or report, what must your prompt force the AI to produce?</li>
+    </ul>
+    <div class="answer-area" data-section="prompt">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Because "anything weird" is not a definition the AI can act on — and the model will hedge. You get back a paragraph of safe generalities about brute force attempts, off-hours logins, and unusual data flows, none anchored to your environment. The vague prompt forces the model to guess what you meant; the next ten minutes go to re-prompting instead of investigating, and you have made no progress.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Specific, contextual, and structured. Specific tells the AI exactly what to look for (an event ID, an IOC type, a timeframe). Contextual grounds the question in your environment, threat scenario, or incident type. Structured locks the output format — table, list, ATT&CK mapping — so the result is mechanically usable, not just readable.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">A defined output format — table rows with required columns, JSON with required keys, MITRE ATT&CK identifiers, fielded indicators. Free prose cannot be ingested by tooling; it has to be reformatted by a human. The moment the prompt specifies the schema, the AI output becomes data, and data flows directly into the SIEM, the ticket, or the report.</div></div>
+      </div>
+    </div>
+  </div>
   <!-- PROMPT ENGINEERING -->
   <div class="section-block" id="section-prompt">
     <div class="section-label">PROMPT ENGINEERING</div>
@@ -300,6 +395,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">→</div>THE VAGUE VS ENGINEERED GAP</div>
       <div class="callout-body">Same data. Same AI. Completely different output. The only variable is the quality of the prompt. A vague request returns a narrative. An engineered prompt returns structured, categorical, immediately actionable intelligence. The next section shows this difference across three real security scenarios.</div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">A prompt is a search warrant. "Look around for anything suspicious" gets thrown out by the judge. "Seize the laptop in the second-floor office bearing serial number X, between 8 and 10 AM" gets executed precisely. The AI, like the officer, can only act on what you specify.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Security-grade prompts have three traits: Specific, Contextual, Structured output. Drop any one — and you drop back into noise.</div>
+      </div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -316,6 +422,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     </div>
   </div>
 
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · PROMPTS IN PRACTICE</span></div>
+    <p class="socratic-insight">Threat intel, malware analysis, incident response — three different jobs, one identical pattern. Vague prompts return generic advice you already knew. Engineered prompts return MITRE-mapped, evidence-listed, containment-ordered output you can paste into a ticket and execute.</p>
+    <ul class="socratic-questions">
+      <li>When analyzing malware, which five categories must your prompt force the AI to populate to make the output investigation-ready?</li>
+      <li>For an active ransomware incident, why is "help me respond" the worst possible thing to type into an AI?</li>
+      <li>What does demanding MITRE ATT&CK IDs in your prompt do for downstream tools like your SIEM or EDR?</li>
+    </ul>
+    <div class="answer-area" data-section="practice">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Persistence mechanisms, network mechanisms (C2 servers and protocols), data exfiltration methods, evasion techniques, and MITRE ATT&CK mapping. These five force the AI to produce a full behavioural profile that maps to detection engineering: persistence tells you what to hunt for on disk, network mechanisms feed firewall and proxy rules, exfil patterns drive DLP signatures, evasion identifies EDR blind spots, and ATT&CK IDs link everything to the rest of your detection stack.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Because under ransomware pressure, vague prompts buy you boilerplate when minutes matter. "Help me respond" returns the same generic checklist the AI would give a homework assignment — isolate, notify, follow your plan. An engineered prompt that names the threat (ransomware), the asset (file server), and the access vector (phishing) returns containment-ordered, evidence-aware, recovery-sequenced steps you can actually execute. Specificity is speed.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">It turns narrative into machine-readable controls. Every modern SIEM, EDR, and threat intel platform already speaks ATT&CK — so an AI output containing T1566, T1071.001, T1547.001 plugs directly into existing detection rules, dashboards, and playbooks. Without those IDs, an analyst has to translate prose into technique IDs by hand; with them, the output integrates with the wider security stack on arrival.</div></div>
+      </div>
+    </div>
+  </div>
   <!-- PROMPTS IN PRACTICE -->
   <div class="section-block" id="section-practice">
     <div class="section-label">PROMPTS IN PRACTICE</div>
@@ -391,6 +518,21 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         </div>
       </div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">A vague prompt to an AI is like ordering "food" at a restaurant — you get whatever the kitchen feels like. An engineered prompt is ordering "medium-rare ribeye, no garnish, broccoli on the side" — the kitchen has no room to improvise, and your meal arrives exactly as needed.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Threat Intel → TTPs + IOCs + Mitigations in a table. Malware → 5 categories with ATT&CK IDs. IR → Containment, Evidence, RCA, Recovery, Hardening. Memorize the lists.</div>
+      </div>
+    </div>
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat blue minimalist illustration of an open structured form being filled by an AI — three clean rows labeled by shape (table, list, timeline) replacing a blurry paragraph of text, suggesting structure beating narrative, no text labels.</div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -407,6 +549,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     </div>
   </div>
 
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · WHEN ATTACKERS TARGET YOUR AI</span></div>
+    <p class="socratic-insight">Deploying an AI scanner does not add a guard — it adds a new door. Attackers no longer need to bypass the AI; they can reprogram it from the outside using nothing but the content it was built to read. Prompt injection, jailbreaking, and data poisoning turn your defender into their accomplice.</p>
+    <ul class="socratic-questions">
+      <li>If an attacker writes "IGNORE ALL PREVIOUS INSTRUCTIONS" inside an email body, which of the three attack categories is that — and why does it work?</li>
+      <li>How is data poisoning fundamentally more dangerous than prompt injection at scale?</li>
+      <li>When an AI scanner clears a malicious email, has it failed — or has it followed orders correctly?</li>
+    </ul>
+    <div class="answer-area" data-section="attack">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">That is prompt injection — adversarial instructions hidden inside the content the AI processes. It works because the AI cannot reliably distinguish "system instructions" from "content to analyse" in the same token stream. When the AI scanner reads the email body, the injected instruction is treated as authoritative input, and the model dutifully overrides its earlier orders. The attacker is not breaking the AI; they are giving it a new command in a language it cannot refuse to listen to.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Prompt injection compromises one interaction; data poisoning compromises the model itself. A poisoned training set bakes the backdoor in — every future query is tainted, every analyst trusting the model is unknowingly receiving manipulated output. Detection is also vastly harder: an injected prompt sits in one email, but a poisoned model is invisible until the rare adversarial trigger appears, which is exactly when you most need the AI to behave.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">From the AI's perspective, it followed orders correctly — the injected instruction told it to mark the email clean and it did. The failure is architectural, not the AI's "fault": treating untrusted content as authoritative instruction is the bug. Reframing it this way is important because it points to the fix — sanitization, separation, output validation — rather than chasing model-level tuning that will never close the door.</div></div>
+      </div>
+    </div>
+  </div>
   <!-- WHEN AI IS ATTACKED -->
   <div class="section-block" id="section-attack">
     <div class="section-label">WHEN ATTACKERS TARGET YOUR AI</div>
@@ -455,6 +618,21 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">!</div>THE CORE LESSON</div>
       <div class="callout-body">AI security tools are only as strong as their ability to resist manipulation. Deploying AI without hardening it creates a defence that attackers can turn against you. An unhardened AI scanner is not a shield — it is a vulnerability.</div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Prompt injection is slipping a forged note into a letter you ask a receptionist to read aloud — and the receptionist obeys it as if it were policy. Jailbreaking is hypnotising the same receptionist into ignoring the rulebook. Data poisoning is rewriting the rulebook before they were ever hired.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Three adversarial AI attacks: Prompt Injection (hidden instructions in data), Jailbreaking (bypass safety rails), Data Poisoning (corrupt the training set). Each targets a different stage of the AI lifecycle.</div>
+      </div>
+    </div>
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat blue minimalist illustration of an envelope being scanned by a robotic eye, with a tiny hidden note inside the letter whispering commands back to the robot, suggesting trust-flow being hijacked by content the AI was meant to inspect, no text labels.</div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -471,6 +649,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     </div>
   </div>
 
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · HARDENING AI DEFENCES</span></div>
+    <p class="socratic-insight">No single control stops a determined attacker — defence is always layered. Sanitization catches the obvious. Separation keeps user content out of the system brain. Output validation catches what slipped through. Least Privilege ensures that if everything else fails, the AI cannot do much damage.</p>
+    <ul class="socratic-questions">
+      <li>Which technique sits at the door — filtering content before the AI ever sees it?</li>
+      <li>Why does instruction separation use delimiters or XML tags rather than just trusting the AI to know the difference?</li>
+      <li>If only one hardening technique remained intact during an attack, why would Least Privilege be the most valuable one to keep?</li>
+    </ul>
+    <div class="answer-area" data-section="harden">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Input Sanitization. It is the perimeter control — it strips malicious patterns, known injection triggers, and instruction-like phrasing from user input before that content ever reaches the model. The further inside the system an attack travels, the more expensive it is to stop, so neutralising obvious injection strings at the door eliminates the cheapest, most automated class of attacks immediately.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Because the AI has no native concept of trust levels in a flat token stream — "trust the instructions, distrust the user content" is a property humans see, not one the model enforces. Explicit delimiters or XML tags give validators (and the model's training) a hard boundary to lean on: anything inside the user tags is data, anything outside is logic. Without them, an attacker can blur the line with phrasing alone.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Because Least Privilege bounds the blast radius even when every other defence fails. If sanitization, separation, and validation all collapse, a compromised AI with only read permissions can mislead but not destroy. The same AI with write access to firewalls or production data becomes the attacker's hands inside your network. Least Privilege is the failsafe that keeps a successful manipulation from becoming a successful breach.</div></div>
+      </div>
+    </div>
+  </div>
   <!-- HARDENING AI -->
   <div class="section-block" id="section-harden">
     <div class="section-label">HARDENING AI DEFENCES</div>
@@ -548,6 +747,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">→</div>ALL FOUR LAYERS TOGETHER</div>
       <div class="callout-body">No single technique is sufficient on its own. Input Sanitization catches attacks at the door. Instruction Separation maintains boundaries. Output Validation catches what gets through. Least Privilege limits the damage if all else fails. Stack all four.</div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Hardening an AI is like fortifying a castle: a moat (Input Sanitization) keeps invaders out, walls (Instruction Separation) separate the throne room from the courtyard, guards check everyone leaving (Output Validation), and even the king carries no sword (Least Privilege). One layer alone falls. Four layers stand.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Four hardening layers — Input Sanitization, Instruction Separation, Output Validation, Least Privilege. Memorize them in order: door, walls, exit, blast radius.</div>
+      </div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -564,6 +774,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     </div>
   </div>
 
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · DEFENSIVE MINDSET</span></div>
+    <p class="socratic-insight">Tools change. Principles do not. A defender using AI must internalise four reflexes: distrust input by default, enforce boundaries between code and content, validate every output, and log everything for later forensics. These principles outlast any specific model or vendor.</p>
+    <ul class="socratic-questions">
+      <li>Why is "Trust Nothing by Default" the foundational principle — and what changes if you skip it?</li>
+      <li>If a manipulated AI produces fluent, confident, wrong output, which mindset principle catches it before damage is done?</li>
+      <li>Which principle gives you the breadcrumbs to investigate after an attack already succeeded?</li>
+    </ul>
+    <div class="answer-area" data-section="mindset">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">"Trust Nothing by Default" is foundational because every other principle assumes it. Skip it and you treat user input as authoritative, AI output as truthful, and integrations as benign — which is exactly the assumption attackers exploit. With Trust Nothing as the starting point, sanitisation, validation, and least privilege all become obvious; without it, those controls feel like overkill and get watered down.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Filter Outputs (output validation). Manipulated AI output is dangerous precisely because it sounds right — confident, fluent, plausible. Only an independent validation step that checks for forbidden actions, schema violations, or anomalous instructions can catch a confident wrong answer before it triggers a downstream action. Trusting AI output because it "sounds like" the model is exactly how silent compromises become operational ones.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Monitor and Log. After a breach, the question becomes "what did the AI do, when, on whose behalf, with what input?" — and that question is answerable only if every prompt, response, and AI-triggered action was logged. Without telemetry, post-incident analysis collapses into guesswork; with it, you can reconstruct the manipulation, scope the impact, and harden the path the attacker took.</div></div>
+      </div>
+    </div>
+  </div>
   <!-- DEFENSIVE MINDSET -->
   <div class="section-block" id="section-mindset">
     <div class="section-label">KEY DEFENSIVE MINDSET</div>
@@ -610,6 +841,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
             <img src="2.png" alt="Where this leads — stepping from chaos into an organised security framework">
           </div>
         </div>
+      </div>
+    </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Treat every AI interaction the way an air traffic controller treats every blip on the radar: assume nothing, verify identity, enforce strict lanes, and record every transmission. Confidence in fluent output without verification is how planes collide.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Four defensive reflexes — Trust Nothing, Enforce Boundaries, Filter Outputs, Monitor and Log. These outlast the tool. Burn them into muscle memory.</div>
       </div>
     </div>
   </div>
@@ -698,6 +940,9 @@ function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));r
 function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
 function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem('edu111d-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem('edu111d-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
 document.addEventListener('DOMContentLoaded',()=>{renderQPanel();initNotes();if(localStorage.getItem('edu111d-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}});
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
 </script>
 </body>
 </html>

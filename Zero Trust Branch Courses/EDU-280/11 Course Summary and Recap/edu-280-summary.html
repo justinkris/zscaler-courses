@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 11 — Course Summary &amp; Recap · EDU-280</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f0fdfe;--surface:#fff;--surface-2:#d0f4f8;--border:#9adde6;--border-dim:#caf0f5;
+  --text:#031f24;--text-soft:#0d4a52;--text-muted:#3d8c96;
+  --teal:#0d7d8a;--teal-glow:rgba(13,125,138,0.07);--teal-dim:#9adde6;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+  /* section accent colors */
+  --s1:#0d7d8a;--s2:#1a7c4a;--s3:#1a6dcc;--s4:#5c35cc;--s5:#b45309;
+  --s6:#1a6dcc;--s7:#1a7c4a;--s8:#b91c1c;--s9:#5c35cc;--s10:#b45309;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:var(--text);display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#1a4a52;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#5adde8;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#1a4a52;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(90,221,232,0.1);border:1px solid rgba(90,221,232,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#5adde8;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#5adde8;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#5adde8;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--teal);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--teal);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:var(--text);color:#5adde8;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 18px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--teal);border-bottom-color:var(--teal);}
+main{display:grid;grid-template-columns:1fr 300px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 24px 60px;background:var(--surface-2);}
+
+/* SECTION CARDS */
+.recap-card{background:var(--surface);border-radius:14px;margin-bottom:28px;overflow:hidden;border:1px solid var(--border);scroll-margin-top:56px;}
+.recap-card-header{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--border);}
+.section-badge{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;color:#fff;font-size:12px;font-weight:700;flex-shrink:0;}
+.recap-card-title{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--text);line-height:1.2;}
+.recap-card-subtitle{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.recap-card-body{padding:18px 20px;}
+
+/* SUMMARY TEXT */
+.summary-text{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:14px;}
+
+/* ANALOGY BOX */
+.analogy-box{background:#fffbeb;border:1px solid var(--amber-border);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--amber);margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+
+/* MENTAL NOTE */
+.mental-note{border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start;}
+.mental-note-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-label{font-size:9px;font-weight:700;letter-spacing:0.16em;margin-bottom:3px;}
+.mental-note-text{font-size:13px;font-weight:600;line-height:1.55;}
+
+/* KEY BULLETS */
+.key-bullets{list-style:none;padding:0;margin-bottom:14px;}
+.key-bullets li{font-size:12.5px;color:var(--text-soft);padding:5px 0 5px 14px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.55;}
+.key-bullets li:last-child{border-bottom:none;}
+.key-bullets li::before{content:'→';position:absolute;left:0;font-weight:700;font-size:11px;top:6px;}
+
+/* DIAGRAM PLACEHOLDER */
+.diag-placeholder{background:var(--surface-2);border:2px dashed var(--border);border-radius:10px;padding:20px;margin-bottom:14px;text-align:center;}
+.diag-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;}
+.diag-prompt{font-size:11.5px;color:var(--text-muted);font-style:italic;max-width:420px;margin:0 auto;line-height:1.6;}
+
+/* LESSON TOOLS */
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;transition:border-color 0.15s,background 0.15s;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--teal);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--text);color:#5adde8;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;transition:background 0.15s;}
+.btn-add-q:hover{background:#1a4a52;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+
+/* OVERVIEW SECTION */
+.section-block{margin-bottom:40px;scroll-margin-top:56px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:20px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+.thread-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.thread-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.thread-title{font-size:12px;font-weight:700;color:var(--teal);margin-bottom:4px;}
+.thread-body{font-size:12px;color:var(--text-soft);line-height:1.55;}
+
+/* SIDEBAR */
+.sidebar-section{margin-bottom:24px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;padding:0;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:5px 0;border-bottom:1px solid var(--border);cursor:pointer;line-height:1.4;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:13px;height:13px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.section-links a{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text-soft);font-size:12px;padding:5px 8px;border-radius:6px;transition:background 0.15s;margin-bottom:2px;}
+.section-links a:hover{background:var(--surface);}
+.section-links .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--text);color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:14px;transition:opacity 0.15s;}
+.mod-nav-hub:hover{opacity:0.85;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--teal);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+/* SOCRATIC BLOCKS */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.thread-grid{grid-template-columns:1fr;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../zero-trust-branch-hub.html">Zero Trust Branch</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-280-hub.html">EDU-280</a>
+      <span class="breadcrumb-sep">›</span>
+      Section 11
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> EDU-280 · Section 11 · Final Recap</div>
+    <h1>Course Summary <em>&amp; Recap</em></h1>
+    <p>All 10 sections distilled — analogies, mental notes, key facts, and image placeholders for every topic. Use this as your final review before assessment.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Everything you need — <em>one page, ten sections, zero fluff</em>.</div>
+  <p class="motivation-sub">This recap is designed for fast review. Each section card has the core concept in plain language, an analogy to lock it in, a mental note for the exam, and the must-know facts. Scroll through, check off what you know, and note what needs more attention.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-s1s5',this)">Sections 1–5</button>
+  <button class="nav-tab" onclick="navTo('section-s6s10',this)">Sections 6–10</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- OVERVIEW -->
+<div class="section-block" id="section-overview">
+  <div class="section-label">COURSE OVERVIEW</div>
+  <h2>The big picture in four sentences</h2>
+  <p>Zero Trust Branch replaces legacy hub-and-spoke networking with an inline gateway that puts every device on its own /32 network, routes all traffic through Zscaler's cloud for inspection, and enforces identity- and context-based policies at the branch edge — with no implicit trust anywhere.</p>
+  <p>You deploy it by creating a Site, activating an appliance, and it phones home. You segment with /32 airgap. You integrate ZIA for internet, ZPA for private apps, CrowdStrike/Armis for posture. You monitor with Analytics and troubleshoot via the Gateway CLI.</p>
+
+  <h3>How the 10 Sections Connect</h3>
+  <div class="thread-grid">
+    <div class="thread-card"><div class="thread-title">Understand (S1–S2)</div><div class="thread-body">What ZTB is, why it exists, and how it segments every device into a network of one.</div></div>
+    <div class="thread-card"><div class="thread-title">Deploy (S3)</div><div class="thread-body">How to get a physical appliance online — site registration, interface roles, SDA, console access.</div></div>
+    <div class="thread-card"><div class="thread-title">Connect &amp; Secure (S4–S5)</div><div class="thread-body">IPSec/GRE tunnels to ZIA, then templates, tags, firewall policies, routing policies, and the kill switch.</div></div>
+    <div class="thread-card"><div class="thread-title">Advanced Services (S6–S7)</div><div class="thread-body">HA, DHCP, SNMP, DNS Policies, App Connector, BGP/OSPF, routed tunnels for legacy apps.</div></div>
+    <div class="thread-card"><div class="thread-title">Visibility (S8–S9)</div><div class="thread-body">Analytics dashboards, link scoring, packet/flow logs, CrowdStrike posture, Armis discovery, SIEM forwarding.</div></div>
+    <div class="thread-card"><div class="thread-title">Fix It (S10)</div><div class="thread-body">Gateway CLI, ping/traceroute/show ip route/tcpdump, VRRP validation, ZIA IPSec 5-step debug.</div></div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTIONS 1-5 -->
+<div class="section-block" id="section-s1s5">
+  <div class="section-label">SECTIONS 1–5</div>
+  <h2>Concepts, deployment, tunnels, and administration</h2>
+
+  <!-- S1 -->
+  <div class="socratic-block" style="border-top:3px solid var(--s1);">
+    <div class="socratic-header">
+      <span class="socratic-icon">💭</span>
+      <span class="socratic-label">THINK FIRST · SECTION 1 — ZERO TRUST CONCEPTS</span>
+    </div>
+    <p class="socratic-insight">Networks have traditionally operated on a "castle and moat" model — once you're inside the perimeter, everything trusts you. That worked when users, devices, and apps stayed in one building. It doesn't hold when the branch edge is a gateway to everywhere.</p>
+    <ul class="socratic-questions">
+      <li>If a laptop inside the branch gets compromised, what stops it from attacking every other device on the same network?</li>
+      <li>Why does being "inside the network" no longer equal being trustworthy — especially at a branch site?</li>
+      <li>If you had to redesign branch networking with zero default trust, where would you place the policy enforcement point — and why?</li>
+    </ul>
+    <div class="answer-area" data-section="s1">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">On a traditional flat /24 branch LAN, nothing stops lateral movement — once a laptop is compromised, the attacker can scan and pivot freely because the segment trusts itself. ZTB closes this by making the inline gateway the only path between any two devices, so east-west traffic is policy-checked just like north-south.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Branches now host IoT, contractor laptops, BYOD, and M&amp;A devices alongside corporate endpoints, so "inside" is no longer a meaningful trust boundary. Zero Trust shifts trust evaluation to identity, device posture, and context — evaluated continuously by the Zero Trust Exchange — rather than to physical location.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">The enforcement point belongs inline at the branch gateway itself, where every packet must traverse it before reaching any other device or the internet. That is exactly what ZTB does: it installs as the inline gateway and pairs with ZTE in the cloud, so policy follows the user and device rather than the network segment.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="recap-card" id="rc1">
+    <div class="recap-card-header">
+      <div class="section-badge" style="background:var(--s1);">1</div>
+      <div><div class="recap-card-title">Introduce Zero Trust Branch Concepts</div><div class="recap-card-subtitle"><a href="../1 Introduce Zero Trust Branch Concepts/edu-280-intro.html" style="color:var(--teal);">Open full section →</a></div></div>
+    </div>
+    <div class="recap-card-body">
+      <p class="summary-text">ZTB is an inline branch gateway that sends all traffic outbound through the Zscaler cloud (ZTE) for inspection and policy enforcement — without extending the corporate network to the branch or trusting any device by default.</p>
+      <div class="analogy-box">
+        <div class="analogy-label">Analogy</div>
+        <div class="analogy-text">Legacy network = a castle with a moat. Once you're inside, you're trusted everywhere. Zero Trust Branch = a smart office building where every door has a keycard reader and nobody is trusted just because they're in the lobby.</div>
+      </div>
+      <div class="mental-note" style="background:#d0f4f8;">
+        <div class="mental-note-icon">🧠</div>
+        <div>
+          <div class="mental-note-label" style="color:var(--teal);">MENTAL NOTE</div>
+          <div class="mental-note-text" style="color:var(--text);">"ZTB = inline gateway + ZTE broker + no implicit trust." ZTE is the middleman that says yes or no to every request based on identity, device, and context.</div>
+        </div>
+      </div>
+      <ul class="key-bullets" style="--bullet-color:var(--s1);">
+        <li>ZTE = Zero Trust Exchange — the cloud-delivered policy broker at the center of everything</li>
+        <li>SASE = ZTB (network) + ZIA (internet security) + ZPA (private app access)</li>
+        <li>Legacy problems: traffic backhaul, implicit trust, flat networks, hub-and-spoke complexity</li>
+        <li>ZTB installs inline as the branch gateway — no network redesign required</li>
+        <li>Branch evolution: from MPLS → SD-WAN → Zero Trust Branch</li>
+      </ul>
+      <div class="img-display-block">
+        <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+        <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+        <div class="prompt-content" hidden>Flat teal illustration of a branch office building on the left, a ZTB gateway in the middle, a cloud with a Zscaler shield on the right, with arrows showing outbound-only traffic flow, minimalist, no text labels.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2 -->
+  <div class="socratic-block" style="border-top:3px solid var(--s2);">
+    <div class="socratic-header">
+      <span class="socratic-icon">💭</span>
+      <span class="socratic-label">THINK FIRST · SECTION 2 — SEGMENTATION</span>
+    </div>
+    <p class="socratic-insight">On a traditional /24 subnet, any device can reach any other device on that segment without going through a gateway. Now consider what happens if a printer, a surveillance camera, and a finance laptop all share that subnet — and one of them gets infected.</p>
+    <ul class="socratic-questions">
+      <li>What changes about device communication when every device has a /32 instead of a shared /24 — what must now happen for any two devices to talk?</li>
+      <li>Which category of attack becomes nearly impossible when east-west traffic always flows through the gateway?</li>
+      <li>Why would a hospital or a manufacturer care about IoT isolation more intensely than a typical office network would?</li>
+    </ul>
+    <div class="answer-area" data-section="s2">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">With a /32 mask, every device is its own "segment of one" — there are no neighbors in its broadcast domain. Any communication between two devices has to be routed through the ZTB gateway, where a firewall or segmentation policy decides whether it is allowed.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Lateral movement (east-west propagation) becomes nearly impossible because no device can reach another without an explicit permit at the gateway. Worms, ransomware, and recon scans that rely on ARP discovery and same-subnet pivots are effectively neutralized.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Hospitals and factories run unpatched, long-lifecycle devices — infusion pumps, MRIs, PLCs, robots — that cannot host an EDR agent and where downtime is unsafe. Airgap /32 isolation contains a compromised IoT/OT device automatically, protecting patient-care or production-floor systems from a flat-network blast radius.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="recap-card" id="rc2">
+    <div class="recap-card-header">
+      <div class="section-badge" style="background:var(--s2);">2</div>
+      <div><div class="recap-card-title">Segment Branches and Devices</div><div class="recap-card-subtitle"><a href="../2 Segment Branches and Devices/edu-280-segment.html" style="color:var(--green);">Open full section →</a></div></div>
+    </div>
+    <div class="recap-card-body">
+      <p class="summary-text">Every device gets a /32 "segment of one" — it is its own isolated network island. All traffic must pass through the ZTB gateway, preventing any device from communicating with another without an explicit policy permit.</p>
+      <div class="analogy-box">
+        <div class="analogy-label">Analogy</div>
+        <div class="analogy-text">Hotel key cards — your room key only opens your room. Even if you're a hotel guest, you can't wander into other rooms. The /32 mask is your personal key that only works for you.</div>
+      </div>
+      <div class="mental-note" style="background:#d4f0e0;">
+        <div class="mental-note-icon">🧠</div>
+        <div>
+          <div class="mental-note-label" style="color:var(--green);">MENTAL NOTE</div>
+          <div class="mental-note-text" style="color:var(--text);">"/32 = a network of one. Every device is an island. Lateral movement requires swimming across the gateway — and the gateway says no."</div>
+        </div>
+      </div>
+      <ul class="key-bullets">
+        <li>4 hardware models: ZT-400 (small branch) → ZT-600 → ZT-800 → ZT-8010 (enterprise, 15x 1GbE + 8x 100G SFP+)</li>
+        <li>Airgap = /32 full isolation | Airgap-Lite = subnet preserved | Static = DHCP off</li>
+        <li>6 main use cases: IoT/OT isolation, M&amp;A onboarding, retail, healthcare, manufacturing, campus</li>
+        <li>Device fingerprinting: MAC OUI (manufacturer from first 3 bytes) + DHCP Options (53/60)</li>
+        <li>ZTB eliminates: east-west firewalls, NAC appliances, static ACL rules</li>
+      </ul>
+      <div class="img-display-block">
+        <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+        <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+        <div class="prompt-content" hidden>Flat green illustration showing 4 device icons (laptop, camera, server, printer) each enclosed in their own /32 circle, all pointing inward to a single central gateway node, with one arrow out to a cloud, minimalist, no text labels.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3 -->
+  <div class="socratic-block" style="border-top:3px solid var(--s3);">
+    <div class="socratic-header">
+      <span class="socratic-icon">💭</span>
+      <span class="socratic-label">THINK FIRST · SECTION 3 — DEPLOYMENT</span>
+    </div>
+    <p class="socratic-insight">A new gateway arrives at a branch site. It has no configuration yet. Before it can do anything useful, it needs to "phone home" and receive its instructions from the cloud. Think carefully about the direction of that connection — who initiates it, and why that matters.</p>
+    <ul class="socratic-questions">
+      <li>Does Zscaler reach into the branch to configure the appliance, or does the appliance reach out to Zscaler? What are the firewall implications of each direction?</li>
+      <li>SDA (browser-based) is the preferred method, but a serial console option also exists — under what conditions would you actually need the console?</li>
+      <li>If activation requires port 443 outbound and UDP 500/4500 — and your branch firewall blocks all outbound traffic by default — what do you need to do before the appliance can activate?</li>
+    </ul>
+    <div class="answer-area" data-section="s3">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The appliance always reaches outbound to Zscaler — Zscaler never reaches inbound. That means no inbound ports are exposed at the branch firewall and no inbound NAT or DMZ is required; only outbound TCP 443 (and IPSec UDP 500/4500 once tunnels come up) is needed, which keeps the branch attack surface near zero.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Use the serial console (PuTTY at 115200 baud, options 4 and 6) when SDA can't be used — DHCP is unavailable on the WAN interface, the activation URL is unreachable, you need to pre-stage networking before plugging in, or you must collect diagnostics on a stuck activation. It is also handy for verifying interface roles and reading platform CLI output.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">You have to pre-authorize outbound flows on the upstream firewall before plugging the appliance in: TCP 443 to the Zscaler activation/cloud endpoints, plus UDP 500 and UDP 4500 for IKE/IPSec to the assigned ZIA data center. Without those allowed, the appliance will not call home and SDA will hang.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="recap-card" id="rc3">
+    <div class="recap-card-header">
+      <div class="section-badge" style="background:var(--s3);">3</div>
+      <div><div class="recap-card-title">Deploy and Administer Zero Trust Branch</div><div class="recap-card-subtitle"><a href="../3 Deploy and Administer Zero Trust Branch/edu-280-deploy.html" style="color:var(--blue);">Open full section →</a></div></div>
+    </div>
+    <div class="recap-card-body">
+      <p class="summary-text">Create a Site in the portal, map interface roles (WAN/LAN/Mgmt/HA/Console), then activate the appliance using SDA (URL-based) or an Activation Code (console-based). The appliance calls home on port 443 and downloads its full configuration.</p>
+      <div class="analogy-box">
+        <div class="analogy-label">Analogy</div>
+        <div class="analogy-text">Activating a new smartphone — out of the box it does nothing. You enter an activation code (or scan a QR code), it connects to the cloud, downloads your profile, and is ready. The appliance works exactly the same way.</div>
+      </div>
+      <div class="mental-note" style="background:#e8f0fb;">
+        <div class="mental-note-icon">🧠</div>
+        <div>
+          <div class="mental-note-label" style="color:var(--blue);">MENTAL NOTE</div>
+          <div class="mental-note-text" style="color:var(--text);">"Port 443 out = gateway calls home. Never opens inbound ports. SDA = URL → scan → done. Console = PuTTY, 115200 baud."</div>
+        </div>
+      </div>
+      <ul class="key-bullets">
+        <li>Create Site first in portal → then activate appliance (site is the logical container)</li>
+        <li>SDA = Simple Device Activation — URL-based, preferred method, works from appliance browser</li>
+        <li>Activation Code = time-limited code entered directly into the console (alternative method)</li>
+        <li>Console access: PuTTY → serial cable → 115200 baud → option 4 = Show Config, option 6 = Platform CLI</li>
+        <li>Required outbound: TCP 443 + UDP 4500/500 (IPSec IKE) — firewall must allow these before activation</li>
+        <li>Final states: Standalone (single gateway) or Active/Standby (HA pair)</li>
+      </ul>
+      <div class="img-display-block">
+        <img src="3.png" alt="Diagram 3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+        <div class="img-missing-msg" style="display:none;">📷 <strong>3.png</strong> will appear here once you add it to this folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+        <div class="prompt-content" hidden>Flat blue 4-step flow — portal dashboard icon → key icon → network appliance box → green checkmark — connected by arrows, minimalist, no text labels.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4 -->
+  <div class="socratic-block" style="border-top:3px solid var(--s4);">
+    <div class="socratic-header">
+      <span class="socratic-icon">💭</span>
+      <span class="socratic-label">THINK FIRST · SECTION 4 — TUNNELS &amp; INTEGRATION</span>
+    </div>
+    <p class="socratic-insight">All branch internet traffic is about to be routed through a cloud security service. Every packet takes a detour — branch → tunnel → Zscaler cloud → internet. That's a deliberate design choice. Think about what you gain and what overhead you accept.</p>
+    <ul class="socratic-questions">
+      <li>GRE is faster than IPSec but doesn't encrypt. IPSec encrypts but adds overhead. When would the trade-off favor one over the other?</li>
+      <li>What can a cloud security service like ZIA inspect that a traditional hardware firewall sitting at the branch edge could not?</li>
+      <li>IKEv1 and IKEv2 both handle key exchange for IPSec — what specific problem does IKEv2 improve on, and why does it matter in a branch deployment?</li>
+    </ul>
+    <div class="answer-area" data-section="s4">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">IPSec is the default for any traffic crossing the public internet because it provides confidentiality, integrity, and authentication. GRE makes sense when the underlying link is already trusted or encrypted (private MPLS, dark fiber, or with IPSec layered on top) and you need lower CPU overhead or to carry multicast/non-IP protocols that pure IPSec cannot.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">ZIA in the cloud can do TLS/SSL inspection at scale, full URL and cloud-app categorization, sandboxing of unknown files, DLP, and threat intelligence correlated across every Zscaler customer — without the branch having to refresh hardware. A box at the branch is limited by its appliance CPU, signature feed, and the volume of traffic it can decrypt locally.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">IKEv2 fixes IKEv1's fragility on flaky branch WAN links: fewer messages to establish the SA, built-in NAT traversal and dead-peer detection, MOBIKE for IP changes, and EAP authentication. The practical impact at a branch is faster tunnel setup, cleaner re-keying, and tunnels that survive ISP blips instead of dropping user sessions.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="recap-card" id="rc4">
+    <div class="recap-card-header">
+      <div class="section-badge" style="background:var(--s4);">4</div>
+      <div><div class="recap-card-title">Integrate Zscaler and Third-Party Security Services</div><div class="recap-card-subtitle"><a href="../4 Integrate Zscaler and Third-Party Security Services/edu-280-integrate-security.html" style="color:var(--purple);">Open full section →</a></div></div>
+    </div>
+    <div class="recap-card-body">
+      <p class="summary-text">IPSec tunnels route all internet-bound traffic through ZIA for inspection (default, secure, encrypted). GRE tunnels are faster but unencrypted — used when IPSec overhead is a concern. ZIA Locations attach the branch site to the nearest Zscaler data center for consistent policy.</p>
+      <div class="analogy-box">
+        <div class="analogy-label">Analogy</div>
+        <div class="analogy-text">IPSec = an armored truck for your data (sealed, authenticated, tamper-proof but slightly slower). GRE = a transparent delivery van (fast, light, but anyone can see what's inside — add IPSec on top if you need privacy).</div>
+      </div>
+      <div class="mental-note" style="background:#ece8ff;">
+        <div class="mental-note-icon">🧠</div>
+        <div>
+          <div class="mental-note-label" style="color:var(--purple);">MENTAL NOTE</div>
+          <div class="mental-note-text" style="color:var(--text);">"IPSec = CIA (Confidentiality, Integrity, Availability). GRE = outer IP + GRE header + inner payload. Verify: docker exec strongswan ipsec status."</div>
+        </div>
+      </div>
+      <ul class="key-bullets">
+        <li>IPSec protects traffic with encryption (AES), integrity (HMAC), and authentication (IKE)</li>
+        <li>IKEv1 = legacy (3 messages, less secure) | IKEv2 = modern (4 messages, faster, more reliable)</li>
+        <li>GRE = encapsulates original packet: Outer IP Header → GRE Header → Inner Payload</li>
+        <li>ZIA Locations: 6 benefits including consistent policy, traffic inspection, and simplified management</li>
+        <li>Verify IPSec: <code>docker exec strongswan ipsec status</code></li>
+      </ul>
+      <div style="background:var(--surface-2);border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;">
+        <img src="4.png" alt="Section 4 diagram" style="max-width:100%;border-radius:10px;display:block;margin:0 auto;">
+      </div>
+    </div>
+  </div>
+
+  <!-- S5 -->
+  <div class="socratic-block" style="border-top:3px solid var(--s5);">
+    <div class="socratic-header">
+      <span class="socratic-icon">💭</span>
+      <span class="socratic-label">THINK FIRST · SECTION 5 — ADMIN &amp; POLICIES</span>
+    </div>
+    <p class="socratic-insight">You manage 80 branch sites and need to push a new firewall policy. You could touch each site individually — or you could think about how template systems work in other parts of IT. But templates don't cover everything. Some rules need to be site-specific.</p>
+    <ul class="socratic-questions">
+      <li>If firewall rules evaluate Site → Template → Global → System and "first match wins" — where does a site-specific exception need to live to take effect before a template rule blocks it?</li>
+      <li>What happens to a packet that matches none of the rules at any level? Is that safe?</li>
+      <li>The Ransomware Kill Switch isolates the entire network with one click. Under what circumstances is that the <em>right</em> call — and what do you have to accept as the trade-off?</li>
+    </ul>
+    <div class="answer-area" data-section="s5">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The exception has to be created at the Site level, because Site is evaluated first in the Site → Template → Global → System order and first match wins. If the exception lives in the Template, the template's own block rule above it (or the surrounding template logic) will hit first and the override never gets a chance.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">A packet that matches no Site, Template, or Global rule falls through to the System Default, which is an implicit deny. That is safe (fail-closed) — nothing accidentally allowed — but it also means you must explicitly permit anything you actually want to flow, including required management or monitoring traffic.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">RKS is the right call when a confirmed ransomware or worm outbreak is spreading and containment beats availability — for example, multiple endpoints encrypting files or beaconing to known C2. The trade-off is total user impact: phones, POS, printers, and clinical or production devices all lose connectivity, so it should only be triggered with incident-response authority and a recovery plan ready (Green → Yellow → Orange → Red).</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="recap-card" id="rc5">
+    <div class="recap-card-header">
+      <div class="section-badge" style="background:var(--s5);">5</div>
+      <div><div class="recap-card-title">Manage Branch Administration and Policies</div><div class="recap-card-subtitle"><a href="../5 Manage Branch Administration and Policies/edu-280-admin-policies.html" style="color:var(--amber);">Open full section →</a></div></div>
+    </div>
+    <div class="recap-card-body">
+      <p class="summary-text">Templates standardize configuration across multiple branch sites. Tags classify devices for policy targeting without relying on IP addresses. Firewall policies evaluate in order: Site → Template → Global → System (first match wins). The Ransomware Kill Switch isolates the entire network with one click.</p>
+      <div class="analogy-box">
+        <div class="analogy-label">Analogy</div>
+        <div class="analogy-text">Templates = cookie cutters — same shape, different flavors at each site. Firewall evaluation = a bouncer checking VIP list → regular guest list → staff list → "everyone else" policy. First match wins — so put specific rules at the top.</div>
+      </div>
+      <div class="mental-note" style="background:#fef9c3;">
+        <div class="mental-note-icon">🧠</div>
+        <div>
+          <div class="mental-note-label" style="color:var(--amber);">MENTAL NOTE</div>
+          <div class="mental-note-text" style="color:var(--text);">"First match wins. Site beats Template beats Global beats System. RKS: one click, four colors (Green → Yellow → Orange → Red). Green = normal, Red = full lockdown."</div>
+        </div>
+      </div>
+      <ul class="key-bullets">
+        <li>Templates = reusable config bundles applied to multiple sites (Default Template or Custom)</li>
+        <li>9 object types: IP Groups, FQDNs, URL Categories, App Groups, Service Groups, and more</li>
+        <li>4 firewall evaluation levels: Site → Template → Global → System Default</li>
+        <li>RKS = Ransomware Kill Switch — path: Policies › Access Control › Segmentation › ZTB › Kill Switch</li>
+        <li>PBR = Policy-Based Routing — 3 steps: Match (source IP + ports) → Apply policy → Steer traffic</li>
+        <li>Routing decision: ZIA (internet) → ZPA (private apps) → Direct (everything else)</li>
+      </ul>
+      <div style="background:var(--surface-2);border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;">
+        <img src="5.png" alt="Section 5 diagram" style="max-width:100%;border-radius:10px;display:block;margin:0 auto;">
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-s1s5" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('s1s5','Sections 1–5')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-s1s5" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-s1s5"></span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTIONS 6-10 -->
+<div class="section-block" id="section-s6s10">
+  <div class="section-label">SECTIONS 6–10</div>
+  <h2>Advanced services, visibility, integrations, and diagnostics</h2>
+
+  <!-- S6 -->
+  <div class="socratic-block" style="border-top:3px solid var(--s6);">
+    <div class="socratic-header">
+      <span class="socratic-icon">💭</span>
+      <span class="socratic-label">THINK FIRST · SECTION 6 — ADVANCED NETWORK SERVICES</span>
+    </div>
+    <p class="socratic-insight">A single gateway is a single point of failure. If it reboots mid-day, every device at the branch loses connectivity. High availability solves this — but seamless failover requires more than just a second device. Think about what the backup needs to know for active sessions to survive a switchover.</p>
+    <ul class="socratic-questions">
+      <li>If the Master gateway fails mid-TCP-session, what data must the Backup already have in order for the user to not notice the switchover?</li>
+      <li>SNMPv2 uses a "community string" — essentially a shared password in plaintext. What exactly does SNMPv3 add, and what threat does each addition mitigate?</li>
+      <li>DNS Override lets you rewrite DNS responses at the branch. What legitimate use case justifies this — and what could go catastrophically wrong if it's misconfigured?</li>
+    </ul>
+    <div class="answer-area" data-section="s6">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The Backup needs the full connection-tracking (Conntrack) state — the active 5-tuples, sequence numbers, NAT mappings, and tunnel SAs — so when VRRP fails over and the virtual IP plus a gratuitous ARP move, in-flight TCP sessions continue without reset. That is exactly what the VRRP HA link (dedicated in v7.8+) and Keepalived/Conntrack sync provide.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">SNMPv3 adds authentication (HMAC-SHA), which prevents a spoofed poller from impersonating the NMS, and privacy (AES/DES encryption), which prevents passive sniffing of OIDs and counters on the wire. Together they replace the v2 model where anyone who learns the community string can both read and forge SNMP traffic.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Legitimate uses include pinning an internal hostname to a private IP at a branch, redirecting captive-portal or guest DNS, or blackholing known malicious domains locally. Misconfigured, it can silently send legitimate traffic (banking, SaaS, internal apps) to the wrong address — effectively a man-in-the-middle by the branch admin — which is why Override should be scoped tightly and reviewed.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="recap-card" id="rc6">
+    <div class="recap-card-header">
+      <div class="section-badge" style="background:var(--s6);">6</div>
+      <div><div class="recap-card-title">Configure Advanced Network Services</div><div class="recap-card-subtitle"><a href="../6 Configure Advanced Network Services/edu-280-advanced-network.html" style="color:var(--blue);">Open full section →</a></div></div>
+    </div>
+    <div class="recap-card-body">
+      <p class="summary-text">VRRP keeps two gateways in sync so one takes over instantly if the other fails. DHCP assigns IPs in three Airgap modes. SNMP v2 uses community strings (basic) while v3 adds authentication and encryption. DNS Policies let you allow, redirect, or override DNS queries site-by-site.</p>
+      <div class="analogy-box">
+        <div class="analogy-label">Analogy</div>
+        <div class="analogy-text">VRRP = a co-pilot in the cockpit — if the pilot becomes incapacitated, the co-pilot takes the controls immediately (stateful switchover = they already know everything that was happening). SNMPv3 = a security clearance badge for your monitoring tool — not just a name at the door, but verified ID with a whisper so nobody else can hear.</div>
+      </div>
+      <div class="mental-note" style="background:#e8f0fb;">
+        <div class="mental-note-icon">🧠</div>
+        <div>
+          <div class="mental-note-label" style="color:var(--blue);">MENTAL NOTE</div>
+          <div class="mental-note-text" style="color:var(--text);">"VRRP: 1 Master + 1 Backup. v7.8+ = dedicated HA link. Conntrack syncs sessions. DNS: allow/redirect/override. SNMPv3 verify: snmpwalk -v3."</div>
+        </div>
+      </div>
+      <ul class="key-bullets">
+        <li>VRRP features: non-preemptive failover, Conntrack sync, link state monitoring, GARP, Keepalived</li>
+        <li>v7.7 = VRRP over WAN link | v7.8+ = dedicated HA link (faster, more reliable)</li>
+        <li>DHCP Airgap = /32 isolation | Airgap-Lite = original subnet | Static = DHCP off</li>
+        <li>IP reservations via CSV: mac_address, ip_address, hostname, type, status</li>
+        <li>SNMPv2 whitelists SNMP servers | SNMPv3 adds auth (HMAC-SHA) + privacy (AES/DES)</li>
+        <li>DNS Policy actions: allow, reject, redirect to DNS gateway, or override response</li>
+        <li>All IPv4 in DNS Policies = Local Interface IPs (AppC, Private, Airgap)</li>
+      </ul>
+      <div style="background:var(--surface-2);border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;">
+        <img src="6.png" alt="Section 6 diagram" style="max-width:100%;border-radius:10px;display:block;margin:0 auto;">
+      </div>
+    </div>
+  </div>
+
+  <!-- S7 -->
+  <div class="socratic-block" style="border-top:3px solid var(--s7);">
+    <div class="socratic-header">
+      <span class="socratic-icon">💭</span>
+      <span class="socratic-label">THINK FIRST · SECTION 7 — APP CONNECTOR &amp; ROUTING</span>
+    </div>
+    <p class="socratic-insight">Traditional VPN creates an inbound listener — a port the firewall must allow inbound, visible to port scanners and attackers. App Connector eliminates that entirely. Think about what it means for your attack surface when zero inbound ports need to be opened on the data center firewall.</p>
+    <ul class="socratic-questions">
+      <li>If App Connector only makes outbound connections and never listens inbound, how does a user's request actually reach the private application?</li>
+      <li>BGP learns routes dynamically and adapts when links go up or down. What operational problem does this solve compared to maintaining static routes across dozens of branch sites?</li>
+      <li>Routed tunnels preserve the original source IP. Which types of applications specifically break if the source IP changes mid-session — and what do they have in common?</li>
+    </ul>
+    <div class="answer-area" data-section="s7">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Both the user (via ZCC or ZTB) and the App Connector make independent outbound connections to the Zero Trust Exchange. ZTE authenticates and authorizes the request, then stitches the two outbound sessions together — so traffic reaches the private app without ever opening an inbound port on the data center firewall.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Static routes don't scale: every link change, new subnet, or M&amp;A site requires manual updates across dozens of devices, and a missed entry creates a blackhole. BGP advertises prefixes dynamically with attributes like local-pref and AS-path, so failover, new subnets, and policy changes propagate automatically — turning a manual config exercise into a peering relationship.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">VoIP signaling, TACACS+/RADIUS, ATM/banking transactions, and Active FTP all break when the source IP is rewritten. They share a common trait: the server enforces ACLs based on the real client IP or embeds that IP inside the application payload (SDP, port-command, callback), so a NAT mid-path corrupts the session.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="recap-card" id="rc7">
+    <div class="recap-card-header">
+      <div class="section-badge" style="background:var(--s7);">7</div>
+      <div><div class="recap-card-title">Deploy App Connector for Zero Trust Access</div><div class="recap-card-subtitle"><a href="../7 Deploy App Connector for Zero Trust Access/edu-280-app-connector.html" style="color:var(--green);">Open full section →</a></div></div>
+    </div>
+    <div class="recap-card-body">
+      <p class="summary-text">ZPA App Connectors live inside the data center, initiate outbound-only connections to the Zero Trust Exchange, and never expose inbound ports. BGP replaces static routes with adaptive path discovery. Routed tunnels link branches with encrypted, source-IP-preserving paths for legacy apps.</p>
+      <div class="analogy-box">
+        <div class="analogy-label">Analogy</div>
+        <div class="analogy-text">App Connector = a spy who only receives instructions from HQ (outbound only) and never broadcasts their own position (no inbound ports). BGP = a GPS that reroutes automatically when there's a traffic jam — no manual map updates needed.</div>
+      </div>
+      <div class="mental-note" style="background:#d4f0e0;">
+        <div class="mental-note-icon">🧠</div>
+        <div>
+          <div class="mental-note-label" style="color:var(--green);">MENTAL NOTE</div>
+          <div class="mental-note-text" style="color:var(--text);">"Inside-out = zero attack surface. Provisioning key → paste into ZTB site → Connected. docker ps -a confirms container running. Routed tunnels = cryptokey routing + preserved source IP."</div>
+        </div>
+      </div>
+      <ul class="key-bullets">
+        <li>ZPA flow: User+ZCC → Zero Trust Exchange (identity+context check) → App Connector (outbound only) → Private App</li>
+        <li>Provisioning key created in ZPA → pasted into ZTB site ZPA tab → status goes to Connected</li>
+        <li>Validate: <code>docker ps -a</code> on gateway — look for App Connector container</li>
+        <li>BGP peer params: Name, Neighbor IP, Neighbor AS, Local IP, Local AS, Password, Graceful Restart Time</li>
+        <li>OSPF Hello Interval = 10s | Dead Interval = 40s (4× Hello) — must match on both ends</li>
+        <li>Routed tunnels preserve source IP — required for VoIP, TACACS+, ATMs, Active FTP</li>
+        <li>DHCP relay over routed tunnel: broadcast → unicast encap → encrypted tunnel → DC DHCP server</li>
+      </ul>
+      <div style="background:var(--surface-2);border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;">
+        <img src="7.png" alt="Section 7 diagram" style="max-width:100%;border-radius:10px;display:block;margin:0 auto;">
+      </div>
+    </div>
+  </div>
+
+  <!-- S8 -->
+  <div class="socratic-block" style="border-top:3px solid var(--s8);">
+    <div class="socratic-header">
+      <span class="socratic-icon">💭</span>
+      <span class="socratic-label">THINK FIRST · SECTION 8 — MONITORING &amp; ANALYTICS</span>
+    </div>
+    <p class="socratic-insight">You can collect all traffic data, or you can collect the right data. Traffic Flow Charts, link scores, packet logs, and flow logs each give you a different view of what's happening on the network. Think about which tool you'd reach for in different situations — and what each one cannot tell you.</p>
+    <ul class="socratic-questions">
+      <li>You suspect two devices that should never communicate are talking to each other. Which monitoring tool surfaces this, and how is the data represented?</li>
+      <li>A branch user reports slow internet. The link score is 4 out of 30. What does that number tell you, and what does it not tell you about the root cause?</li>
+      <li>Flow logs record one entry per 4-tuple per hour by default. Packet logs capture every individual packet. When would the detail of packet-level capture be worth the storage cost — and when would it be overkill?</li>
+    </ul>
+    <div class="answer-area" data-section="s8">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The Traffic Flow Chart surfaces it: built on a graph database, each device is a node and each observed conversation is an edge between them. An unexpected edge between two nodes — for example a camera talking to a finance laptop — is visually obvious. For near-real-time confirmation use Flow Logs, because the chart can lag by up to ten minutes.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">A link score of 4/30 means the WAN link is in poor health, normalized from latency, jitter, and packet loss over the last 30 iterations. It doesn't tell you which of those three metrics is driving it or whether the cause is upstream ISP, local cabling, or congestion — for that you drill into Sites → Interfaces → Interface Statistics 24h.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Packet logs are worth the cost for active incident response, deep protocol or TLS handshake analysis, malware C2 investigation, or proving a specific failure mode to a vendor — anything where headers and payload bytes matter. They are overkill for capacity planning, top-talkers, or "who talked to whom" trending, where flow logs (one entry per 4-tuple per hour) give the same answer at a fraction of the storage.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="recap-card" id="rc8">
+    <div class="recap-card-header">
+      <div class="section-badge" style="background:var(--s8);">8</div>
+      <div><div class="recap-card-title">Monitor Network Activity and Analytics</div><div class="recap-card-subtitle"><a href="../8 Monitor Network Activity and Analytics/edu-280-monitor.html" style="color:var(--red);">Open full section →</a></div></div>
+    </div>
+    <div class="recap-card-body">
+      <p class="summary-text">The ZTB dashboard shows device counts, threats, and network topology. Traffic Flow Charts visualize device-to-device communication (up to 10 min delay). Link Scoring (0–30) measures WAN quality. Packet Logs give raw per-packet detail. Flow Logs give per-session summaries (one per 4-tuple per hour by default).</p>
+      <div class="analogy-box">
+        <div class="analogy-label">Analogy</div>
+        <div class="analogy-text">Traffic Flow Chart = a social network map for your devices — every conversation leaves a trace. Link Score = a health bar for your WAN link (30 = full health, 0 = critical). Packet Logs = listening to every phone call. Flow Logs = the phone bill (who called who, for how long).</div>
+      </div>
+      <div class="mental-note" style="background:#fee2e2;">
+        <div class="mental-note-icon">🧠</div>
+        <div>
+          <div class="mental-note-label" style="color:var(--red);">MENTAL NOTE</div>
+          <div class="mental-note-text" style="color:var(--text);">"Flow log = 4-tuple (src IP, dst IP, dst port, protocol). Chart = up to 10 min delay — use Flow Logs for real-time. Link Score 0–30 = jitter + latency + packet loss normalized."</div>
+        </div>
+      </div>
+      <ul class="key-bullets">
+        <li>Dashboard panels: Insights (endpoints/threats), Device Insights (brand/model/IoT), Network Topology (Charts)</li>
+        <li>Traffic Flow Chart: every device = node, every communication = edge — built on graph database</li>
+        <li>Link Score inputs: latency (ms) + jitter (ms) + packet loss (%) — normalized over 30 iterations</li>
+        <li>Interface stats path: Sites → Interfaces → click WAN score → Interface Statistics 24h</li>
+        <li>Packet Logs: filter by source (IP/port/OS/browser/geo), destination, or host — path: Logs → Packet Logs</li>
+        <li>Flow Logs: 1 entry/hour per 4-tuple by default — disable throttling in policy for more detail</li>
+        <li>Gateway monitoring: Sites → Monitoring → CPU/memory/disk + Top Containers + 24h trends</li>
+      </ul>
+      <div style="background:var(--surface-2);border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;">
+        <img src="8.png" alt="Section 8 diagram" style="max-width:100%;border-radius:10px;display:block;margin:0 auto;">
+      </div>
+    </div>
+  </div>
+
+  <!-- S9 -->
+  <div class="socratic-block" style="border-top:3px solid var(--s9);">
+    <div class="socratic-header">
+      <span class="socratic-icon">💭</span>
+      <span class="socratic-label">THINK FIRST · SECTION 9 — THIRD-PARTY INTEGRATIONS</span>
+    </div>
+    <p class="socratic-insight">Device trust isn't a binary yes/no — it's a spectrum that changes over time. A fully-patched laptop with active security software is more trustworthy than one that hasn't been updated in 90 days. Now think about what it would take to automatically enforce network access policies based on that continuously-updating score.</p>
+    <ul class="socratic-questions">
+      <li>A user with a ZTA score of 80 is in the middle of a critical meeting. Their score drops to 20 because a patch check failed. What should happen to their network access — and is there any way to make that policy more nuanced than a hard cut?</li>
+      <li>Armis discovers and classifies devices without installing any agent. What signals could it possibly use to identify whether a device is a medical infusion pump versus a security camera?</li>
+      <li>Why is correlating ZTB logs in a SIEM more powerful than reviewing them inside the ZTB portal alone?</li>
+    </ul>
+    <div class="answer-area" data-section="s9">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Per the standard ZTA tiers, a score of 20 (&lt;30) means the device should be blocked, but a hard cut mid-meeting is disruptive. A more nuanced policy uses tiered enforcement: &gt;70 full access, 30–70 restricted (for example ICMP plus an allowlist for collaboration apps), &lt;30 quarantine — combined with user notification and a "remediate within X minutes" grace window so the user can patch and recover access without an abrupt drop.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Armis fingerprints devices passively from network metadata: MAC OUI, DHCP options, mDNS/SSDP advertisements, TLS/JA3, HTTP user-agents, open ports, and the destinations they talk to. It then matches that behavioral fingerprint against a crowdsourced knowledge base — so an infusion pump's vendor cloud and protocol pattern look very different from an ONVIF camera's, even without an agent.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">A SIEM correlates ZTB events with identity (IdP), EDR (CrowdStrike), email, and cloud logs, so a single suspicious flow at the branch can be tied to a user login from a new country and an EDR detection on the same host. The portal alone shows ZTB's slice; the SIEM provides cross-source context, long-term retention, and compliance-grade search that turn isolated events into a story.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="recap-card" id="rc9">
+    <div class="recap-card-header">
+      <div class="section-badge" style="background:var(--s9);">9</div>
+      <div><div class="recap-card-title">Integrate Third-Party Security Platforms</div><div class="recap-card-subtitle"><a href="../9 Integrate Third-Party Security Platforms/edu-280-third-party.html" style="color:var(--purple);">Open full section →</a></div></div>
+    </div>
+    <div class="recap-card-body">
+      <p class="summary-text">CrowdStrike ZTA scores (0–100) automatically classify devices into risk tiers and ZTB enforces matching policies. Armis discovers and classifies all IT/IoT/OT devices agentlessly. SIEM integration forwards ZTB logs over TCP 514 to a centralized platform for correlation, investigation, and compliance.</p>
+      <div class="analogy-box">
+        <div class="analogy-label">Analogy</div>
+        <div class="analogy-text">CrowdStrike ZTA = a background check score that updates in real time — miss a patch and your score drops instantly. Armis = security cameras that can identify every visitor without asking for ID. SIEM = a war room where every alarm from every building feeds into one screen.</div>
+      </div>
+      <div class="mental-note" style="background:#ece8ff;">
+        <div class="mental-note-icon">🧠</div>
+        <div>
+          <div class="mental-note-label" style="color:var(--purple);">MENTAL NOTE</div>
+          <div class="mental-note-text" style="color:var(--text);">"ZTA score: &gt;70 = full access, 30–70 = ICMP only, &lt;30 = blocked. No Falcon sensor = no ZTA score = device can't be evaluated. SIEM = TCP port 514 (rsyslog), validate at /var/log/syslog."</div>
+        </div>
+      </div>
+      <ul class="key-bullets">
+        <li>CrowdStrike evaluates: OS patch level, sensor status, vulnerabilities, user activity, active threats</li>
+        <li>CrowdStrike config: Client ID + Client Secret + Base URL → run connectivity test → save</li>
+        <li>Armis = agentless, discovers IT/IoT/OT/medical devices — no agents required</li>
+        <li>Armis access tiers: Managed+Compliant = full | Unmanaged/Unknown = limited | High Risk/Vulnerable = blocked</li>
+        <li>SIEM setup: Infrastructure → Connectors → Edge → Integrations → SIEM Integration → Settings</li>
+        <li>SIEM values: Host = server IP, Protocol = TCP, Port = 514 — then Confirm → Test → Save</li>
+        <li>Validate rsyslog: <code>sudo systemctl status rsyslog</code> — logs at <code>/var/log/syslog</code></li>
+      </ul>
+      <div style="background:var(--surface-2);border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;">
+        <img src="9.png" alt="Section 9 diagram" style="max-width:100%;border-radius:10px;display:block;margin:0 auto;">
+      </div>
+    </div>
+  </div>
+
+  <!-- S10 -->
+  <div class="socratic-block" style="border-top:3px solid var(--s10);">
+    <div class="socratic-header">
+      <span class="socratic-icon">💭</span>
+      <span class="socratic-label">THINK FIRST · SECTION 10 — TROUBLESHOOTING</span>
+    </div>
+    <p class="socratic-insight">Troubleshooting is a process of elimination — you start broad and narrow down. The temptation is to jump to conclusions ("it must be the firewall") instead of building evidence first. Think about the most logical sequence of checks, from widest scope to most specific.</p>
+    <ul class="socratic-questions">
+      <li>Ping succeeds to 8.8.8.8 but the web application won't load. What does that tell you about where the problem is — and what does it rule out?</li>
+      <li><code>show ip route</code> and <code>traceroute</code> both help you understand paths. What does one show that the other doesn't, and when would you need both?</li>
+      <li>ZIA IPSec tunnels show as ESTABLISHED but branch traffic still isn't reaching the internet. The problem is post-tunnel. What would your next three diagnostic steps be?</li>
+    </ul>
+    <div class="answer-area" data-section="s10">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">A successful ping to 8.8.8.8 proves Layer 3 reachability, the default route, and NAT/tunnel egress are all working. It rules out a dead WAN, a broken default route, and a fully-down IPSec tunnel. The problem is higher in the stack — DNS resolution, TLS inspection, URL filtering, application policy, or the destination itself.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text"><code>show ip route</code> shows the control-plane view: which next-hop the router intends to use for a destination, along with the routing protocol and metric. <code>traceroute</code> shows the data-plane reality: the actual hops a packet traverses right now, including asymmetric paths or mid-path drops. You need both when the routing table looks correct but traffic still fails — the table tells you intent, the trace tells you what's really happening.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">First, run <code>tcpdump</code> on the WAN/tunnel interface to confirm packets are actually entering the tunnel after PBR. Second, check PBR flow marking and the routing decision (ZIA vs ZPA vs direct) to make sure the intended traffic is being steered into the tunnel. Third, validate on the ZIA side — Location is attached, GRE/IPSec status is up at the data center, and the public source IP matches the configured Location — then confirm there is no upstream firewall rule blocking egress from the tunnel egress IP.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="recap-card" id="rc10">
+    <div class="recap-card-header">
+      <div class="section-badge" style="background:var(--s10);">10</div>
+      <div><div class="recap-card-title">Troubleshoot and Diagnose Branch Issues</div><div class="recap-card-subtitle"><a href="../10 Troubleshoot and Diagnose Branch Issues/edu-280-troubleshoot.html" style="color:var(--amber);">Open full section →</a></div></div>
+    </div>
+    <div class="recap-card-body">
+      <p class="summary-text">The Gateway CLI (accessed via SSH → admin → option 6) is the first line of defense. Core commands cover reachability, path tracing, routing, and packet capture. VRRP is verified with three Docker commands inside the VyOS container. ZIA IPSec issues follow a 5-step diagnostic flow. PBR flow marking confirms traffic is steering correctly.</p>
+      <div class="analogy-box">
+        <div class="analogy-label">Analogy</div>
+        <div class="analogy-text">Gateway CLI = a doctor's stethoscope — you can't treat what you can't hear. <code>show ip route</code> = reading the patient's X-ray (full map of where traffic can go). <code>tcpdump</code> = listening to every heartbeat. Evidence first, assumptions last.</div>
+      </div>
+      <div class="mental-note" style="background:#fef9c3;">
+        <div class="mental-note-icon">🧠</div>
+        <div>
+          <div class="mental-note-label" style="color:var(--amber);">MENTAL NOTE</div>
+          <div class="mental-note-text" style="color:var(--text);">"Troubleshooting order: ping → traceroute → show ip route → monitor traffic → tcpdump. VRRP: show config → show vrrp → systemctl keepalived. ZIA IPSec: swanctl → fwmark → zia_ipsec_rt → MARK → selectors."</div>
+        </div>
+      </div>
+      <ul class="key-bullets">
+        <li>CLI access: SSH to Mgmt/WAN IP → login as admin → airgap console → option 6 = Platform CLI</li>
+        <li>Type <code>?</code> for all commands | <code>ping ?</code> for sub-commands — 5 command categories</li>
+        <li><code>show ip route</code> = all WAN/LAN/ZPA/IPsec routes | <code>monitor traffic interface GE8 filter icmp</code> = platform capture</li>
+        <li><code>tcpdump -i GE8 icmp</code> = Linux cross-validation — both tools confirming = high confidence</li>
+        <li>VRRP commands: show config → show vrrp → systemctl status keepalived (all inside vyos_container)</li>
+        <li>ZIA IPSec 5 steps: swanctl.conf sanity → fwmark → zia_ipsec_rt routes → MARK applied → selectors valid</li>
+        <li>WAN best link: "best" routing table → healthiest link gets lowest metric → path of least resistance</li>
+      </ul>
+      <div style="background:var(--surface-2);border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;">
+        <img src="10.png" alt="Section 10 diagram" style="max-width:100%;border-radius:10px;display:block;margin:0 auto;">
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-s6s10" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('s6s10','Sections 6–10')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-s6s10" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-s6s10"></span></div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main-content -->
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a class="mod-nav-hub" href="../edu-280-hub.html">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    EDU-280 Hub
+  </a>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">JUMP TO SECTION</div>
+    <div class="section-links">
+      <a href="#rc1"><span class="dot" style="background:var(--s1);"></span>1 · ZTB Concepts</a>
+      <a href="#rc2"><span class="dot" style="background:var(--s2);"></span>2 · Segment Branches</a>
+      <a href="#rc3"><span class="dot" style="background:var(--s3);"></span>3 · Deploy ZTB</a>
+      <a href="#rc4"><span class="dot" style="background:var(--s4);"></span>4 · Integrate Security</a>
+      <a href="#rc5"><span class="dot" style="background:var(--s5);"></span>5 · Admin &amp; Policies</a>
+      <a href="#rc6"><span class="dot" style="background:var(--s6);"></span>6 · Advanced Network</a>
+      <a href="#rc7"><span class="dot" style="background:var(--s7);"></span>7 · App Connector</a>
+      <a href="#rc8"><span class="dot" style="background:var(--s8);"></span>8 · Monitor</a>
+      <a href="#rc9"><span class="dot" style="background:var(--s9);"></span>9 · Third-Party</a>
+      <a href="#rc10"><span class="dot" style="background:var(--s10);"></span>10 · Troubleshoot</a>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">MASTERY CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S1 · ZTE brokers all access — no implicit trust</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S2 · /32 = segment of one, lateral movement blocked</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S2 · 4 hardware models (ZT-400 → ZT-8010)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S3 · SDA vs Activation Code activation methods</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S3 · Port 443 out + UDP 500/4500 — never inbound</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S4 · IPSec = CIA | GRE = outer+GRE+inner</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S5 · Firewall order: Site→Template→Global→System</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S5 · RKS colors: Green/Yellow/Orange/Red</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S6 · VRRP: Master + Backup, Conntrack sync</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S6 · SNMPv3: auth (HMAC-SHA) + privacy (AES)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S7 · App Connector: outbound only, no inbound ports</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S7 · OSPF: Hello=10s, Dead=40s, must match both ends</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S8 · Link Score 0–30 (jitter + latency + packet loss)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S8 · Flow log = 1 per 4-tuple per hour (default)</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S9 · ZTA: &gt;70 full, 30-70 ICMP only, &lt;30 blocked</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S9 · SIEM: TCP port 514, validate /var/log/syslog</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S10 · CLI: SSH → admin → option 6 → Platform CLI</span></li>
+      <li onclick="toggleCheck(this)"><div class="subtopic-check"></div><span>S10 · ZIA IPSec debug: 5-step flow</span></li>
+    </ul>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-280 · <span>Section 11</span></div>
+  <div class="footer-right">Course Summary &amp; Recap</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu280-s11-summary';
+function getStore(){try{return JSON.parse(localStorage.getItem(PAGE_KEY))||{};}catch(e){return{};}}
+function saveStore(s){try{localStorage.setItem(PAGE_KEY,JSON.stringify(s));}catch(e){}}
+const SECTIONS=['overview','s1s5','s6s10'];
+const SECTION_LABELS={overview:'Overview',s1s5:'Sections 1–5',s6s10:'Sections 6–10'};
+function addQuestion(sectionId,sectionLabel){
+  const ta=document.getElementById('q-'+sectionId);
+  const text=ta.value.trim();if(!text)return;
+  const s=getStore();if(!s.questions)s.questions=[];
+  s.questions.push({section:sectionLabel,text,id:Date.now()});
+  saveStore(s);ta.value='';renderQPanel();
+}
+function deleteQuestion(id){
+  const s=getStore();s.questions=(s.questions||[]).filter(q=>q.id!==id);
+  saveStore(s);renderQPanel();
+}
+function renderQPanel(){
+  const s=getStore();const qs=s.questions||[];
+  const count=document.getElementById('qpanel-count');
+  const body=document.getElementById('qpanel-body');
+  count.textContent=qs.length;count.style.display=qs.length?'inline':'none';
+  if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Use the boxes below to add one.</p>';return;}
+  const groups={};qs.forEach(q=>{if(!groups[q.section])groups[q.section]=[];groups[q.section].push(q);});
+  body.innerHTML=Object.entries(groups).map(([label,items],gi)=>`
+    <div class="q-group"><div class="q-group-label">${label.toUpperCase()}</div>
+    ${items.map((q,i)=>`<div class="q-item"><div class="q-num">${gi*10+i+1}</div><div class="q-text">${q.text}</div><button class="q-del" onclick="deleteQuestion(${q.id})">✕</button></div>`).join('')}
+    </div>`).join('');
+}
+function toggleQPanel(){
+  const body=document.getElementById('qpanel-body');
+  const hdr=document.getElementById('qpanel-header');
+  const chev=document.getElementById('qpanel-chevron');
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);chev.textContent=open?'▴':'▾';
+  const s=getStore();s.qOpen=open;saveStore(s);
+}
+document.querySelectorAll('.notes-ta').forEach(ta=>{
+  const key=ta.id;const s=getStore();if(s[key])ta.value=s[key];
+  let timer;
+  ta.addEventListener('input',()=>{
+    clearTimeout(timer);timer=setTimeout(()=>{
+      const st=getStore();st[key]=ta.value;saveStore(st);
+      const ns=document.getElementById('ns-'+key.replace('notes-',''));
+      if(ns){ns.textContent='Saved';setTimeout(()=>{ns.textContent='';},1800);}
+    },600);
+  });
+});
+function toggleCheck(li){
+  li.classList.toggle('done');const s=getStore();if(!s.checks)s.checks={};
+  s.checks[li.querySelector('span').textContent]=li.classList.contains('done');saveStore(s);
+}
+(function restoreChecks(){
+  const s=getStore();if(!s.checks)return;
+  document.querySelectorAll('#checklist li').forEach(li=>{
+    if(s.checks[li.querySelector('span').textContent])li.classList.add('done');
+  });
+})();
+function navTo(id,btn){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+(function init(){
+  renderQPanel();const s=getStore();
+  if(s.qOpen){
+    document.getElementById('qpanel-body').classList.add('open');
+    document.getElementById('qpanel-header').classList.add('open');
+    document.getElementById('qpanel-chevron').textContent='▴';
+  }
+})();
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+</script>
+</body>
+</html>

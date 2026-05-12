@@ -156,6 +156,45 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .img-prompt-label{font-size:9px;letter-spacing:0.18em;font-weight:600;opacity:0.5;text-transform:uppercase;}
 .img-prompt-text{font-size:12px;line-height:1.7;font-style:italic;text-align:center;opacity:0.8;max-width:440px;color:inherit;}
 .img-size{font-size:10px;font-weight:600;letter-spacing:0.14em;opacity:0.45;margin-top:2px;}
+/* SOCRATIC COACHING */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--red);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted,#a04444);}
+.socratic-insight{font-size:13px;color:var(--text-soft,#5a1414);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim,var(--border));line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--red);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(185,28,28,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--red);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
 
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
@@ -202,6 +241,28 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <main>
 <div class="main-content">
 
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · THE NEW ATTACKER TOOLKIT</span></div>
+    <p class="socratic-insight">Attackers have not invented new goals — they still want access, money, and disruption. What has changed is the cost structure of the work. Think about which steps of an attack used to require a human expert, and ask what happens when that human can be replaced by a prompt.</p>
+    <ul class="socratic-questions">
+      <li>If AI doesn't give attackers new goals, what exactly does it give them — and why is that more dangerous than a "new" attack?</li>
+      <li>When skilled labour is the bottleneck on attack volume and quality, what breaks first as that bottleneck disappears?</li>
+      <li>If a script kiddie can now execute nation-state-quality attacks, how does that change which controls actually matter?</li>
+    </ul>
+    <div class="answer-area" data-section="shift">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">AI doesn't hand attackers a new objective — it hands them scale, speed, and quality at near-zero marginal cost. That is more dangerous than a novel exploit because every existing attack class now runs at industrial volume with professional polish. Defences calibrated to "the attacker can only send a few good emails a day" silently break, even though nothing about the threat model looks new on paper.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">The first thing to break is any control that depends on attackers being lazy or unskilled — generic-looking phishing, low translation quality, slow reconnaissance, expensive impersonation. User-awareness training built on "spot the typos" collapses, and SOC capacity built around a predictable volume of alerts gets buried. The bottleneck shifts from the attacker's skill to the defender's ability to triage at machine speed.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">When elite tradecraft becomes commodity, controls that assumed "only nation-states can do this" become daily controls. The high-leverage defences are the ones that don't depend on attacker skill — Zero Trust segmentation, behavioural detection, out-of-band verification, and least-privilege access. Anything that relied on the attacker not being good enough is now obsolete.</div></div>
+      </div>
+    </div>
+  </div>
+
   <!-- THE SHIFT -->
   <div class="section-block" id="section-shift">
     <div class="section-label">THE SHIFT</div>
@@ -228,6 +289,21 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">!</div>THE DEMOCRATISATION PROBLEM</div>
       <div class="callout-body">Nation-state level attack quality is now accessible to low-skill actors. A script kiddie with access to an LLM and a voice cloning tool can execute attacks that would have required a professional team five years ago. Volume goes up. Quality goes up. Cost to the attacker goes down.</div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Before AI, an attacker was a skilled chef hand-cooking each meal — slow, expensive, and only for the highest-value targets. AI hands them a fast-food kitchen: identical quality, served in seconds, for anyone who walks through the door. The menu didn't change. The volume did.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">AI gives attackers three things — scale, speed, and quality — not new goals. The skill barrier collapses, so nation-state-grade phishing, malware, and impersonation become commodity capabilities. Plan defences for attack volumes orders of magnitude higher than last year.</div>
+      </div>
+    </div>
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat red minimalist illustration of a single hooded silhouette at a laptop, with a cascading swarm of identical phishing envelopes streaming outward at machine scale — no text labels.</div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -240,6 +316,28 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="tool-label">MY NOTES</div>
         <textarea class="tool-textarea notes-ta" id="notes-shift" placeholder="Write your notes here..." rows="5"></textarea>
         <div class="tool-row"><span class="save-status" id="ns-shift"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · AI-POWERED SOCIAL ENGINEERING</span></div>
+    <p class="socratic-insight">The two things that historically limited spear-phishing were attacker effort and message quality. Remove both and the math of social engineering changes completely. Consider how the controls you trust today — "look for typos", "verify by phone" — were designed around constraints that no longer exist.</p>
+    <ul class="socratic-questions">
+      <li>If an attacker can generate 50,000 individually personalised emails a day, which existing email defences still hold up?</li>
+      <li>"Call back to verify" is a classic control. What happens to that control when the callback voice is also cloned?</li>
+      <li>Three seconds of audio is enough to clone a voice. Where in your own digital footprint have you already given that away?</li>
+    </ul>
+    <div class="answer-area" data-section="social">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Signature-based filtering, "report spam" heuristics, and grammar/typo cues all collapse because every email is unique, fluent, and contextually plausible. What still works are controls that don't depend on content quality — DMARC/SPF/DKIM enforcement, URL rewriting and inline browser isolation, attachment sandboxing, and Zero Trust access so a successful credential capture doesn't translate into lateral movement. Treat email content itself as untrusted no matter how legitimate it reads.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">"Call back to verify" only works if the second channel is independent and trusted. If the attacker can clone the executive's voice and supply the callback number, the second channel just becomes a second attack channel — exactly what happened in the 2024 $25M deepfake case. The control has to specify out-of-band verification on a pre-known, organisation-issued number, not whatever number arrived with the request.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Almost everyone has handed over plenty: voicemail greetings, conference talks, podcast appearances, webinar recordings, internal all-hands clips, LinkedIn video posts, even short clips on social media. Three seconds is a trivially low bar, and most executives have hours of public audio. The lesson is that voice is no longer a secret — it is public material, and authentication processes have to assume the attacker already has it.</div></div>
       </div>
     </div>
   </div>
@@ -274,6 +372,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">→</div>ZSCALER RELEVANCE</div>
       <div class="callout-body">AI-generated phishing bypasses traditional email filters that rely on known-bad links and signature matching. Inline inspection, browser isolation, and Zero Trust access controls reduce the blast radius when a user does click — the credential they hand over doesn't grant network-wide access.</div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">A traditional phishing email is a stranger handing out a generic flyer on a street corner. AI-powered spear-phishing is a tailor who has read your diary, knows your boss's name, your project deadlines, and your dog's birthday — and slides a hand-stitched suit under your door at exactly the moment you needed one.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Voice cloning needs as little as three seconds of audio. Combine that with a spoofed email and you have BEC + voice clone, the dual-channel attack that defeated the "verify via second method" control and stole $25M in the 2024 multinational deepfake call. The defence is out-of-band verification on a pre-known number, not a callback to a number the attacker provided.</div>
+      </div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -286,6 +395,28 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="tool-label">MY NOTES</div>
         <textarea class="tool-textarea notes-ta" id="notes-social" placeholder="Write your notes here..." rows="5"></textarea>
         <div class="tool-row"><span class="save-status" id="ns-social"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · DEEPFAKES &amp; SYNTHETIC REALITY</span></div>
+    <p class="socratic-insight">For most of human history, seeing a face and hearing a voice was treated as proof of identity. AI just dissolved that assumption in real time. Notice that the most effective defences here are not technological — they're procedural.</p>
+    <ul class="socratic-questions">
+      <li>If deepfake detectors and generators are locked in a permanent arms race, why does that imply you can't rely on detection alone?</li>
+      <li>What kind of process control makes a deepfake fail even when the video and voice are flawless?</li>
+      <li>Where in your business is "I saw them on a call" still treated as authoritative proof — and what's the exposure if that assumption is wrong?</li>
+    </ul>
+    <div class="answer-area" data-section="deepfakes">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Detection improves, generation improves in response, and the cycle never stops — that's the definition of an arms race. Any defence whose effectiveness depends on the detector being ahead today will fail the moment the next generator releases. The durable strategy is to assume the media is fake and design the process around that assumption, rather than betting your control on winning an arms race you don't control.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Out-of-band verification is the canonical example: any high-value request — money, access, credentials — must be confirmed on a separate, pre-established channel that the impersonator hasn't compromised. Other process controls include pre-shared verbal challenge phrases, mandatory dual-approval workflows for payments, and "no decisions made on the call" policies for certain action types. The deepfake might be flawless, but the process makes the call non-actionable.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Common exposures are CFO/CEO wire approvals, IT helpdesk identity verification, KYC onboarding at financial institutions, executive press statements, and HR offboarding/credential-reset calls. The exposure is the full value of whatever can be authorised on that call — wire transfers, access grants, account takeovers. If any of those flows still treat "I recognised them on video" as proof, that is now a single-factor control resting on a broken assumption.</div></div>
       </div>
     </div>
   </div>
@@ -327,6 +458,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         </div>
       </div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">A deepfake is a perfect mask worn over a phone call. You can spend hours studying the mask for cracks, or you can ask the wearer something only the real person could answer — and ask it down a channel the impersonator hasn't compromised. The mask is unbeatable; the conversation isn't.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Deepfakes defeat KYC, executive verification, and reputation defences. Detection is in a losing arms race with generation, so the durable control is process: out-of-band verification on a pre-established channel for any request involving money, access, or credentials. Don't try to see through the mask — refuse to make decisions on the masked channel.</div>
+      </div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -339,6 +481,28 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="tool-label">MY NOTES</div>
         <textarea class="tool-textarea notes-ta" id="notes-deepfakes" placeholder="Write your notes here..." rows="5"></textarea>
         <div class="tool-row"><span class="save-status" id="ns-deepfakes"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · AI-GENERATED MALWARE</span></div>
+    <p class="socratic-insight">Signature-based detection has a hidden assumption: that malware repeats itself often enough to be catalogued. AI breaks that assumption by making every variant unique. Before reading on, ask yourself what a scanner actually scans — and what happens when the thing it's looking for never appears twice.</p>
+    <ul class="socratic-questions">
+      <li>If every copy of a piece of malware is structurally different, what kind of detection can still work?</li>
+      <li>Public LLMs have guardrails. Why do dark LLMs like WormGPT and FraudGPT exist anyway — and what does that tell you about market demand?</li>
+      <li>An attacker reads your job postings and GitHub. How does that information change the malware they generate for you specifically?</li>
+    </ul>
+    <div class="answer-area" data-section="malware">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Signatures only work when the thing being signed repeats. Polymorphic malware breaks that assumption — so detection has to move from "what does the file look like" to "what does the code do when it runs". Behavioural analysis, sandboxing, EDR telemetry on process trees and syscalls, and inline TLS inspection of command-and-control traffic all detect the actions of malware rather than its appearance. Zscaler's sandbox and behavioural engines exist for exactly this reason.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">They exist because there is a paying market that wants speed and zero friction. Mainstream LLM guardrails can be jailbroken, but doing so reliably takes effort; dark LLMs remove that effort and bundle malware/phishing/fraud generation as a subscription product. The market signal is clear — criminals will pay for friction-free attack tooling, so the supply will keep appearing. Defending by hoping the mainstream models stay locked down is not a strategy.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Job postings and public repos reveal your tech stack — EDR vendor, SIEM, cloud provider, frameworks, language versions — which lets the LLM generate malware pre-tuned to your environment. That means evasions specifically chosen to bypass your EDR, exploits aimed at your known CVE exposure, and tradecraft that blends with the tools your engineers already run. Generic malware becomes bespoke malware, and your own hiring and engineering transparency is the targeting data.</div></div>
       </div>
     </div>
   </div>
@@ -390,6 +554,21 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">→</div>ZSCALER RELEVANCE</div>
       <div class="callout-body">Polymorphic malware defeats signature detection. This is why Zscaler uses behavioural analysis and sandboxing — inspecting what code <em>does</em> rather than what it looks like. AI Threat Intelligence and inline SSL inspection catch malware that traditional endpoint AV misses.</div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Signature-based AV is a bouncer with a photo album of banned faces. Polymorphic malware shows up wearing a different face every single time. The only bouncer who still works is one who watches what people do once they're inside — and throws out anyone reaching for the till, no matter what they look like.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">LLMs let attackers scaffold malware in hours, mutate it polymorphically on every deployment, and tailor it to OSINT-derived target stacks. Dark LLMs like WormGPT and FraudGPT remove guardrails entirely. The defensive answer is behavioural inspection and sandboxing — judge what code does, not what it looks like.</div>
+      </div>
+    </div>
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat red minimalist illustration of a single piece of malware code shape-shifting through a row of identical scanner outlines, each scanner failing to recognise it because every copy looks different — no text labels.</div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -402,6 +581,28 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="tool-label">MY NOTES</div>
         <textarea class="tool-textarea notes-ta" id="notes-malware" placeholder="Write your notes here..." rows="5"></textarea>
         <div class="tool-row"><span class="save-status" id="ns-malware"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · AI-DRIVEN RECONNAISSANCE</span></div>
+    <p class="socratic-insight">Every piece of information your organisation publishes looks harmless in isolation — a job posting, a GitHub commit, a conference talk, a LinkedIn update. An AI doesn't see them in isolation. It fuses them into a targeting profile, and the fused picture is far more dangerous than any single piece.</p>
+    <ul class="socratic-questions">
+      <li>If every individual data point is genuinely public and harmless, what makes the aggregation of them an attack?</li>
+      <li>A job posting for a "Senior Splunk Engineer" reveals more than just an open role — what else does it tell an attacker?</li>
+      <li>When AI can map your org chart, tech stack, and travel patterns from public data, which employees become the highest-value targets?</li>
+    </ul>
+    <div class="answer-area" data-section="recon">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Each piece is harmless individually because the cost of correlating it with everything else used to be prohibitive. AI removes that cost — fusion at scale is now cheap and fast — so the aggregated picture (org chart, stack, schedules, relationships) is far more sensitive than any single record. The attack isn't in any one disclosure; it's in the fusion. Privacy and OSINT exposure now have to be reasoned about as a portfolio, not a list of individual items.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">It tells the attacker you run Splunk, that there are likely current gaps or pain points in the deployment, and that there will be a transition period of reduced coverage during hiring and onboarding. It also exposes the responsibilities listed in the JD — log sources, integrations, on-call patterns — which describes your detection blind spots in detail. The job ad is unintentionally a SOC capability disclosure document.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">The highest-value targets are rarely the C-suite directly — they are the people with privileged access and high request velocity: domain admins, finance approvers, IT helpdesk, executive assistants, and DevOps engineers with cloud keys. AI-built profiles surface them quickly, along with timing signals (travel, on-call, vacation) that pick the optimal strike moment. Defences need to harden those specific roles with phishing-resistant MFA, stricter approval workflows, and tighter access scopes.</div></div>
       </div>
     </div>
   </div>
@@ -428,6 +629,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">★</div>THE JOB POSTING PROBLEM</div>
       <div class="callout-body">A job posting for a "Senior Splunk Engineer" tells an attacker: (1) you use Splunk, (2) your current Splunk deployment has gaps, (3) there is probably a period of reduced coverage during the hiring transition. Job postings are inadvertent threat intelligence broadcasts. Attackers read them.</div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Each public data point is a single jigsaw piece left on a park bench — meaningless on its own. AI is the patient stranger who collects every piece in the city, assembles them on a table, and ends up with a full street map of your house, your keys, and the hours when nobody's home.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">AI-powered reconnaissance is the aggregation attack: hundreds of harmless public signals — LinkedIn, GitHub, job postings, certificate transparency logs, Shodan — fused into a targeting profile that names your stack, your admins, and your weakest moments. Treat every public posting as threat intelligence you are voluntarily publishing.</div>
+      </div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -440,6 +652,28 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="tool-label">MY NOTES</div>
         <textarea class="tool-textarea notes-ta" id="notes-recon" placeholder="Write your notes here..." rows="5"></textarea>
         <div class="tool-row"><span class="save-status" id="ns-recon"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ATTACKING AI SYSTEMS</span></div>
+    <p class="socratic-insight">When you deploy an AI agent, you don't just add a feature — you add a new attack surface that takes its instructions from any content it reads. Prompt injection is to LLMs what SQL injection was to early web apps. The difference is that LLMs can act on the world.</p>
+    <ul class="socratic-questions">
+      <li>What is the difference between direct and indirect prompt injection — and which one scares you more for an agentic system?</li>
+      <li>If a passive chatbot just gives a wrong answer when injected, what does an agent with email, files, and API access do?</li>
+      <li>How do you protect a system that, by design, has to trust the content it reads in order to be useful?</li>
+    </ul>
+    <div class="answer-area" data-section="prompt">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Direct prompt injection is the user typing malicious instructions straight into the model — annoying but localised. Indirect prompt injection hides the instructions in content the model retrieves later — a web page, an email, a shared document — so the AI executes attacker instructions without the operator ever seeing them. Indirect is the scary one for agentic systems because the trigger can be planted anywhere in the data the agent is allowed to read.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">A passive chatbot just outputs the wrong text. An agent with tool access can send the email, move the file, transfer the funds, query the database, or pivot to a connected SaaS — all from a single poisoned document it was asked to summarise. The blast radius is whatever the agent's tools are authorised to do, which is why agentic capabilities and least-privilege scoping have to be designed together. Prompt injection in an agent is closer to remote code execution than to a hallucination.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">You can't fully prevent the model from being influenced by what it reads, so defence is built around containment: treat all retrieved content as untrusted, separate instructions from data wherever possible, scope tool permissions to least privilege, require human approval for high-impact actions, log and monitor agent actions, and apply AI access controls (like Zscaler's) over which models and which data the agent can touch. The model will follow injected instructions — your job is to make sure the instructions can't reach anything that matters.</div></div>
       </div>
     </div>
   </div>
@@ -481,6 +715,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="callout callout-tip">
       <div class="callout-header"><div class="callout-icon">→</div>ZSCALER RELEVANCE — AI ACCESS CONTROL</div>
       <div class="callout-body">Zscaler's AI Security controls govern which AI tools employees can access, what data they can submit to them, and what responses can be returned. This directly addresses the risk of employees submitting sensitive data to unvetted LLMs or of attackers using AI tools as exfiltration channels.</div>
+    </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">An agentic AI is a brilliant intern who follows any written instruction it reads, anywhere — including the sticky note an attacker slipped onto a document in your shared drive. Telling the intern "only listen to me" doesn't help, because to read the document at all the intern has to read the sticky note too.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Prompt injection is the AI-era SQL injection. Direct injection targets the model through user input; indirect injection hides instructions in content the model retrieves — web pages, emails, documents. Combined with agentic tool access, a single poisoned document can exfiltrate data or pivot to connected systems. Govern what AI agents can access and what data they can return.</div>
+      </div>
     </div>
   </div>
   <div class="lesson-tools">
@@ -635,6 +880,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('qpanel-chevron').textContent='▴';
   }
 });
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
 </script>
 </body>
 </html>

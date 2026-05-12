@@ -81,6 +81,26 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
 .mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 .back-link{display:inline-flex;align-items:center;gap:8px;margin-bottom:36px;font-size:12px;font-weight:600;letter-spacing:0.08em;color:var(--purple);text-decoration:none;padding:8px 16px;border:1px solid var(--border);border-radius:20px;background:var(--surface);transition:background 0.15s;}
 .back-link:hover{background:var(--surface-2);}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--purple);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted,#6a5a9a);}
+.socratic-insight{font-size:13px;color:var(--text-soft,#2a1a5c);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim,var(--border));line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--purple);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(92,53,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--purple);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
 @media(max-width:700px){.page-body{padding:40px 20px 80px;}header{padding:32px 20px 28px;}.mod-nav-panel{display:none;}.qrg-grid{grid-template-columns:1fr;}.summary-points,.summary-block-header{padding:16px 18px;}.outcomes-block{padding:28px 24px;}}
 </style>
 </head>
@@ -111,6 +131,20 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
 
   <a class="back-link" href="#">← Back to EDU-220 Hub</a>
 
+  <!-- Socratic — Section 1 synthesis -->
+  <div class="socratic-block">
+    <div class="socratic-header">
+      <span class="socratic-icon">◆</span>
+      <span class="socratic-label">SYNTHESIS · INTRODUCTION</span>
+    </div>
+    <div class="socratic-insight">Before you re-read the summary, try to recall: why did traditional, fragmented data tools fail — and what makes a unified DLP policy fundamentally different?</div>
+    <ul class="socratic-questions">
+      <li>If a user uploads a sensitive file to a personal cloud, then emails the link from an unmanaged phone — which discovery surfaces (inline, endpoint, cloud) catch it, and in what order?</li>
+      <li>Why does AI-driven discovery need to look at users, destinations, and behaviour together rather than just file content?</li>
+      <li>How does GLBA/PCI/HIPAA themed classification reduce policy authoring effort compared to building rules from raw regex?</li>
+    </ul>
+  </div>
+
   <!-- SECTION 1 SUMMARY -->
   <div class="summary-block section1">
     <div class="summary-block-header">
@@ -133,6 +167,35 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
     <div style="margin:0 24px 20px;border:1px solid var(--border);border-radius:12px;overflow:hidden;">
       <img src="1.png" alt="Cartoon umbrella with Zscaler logo protecting laptop, phone, cloud, and USB drive from rain" style="width:100%;display:block;">
     </div>
+  </div>
+
+  <div class="analogy-box">
+    <div class="analogy-label">ANALOGY</div>
+    <div class="analogy-text">Fragmented DLP tools are like having a different lock on every door, window, and vent — each with its own key. Unified DLP is one master keycard system that knows who you are, what room you're in, and what you're carrying — regardless of the entry point.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <span class="mental-note-block-icon">★</span>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">One engine, one policy, three discovery surfaces (inline · endpoint · cloud) — visibility before enforcement.</div>
+    </div>
+  </div>
+
+  <!-- Socratic — Section 2 synthesis -->
+  <div class="socratic-block">
+    <div class="socratic-header">
+      <span class="socratic-icon">◆</span>
+      <span class="socratic-label">SYNTHESIS · ADVANCED SERVICES</span>
+    </div>
+    <div class="socratic-insight">Section 2 is the heart of the course — four channels (motion, SaaS, cloud, endpoint/BYOD) but one engine. Test whether you can connect the threads rather than recite each module.</div>
+    <ul class="socratic-questions">
+      <li>The same DLP dictionary written once — where does it run? Trace it through inline (motion), OOB CASB (at rest in SaaS), DSPM (public cloud), and the endpoint agent. What's the practical benefit of that re-use?</li>
+      <li>Parallel Policy Processing vs traditional first-match: a file matches three rules — Allow (HR group), Notify (PCI dictionary), and Block (size > 10MB). What happens, and why is that the safer default?</li>
+      <li>UEBA flags a user as anomalous. How does Adaptive Access turn that signal into an enforcement action, and which DLP policies might tighten as a result?</li>
+      <li>BYOD covers two scenarios — web SaaS and internal apps. Which control fits which (Browser Isolation vs PRA), and why does data never "land" on the device in either case?</li>
+      <li>AppTotal discovers a third-party app connected to Salesforce with broad scopes. Which remediation tier (End User Review / Revoke / Ban) would you choose, and on what evidence?</li>
+    </ul>
   </div>
 
   <!-- SECTION 2 SUMMARY -->
@@ -171,6 +234,38 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
     </div>
   </div>
 
+  <div class="analogy-box">
+    <div class="analogy-label">ANALOGY</div>
+    <div class="analogy-text">Think of the DLP engine as a single recipe written in one cookbook. Inline traffic is the takeout window, OOB CASB is the walk-in fridge being audited overnight, DSPM is the warehouse, and endpoint is the lunchbox the employee carries home. Same recipe — four kitchens.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <span class="mental-note-block-icon">★</span>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Parallel evaluation + strictest-wins is the inverse of legacy proxies. Combine with UEBA/Adaptive Access and the policy becomes context-aware, not just content-aware.</div>
+    </div>
+  </div>
+
+  <div class="img-gen-placeholder">
+    <div class="img-gen-label">Image Prompt</div>
+    <div class="img-gen-prompt">Cartoon-style illustration in flat purple palette (#5c35cc). A single central engine block labelled "DLP" with four colour-coded pipes branching outward to four kitchens labelled "Inline", "SaaS at rest", "Cloud", and "Endpoint" — each kitchen has a chef holding the identical recipe card.</div>
+  </div>
+
+  <!-- Socratic — Section 3 synthesis -->
+  <div class="socratic-block">
+    <div class="socratic-header">
+      <span class="socratic-icon">◆</span>
+      <span class="socratic-label">SYNTHESIS · INCIDENT MANAGEMENT</span>
+    </div>
+    <div class="socratic-insight">Detection without remediation is just noise. Pull together what Sections 1 and 2 produce (alerts, classifications, UEBA signals) and ask: how does the incident pipeline turn them into closed-loop action?</div>
+    <ul class="socratic-questions">
+      <li>An endpoint DLP rule blocks a file copy to a personal USB. Trace the notification path — what reaches the end user (Client Connector / browser pop), and what reaches the admin (email / ICAP / SIEM)?</li>
+      <li>Workflow Automation auto-groups incidents by user, manager, or policy. When would each grouping be most useful — and what does manager escalation buy you that admin-only handling does not?</li>
+      <li>Why is real-time log streaming to an external SIEM still valuable even though Zscaler can fully automate the workflow internally?</li>
+    </ul>
+  </div>
+
   <!-- SECTION 3 SUMMARY -->
   <div class="summary-block section3">
     <div class="summary-block-header">
@@ -189,6 +284,39 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
     <div style="margin:0 24px 20px;border:1px solid var(--border);border-radius:12px;overflow:hidden;">
       <img src="4.png" alt="Cartoon robot arm sorting alert cards into bins representing workflow automation" style="width:100%;display:block;">
     </div>
+  </div>
+
+  <div class="analogy-box">
+    <div class="analogy-label">ANALOGY</div>
+    <div class="analogy-text">Without Workflow Automation, every alert is a separate phone call — admins answering one ring at a time. With it, calls are routed by topic, grouped by caller, escalated to the right manager, and logged in a journal the SIEM can read at any hour.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <span class="mental-note-block-icon">★</span>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">User-side channels (Client Connector / Slack / Teams) educate; admin-side channels (email / ICAP / SIEM) coordinate. Automation closes the loop between them.</div>
+    </div>
+  </div>
+
+  <!-- Socratic — QRG cross-module synthesis -->
+  <div class="socratic-block">
+    <div class="socratic-header">
+      <span class="socratic-icon">◆</span>
+      <span class="socratic-label">SYNTHESIS · CROSS-MODULE</span>
+    </div>
+    <div class="socratic-insight">The QRG is twelve concepts on one page. The exam-worthy skill is connecting them — picking which two or three pair up to solve a real scenario.</div>
+    <ul class="socratic-questions">
+      <li>Shadow IT Discovery flags a risky app; Cloud App Control categorises it; Tenant Restrictions narrows what users can do inside it. In what order would you deploy these three on a freshly acquired subsidiary, and why?</li>
+      <li>OCR + Parallel Policy Processing + Endpoint DLP — describe a single scenario (e.g. screenshot of a credit card sent over Slack from a laptop) that exercises all three together.</li>
+      <li>DSPM and OOB CASB both inspect data at rest. What's the boundary between them, and when would you choose one over the other?</li>
+      <li>BYOD users hit Browser Isolation for SaaS and PRA for internal apps — what's the single underlying principle that makes both safer than full VDI?</li>
+    </ul>
+  </div>
+
+  <div class="img-gen-placeholder">
+    <div class="img-gen-label">Image Prompt</div>
+    <div class="img-gen-prompt">Cartoon-style flat illustration in purple (#5c35cc) and lavender. A bookshelf labelled "QRG" with twelve labelled binders (Shadow IT, CAC, Tenant Restrictions, OCR, UEBA, PPP, OOB CASB, DSPM, Endpoint DLP, BYOD, Workflow, AppTotal). Coloured threads connect binders that work together in common scenarios.</div>
   </div>
 
   <!-- QRG SUMMARY -->
@@ -248,6 +376,19 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
         <div class="qrg-item-title">APPTOTAL</div>
         <div class="qrg-item-body">Discover (30+ attributes via API), Analyze (static, sandbox, heuristic), Remediate (End User Review / Revoke / Ban). Continuously monitors and streamlines recertifications.</div>
       </div>
+    </div>
+  </div>
+
+  <div class="analogy-box">
+    <div class="analogy-label">ANALOGY</div>
+    <div class="analogy-text">The QRG isn't a checklist of features — it's a toolbox. Real incidents rarely use one tool; they use two or three together, the way a carpenter reaches for a saw, a clamp, and a square on the same cut.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <span class="mental-note-block-icon">★</span>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">For exam scenarios: name the channel first (motion · SaaS at rest · cloud · endpoint · BYOD), then pick the matching QRG capability, then layer policy and remediation on top.</div>
     </div>
   </div>
 

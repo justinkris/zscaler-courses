@@ -139,6 +139,26 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .mod-nav-link:hover{background:var(--surface);}
 .mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
 .mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--red);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted,#a04444);}
+.socratic-insight{font-size:13px;color:var(--text-soft,#5a1414);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim,var(--border));line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--red);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(185,28,28,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--red);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
 @media(max-width:900px){header{padding:24px 20px 20px;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.notif-grid,.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -172,6 +192,16 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <main>
 <div class="main-content">
 
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">🤔</span><span class="socratic-label">BEFORE YOU READ — THINK</span></div>
+    <div class="socratic-insight">Every security operations team faces the same paradox: the more alerts you generate, the less attention each one receives. Incident management isn't really about detecting incidents — it's about deciding which ones deserve a human's finite attention.</div>
+    <ul class="socratic-questions">
+      <li>If your DLP tool produces 500 alerts per day and your team can review 50, what happens to the other 450 — and is "missing" them better or worse than not detecting them at all?</li>
+      <li>When does asking the end user to justify their own violation save admin time, and when does it just shift the problem somewhere less visible?</li>
+      <li>What's the difference between an "incident" and a "ticket" — and why does that distinction matter for how you measure your team's effectiveness?</li>
+    </ul>
+  </div>
+
   <!-- WHAT IS INCIDENT MANAGEMENT -->
   <div class="section-block" id="section-what">
     <div class="section-label">WHAT IS INCIDENT MANAGEMENT?</div>
@@ -188,6 +218,24 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="key-concept">
       <strong>In data security context:</strong> When adopting DLP and CASB (SaaS Security API) capabilities, alerts are generated that require administrator teams to investigate and respond. Zscaler provides tools to manage these alerts through multiple channels — delegating violations to end users where appropriate.
     </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">ANALOGY</div>
+      <div class="analogy-text">Incident management is the emergency room triage nurse — not the doctor. Her job isn't to cure anyone; it's to decide, in seconds, who bleeds out without attention and who can safely wait. A DLP platform without triage is an ER where every cut and every gunshot wound get the same waiting-room ticket.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">An incident is not a problem until someone owns it. The whole purpose of incident management is to assign ownership fast — to the user, the admin, or the manager — before the alert becomes noise.</div>
+      </div>
+    </div>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">IMAGE GENERATION PROMPT</div>
+      <div class="img-gen-prompt">A minimalist diagram showing a funnel: at the top, hundreds of small red alert icons pouring in; in the middle, a triage layer splitting flow into three labelled streams ("user self-serve", "admin review", "manager escalation"); at the bottom, a single resolved checkmark. Muted reds, white background, thin line-art style.</div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -195,6 +243,16 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-what" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('what','What is Incident Management')">Add Question</button></div></div>
       <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-what" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-what"></span></div></div>
     </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">🤔</span><span class="socratic-label">BEFORE YOU READ — THINK</span></div>
+    <div class="socratic-insight">Choosing how to notify a user isn't a UI decision — it's a behavioural one. The channel shapes whether the user pauses to think, clicks through reflexively, or ignores the message entirely. The "best" notification depends on the outcome you want, not the technology that's available.</div>
+    <ul class="socratic-questions">
+      <li>If a browser-based block shows up mid-upload, will the user actually read the justification box, or paste anything to get past the screen?</li>
+      <li>Why might a Slack notification get a more honest justification than an SMTP email that arrives 20 minutes later?</li>
+      <li>What's the cost of routing every admin notification through SIEM, ServiceNow, AND email — and at what point does redundancy become alert fatigue?</li>
+    </ul>
   </div>
 
   <!-- NOTIFICATION METHODS -->
@@ -235,6 +293,19 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">★</div>KEY ANSWER</div>
       <div class="callout-body">When asked how Zscaler notifies users about policy violations: the answer is <strong>browser-based notifications, Slack/Teams connectors, or the Zscaler Client Connector</strong> — NOT by sending personal emails, shutting down systems, or requiring calls to IT support.</div>
     </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">ANALOGY</div>
+      <div class="analogy-text">A browser block is a speed bump — it forces a moment of friction at the exact place the user was going. A Slack ping is a tap on the shoulder afterward — quieter, but easier to dismiss. An SMTP email to the admin is a letter in the mail — accurate, slow, and almost never read first.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">User notifications change behaviour. Admin notifications create records. Choose channels for what you want each audience to actually do — not for completeness of coverage.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -242,6 +313,16 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-notify" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('notify','Notification Methods')">Add Question</button></div></div>
       <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-notify" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-notify"></span></div></div>
     </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">🤔</span><span class="socratic-label">BEFORE YOU READ — THINK</span></div>
+    <div class="socratic-insight">Automation is seductive because it scales — but every automated decision is one a human used to make, and every shortcut hides a judgment call. Workflow Automation isn't replacing your incident analysts; it's encoding the rules they already follow. The danger is encoding rules they only thought they followed.</div>
+    <ul class="socratic-questions">
+      <li>If WFA auto-groups incidents by user and policy, what kinds of patterns might it hide that a human reviewing each alert in isolation would catch?</li>
+      <li>When you escalate to a manager automatically, are you accelerating resolution — or just diffusing accountability up the org chart?</li>
+      <li>What does "Time to Triage" tell you that "Time to Resolve" doesn't, and which one should the team actually be optimising for?</li>
+    </ul>
   </div>
 
   <!-- WORKFLOW AUTOMATION -->
@@ -296,6 +377,24 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         6. Resolution recorded → count updated → incident closed.
       </div>
     </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">ANALOGY</div>
+      <div class="analogy-text">Workflow Automation is a factory conveyor belt for incidents. Raw alerts go in one end, get sorted into bins (incident groups), routed to the right station (admin, user, manager), and roll out the other end stamped "resolved" with a full paper trail. Without it, you have the same parts — but every worker is sprinting between piles on the floor.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">WFA's real product isn't speed — it's the audit trail. Anyone can resolve an incident quickly. Only an automated, closed-loop workflow can prove exactly how, when, and by whom it was resolved months later.</div>
+      </div>
+    </div>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">IMAGE GENERATION PROMPT</div>
+      <div class="img-gen-prompt">A horizontal pipeline diagram in muted red and dark slate: stage 1 "Trigger" (alert icon), stage 2 "Group" (cluster of dots merging), stage 3 "Notify" (chat bubble), stage 4 "Justify" (user with speech bubble), stage 5 "Escalate" (upward arrow to manager silhouette), stage 6 "Resolve" (checkmark). Thin connecting lines with small clock icons between each stage representing measured time.</div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -303,6 +402,16 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-wfa" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('wfa','Workflow Automation')">Add Question</button></div></div>
       <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-wfa" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-wfa"></span></div></div>
     </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">🤔</span><span class="socratic-label">BEFORE YOU ANSWER — THINK</span></div>
+    <div class="socratic-insight">The wrong answers on a knowledge check aren't random — they're the assumptions an untrained admin would actually make. Before you pick, work out why each wrong option feels plausible. That's where the real learning happens.</div>
+    <ul class="socratic-questions">
+      <li>Why is "send a personal email" a tempting but flawed answer — what does it confuse about who Zscaler actually integrates with?</li>
+      <li>What would "automatically shut down the user's system" cost the business compared to a soft block with justification?</li>
+      <li>If the right answer is three channels (browser, Slack/Teams, Client Connector), what does that tell you about Zscaler's philosophy on user experience vs. enforcement?</li>
+    </ul>
   </div>
 
   <!-- KNOWLEDGE CHECK -->

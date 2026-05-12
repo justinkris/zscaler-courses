@@ -157,6 +157,44 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
 .mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--green);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted,#4a7a5a);}
+.socratic-insight{font-size:13px;color:var(--text-soft,#1a3d24);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim,var(--border));line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--green);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,124,74,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--green);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.pillar-grid,.debrief-grid,.lesson-tools-grid{grid-template-columns:1fr;}.timeline-step{grid-template-columns:1fr;}.timeline-right{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -202,6 +240,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <div class="main-content">
 
   <!-- THE FRAMEWORK -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · THE FRAMEWORK</span></div>
+    <p class="socratic-insight">Before you study the Zscaler AI Security Framework, ask yourself what makes a defensive posture sustainable. A framework is not a checklist — it is an ordering of priorities. The order itself carries meaning: you cannot defend what you do not see, and you cannot govern what you cannot define.</p>
+    <ul class="socratic-questions">
+      <li>Why does the framework insist on visibility (See) before control (Control) and protection (Protect)? What breaks if you reverse the order?</li>
+      <li>If Governance is "continuous" rather than a discrete step, what is the tradeoff for an organisation that treats it as an annual audit instead?</li>
+      <li>Imagine a company has world-class access controls but no AI asset inventory. Which gap in the framework would you expect attackers to exploit first?</li>
+    </ul>
+    <div class="answer-area" data-section="framework">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Visibility is the precondition for everything else. If you cannot see an AI tool, you cannot apply controls to it (which user is using it, with what data) and you cannot protect the data flowing through it. Reverse the order and you end up applying brittle controls to a subset of known tools while Shadow AI quietly handles the sensitive workloads — the controls feel rigorous, but they are policing the wrong perimeter.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Governance is continuous because the AI landscape is continuous — new tools arrive weekly, employee behaviour drifts, regulations change. An annual audit captures a single snapshot, so policy and reality diverge for 364 days a year. The tradeoff is silent decay: visibility goes stale, controls drift out of alignment with current usage, and gaps reopen invisibly. The framework collapses into theatre.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Shadow AI first. Strong access controls only protect the tools you have actually enrolled — they are blind to anything not in the inventory. Attackers (and well-meaning employees) gravitate toward the path of least resistance: the unsanctioned ChatGPT tab, the personal Claude subscription, the browser extension nobody approved. Without an asset inventory, the access controls are a fence around an empty field.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-framework">
     <div class="section-label">THE ZSCALER AI SECURITY FRAMEWORK</div>
     <h2>See, Control, Protect — and Govern continuously</h2>
@@ -215,6 +274,21 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">→</div>WHY IT MATTERS</div>
       <div class="callout-body">You cannot protect what you cannot see. You cannot control what you cannot govern. You cannot govern what you have not made visible. The framework addresses these in order — See first, then Control, then Protect — with Governance as the thread that runs through all three.</div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">A medieval castle did not protect itself with one tall wall. It used moats, gatehouses, inner baileys, and a constant watch — each layer compensating for the one before it. The Zscaler framework is the same idea: See is the watchtower, Control is the gatehouse, Protect is the keep, and Governance is the captain who walks the walls every night so no torch goes unlit.</div>
+    </div>
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat green minimalist illustration of three concentric defensive rings around a central node, with a continuous thin band weaving through all three layers, palette of emerald and forest green with cream accents, geometric and clean, no text labels</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">The framework is ordered for a reason — See, Control, Protect, with Governance woven through all three. No single pillar closes the gap alone; remove Governance and the others decay over time.</div>
+      </div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -224,6 +298,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- THREE PILLARS -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · THE THREE PILLARS</span></div>
+    <p class="socratic-insight">Each pillar exists to close a specific gap that legacy security tools leave open. Asset management catches Shadow AI. Access control catches data leaking through clipboards and unmanaged identities. Infrastructure protection catches vulnerabilities baked into custom AI builds. Try to name the gap before you name the pillar.</p>
+    <ul class="socratic-questions">
+      <li>If your team blocked all public AI tools tomorrow, would that solve Shadow AI — or would it push the risk somewhere harder to see?</li>
+      <li>Where does the line sit between "Secure Access to AI" and "Secure AI Infrastructure"? What happens at the boundary when an employee uses a company-built chatbot?</li>
+      <li>Imagine an organisation that builds its own AI but never inventories third-party models. Which pillar is failing — and why does the failure compound?</li>
+    </ul>
+    <div class="answer-area" data-section="pillars">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Blanket blocking does not eliminate the demand for AI — it just relocates it. Employees who need to ship work will move to personal devices, mobile hotspots, or browser-based wrappers that the corporate proxy cannot see. So you trade visible Shadow AI for invisible Shadow AI, which is strictly worse: same data leakage, zero telemetry, no chance of detection. The right answer is sanctioned alternatives plus visibility, not prohibition.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">"Secure Access to AI" governs the conduit — who reaches which AI tool, with what data, under what conditions. "Secure AI Infrastructure" governs the AI itself — the model, the training pipeline, the inference endpoint. A company-built chatbot lives on both sides of the line: an employee accessing it is an Access concern (auth, DLP on the prompt), while the chatbot itself is an Infrastructure concern (prompt injection defences, model supply chain). The handoff is the boundary where most real-world incidents land.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Pillar 1 (AI Asset Management) is failing, and the failure compounds because every downstream control depends on it. You cannot apply access policies to third-party models you have not enrolled, you cannot patch infrastructure you do not know is running, and you cannot govern what is invisible. The custom AI gets enormous scrutiny while the unmanaged third-party model siphons the same data — same risk, none of the defence.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-pillars">
     <div class="section-label">THREE PILLARS + GOVERNANCE</div>
     <h2>What each pillar does and the gap it closes</h2>
@@ -253,6 +348,21 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="govern-body">Sustain posture over time. Governance is not a project or a one-time audit — it is continuous monitoring, posture management, and policy enforcement as requirements evolve. Without it, visibility decays, controls drift, and protection gaps reopen. Governance is the layer that holds the framework together.</div>
       </div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Think of the human immune system. Innate immunity scans for anything unfamiliar (See). Skin and mucous membranes filter what comes in (Control). White blood cells engage what gets past the barrier (Protect). And the lymphatic system runs continuously in the background, remembering, adapting, sustaining (Govern). Remove any layer and the body still functions briefly — until a single infection cascades.</div>
+    </div>
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat green minimalist illustration of three vertical pillars supporting a horizontal beam, with a continuous green thread weaving through and around all three pillars, palette of forest green, sage, and cream, geometric and architectural, no text labels</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Each pillar closes a specific gap: Asset Management = Shadow AI; Secure Access = Clipboard/Identity/Encryption gaps; Secure Infrastructure = internal-build vulnerabilities. Governance is continuous — never a finished project.</div>
+      </div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -262,6 +372,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- INCIDENT WALKTHROUGH -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · THE INCIDENT WALKTHROUGH</span></div>
+    <p class="socratic-insight">Seven decisions, one morning, one breach stopped. Before you read the timeline, think about where AI adds the most leverage and where human judgment is irreplaceable. The interesting answers are not at the extremes — they are at the handoffs between automation and authorisation.</p>
+    <ul class="socratic-questions">
+      <li>At which step does AI's contribution shift from detection to prediction? Why does that shift change the team's posture from reactive to anticipatory?</li>
+      <li>If the analyst had not been available to authorise containment, should AI have acted alone? What does the answer reveal about the human-AI partnership?</li>
+      <li>Compare the 5-minute AI-assisted containment with a 60-minute manual response. What attacks become impossible at minute-scale speed that were unstoppable at hour-scale?</li>
+    </ul>
+    <div class="answer-area" data-section="scenario">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The shift happens at Step 3, Correlation. Up to that point AI is describing what already occurred (a strange login, abnormal downloads). At correlation, AI matches the TTPs to a known campaign and projects the likely next moves — lateral movement attempts in this case. The team is no longer chasing what happened; they are pre-positioning for what is about to happen, and that converts the SOC from reactive to anticipatory.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">No — and the framework is deliberately built so that AI does not. Autonomous AI containment cannot weigh business context: shutting down the CFO's account ten minutes before an earnings call is technically correct and operationally catastrophic. Human authorisation exists precisely so judgement calls about consequence stay with someone accountable. The answer reveals that "human-AI partnership" is not a slogan; it is a deliberate division of labour between speed (AI) and consequence (human).</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">At hour-scale, automated post-compromise toolkits can finish their work and exfiltrate before containment lands — credential harvesting, lateral movement, and data theft all complete in well under 60 minutes. At minute-scale, the attacker is interrupted mid-sequence: the dropper has fired but the C2 callback is blocked, the privilege escalation is in flight but the account is already disabled. Speed converts a successful breach into a contained intrusion attempt.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-scenario">
     <div class="section-label">INCIDENT WALKTHROUGH</div>
     <h2>One morning. One financial institution. Seven decisions that stopped a breach.</h2>
@@ -401,6 +532,21 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">→</div>THE RESULT — MINUTES, NOT DAYS</div>
       <div class="callout-body">The threat was neutralised in minutes, not days — because AI handled the speed and scale while humans provided the judgment and authorisation. Neither could have done it alone.</div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Picture a fighter pilot and the aircraft's flight computer. The computer sees a thousand telemetry signals per second, predicts stall conditions, and offers corrections. But the pilot decides whether to engage, evade, or hold. Strip away the computer and the pilot is overwhelmed; strip away the pilot and the aircraft has no purpose. The SOC analyst and the AI work the same way — and at 8:15 AM with seconds to act, both seats are occupied.</div>
+    </div>
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat green minimalist illustration of a horizontal timeline with seven nodes connected by a flowing line, each node a different small abstract icon, palette of emerald green with cream and charcoal accents, clean and editorial, no text labels</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Memorise the seven steps in order: Detection, Investigation, Correlation, Response, Containment, Analysis, Hunting. AI provides speed and scale at every step; humans provide context and authorisation. Containment worked because Zero Trust meant there was no path to pivot.</div>
+      </div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -410,6 +556,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- DEBRIEF -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · THE DEBRIEF</span></div>
+    <p class="socratic-insight">The debrief is not just a summary — it is a separation of responsibilities. AI did four things; humans did four things. Notice that none of the columns can swap. Speed cannot be delegated to a human; judgment cannot be delegated to AI. Read each side and ask what would have happened if the work had been forced onto the wrong actor.</p>
+    <ul class="socratic-questions">
+      <li>"Provided context — knew the executive was not travelling to Europe." Why could AI not have known this on its own? What does that tell you about the limits of behavioural baselines?</li>
+      <li>If AI both detects and acts, the response is fast but brittle. What specific failure modes are prevented by inserting a human authorisation step before containment?</li>
+      <li>"Improved posture — updated policies based on what the incident revealed." Is this a human-only task forever, or will AI eventually contribute? What would have to be true for that handoff to be safe?</li>
+    </ul>
+    <div class="answer-area" data-section="debrief">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Behavioural baselines describe what is statistically normal, not what is contextually true. The travel calendar, the executive's verbal mention of cancelled plans, the assistant rescheduling Tokyo meetings — none of it flows into the SIEM. Humans hold this context implicitly. The lesson: AI is excellent at "different from usual" but blind to "different from intended," and intent lives in human conversation, not logs.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Without a human gate, three failure modes appear quickly: false positives become outages (a legitimate executive login flagged at 3 AM kills the deal), adversarial inputs become weapons (an attacker who can fool the model can also trigger self-inflicted containment), and accountability evaporates (who answers when automation disables the wrong account?). The authorisation step inserts a moment of consequence-weighing that AI cannot perform.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">AI will increasingly contribute — drafting policy updates, proposing rule changes from incident patterns, identifying gaps. The handoff becomes safe when three things are true: changes are proposals not unilateral actions, every recommendation traces back to evidence a human can audit, and posture changes go through the same change-management review as any other production change. AI accelerates the analysis; humans still own the policy.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-debrief">
     <div class="section-label">10:00 AM — DEBRIEF</div>
     <h2>What AI did. What humans did. Why both were essential.</h2>
@@ -434,6 +601,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         </ul>
       </div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">A surgical team is the cleanest analogy. The monitoring equipment tracks every vital sign at machine speed, flags anomalies before a human could feel them, and recommends interventions. But the surgeon decides where to cut. After the operation, the nurses debrief, the surgeon updates the protocol, and the equipment learns nothing on its own. Speed and scale belong to the machines; consequence and context belong to the humans.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">AI = processed, found, correlated, acted (speed + scale). Humans = context, decision, impact, posture (judgment + authority). The partnership only works because the columns do not overlap.</div>
+      </div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -443,6 +621,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- REACTIVE TO PROACTIVE -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · FROM REACTIVE TO PROACTIVE</span></div>
+    <p class="socratic-insight">Reactive security waits for a threat to declare itself. Proactive security tries to close the path before the attacker walks it. The shift sounds obvious — until you ask what it costs in false positives, in user friction, and in the trust an organisation places in predictive models.</p>
+    <ul class="socratic-questions">
+      <li>What is the conceptual difference between "detecting an anomaly" and "predicting the next attacker move"? Where does the second require capabilities the first does not?</li>
+      <li>Proactive prevention can mean blocking actions that have not yet happened. What is the tradeoff when a predictive model is wrong — and how does the framework's Governance layer manage that risk?</li>
+      <li>If proactive security is the goal, why does the lesson insist that See, Control, Protect, and Govern remain the foundation? What collapses if you skip straight to prediction?</li>
+    </ul>
+    <div class="answer-area" data-section="proactive">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Anomaly detection asks "is this current behaviour different from baseline?" — a backward-looking statistical question. Prediction asks "given this attacker's apparent goal and the paths available, what is the next likely move?" — a forward-looking modelling question. Prediction requires attacker modelling, threat intelligence correlation, and exposure path analysis. It is a different cognitive task and a different data dependency.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">The cost of a wrong prediction is real friction: a legitimate user blocked, a deployment delayed, a workflow interrupted. Without Governance, these false positives accumulate silently until users find workarounds and trust in the model collapses. Governance manages this risk by tracking model accuracy, requiring proportional responses (warn before block), and creating a feedback loop so prediction quality is monitored as a live metric, not a vendor claim.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Prediction is a layer on top, not a replacement for the foundation. Without See, the predictive model has no inventory to reason over. Without Control, accurate predictions cannot be enforced. Without Protect, the prediction engine itself can be poisoned. Without Govern, prediction drifts from reality. Skip the foundation and you build a forecasting engine on sand — confident outputs, no enforcement, no truth-checking, no resilience.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-proactive">
     <div class="section-label">FROM REACTIVE TO PROACTIVE</div>
     <h2>The next frontier — preventing threats before they strike</h2>
@@ -455,6 +654,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="callout callout-tip">
       <div class="callout-header"><div class="callout-icon">→</div>WHAT THIS MEANS IN PRACTICE</div>
       <div class="callout-body">Proactive security uses AI to model attacker behaviour, predict likely next steps, and close exposure paths before they are exploited. The Zscaler framework — See, Control, Protect, Govern — is the foundation that makes proactive posture possible. Without visibility and continuous governance, prevention cannot be sustained.</div>
+    </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Reactive security is a goalkeeper diving for the shot already in the air. Proactive security is the defender who reads the striker's run two passes earlier and closes the lane before the shot is taken. The goalkeeper still matters — but the team that wins is the one whose defenders never let the shot happen. Both require the same field of view; proactive defence just acts on it sooner.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Proactive prevention does not replace See-Control-Protect-Govern — it depends on them. GenAI's role shifts from responding to threats to predicting and closing exposure paths before they are exploited.</div>
+      </div>
     </div>
   </div>
   <div class="lesson-tools">
@@ -528,6 +738,9 @@ function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));r
 function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
 function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem('edu111ds-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem('edu111ds-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
 document.addEventListener('DOMContentLoaded',()=>{renderQPanel();initNotes();if(localStorage.getItem('edu111ds-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}});
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
 </script>
 </body>
 </html>

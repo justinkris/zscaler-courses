@@ -177,6 +177,44 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .diagram-wrap{margin:20px 0 24px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface);}
 .diagram-img{width:100%;display:block;}
 .diagram-caption{font-size:11px;color:var(--text-muted);padding:10px 16px;border-top:1px solid var(--border);background:var(--surface-2);letter-spacing:0.04em;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted,#5a7a9a);}
+.socratic-insight{font-size:13px;color:var(--text-soft,#1e3a5c);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim,var(--border));line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.stats-grid{grid-template-columns:1fr 1fr;}.pillar-grid{grid-template-columns:1fr;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -222,6 +260,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <div class="main-content">
 
   <!-- WHY IT MATTERS -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · WHY DATA SECURITY</span></div>
+    <p class="socratic-insight">Every click, login, and document creates data exhaust — most of it sensitive in some way. The cloud-first world hasn't just moved this data; it has scattered it across SaaS, public clouds, contractor laptops, and personal phones. Traditional perimeter tools were built for a world where data sat still.</p>
+    <ul class="socratic-questions">
+      <li>If you mapped every place your organisation's data lives right now, how many destinations could you actually name?</li>
+      <li>What kinds of data do you handle daily without ever thinking of it as "sensitive"?</li>
+      <li>When the perimeter dissolves, what does "protecting" data even mean anymore?</li>
+    </ul>
+    <div class="answer-area" data-section="intro">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">In practice, most teams can name only the official sanctioned apps — usually a dozen or so. The real footprint is multiples larger: forgotten S3 buckets, contractor laptops, file-sharing links shared once and never revoked, third-party SaaS connectors, AI chat sessions. The gap between the apps you can list and the destinations data actually reaches is exactly the visibility deficit data security is built to close.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Calendar invites contain travel and schedule details an attacker can weaponise; Slack messages contain credentials, decisions, and internal language used in social engineering; meeting transcripts contain strategy. None of this looks like "sensitive data" in a traditional DLP rule because it has no SSN pattern, but in aggregate it forms a profile of the business that is enormously valuable to attackers and to competitors.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Protection shifts from defending a location to defending the data itself wherever it travels — data-centric, not perimeter-centric. That means identity-aware access, inline inspection of the channels data moves through, classification that travels with the file, and continuous monitoring rather than a one-time gate. The wall is gone; the responsibility is to know what the data is and enforce policy at every hop.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-intro">
     <div class="section-label">WHY IT MATTERS</div>
     <h2>Data Security in a cloud-first world</h2>
@@ -255,6 +314,22 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>Configure Zscaler Data Security policies to meet organisational requirements</li>
       <li>Leverage Zscaler Workflow Automation for efficient incident handling</li>
     </ul>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Data is the new oil — but unlike oil, it doesn't sit in one tanker. It seeps through pipelines made of SaaS apps, cloud buckets, email threads, and BYOD phones. Bolting a single padlock on the refinery door no longer works when the pipeline runs through everyone's pocket.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Modern data security must protect data at rest, in motion, in cloud, and on unmanaged/BYOD devices — a unified layer across every channel, not a stack of disconnected tools.</div>
+      </div>
+    </div>
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat blue minimalist illustration of scattered data nodes — laptops, phones, cloud icons, SaaS app tiles — connected by glowing thin lines forming a single protective ring around them, no text labels</div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -265,6 +340,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- BREACH TIMELINE -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · BREACH PATTERNS</span></div>
+    <p class="socratic-insight">Five years of major breaches reveal a pattern: the attackers don't all look alike. Some are foreign criminal gangs scraping public APIs, some exploit a single vulnerable file-transfer tool, and some are trusted employees walking out the front door. The vector keeps changing — the data keeps leaking.</p>
+    <ul class="socratic-questions">
+      <li>If LinkedIn, T-Mobile, and Tesla each leaked through a different mechanism, what does that say about defending with a single tool?</li>
+      <li>Why did two-factor authentication fail to prevent the Crypto.com loss — and what does that imply about "checkbox security"?</li>
+      <li>Which is harder to detect: a hacker probing the perimeter, or a Tesla employee with legitimate access copying a file?</li>
+    </ul>
+    <div class="answer-area" data-section="breaches">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">It says a single tool will always be blind to the next vector. LinkedIn lost data through public-facing scraping, T-Mobile through API abuse and exposed endpoints, Tesla through trusted insiders walking out. No DLP, no CASB, no insider-threat tool covers all three. The lesson is layered, channel-aware defence — and a platform stance that can reason about identity, content, and behaviour together — not a best-of-breed shopping list.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">2FA prevents credential reuse; it does not prevent a session hijack, an authenticated insider, or a compromised authenticated endpoint. Crypto.com's loss happened despite 2FA because the attack worked around the factor, not through it. Checkbox security treats controls as compliance line items rather than threat-specific defences — once you mark "2FA: yes," the assumption is "account takeover: solved." It is not.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">The insider. A perimeter probe is noisy — failed logins, scanning patterns, anomalous traffic — and triggers signature- and rate-based detections. A trusted employee using legitimate credentials to copy a file they have legitimate access to looks like normal work. Detecting that requires behavioural baselining, peer comparisons, and DLP on egress channels — far harder, far quieter, and far more common in real breach data.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-breaches">
     <div class="section-label">BREACH TIMELINE</div>
     <h2>Major data breaches: 2021 – 2025</h2>
@@ -336,6 +432,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">!</div>KEY OBSERVATION</div>
       <div class="callout-body">Breaches come from multiple vectors — external hackers, software vulnerabilities, and malicious insiders. No single control layer is sufficient. The Tesla breach in particular highlights that <strong>insider threats are just as dangerous as external attacks</strong>.</div>
     </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">A breach timeline is like a weather log of broken levees. One year, the flood comes over the top (LinkedIn scraping). Another, a hidden crack spreads through the wall (MOVEit). The next, the gatekeeper himself opens the gate (Tesla insider). You don't defend a city against floods by patching only the spot the last one came through.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">2021–2025 breaches span scraping, vendor vulnerabilities, weak MFA, and insider misconduct. Insider threats are as severe as external attacks — defence must be multi-vector and multi-channel.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -346,6 +454,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- COST & IMPACT -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · COUNTING THE DAMAGE</span></div>
+    <p class="socratic-insight">$4.88 million is just the average — the headline number. Behind it sits 258 days of unnoticed intrusion, lost customers, regulatory fines, and the silent cost of staff burnout. The slow burn matters as much as the spark.</p>
+    <ul class="socratic-questions">
+      <li>If a breach is sitting undetected in your environment for 194 days, what does that say about how much you actually see?</li>
+      <li>Why is Employee PII the costliest record type when Customer PII is the most commonly stolen?</li>
+      <li>What gets paid for in that $4.88M number that you'd never see on a security budget line?</li>
+    </ul>
+    <div class="answer-area" data-section="cost">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">194 days is more than six months of unobserved attacker dwell — enough time to map the environment, identify crown jewels, establish persistence, and exfiltrate in stages too small to alarm anyone. It means your detection coverage is essentially incidental rather than systematic, and that the controls in place are catching only the loudest, sloppiest attacks. By the time you find the breach, the attacker has already done what they came to do.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Customer PII is stolen more often because customer datasets are larger and externally exposed — attackers scrape what is in front of them. Employee PII is costlier per record because it usually includes deeper, more correlated data: salary, SSN, banking details, performance records, dependent information. The combination enables identity theft, tax fraud, and targeted social engineering, and the regulatory liability per record is heavier.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Regulatory fines, legal counsel, forensic investigators, customer notification mailings and call-centre surges, credit-monitoring offers, lost deals and churned customers, executive time, PR firms, and the morale tax that drives staff turnover. None of these show up on the firewall renewal line, but they dominate the total — which is why "we spent $X on prevention" rarely captures the actual avoided loss.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-cost">
     <div class="section-label">COST &amp; IMPACT</div>
     <h2>The rising cost of a data breach</h2>
@@ -402,6 +531,22 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <tr><td>Anonymised Customer Data (non-PII)</td><td>26%</td><td>24%</td><td><span class="badge badge-mid">MEDIUM</span></td></tr>
       </tbody>
     </table>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">A breach is less like a robbery and more like a slow leak in a sinking ship. By the time you hear the water (258 days later), the cargo is ruined, the crew is exhausted, and the auditors are at the dock with clipboards. The visible damage is just the tip — what you don't see in the hold costs the most.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">2024 averages: $4.88M cost per breach (up 10% YoY), 258 days to identify + contain (194 MTTI + 64 MTTC). Customer PII = most common (48%); Employee PII = costliest.</div>
+      </div>
+    </div>
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat blue minimalist illustration of an iceberg with a small visible tip above a waterline and a vast submerged mass below, divided into stacked layers representing hidden costs — no text labels</div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -412,6 +557,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- ZSCALER'S APPROACH -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ONE PLATFORM VS MANY</span></div>
+    <p class="socratic-insight">Most organisations didn't choose tool sprawl — they grew into it. A DLP for email, a CASB for SaaS, an agent for endpoints, a posture tool for AWS. Each one was the right answer to yesterday's question. Together, they leave seams that data slips through.</p>
+    <ul class="socratic-questions">
+      <li>If you updated a single DLP rule today, how many separate consoles would you need to touch to make it stick everywhere?</li>
+      <li>What gets lost when each channel has its own policy engine and its own definition of "sensitive"?</li>
+      <li>Why is Browser Isolation a cleaner answer for BYOD than shipping a VDI image to a contractor's personal laptop?</li>
+    </ul>
+    <div class="answer-area" data-section="approach">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">In a tool-sprawl environment, a single policy change ripples across five or more consoles — email DLP, web DLP, CASB, endpoint DLP, cloud security posture, possibly an SaaS-specific tool, plus identity. Each console has its own syntax, its own update cycle, and its own approval workflow. The lag between consoles is where inconsistencies live, and inconsistencies are where data leaks.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">When each channel owns its own definitions, "sensitive" means different things in different places. A document classified Confidential in email DLP may be unclassified in the CASB and ignored entirely on endpoints. Worse, evidence and incident data are fragmented across consoles, making investigation slow and error-prone. The unified platform answer is one classification model, one policy engine, one audit trail — applied at every channel.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Browser Isolation renders the application in a remote browser and streams only pixels to the contractor's device. Data never touches the endpoint, so there is nothing on the personal laptop to secure, image, or wipe. VDI by contrast still ships a full image to a managed runtime, requiring agents, licences, and trust in the underlying device. Isolation gives the contractor access without giving the laptop responsibility.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-approach">
     <div class="section-label">ZSCALER'S APPROACH</div>
     <h2>A unified data security platform</h2>
@@ -448,6 +614,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 
     <h3>Why Traditional Tools Fall Short</h3>
     <p>The top reasons breaches occur include targeted attacks, data theft by bots, accidental internet exposure, and malicious insiders. Insider threats are particularly hard to detect because they occur through normal-looking activity — emails, apps, and routine file access. Data travels across many places, and security teams often don't have a clear view of the full picture with siloed tools.</p>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">A patchwork of disconnected security tools is like guarding a house with five different locksmiths — one for the front door, one for the back, one for windows, one for the garage, and one for the mailbox. Each does fine work, but no one is watching the whole house. Zscaler's unified platform is the single security system that sees every door, window, and vent at once.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Zscaler unifies Inline DLP, DSPM, Endpoint DLP, and Browser Isolation (BYOD) on the Zero Trust Exchange — one policy engine across motion, rest, cloud, endpoints, and unmanaged devices.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -458,6 +636,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- AI DISCOVERY -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · YOU CAN'T PROTECT WHAT YOU CAN'T SEE</span></div>
+    <p class="socratic-insight">Before you can protect data, you have to find it — and most organisations can't. Sensitive files end up in Shadow IT apps, forgotten cloud buckets, and personal drives. Manual tagging never keeps up with the velocity of modern work. AI changes that arithmetic.</p>
+    <ul class="socratic-questions">
+      <li>How many sanctioned apps does your organisation officially have — and how many are employees actually using?</li>
+      <li>If a resume, a tax form, and a contract all land in the same SaaS folder this afternoon, who tags them — and how soon?</li>
+      <li>What does AI-driven discovery do that human classification can't, and where does it still need a human in the loop?</li>
+    </ul>
+    <div class="answer-area" data-section="ai-discovery">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Most organisations sanction perhaps 20-40 apps and discover their employees actually use hundreds — including unofficial Slack workspaces, personal Dropbox accounts, browser-based AI tools, and SaaS adopted department-by-department without IT review. The gap is the definition of Shadow IT. Without measurement (a CASB or discovery tool), the gap is invisible; with it, the typical first scan returns numbers that shock the security team.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">In most environments, no one — until a DLP scan or an AI classifier processes the folder later. That latency window is where data leakage happens: a resume sent to an external recruiter, a contract emailed to the wrong party, tax forms shared too broadly. Inline classification at upload time is the difference between catching the mistake in seconds versus discovering it during an annual audit.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">AI-driven discovery scales — millions of documents, dozens of formats, multiple languages, with semantic understanding that catches sensitive content even when it lacks obvious markers. Humans cannot match that throughput. But humans still own policy questions (what counts as sensitive in this business context?), exception handling, and reviewing low-confidence AI classifications. Discovery automates the volume; humans tune the judgment.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-ai">
     <div class="section-label">AI DISCOVERY &amp; CLASSIFICATION</div>
     <h2>AI-driven Auto Data Discovery and Classification</h2>
@@ -507,6 +706,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="kcheck-option correct"><div class="kcheck-opt-badge">✓</div>They automate the detection and classification of sensitive data</div>
         <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>They restrict all external sharing of organisational data</div>
         <div class="kcheck-option wrong"><div class="kcheck-opt-badge">✕</div>They eliminate the need for cybersecurity policies</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Manual data classification is like trying to label every drop in a river with a sticker as it flows past. AI-driven discovery is the sonar that sees the whole current at once — what's flowing, where it's going, and which currents are carrying the dangerous cargo.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Zscaler's AI discovery automates detection and classification — Shadow IT, AI Auto Discovery, and Real-time Discovery across 8,000+ files in 10+ categories. It augments human oversight; it does not replace policy or governance.</div>
       </div>
     </div>
   </div>
@@ -700,6 +911,9 @@ function navTo(id,btn){
     body.classList.add('open');hdr.classList.add('open');chev.textContent='▴';
   }
 })();
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
 </script>
 </body>
 </html>

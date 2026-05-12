@@ -140,6 +140,54 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .quick-ref{background:#130a2e;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
 .quick-ref-term{font-size:11px;font-weight:600;color:#a78bfa;letter-spacing:0.06em;margin-bottom:4px;}
 .quick-ref-def{font-size:12px;color:#8a70cc;line-height:1.6;}
+/* SOCRATIC COACHING */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--purple);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--purple);}
+/* MENTAL NOTES & ANALOGIES */
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--purple-glow);border:1px solid var(--purple-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--purple);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2);border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -186,6 +234,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <div class="main-content">
 
   <!-- API ARCHITECTURE -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · API ARCHITECTURE</span></div>
+  <p class="socratic-insight">Every API request travels through multiple layers before reaching the actual data. The OneAPI architecture has a Central Authority that handles authentication, then routes to specific capabilities, then enforces security controls. Think about why each layer exists as a separate concern — and what would break if layers were combined.</p>
+  <ul class="socratic-questions">
+    <li>Why is it better to have a centralized API Gateway handling authentication rather than each backend service (ZIA, ZPA, ZDX) independently validating tokens?</li>
+    <li>"Browser activities are driven by the same APIs as programmatic access." What does this tell you about the consistency between what an admin does manually in the portal versus what an automation script does via API?</li>
+    <li>Rate limiting has two tiers: burst limits (lower bound) and volume limits (upper bound). Why are these separate — what specific scenario does the burst limit protect against that the hourly volume limit does not?</li>
+  </ul>
+  <div class="answer-area" data-section="architecture">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">A centralized API Gateway concentrates authentication logic in one place, which means token validation, key rotation, and revocation are consistent across every product. If each backend (ZIA, ZPA, ZDX) validated tokens independently, you'd risk divergent implementations, inconsistent enforcement of policies, and far more attack surface. Centralization also enables shared rate limiting, logging, and access policy enforcement — all things that should not be reinvented per service.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">It tells you the portal is just a graphical front-end on top of the same APIs your script uses. Anything you can do as an admin in the browser, you can do programmatically — and vice versa. This guarantees parity between manual and automated workflows, so an automation script will never be artificially restricted compared to a human admin, and changes happen through the same audited code path.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">The burst limit protects against short-duration spikes — for example, a buggy script in a tight loop firing 1,000 requests in a second. An hourly volume cap wouldn't catch that because the script could exceed instantaneous capacity well before the hour ends, overwhelming the gateway. The burst limit smooths traffic in real time, while the volume limit ensures fair long-term usage. Together they prevent both DoS-style spikes and sustained over-consumption.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-architecture">
     <div class="section-label">API ARCHITECTURE AND ACCESS</div>
     <h2>Zscaler API Architecture and Access</h2>
@@ -254,6 +323,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       </div>
     </div>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">The OneAPI architecture is like airport security. The Central Authority (API Gateway) is the single security checkpoint everyone passes through regardless of destination. API Capabilities are the different terminals you reach after clearing security. The Authentication & Security layer is passport control and screening. Developer Support is the airport directory that explains how to navigate. You can't skip any layer — and that's the point.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">Zscaler API Architecture = 4 layers: (1) Central Authority — API Gateway + Admin Portal; (2) API Capabilities — Policy Management, Log Management, Config Management; (3) Authentication & Security — auth control, rate limiting, identity validation, logging, 3rd-party integrations; (4) Developer Support — documentation at Zscaler Help Portal. All requests go through the Central Authority first.</div>
+  </div>
+</div>
+<div class="img-display-block">
+  <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+  <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+  <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+  <div class="prompt-content" hidden>[Generate: flat purple 4-tier pyramid — top tier shows API gateway icon (Central Authority), second tier shows three icons for policy/log/config (API Capabilities), third tier shows a security shield (Auth & Security), bottom tier shows a document/guide icon (Developer Support) — with arrows showing request flowing downward and data flowing upward, minimalist, no text labels]</div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-architecture" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('architecture','API Architecture')">Add Question</button></div></div>
@@ -262,6 +348,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- TRADITIONAL FRAMEWORK -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · TRADITIONAL FRAMEWORK</span></div>
+  <p class="socratic-insight">Before OneAPI, the traditional Zscaler automation framework required separate authentication flows for ZIA, ZPA, and Client Connector. Before reading about the problems, try to reason through what an automation script that manages all three products would actually look like — and where things would go wrong.</p>
+  <ul class="socratic-questions">
+    <li>If you need to rotate API credentials for security reasons and you have separate credentials for ZIA, ZPA, and ZCC — what's the operational burden? What's the risk if you forget to rotate one of them?</li>
+    <li>If ZIA uses a different rate limiting scheme than ZPA, what does your automation script need to do differently when calling each product — and how does that complexity compound as you add more products?</li>
+    <li>In a merger/acquisition scenario, a company inherits two Zscaler tenants. Under the traditional framework, how many separate sets of credentials would an admin managing both need to handle simultaneously?</li>
+  </ul>
+  <div class="answer-area" data-section="traditional">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The operational burden is significant: each product has its own admin portal, its own credential storage, and its own rotation procedure, so rotating credentials means doing the same task three times in three different places. If you forget to rotate one, you've left a stale credential that may still be valid — an attacker who compromised that credential keeps access to that product indefinitely. This is exactly the kind of inconsistency that erodes a zero-trust posture.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Your script needs product-specific retry logic, back-off intervals, and header parsing for each product's rate-limit response. Adding a new product means writing yet another adapter and maintaining yet another quirk. The complexity compounds because a single integration change (say, ZIA modifies its rate-limit window) forces re-testing of the entire automation suite, and there's no shared error-handling layer to inherit from.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">With three products per tenant and two tenants, the admin manages six independent credential sets simultaneously — plus separate auth flows, endpoints, and rate-limit behaviours per product. That's a tracking nightmare for rotation, audit, and revocation, and it's exactly the scenario where credentials end up reused or sticky in scripts long after they should have been retired.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-traditional">
     <div class="section-label">TRADITIONAL AUTOMATION FRAMEWORK</div>
     <h2>Traditional Zscaler Automation Framework</h2>
@@ -292,6 +399,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">Before OneAPI, switching between different API products required repeated registration, authorization, token requests, and token grants. Automation scripts had to manage multiple endpoints and tokens, raising the chances of mistakes and security issues. OneAPI simplifies this by unifying API interactions under a single framework, reducing redundant code and error risk.</div>
     </div>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">The traditional framework was like having separate usernames and passwords for every website on the internet — no password manager, no SSO, just a growing list of credentials to manage manually. Inevitably you start reusing passwords, writing them down, or forgetting to revoke them when someone leaves. OneAPI is the equivalent of a password manager and SSO combined — one credential, one place to manage it, one place to revoke it.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">Traditional framework = 3 problems: (1) Separate credential management per product; (2) Separate API endpoint per product (ZIA=zsapi.zscaler.net, ZPA=config.zpatwo.net, ZCC=api-mobile.zscalerbeta.net); (3) Variations in common functionality like rate limiting. OneAPI solves all 3 with a single endpoint, unified auth, and consistent rate limiting.</div>
+  </div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-traditional" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('traditional','Traditional Framework')">Add Question</button></div></div>
@@ -300,6 +418,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- ZTA FRAMEWORK -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZTA FRAMEWORK</span></div>
+  <p class="socratic-insight">The Zero Trust Automation Framework centralizes everything through ZIdentity + OneAPI. Think about what "everything external that interacts with Zscaler over automation must create an API client" means in practice — including partners and third-party tools, not just your own scripts.</p>
+  <ul class="socratic-questions">
+    <li>Partners and technology partners must create API clients — they can't use admin credentials. What security principle does this enforce, and what specific risk does it prevent compared to sharing admin credentials with a third party?</li>
+    <li>Step-up authentication (AL1–AL4) escalates the required auth strength when accessing sensitive resources. Why is dynamic authentication levels better than just requiring the strongest (AL4 hardware key) for all operations?</li>
+    <li>The ZTA framework flow is: Authenticate → ZIdentity → Token → OneAPI → Product. At which point in this flow could a legitimate security control interrupt the request — and why would you want that capability?</li>
+  </ul>
+  <div class="answer-area" data-section="zta">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">This enforces the principle of least privilege and non-repudiation. An API client has a scoped identity, narrowly defined permissions, and its own audit trail — so partners can only touch what they need, and every action is attributable to them rather than to a shared admin account. Sharing admin credentials would give a third party full god-mode access with no accountability and no easy revocation, which is exactly the anti-pattern zero trust eliminates.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Dynamic levels follow the risk: low-risk reads can use AL1 with no friction, while sensitive operations (like creating an API client or revealing OTPs) can demand AL4. Forcing AL4 universally would make admins carry hardware keys for every trivial action, which leads to workarounds and shared keys — the opposite of secure. Step-up strikes a balance between usability and security by matching authentication strength to the sensitivity of the operation.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">The OneAPI Gateway is the natural interception point — it sees the token, the requested operation, and any rate-limit or access-policy state. You'd want it there because it can enforce quota, revoke a compromised token, trigger step-up authentication, or block based on a risk signal before the request ever reaches the product. Centralizing enforcement at the gateway means a single security update protects all products simultaneously.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-zta">
     <div class="section-label">ZERO TRUST AUTOMATION FRAMEWORK</div>
     <h2>Zscaler Zero Trust Automation Framework</h2>
@@ -349,6 +488,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     </div>
     <p>Flow: Login → Access Sensitive Resource → Step-Up Triggered → MFA Challenge → Access Granted. Benefits: Enhanced Security, Dynamic Risk-Based Access, Simplified Compliance.</p>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">The ZTA Framework is like a secure government facility. ZIdentity is the security office that issues clearances and badges — no badge, no entry. The OneAPI Gateway is the main entrance checkpoint that validates your badge and determines which areas you're cleared for. Step-up authentication (AL1–AL4) is like different clearance levels — some rooms require showing your badge, others require a fingerprint, others require a physical hardware key.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">ZTA Framework = 4 components: (1) ZIdentity — API credential management + OAuth server that issues tokens; (2) OneAPI Platform — consistent API experience; (3) Single Endpoint — api.zsapi.net for everything; (4) OneAPI Gateway — token validation, rate limiting, access policy, quota. Step-up auth: AL1=basic, AL2=MFA (SMS/email OTP), AL3=TOTP (Google Authenticator), AL4=FIDO hardware key.</div>
+  </div>
+</div>
+<div class="img-display-block">
+  <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+  <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+  <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+  <div class="prompt-content" hidden>[Generate: flat purple horizontal pipeline: API Client icon → ZIdentity building icon with badge → OneAPI gateway/checkpoint icon → three product destination icons (ZIA, ZPA, ZCC) — with AL1-AL4 authentication strength shown as ascending colored bars near the ZIdentity step, minimalist, no text labels]</div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zta" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zta','ZTA Framework')">Add Question</button></div></div>
@@ -357,6 +513,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- USE CASES -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · USE CASES</span></div>
+  <p class="socratic-insight">Three use cases are demonstrated: block a URL in ZIA, create an App Connector group in ZPA, retrieve device OTPs in ZCC. Before reading the step-by-step details, think about what you'd need to know to execute each one independently — what inputs, what API calls, what verification steps.</p>
+  <ul class="socratic-questions">
+    <li>In the ZIA URL blocking demo, you need to update a URL filtering policy via PUT request. What must you know before you can construct that request — specifically, how would you find the correct category ID to reference in the JSON body?</li>
+    <li>The ZPA App Connector group creation requires longitude, latitude, and location in the request body. Why does a software configuration object need geographic coordinates?</li>
+    <li>Client Connector OTP retrieval returns credentials for all devices in your tenant. What security controls should be in place before you run a script that retrieves sensitive credentials for potentially tens of thousands of devices?</li>
+  </ul>
+  <div class="answer-area" data-section="usecases">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">You need to first GET the URL Filtering Policy to inspect the existing categories and find the numeric category ID associated with the rule you want to update (for example, the "Gambling" category). The category ID is what you reference in the JSON body of your PUT request — without it, the API has no way to know which rule object you're modifying. Always read before you write: confirm the current state, then craft an update that targets the right resource.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">App Connector groups have geographic attributes because ZPA uses location data to optimize routing — clients should connect to the nearest healthy App Connector to minimize latency. Latitude and longitude let ZPA make intelligent placement and failover decisions, and the location string provides human-readable context for admins. Even though it's "just configuration", that metadata drives real network behaviour.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">At minimum: a scoped API client with read-only access to the ZCC endpoints needed, step-up authentication (AL3 or AL4) for the user invoking the script, audit logging of every retrieval, and encrypted storage for the retrieved OTPs (never plain text on disk). You also want rate-limit awareness and the smallest possible blast radius — pull only the devices you need, not the whole tenant — and a clear, short-lived purpose for the credentials so they're rotated immediately after use.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-usecases">
     <div class="section-label">COMMON USE CASES</div>
     <h2>Common Use Cases for Zscaler Zero Trust Automation</h2>
@@ -423,6 +600,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">For all use cases, Zscaler provides a Postman collection on help.zscaler.com. The collection includes preconfigured requests, payloads, and environment variables. Download the most recent version of the collection for each product before starting your automation work.</div>
     </div>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">These three use cases are test drives for the API. ZIA URL blocking = changing a traffic signal remotely via API (policy update happens in the cloud immediately). ZPA App Connector group creation = opening a new service entrance in a corporate building by sending an instruction — the building reconfigures itself. ZCC device OTP retrieval = requesting the master key list for all doors through a secure authenticated portal, rather than physically visiting each lock.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">3 use cases to know: (1) ZIA URL block — PUT to URL Filtering Policy endpoint, add URL to category in JSON body; (2) ZPA App Connector group — POST with name/longitude/latitude/location, expect 201 Created, verify in portal; (3) ZCC devices — GET v1/getDevices, iterate for OTP credentials. All use Postman collection from help.zscaler.com. ZPA requires Customer ID from Portal → Administration → Company Details.</div>
+  </div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-usecases" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('usecases','Use Cases')">Add Question</button></div></div>
@@ -490,6 +678,10 @@ function renderQPanel(){const qs=getQuestions();const count=document.getElementB
 function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
 function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
 document.addEventListener('DOMContentLoaded',()=>{renderQPanel();initNotes();initChecks();if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}});
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>

@@ -65,6 +65,44 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
 .mod-nav-link:hover{background:var(--surface-2);}
 .mod-nav-link.current{background:var(--surface-2);font-weight:700;pointer-events:none;color:var(--text);}
 .mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--purple);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted,#6a5a9a);}
+.socratic-insight{font-size:13px;color:var(--text-soft,#2a1a5c);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim,var(--border));line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--purple);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(92,53,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--purple);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
 @media(max-width:700px){.page-body{padding:40px 20px 80px;}header{padding:32px 20px 28px;}.recap-block-header,.recap-points{padding:16px 20px;}.outcomes-block{padding:28px 24px;}.mod-nav-panel{display:none;}}
 </style>
 </head>
@@ -98,6 +136,28 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
 
   <a class="back-link" href="../edu-111-hub.html">← Back to EDU-111 Hub</a>
 
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · THE CYBER THREAT</span></div>
+    <p class="socratic-insight">Before reading the recap, try to reconstruct the threat picture in your own words — AI did not invent new attack phases, it compressed and accelerated the ones we already knew.</p>
+    <ul class="socratic-questions">
+      <li>Which phases of the attack chain does AI accelerate, and which one tends to compress the most in time?</li>
+      <li>How does the rise of attacks on AI systems themselves (prompt injection, jailbreaking) connect to the idea that defenders must also wield AI?</li>
+      <li>If you had to brief an executive in 30 seconds on how AI changes the attack chain, what three points would you keep?</li>
+    </ul>
+    <div class="answer-area" data-section="threat">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">AI accelerates every phase — reconnaissance, initial access, lateral movement, and action on objectives — but reconnaissance and initial access compress the most. Reconnaissance shrinks because LLMs digest target footprints in seconds; initial access shrinks because phishing variants and credential lures can be generated and tailored per recipient at scale. The later phases still depend on the target's defences, so they speed up but do not collapse the same way.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Attacks on AI systems (prompt injection, jailbreaking, data poisoning) prove that AI is now part of the attack surface itself. If defenders refuse to wield AI, they fight blind against AI-accelerated attackers and they cannot defend their own AI tools without understanding how attackers manipulate them. The two ideas are inseparable — AI is simultaneously the new weapon and the new target.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">First: attackers are faster, cheaper, and more personalised — the volume of credible attacks is rising sharply. Second: defenders must wield AI to keep up, and skill (prompt engineering) is the differentiator. Third: AI itself is a new attack surface — we now defend the tools, not just with them. Three sentences, every one tied to a budget decision.</div></div>
+      </div>
+    </div>
+  </div>
+
   <!-- THE CYBER THREAT -->
   <div class="recap-block threat">
     <div class="recap-block-header">
@@ -118,6 +178,44 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
       <div class="recap-point">
         <div class="recap-num">3</div>
         <div class="recap-text">AI systems create new attack surfaces. <strong>Prompt injection, jailbreaking, and related attacks</strong> target the AI itself.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="analogy-box">
+    <div class="analogy-label">Analogy</div>
+    <div class="analogy-text">AI is a turbocharger bolted onto an old engine. The attack chain still has the same cylinders — recon, access, lateral movement, action — but each stroke fires faster, and the engine itself becomes a target for sabotage.</div>
+  </div>
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">AI does not rewrite the attack chain — it accelerates every phase and adds a new surface (the AI system itself) that defenders must also protect.</div>
+    </div>
+  </div>
+  <div class="img-gen-placeholder">
+    <div class="img-gen-label">Image Prompt</div>
+    <div class="img-gen-prompt">A minimalist purple-toned illustration of a four-link chain (reconnaissance, access, lateral movement, action) glowing with violet energy, with a small AI chip embedded at the centre — conveying acceleration and a new attack surface.</div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · THE DATA RISK</span></div>
+    <p class="socratic-insight">The risk is not just what AI can do, but what data flows through it — and how little of that traffic legacy controls can see.</p>
+    <ul class="socratic-questions">
+      <li>Why do traditional DLP and proxy controls struggle to govern prompts and responses?</li>
+      <li>How does Shadow AI connect to hallucination risk — what does an organisation lose when both happen at once?</li>
+      <li>What would you do if you discovered an entire business unit was pasting customer data into an unsanctioned chatbot?</li>
+    </ul>
+    <div class="answer-area" data-section="data-risk">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Legacy DLP was built around file-shaped data — attachments, emails, downloads — and structured patterns like credit card numbers. Prompts and responses are unstructured natural-language strings flowing through encrypted SaaS sessions where context determines sensitivity, not regex. The proxy sees encrypted traffic to a known AI domain; the DLP cannot meaningfully scan free text without AI-aware inspection. The category mismatch is the root cause.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Shadow AI is unsanctioned AI usage; hallucination is AI confidently producing wrong output. When both happen at once, the organisation loses on two fronts simultaneously: sensitive data leaves through the unmonitored tool, and decisions get made on fabricated answers no governance team has reviewed. The compound effect is leakage outbound and corruption inbound — quiet, deniable, and hard to detect until it shows up in regulatory or reputational form.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Investigate before reacting. Find out what jobs they were trying to do, why the sanctioned path failed them, and what data classes flowed through. Then provide a sanctioned alternative with the same value, apply DLP and access controls to it, and educate (not punish) the business unit. Blanket bans push the behaviour underground; substitution with governance keeps the work visible.</div></div>
       </div>
     </div>
   </div>
@@ -146,6 +244,40 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
     </div>
   </div>
 
+  <div class="analogy-box">
+    <div class="analogy-label">Analogy</div>
+    <div class="analogy-text">Letting AI tools flow through legacy controls is like installing a glass pipe inside an opaque wall — data is moving in plain sight, but the wall was never designed with a window. Shadow AI is the second pipe nobody told the plumber about.</div>
+  </div>
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">The data risk has three faces: legacy controls cannot see prompt/response flows, Shadow AI widens the surface, and trusted-but-wrong output (hallucination) turns AI into an insider threat.</div>
+    </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · THE DEFENCE STRATEGY</span></div>
+    <p class="socratic-insight">A framework is only useful if you can place every control inside it. Before reading the recap, try to map the three pillars and the layer that runs across all of them.</p>
+    <ul class="socratic-questions">
+      <li>What are the three pillars of the Zscaler AI Security Framework, and why is Governance a cross-cutting layer rather than a fourth pillar?</li>
+      <li>How does the framework connect back to the threats and data risks from the earlier lessons — which pillar addresses which problem?</li>
+      <li>What would you do if AI flagged a high-confidence incident but the business impact of acting on it was severe — when does human judgment override AI speed?</li>
+    </ul>
+    <div class="answer-area" data-section="defence">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The three pillars are AI Asset Management (See), Secure Access to AI (Control), and Secure AI Infrastructure & Apps (Protect). Governance runs across all three because it is continuous, not a discrete step — it is the monitoring, policy-evolution, and posture-management work that keeps the other pillars from decaying. Treating Governance as a fourth pillar would imply you can "finish" it; modelling it as a cross-cutting layer makes its ongoing nature visible.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">AI Asset Management addresses Shadow AI from the data risk lesson — making the invisible visible. Secure Access closes the clipboard, identity, and encryption gaps left by legacy controls. Secure AI Infrastructure addresses the new attack surface — prompt injection, jailbreaking, data poisoning — introduced when organisations build or deploy their own AI. Each pillar maps cleanly to a problem the prior lessons exposed.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Human judgment overrides AI speed whenever consequence outpaces certainty. High-confidence flags mean the model thinks it is right, not that it has weighed the business impact of acting. A human authoriser holds the context AI does not — pending deals, executive travel, ongoing investigations, regulatory considerations. The rule of thumb: AI recommends and prepares the action, humans approve anything that creates business-level consequences.</div></div>
+      </div>
+    </div>
+  </div>
+
   <!-- THE DEFENCE STRATEGY -->
   <div class="recap-block defence">
     <div class="recap-block-header">
@@ -168,6 +300,22 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
         <div class="recap-text">Strong defence combines <strong>AI speed with human judgment.</strong> AI helps detect, investigate, and accelerate response, while humans make the critical decisions.</div>
       </div>
     </div>
+  </div>
+
+  <div class="analogy-box">
+    <div class="analogy-label">Analogy</div>
+    <div class="analogy-text">The framework is a three-legged stool sitting on a Governance floor. Remove any leg (Asset Management, Secure Access, or Secure Apps) and it tips; remove the floor and every leg sinks. AI is the power tool — humans still decide where to cut.</div>
+  </div>
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Three pillars, one continuous Governance layer, and a partnership between AI speed and human judgment — that is the defence strategy in one sentence.</div>
+    </div>
+  </div>
+  <div class="img-gen-placeholder">
+    <div class="img-gen-label">Image Prompt</div>
+    <div class="img-gen-prompt">A clean isometric illustration in deep purple (#5c35cc) of three vertical pillars labelled "AI Asset Management," "Secure Access to AI," and "Secure AI Apps," resting on a horizontal slab labelled "Governance and Compliance" — minimal, editorial, soft violet glow.</div>
   </div>
 
   <!-- LEARNING OUTCOMES -->
@@ -199,5 +347,10 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
   </div>
 
 </div>
+<script>
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+</script>
 </body>
 </html>

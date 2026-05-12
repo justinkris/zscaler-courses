@@ -104,6 +104,53 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
 .footer-left span{color:var(--blue);}
 .footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+/* SOCRATIC COACHING */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted,#5a7a9a);}
+.socratic-insight{font-size:13px;color:var(--text-soft,#1e3a5c);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim,var(--border));line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}}
 
 /* ── QUESTIONS PANEL ── */
@@ -200,6 +247,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <div class="main-content">
 
   <!-- LESSON 1 -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · AI FOUNDATIONS &amp; EVOLUTION</span></div>
+    <p class="socratic-insight">Before you learn what AI <em>is</em>, ask yourself what it actually does when it gets something right. A spam filter and a chess engine both feel "intelligent," but they got there by very different paths — and one of those paths quietly reshaped everything you now call modern AI.</p>
+    <ul class="socratic-questions">
+      <li>If an AI's output is only as good as its training data, who decides what data is "good enough" — and what does that mean for fairness or accuracy in a security context?</li>
+      <li>Why might stacking more layers in a neural network unlock new capabilities rather than just making the model slightly better at the same old task?</li>
+      <li>If you removed the attention mechanism from a Transformer, what kind of mistakes would the model start making — and on what kind of inputs?</li>
+    </ul>
+    <div class="answer-area" data-section="l1">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">"Good enough" is a value judgement disguised as a technical one. In a security context, whoever curates the training set is implicitly defining what threats the model recognises, which behaviours it deems normal, and which user populations are well represented. Bias in data becomes bias in detection — under-sampled regions, languages, or attack patterns become invisible to the model. Fairness and accuracy here are not separate ethics and engineering concerns; they are the same problem viewed from two angles.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Each additional layer lets the network compose simpler features into more abstract ones — edges become shapes become objects, characters become words become semantic concepts. This hierarchical composition is qualitatively different from doing the same thing better; it lets the model represent things shallow networks structurally cannot. That is why depth unlocks new capabilities (vision, language, reasoning) rather than just incremental gains on the original task.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Without attention, the model loses the ability to weigh how every token relates to every other token in a sequence. It would fail most on long inputs and on anything requiring long-range reference — pronoun resolution ("it" referring to something paragraphs earlier), tracking entities across a document, or understanding code that depends on definitions far above the current line. Short, local patterns would still work; coherence at scale would collapse.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-l1">
     <div class="section-label">LESSON 1</div>
     <h2>AI Foundations and Evolution</h2>
@@ -259,6 +327,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         </div>
       </div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">The evolution of AI is like the evolution of a child learning language. Machine Learning is rote memorisation of flashcards. Neural Networks let the child string concepts together. Deep Learning lets them recognise that "cat" and "kitten" relate to the same idea hierarchically. Transformers are when the child finally learns to follow a conversation — keeping track of who said what, paragraphs ago, to understand what "it" refers to.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">AI outcomes depend on three things: <strong>data quality, model design, human oversight</strong>. The evolution chain to memorise: <strong>ML → Neural Networks → Deep Learning → Transformers (attention)</strong>. Transformers are what make modern LLMs possible.</div>
+      </div>
+    </div>
+    <div class="img-display-block">
+      <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat blue minimalist illustration showing four stacked horizontal layers labelled visually as ML, Neural Nets, Deep Learning, Transformers — each layer slightly wider and more interconnected than the one below, suggesting upward evolution. Clean simple shapes, no text labels.</div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -276,6 +361,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- LESSON 2 -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · FROM ML TO GENERATIVE AI</span></div>
+    <p class="socratic-insight">A spam filter says "this is junk." A GenAI system writes the junk. Same underlying maths in many ways — wildly different consequences. The leap from <em>classifying</em> the world to <em>generating</em> it is the single most important shift in the field, and it is why the security playbook had to be rewritten.</p>
+    <ul class="socratic-questions">
+      <li>If GenAI is just sampling from a learned distribution, why does its output feel original — and is "original" even the right word for what it produces?</li>
+      <li>A phishing email written by a human and one written by GenAI may be identical in content. What changes for the attacker, and what changes for the defender?</li>
+      <li>Where is the line between an ML model that "predicts the next value" and a GenAI model that "creates new content" — is it really a different task, or just the same task at scale?</li>
+    </ul>
+    <div class="answer-area" data-section="l2">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">GenAI samples from a probability distribution shaped by an enormous training corpus, so its outputs are recombinations of patterns it has seen rather than truly novel inventions. The output <em>feels</em> original because the combinatorial space is so vast that no single output likely existed verbatim in training — but "original" in the human creative sense implies intent and meaning, neither of which a sampler possesses. A better framing is "statistically novel surface form, derivative substance."</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">For the attacker, the cost curve flattens — what used to require a skilled writer per target can now be produced by the thousand, personalised per recipient, in any language. For the defender, content-based signals (typos, awkward phrasing, generic salutations) lose almost all signal value. The defensive centre of gravity shifts from "does this email look suspicious?" to behavioural, identity, and link-level indicators that the attacker cannot generate away.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Mechanically they are the same task — both are conditional probability estimators predicting "what is most likely next?" The difference is in the output space and how it is used: an ML predictor returns a label or a number; a GenAI model autoregressively chains thousands of predictions into a coherent artefact (text, image, code). So yes, it really is the same task — but scale plus chaining produces something qualitatively new in capability and risk.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-l2">
     <div class="section-label">LESSON 2</div>
     <h2>From Machine Learning to Generative AI</h2>
@@ -302,6 +408,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">→</div>KEY DISTINCTION TO REMEMBER</div>
       <div class="callout-body">Machine Learning = <strong>recognise and classify</strong>. Generative AI = <strong>create and produce</strong>. The exam or any quiz on this material will probe whether you understand which mode is which — keep the boundary sharp.</div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Traditional programming is a recipe — exact ingredients, exact steps, predictable cake every time. Machine Learning is a tasting panel — try enough cakes and you can label "this is chocolate, that is vanilla." Generative AI is the chef who has eaten ten thousand cakes and can invent a new one on demand — sometimes brilliant, sometimes wildly off, always confidently plated.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Three modes: <strong>Traditional = rules</strong>. <strong>ML = recognise / classify</strong>. <strong>GenAI = create / produce</strong>. GenAI produces text, images, code, audio, and video — and that is precisely what reshapes the threat surface (scaled phishing, deepfakes, scaffolded malware).</div>
+      </div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -319,6 +436,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- LESSON 3 -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · HOW LLMS WORK</span></div>
+    <p class="socratic-insight">When an LLM answers you, it has not "looked anything up." It is doing the linguistic equivalent of pressing the most plausible next-key on a keyboard, over and over, thousands of times. Hold that thought — then ask yourself why its answers ever feel <em>right</em> at all, and what that tells you about when to trust them.</p>
+    <ul class="socratic-questions">
+      <li>If hallucination is a structural feature of how LLMs generate text — not a bug to be patched — what does that mean for any product or workflow that depends on "AI getting the right answer"?</li>
+      <li>Why is a confidently worded, fluent paragraph from an LLM <em>more</em> dangerous than a hesitant or fragmented one?</li>
+      <li>A base LLM has no memory, no hands, and no awareness past its training date. Which of those three limits would you most want to fix first if you were deploying it for an enterprise — and why?</li>
+    </ul>
+    <div class="answer-area" data-section="l3">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">It means you cannot architect any product around the assumption that the model is correct by default — accuracy has to come from somewhere outside the model. That is the entire reason for grounding (RAG), verification layers, human-in-the-loop checkpoints, and explicit citation. Treating hallucination as a structural property rather than a bug forces honest workflow design: AI as a draft generator under human review, never as the final source of truth.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Because fluency is the strongest social cue humans use to gauge competence. A hesitant or fragmented answer triggers scepticism and verification; a confident, well-structured paragraph triggers trust. The LLM's prose quality is decoupled from its factual accuracy, so the very signal a reader uses to assess reliability is the one most likely to mislead them. Confident wrongness is the worst combination, and it is the default LLM output.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Enterprise memory, almost always. A base LLM that cannot see your company's documents, tickets, or policies cannot answer the questions that matter to your business, no matter how fluent it is. Agency and freshness compound the risk surface but do not add direct enterprise value; grounding in your own data does. Fix memory first via RAG, then layer in action and current information as the use case justifies.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-l3">
     <div class="section-label">LESSON 3</div>
     <h2>How LLMs Work</h2>
@@ -365,6 +503,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         </div>
       </div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">An LLM is like a brilliant student in a sealed exam hall, with no books, no internet, and a watch frozen on training day. Ask them anything and they will answer — fluently, confidently, in beautiful prose. Ask them about something that happened last week, or something specific to your company, and they will <em>still</em> answer fluently, confidently, in beautiful prose. The fluency never wavers. The accuracy quietly does.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">LLMs <strong>predict next token</strong>, they do not retrieve facts. <strong>Hallucination is structural</strong>, not a fixable bug. Three base limits: <strong>no enterprise memory, no agency, knowledge cutoff</strong> — these map directly to RAG, MCP, and updated context.</div>
+      </div>
+    </div>
+    <div class="img-display-block">
+      <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat blue minimalist illustration of a row of word-tokens floating in a line, each one slightly transparent except the last, with a spotlight on the next predicted token appearing — suggesting one-at-a-time token prediction. Clean simple shapes, no text labels.</div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -382,6 +537,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- LESSON 4 -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · RAG, MCP &amp; COMPUTER VISION</span></div>
+    <p class="socratic-insight">Lesson 3 left you with a model that is sealed, mute, and slightly out of date. Lesson 4 hands it a filing cabinet, a phone, and a pair of eyes. Each addition solves <em>exactly one</em> limit — and the choice of which to add first is essentially a product decision dressed up as an architecture decision.</p>
+    <ul class="socratic-questions">
+      <li>If RAG injects retrieved documents into the prompt at query time, what new failure modes does it introduce that a plain LLM did not have?</li>
+      <li>MCP gives an AI the ability to act. From a security standpoint, what is the difference between "an AI that can write an email draft" and "an AI that can send the email"?</li>
+      <li>Why does Computer Vision matter for an <em>enterprise</em> use case — what kinds of information are trapped in images, screenshots, or PDFs that text-only systems cannot reach?</li>
+    </ul>
+    <div class="answer-area" data-section="l4">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">RAG introduces failure modes that a plain LLM cannot have: retrieving the wrong document, retrieving stale or contradicting documents, and — most importantly — indirect prompt injection where retrieved content itself contains instructions that hijack the model. You also inherit every access-control mistake in the underlying knowledge base, because anything the retriever can read can end up in the prompt. RAG converts "the model is wrong" into a richer set of failure modes involving the retrieval layer, the corpus, and the trust boundary between them.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">A drafting LLM produces text that a human reviews and chooses to send — there is a human in the loop, and the blast radius is bounded by their judgement. An LLM with send privileges removes that checkpoint, so a prompt injection or hallucination becomes an action with real-world consequences (data exfiltration, social engineering at scale, mistaken commitments). Security-wise it is the difference between "untrusted code in a sandbox" and "untrusted code with shell access."</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Most enterprise information lives outside flat text — architecture diagrams, screenshots in tickets, scanned contracts, dashboards, security camera feeds, product photos, slide decks. Text-only systems cannot reason about any of that. Computer Vision unlocks a category of workflows (visual triage, document automation, compliance review of imagery) that no amount of better text modelling can reach.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-l4">
     <div class="section-label">LESSON 4</div>
     <h2>SLMs, RAG, MCP, and Computer Vision</h2>
@@ -427,6 +603,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         </div>
       </div>
     </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Imagine hiring a brilliant consultant on day one. RAG is the moment you finally give them access to your company SharePoint — suddenly their advice is grounded in your business, not just their general knowledge. MCP is the day you give them a corporate laptop with login credentials and Slack — now they can <em>do</em> things, not just recommend them. Computer Vision is the day they walk out of the back office and onto the manufacturing floor, finally seeing what everyone has been describing.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Map each capability to one base LLM limit: <strong>RAG = memory</strong> (solves enterprise knowledge + cutoff). <strong>MCP = hands</strong> (solves no agency). <strong>Computer Vision = eyes</strong> (solves text-only input). Memorise these one-to-one mappings — they appear constantly on assessments.</div>
+      </div>
+    </div>
+    <div class="img-display-block">
+      <img src="3.png" alt="Diagram 3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>3.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat blue minimalist illustration of a central brain icon with three arrows reaching outward to a filing cabinet, a connected gear/plug, and an eye — each labelled visually as memory, hands, and vision. Clean simple shapes, no text labels.</div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -444,6 +637,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- LESSON 5 -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · AGENTIC AI</span></div>
+    <p class="socratic-insight">Up to now AI has been something you <em>ask</em>. An agent is something you <em>send</em>. The moment you combine memory, perception, and the ability to act over multiple steps, you stop having a chatbot and start having a junior employee with credentials — and the security model has to change with it.</p>
+    <ul class="socratic-questions">
+      <li>If an agent loops through perceive → reason → act, where in that loop is a prompt injection attack most dangerous, and why?</li>
+      <li>What is the meaningful difference between an LLM that <em>writes a script</em> and an agent that <em>runs the script</em> — and which one needs least-privilege controls?</li>
+      <li>If an agent can self-correct after observing a failed action, when does that become a strength and when does it become a liability that hides bugs from human reviewers?</li>
+    </ul>
+    <div class="answer-area" data-section="l5">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">It is most dangerous at the <em>perceive</em> step, because that is where attacker-controlled content enters the loop — a web page, a retrieved document, a tool result. Once a malicious instruction lands in the context, the reason step treats it as legitimate planning input, and the act step executes it with the agent's real privileges. The further downstream you try to defend, the harder it gets; the only durable mitigations isolate untrusted inputs and constrain what reason+act can do with them.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">A model that writes a script produces text — a human reads, judges, and decides to execute. A model that runs the script collapses that decision into the same loop that produced the script, so a hallucinated or injected instruction becomes a live action. The runtime agent is the one that needs least-privilege controls (scoped credentials, allowlisted tools, rate limits, audit logs), because the loss of the human checkpoint is exactly what raises its blast radius.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Self-correction is a strength when failures are transient and observable — a 500 error, a malformed argument, a missing file. It becomes a liability when the agent retries around a bug or a policy violation until it succeeds by accident, because the recovered final state looks clean while the audit trail of "tried 14 things" never surfaces to a reviewer. The fix is logging every step and surfacing repeated retries, not removing self-correction.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-l5">
     <div class="section-label">LESSON 5</div>
     <h2>Agentic AI</h2>
@@ -509,6 +723,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
             <img src="Images/5.png" alt="Course summary — the arc from AI foundations to agentic systems">
           </div>
         </div>
+      </div>
+    </div>
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">A base LLM is a brilliant friend on the phone who can give you advice. An agent is the same friend with your house keys, your bank PIN, and a to-do list — and you've gone on holiday for a week. Their advice was free; their access has consequences. The capability difference is enormous, and so is the responsibility difference.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">An agent has three capabilities: <strong>Perceive → Reason → Act</strong>, executed in a loop until the goal is reached. Memory + action + perception = agent. Security controls required: <strong>least-privilege tool access, human-in-the-loop checkpoints, audit trails</strong>.</div>
       </div>
     </div>
   </div>
@@ -655,6 +880,11 @@ function initNotes(){
   });
 }
 
+// ── SOCRATIC ANSWERS ──
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+
 // ── INIT ──
 document.addEventListener('DOMContentLoaded',()=>{
   renderQPanel();
@@ -665,6 +895,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('qpanel-chevron').textContent='▴';
   }
 });
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>

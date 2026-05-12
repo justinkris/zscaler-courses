@@ -139,6 +139,26 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .mod-nav-link:hover{background:var(--surface);}
 .mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
 .mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--amber);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted,#9a7c30);}
+.socratic-insight{font-size:13px;color:var(--text-soft,#3d2e08);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim,var(--border));line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--amber);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(180,83,9,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--amber);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
 @media(max-width:900px){header{padding:24px 20px 20px;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.dspm-flow{grid-template-columns:1fr 1fr;}.compare-grid,.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -173,6 +193,16 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <main>
 <div class="main-content">
 
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">◆</span><span class="socratic-label">BEFORE YOU READ — THE BOUNDARY PROBLEM</span></div>
+    <div class="socratic-insight">Inline web traffic is the easy case — a proxy sits between user and internet, and everything passes through. But data lives in places the inline path never sees: a contractor's MacBook at home, an S3 bucket spun up by a developer last week, a PDF dragged from Outlook into a personal Dropbox tab. The same policy must reach all three. Otherwise, the perimeter is just a story we tell ourselves.</div>
+    <ul class="socratic-questions">
+      <li>If your DLP only inspects traffic that crosses the network, what percentage of your sensitive data movement is invisible to it?</li>
+      <li>A cloud bucket, a laptop, and a personal iPad — which of these does your current security stack actually see today?</li>
+      <li>What is the boundary you're trying to protect — the network, the device, or the data itself?</li>
+    </ul>
+  </div>
+
   <!-- OVERVIEW -->
   <div class="section-block" id="section-overview">
     <div class="section-label">OVERVIEW</div>
@@ -182,6 +212,19 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <img src="diagram-platform.png" alt="Zscaler Data Security Platform showing Secure Cloud Data (DSPM), Secure Endpoint Data, and Secure Unmanaged Devices highlighted" class="diagram-img">
       <div class="diagram-caption">Zscaler Data Security Platform — this lesson covers Secure Cloud Data (DSPM), Secure Endpoint Data, and Secure Unmanaged Devices (Browser Isolation)</div>
     </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">ANALOGY</div>
+      <div class="analogy-text">Inline web traffic is the front door of an office building. Cloud, endpoint, and BYOD are the loading dock, the employees' briefcases, and the visitors' phones. A guard at the front door — no matter how diligent — never sees those three. You need cameras in all four places, or you don't have security; you have a checkpoint.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">◆</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Three vectors, one policy fabric: DSPM for cloud-at-rest, Endpoint DLP for the device, Browser Isolation + PRA for the unmanaged.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -189,6 +232,16 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
       <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
     </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">◆</span><span class="socratic-label">BEFORE YOU READ — SANCTIONED VS SHADOW CLOUD</span></div>
+    <div class="socratic-insight">Cloud storage is the easiest infrastructure in history to provision — a developer with a corporate credit card can spin up an S3 bucket in 90 seconds, and a marketing team can copy a customer database into a "temporary" Snowflake instance before lunch. The data is still yours, the liability is still yours, but the visibility is not. DSPM exists because nobody knows what they have until something asks five specific questions about it.</div>
+    <ul class="socratic-questions">
+      <li>If someone asked you right now where every copy of your customer PII lives across AWS, Azure, and GCP — could you answer in under a week?</li>
+      <li>A bucket created by an engineer last quarter, with public read access, holding a CSV of test data that turned out to be production — how would you discover it before an attacker does?</li>
+      <li>What's the difference between knowing data exists and knowing whether it is exposed?</li>
+    </ul>
   </div>
 
   <!-- SECURE CLOUD DATA -->
@@ -223,6 +276,24 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">★</div>DSPM KEY CAPABILITIES</div>
       <div class="callout-body">DSPM provides: Data Discovery (identify sensitive data across cloud), Posture Control (find misconfigurations &amp; vulnerabilities), and Actionable Insights (correlate, prioritise, auto-remediate). It also offers a geographical data breakdown — showing the types and volume of data stored in each location.</div>
     </div>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">IMAGE PROMPT</div>
+      <div class="img-gen-prompt">Editorial illustration in amber and warm cream tones: a vast warehouse with countless unmarked crates stretching to the horizon. A figure in the foreground holds a glowing amber lantern, illuminating crates that reveal labels — "PII", "PCI", "PUBLIC", "EXPOSED". The unlit crates remain dark and anonymous. Caption mood: discovery before defense.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">ANALOGY</div>
+      <div class="analogy-text">DSPM is the home inspector for your cloud. The Scanner walks every room with a clipboard — "What's in this closet? Who has a key? Is the window unlocked?" The Orchestrator is the contractor who follows behind: locking the windows, changing the keys, and writing the report. Without both, you have either a list of problems no one fixes, or fixes applied to problems no one mapped.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">◆</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Five questions in order: Where → What → Who → Exposed? → Posture. Metadata never leaves the customer environment.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -230,6 +301,16 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-cloud" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('cloud','Secure Cloud Data')">Add Question</button></div></div>
       <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-cloud" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-cloud"></span></div></div>
     </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">◆</span><span class="socratic-label">BEFORE YOU READ — THE DEVICE IS ALSO A DESTINATION</span></div>
+    <div class="socratic-insight">A laptop on an airplane has no network. A user dragging a customer list onto a USB stick generates no proxy log. Most DLP conversations focus on data leaving the network — but the device itself is often the final stop. Printing, USB transfer, screenshots, drag-and-drop to a personal Dropbox tab — these are local acts that need local enforcement. And when you do catch the user, the question isn't always "block them" — sometimes it's "ask them why."</div>
+    <ul class="socratic-questions">
+      <li>If your DLP only worked when the user was on the corporate network, what happens at the coffee shop?</li>
+      <li>A user uploads a sensitive file to personal Google Drive — they may be exfiltrating, or they may be working over the weekend. How do you tell the difference without slowing both down?</li>
+      <li>Is a hard block always the right answer, or does a justified soft-block sometimes produce better outcomes — for security AND productivity?</li>
+    </ul>
   </div>
 
   <!-- SECURE ENDPOINT DATA -->
@@ -259,6 +340,24 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">★</div>EXAM POINT</div>
       <div class="callout-body">The rule name <strong>"Block sensitive data to the cloud"</strong> is set to protect personal cloud storage — e.g., blocking uploads to personal Google Drive, Dropbox, or OneDrive while allowing uploads to corporate accounts. This is a named rule that appears in the Endpoint DLP policy configuration.</div>
     </div>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">IMAGE PROMPT</div>
+      <div class="img-gen-prompt">Editorial illustration in amber and warm cream: a person at a laptop is mid-action — about to drag a glowing amber document toward a cloud labeled "Personal Drive." A translucent amber dialog box hovers in front of the screen asking "Why?" rather than a red STOP sign. The mood is dialogue, not denial.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">ANALOGY</div>
+      <div class="analogy-text">User Confirmation is the librarian who lets you check out the rare book — but only after you sign your name and say what you need it for. A hard block is the locked cage. Both protect the book, but only one tells you who wanted it, why, and how often. Over time, the signatures teach you more about your library than the cage ever could.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">◆</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Endpoint DLP triggers through the Client Connector — incidents log even offline. User Confirmation = soft block, justification allows the action.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -266,6 +365,16 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-endpoint" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('endpoint','Secure Endpoint Data')">Add Question</button></div></div>
       <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-endpoint" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-endpoint"></span></div></div>
     </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">◆</span><span class="socratic-label">BEFORE YOU READ — HIDDEN DATA ON A DEVICE YOU DON'T OWN</span></div>
+    <div class="socratic-insight">A contractor logs into your CRM from their personal MacBook. They view a customer record. Now ask: where did that record actually go? Pixels on a screen, sure — but also browser cache, OS-level screenshot service, autofill memory, maybe a synced clipboard on their phone, possibly a backup to their personal iCloud. You did not authorise any of that, and yet all of it just happened. Installing an agent on the device is not an option — they own it, not you.</div>
+    <ul class="socratic-questions">
+      <li>If a user can see data on their screen, what mechanisms exist to prevent that data from being copied, screenshotted, downloaded, or cached locally — when you don't control the device?</li>
+      <li>Traditional VDI solves this by streaming pixels — but at what cost in dollars, latency, and operational complexity? Is there a lighter path?</li>
+      <li>What's the difference between a web app (which fits in a browser) and a thick-client app (which doesn't) — and why does that distinction matter for BYOD security?</li>
+    </ul>
   </div>
 
   <!-- BYOD -->
@@ -303,6 +412,24 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>ZIA and ZPA direct traffic for SaaS and private apps respectively, even from unmanaged devices</li>
       <li>The dual approach achieves VDI-like controls in a cost-effective, agile, and scalable manner</li>
     </ul>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">IMAGE PROMPT</div>
+      <div class="img-gen-prompt">Editorial illustration in amber and cream: a personal laptop sits open on a kitchen table. On its screen, a glowing amber bubble contains a small office scene — files, charts, an app — but the bubble is sealed off from the laptop's keyboard, clipboard, and download folder by a faint amber boundary. The data is visible but untouchable. Mood: containment without weight.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">ANALOGY</div>
+      <div class="analogy-text">Browser Isolation is the museum glass case. You can see the artifact, walk around it, photograph the placard — but you cannot touch it, pocket it, or take it home. PRA is the same idea for the back rooms — RDP and SSH conducted through a glass corridor that ends before it reaches the visitor's hands. VDI tried to do this by handing visitors hazmat suits. The new approach is just to put the artifact behind glass.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">◆</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Browser Isolation covers web/SaaS; PRA covers RDP/SSH. Thick clients remain N/A. Both are agentless — no install on the unmanaged device.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -310,6 +437,16 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-byod" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('byod','Secure BYOD')">Add Question</button></div></div>
       <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-byod" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-byod"></span></div></div>
     </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">◆</span><span class="socratic-label">BEFORE THE CHECK — TEST YOURSELF FIRST</span></div>
+    <div class="socratic-insight">Before you read the multiple choice — answer in your own words. If a user triggers a soft-block and justifies the action, what happens? Is the "Block sensitive data to the cloud" rule about corporate cloud or personal cloud? Does DSPM tell you only what data exists, or also where in the world it lives? Frame your own answers, then check them against the options.</div>
+    <ul class="socratic-questions">
+      <li>If a user justifies a DLP-triggered print job, is the print allowed or blocked by default?</li>
+      <li>Is the "Block sensitive data to the cloud" rule aimed at corporate Drive/OneDrive accounts, or at personal ones?</li>
+      <li>Does DSPM expose geographical distribution of data, or only the types of data discovered?</li>
+    </ul>
   </div>
 
   <!-- KNOWLEDGE CHECK -->

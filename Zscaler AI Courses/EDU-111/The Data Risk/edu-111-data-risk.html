@@ -176,6 +176,47 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
 .mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 
+/* SOCRATIC COACHING */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--amber);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted,#9a7c30);}
+.socratic-insight{font-size:13px;color:var(--text-soft,#3d2e08);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim,var(--border));line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--amber);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(180,83,9,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--amber);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.gap-row,.shadow-grid,.lesson-tools-grid{grid-template-columns:1fr;}.gap-col+.gap-col{border-left:none;border-top:1px solid var(--border);}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -221,6 +262,28 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <div class="main-content">
 
   <!-- THE CHALLENGE -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · WHY THE OLD CONTROLS GO QUIET</span></div>
+    <p class="socratic-insight">Imagine a senior analyst pasting a customer list into a chatbot on her lunch break. No file leaves the laptop. No alert fires. The DLP dashboard stays green. The data is already gone — and the tools that were supposed to stop this never noticed it happen.</p>
+    <ul class="socratic-questions">
+      <li>If pasted text is not a file, what exactly is your DLP scanning for — and what is it missing every day?</li>
+      <li>When an employee opens ChatGPT in a personal browser tab, which corporate identity control gets a chance to see the request?</li>
+      <li>Why does an absence of malicious intent make this risk harder to govern, not easier?</li>
+    </ul>
+    <div class="answer-area" data-section="challenge">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">DLP is scanning for file objects — attachments, uploads, named documents leaving managed endpoints — and for keyword or fingerprint matches inside those files. What it misses every day is the clipboard channel: a copy-paste into a browser-based AI prompt that never instantiates as a file, never traverses an inspected egress path, and therefore never triggers a rule. The sensitive content moves as ephemeral text inside an HTTPS session.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Effectively none. Personal-account access to a consumer AI tool bypasses SSO entirely, so corporate identity providers, conditional access policies, and access logs never see the session. The only thing the corporate stack registers is encrypted egress to a permitted SaaS domain — which looks identical to legitimate consumer traffic.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Insider-threat programs are designed to detect signals of intent: unusual hours, mass downloads, exfiltration patterns. A well-meaning employee pasting a customer list to "summarise it faster" produces no anomaly to flag. The behaviour looks productive, the user remains compliant in spirit, and governance has nothing to escalate — which is precisely why it scales invisibly.</div></div>
+      </div>
+    </div>
+  </div>
+
   <div class="section-block" id="section-challenge">
     <div class="section-label">THE CHALLENGE</div>
     <h2>Why traditional security wasn't built for AI</h2>
@@ -237,6 +300,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">!</div>THE GOVERNANCE GAP</div>
       <div class="callout-body">Most employees regularly use public GenAI tools for work tasks. Very few organisations have formal AI security policies in place. A significant gap exists between AI adoption speed and governance readiness. The risk does not require malicious intent — it requires only that someone pastes the wrong thing into the wrong tool on an ordinary Tuesday afternoon.</div>
     </div>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat amber minimalist illustration of a glass office building at night where employees at desks have softly glowing speech bubbles floating up through the ceiling, drifting past a watchful security guard who is looking only at the front door — warm amber and cream palette, no text labels</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">A bank built every wall, vault and alarm to stop intruders carrying gold out of the front door. AI is the moment a teller starts photographing the ledger and emailing the pictures from her phone — same building, same locks, but the value is now leaving in a form the architecture was never asked to watch.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">The AI data risk is structural, not malicious. Controls did not break — the assumptions underneath them did. Expect exam questions framed around "well-intentioned employee on an ordinary day," not insider threats.</div>
+      </div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -246,6 +326,28 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- THE THREE GAPS -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · THREE BLIND SPOTS WORKING AS DESIGNED</span></div>
+    <p class="socratic-insight">Three controls that have protected enterprise data for two decades — DLP, identity, and the firewall — all share one quiet assumption: that data moves as a file, through a managed account, over inspectable traffic. AI quietly violates every one of those assumptions, and the controls keep reporting green.</p>
+    <ul class="socratic-questions">
+      <li>If a customer list is pasted into a prompt and never saved as a file, which signal would your DLP need that it does not currently collect?</li>
+      <li>What does your SSO log look like when an engineer signs in to a public AI tool with a personal Gmail account on a corporate laptop?</li>
+      <li>Your firewall sees the destination of an AI request — but what is sitting inside that TLS tunnel that it cannot read?</li>
+    </ul>
+    <div class="answer-area" data-section="gaps">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">DLP would need browser-level visibility — instrumentation that inspects the contents of paste events and outbound POST bodies destined for AI services, then matches them against the same classifiers used on files. Without an inline AI-aware proxy or endpoint browser agent, no signal is collected because the data never crystallises as a file artifact. This is the Clipboard Gap in one sentence.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">The SSO log shows nothing. The engineer never authenticated through corporate identity — they used a private credential against a consumer tenant, so the IdP has no event to record. You will only see the corporate device's network egress, not the user, not the session, not the action. That is the Identity Gap: no audit trail, no enforcement point.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Inside the tunnel is the prompt itself — potentially proprietary source code, customer PII, contract terms, M&A figures, regulated health or payment data. The firewall reads only the SNI or destination URL; the payload is opaque without TLS inspection plus AI-content classification. That blind interior is the Encryption Gap.</div></div>
+      </div>
+    </div>
+  </div>
+
   <div class="section-block" id="section-gaps">
     <div class="section-label">THE THREE GAPS</div>
     <h2>Why traditional security controls fail against AI</h2>
@@ -288,6 +390,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">★</div>THE KEY INSIGHT</div>
       <div class="callout-body">Three blind spots. Each one invisible to tools that are working exactly as designed. AI has not broken the controls — it has changed the assumptions those controls were built on.</div>
     </div>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat amber minimalist illustration of three security cameras mounted on a wall, each looking confidently in one direction — but the data is flowing through three glowing keyholes between them, perfectly in the cameras' blind spots, warm amber and cream palette, no text labels</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">It's like a museum that installed motion sensors, fingerprint locks, and metal detectors — then hung an open window in the gift shop. Every legacy control is doing exactly what it was designed for. The window is simply somewhere nobody thought to watch.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Memorise the three gaps by what they cannot see: Clipboard = no file, Identity = no corporate account, Encryption = no readable payload. If an exam scenario describes one of these blind conditions, name the matching gap.</div>
+      </div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -297,6 +416,28 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- WHAT ARE WE RISKING -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · WHAT YOU'RE ACTUALLY HANDING OVER</span></div>
+    <p class="socratic-insight">Three categories of harm — data leakage, IP exposure, compliance violation — none of them require a bad actor. Each one begins with a helpful employee, a public prompt box, and a sentence that sounded harmless until it left the laptop.</p>
+    <ul class="socratic-questions">
+      <li>Once a customer record is in a public AI provider's training pipeline, what mechanism exists for your organisation to recall it?</li>
+      <li>If a developer pastes proprietary pricing logic to "optimise this code," how would you ever know that competitive advantage had left the building?</li>
+      <li>Under GDPR or HIPAA, does the regulator care whether the employee meant to breach policy — or only that regulated data crossed an unapproved boundary?</li>
+    </ul>
+    <div class="answer-area" data-section="risks">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">None that is contractually or technically reliable. Consumer AI providers do not generally accept third-party data subject deletion requests for inputs already absorbed into a training corpus, and even where retention controls exist, the organisation has no audit visibility to prove deletion. The pragmatic assumption is that submission equals permanent loss of control — there is no recall slip.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">In most enterprises today, you would not know — and that is the point. Without inline AI inspection, the paste leaves no log, no DLP event, no SSO record. The IP loss only surfaces later, sometimes years later, when a competitor ships something suspiciously similar or a model's outputs to other users start echoing your proprietary patterns. By then, attribution is impossible.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">The regulator cares about the act, not the intent. Under GDPR, processing personal data on an unapproved processor without a lawful basis or DPA is a violation regardless of motive; under HIPAA, disclosing PHI to a non-BAA vendor is a breach. The employee's good intentions are mitigation at best — they do not erase the regulatory event of submission.</div></div>
+      </div>
+    </div>
+  </div>
+
   <div class="section-block" id="section-risks">
     <div class="section-label">WHAT ARE WE RISKING</div>
     <h2>Three categories of real data risk</h2>
@@ -331,6 +472,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         "Translate this patient record to Spanish: Patient: Maria Garcia, DOB: 04/15/1978..."
       </div>
     </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Submitting sensitive data to a public AI tool is like dropping a confidential file into a public photocopier you do not own, in a lobby you cannot enter, run by a company that never signed your NDA. There is no recall slip. The copies that already printed are someone else's now.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Three risks, three keywords: Leakage = PII / customer data; IP = code, pricing, strategy; Compliance = regulated data under GDPR / HIPAA / PCI-DSS. Intent is irrelevant for compliance — submission is the violation.</div>
+      </div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -340,6 +493,28 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- SHADOW AI -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · THE 90% YOU CANNOT SEE</span></div>
+    <p class="socratic-insight">For every AI tool your security team has approved, roughly nine others are already running in your environment — opened in personal browser tabs, signed in with private email addresses, leaving no logs behind. The sanctioned tools are the tip; the iceberg is doing the work.</p>
+    <ul class="socratic-questions">
+      <li>If asked today, could your IT team produce a list of every AI tool actually being used across your workforce — or only the ones they approved?</li>
+      <li>What does "audit trail" mean when an employee logs in to an AI service through a personal account on a personal device?</li>
+      <li>Why is the speed of Shadow AI adoption faster and harder to detect than the Shadow IT wave that preceded it?</li>
+    </ul>
+    <div class="answer-area" data-section="shadow">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Most IT teams can only produce the sanctioned list — the roughly 10% they procured and onboarded. The remaining ~90% lives in personal browser tabs, browser extensions, mobile apps, and BYO accounts that never touched a procurement workflow. Discovering it requires inline AI-aware traffic inspection and shadow IT analytics, not asset databases.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Effectively nothing. There is no corporate identity in the transaction, no enterprise log of session start, and no record of what was submitted. The "audit trail" exists only inside the AI provider's consumer tenant, accessible to the individual user — not the organisation whose data may have crossed the wire. From a governance standpoint, the event is silent.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Shadow IT historically required provisioning a service, sharing credentials, and often expensing a subscription — friction that created discoverable signals. Shadow AI requires a browser tab and a free account; there is no procurement footprint, no spend anomaly, no shared workspace. Add genuine productivity gains and natural-language interfaces that anyone can use, and adoption outruns governance by months, not quarters.</div></div>
+      </div>
+    </div>
+  </div>
+
   <div class="section-block" id="section-shadow">
     <div class="section-label">SHADOW AI</div>
     <h2>The AI your security team cannot see</h2>
@@ -374,6 +549,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">!</div>THE SCALE OF THE PROBLEM</div>
       <div class="callout-body">The approved tools are a small fraction of what is actually running. The majority of enterprise AI activity is happening outside the security team's line of sight. Every piece of data submitted through a Shadow AI tool is data the organisation has lost control of — without knowing it happened.</div>
     </div>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat amber minimalist illustration of an iceberg viewed from the side, the small tip above water lit warmly and labelled-looking but with no text, while the enormous mass below water is filled with faint shapes of chat bubbles and laptop silhouettes — warm amber and cream palette, no text labels</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Sanctioned AI is the lit corridor of the office at night. Shadow AI is the entire rest of the building, where lights are flicking on and off through doors you didn't realise existed — and the security desk is only watching the one corridor.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Sanctioned ≈ 10% (approved, logged, governed). Shadow ≈ 90% (personal accounts, no logging, unknown data terms). Lock that split — it is a high-probability exam recall question.</div>
+      </div>
+    </div>
   </div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
@@ -383,6 +575,28 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- HALLUCINATION -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · CONFIDENT, FLUENT, AND WRONG</span></div>
+    <p class="socratic-insight">The model is not lying when it hallucinates — it is doing exactly what it was built to do: predict the next plausible token. The danger is not that the output is wrong. The danger is that it sounds so right that a smart professional forgets to check.</p>
+    <ul class="socratic-questions">
+      <li>If a tool predicts language rather than retrieves facts, what is the meaningful difference between "an accurate answer" and "an answer that reads like an accurate one"?</li>
+      <li>Which AI outputs in your workflow get acted on, shared, or submitted without an independent verification step?</li>
+      <li>If hallucination is structural to how LLMs work, what kind of control closes the gap — better models, or better governance?</li>
+    </ul>
+    <div class="answer-area" data-section="hallucination">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">An accurate answer is grounded in a verifiable source; a fluent answer is grounded in token probability. The LLM optimises for the latter and cannot, by architecture, distinguish between them. The meaningful difference is epistemic: one is true, the other is statistically average — and only external verification can tell which one you are holding.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Honest answer: more than most teams realise. Drafted emails, client-facing summaries, legal citations, code suggestions, research write-ups, and exec briefings frequently move downstream after only a casual glance. Any output that influences a decision or leaves the building should be on a verification checklist — and most workflows do not have one yet.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Governance. Better models reduce hallucination rates but cannot eliminate them because next-token prediction has no built-in truth function. The durable control is process: human-in-the-loop verification, source-grounded retrieval, citation requirements, and policy banning unverified AI output in regulated artefacts. The fix lives in the workflow, not the weights.</div></div>
+      </div>
+    </div>
+  </div>
+
   <div class="section-block" id="section-hallucination">
     <div class="section-label">WHEN AI MAKES THINGS UP</div>
     <h2>Hallucination — the governance risk hiding in plain sight</h2>
@@ -415,6 +629,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="callout callout-tip">
       <div class="callout-header"><div class="callout-icon">→</div>WHERE THIS LEADS</div>
       <div class="callout-body">You now understand the three security gaps AI creates, the three categories of data risk, what Shadow AI means at enterprise scale, and why hallucination is a governance problem. The next lesson introduces the Zscaler framework that addresses all of these systematically.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">An LLM is the colleague who never says "I don't know." Ask for a citation it doesn't have and it will invent one, formatted perfectly, with a confident smile. You wouldn't sign a legal filing based on that colleague's word alone — and the AI is exactly the same colleague, just faster.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Hallucination is not a bug awaiting a patch — it is a structural property of token prediction. The exam-correct control is verification and governance, not "wait for better AI." Every output that will be acted upon must be independently verified.</div>
+      </div>
     </div>
   </div>
   <div class="lesson-tools">
@@ -488,6 +714,9 @@ function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));r
 function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
 function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem('edu111dr-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem('edu111dr-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
 document.addEventListener('DOMContentLoaded',()=>{renderQPanel();initNotes();if(localStorage.getItem('edu111dr-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}});
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
 </script>
 </body>
 </html>

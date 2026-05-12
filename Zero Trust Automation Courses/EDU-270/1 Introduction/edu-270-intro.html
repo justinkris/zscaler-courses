@@ -151,6 +151,54 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .quick-ref-term{font-size:11px;font-weight:600;color:#60a5fa;letter-spacing:0.06em;margin-bottom:4px;}
 .quick-ref-def{font-size:12px;color:#7aa8cc;line-height:1.6;}
 .sidebar-note{background:var(--blue-glow);border:1px solid var(--blue-dim);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text-soft);line-height:1.6;margin-bottom:10px;}
+/* SOCRATIC COACHING */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+/* MENTAL NOTES & ANALOGIES */
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--blue-glow);border:1px solid var(--blue-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2);border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -198,6 +246,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <div class="main-content">
 
   <!-- COURSE OVERVIEW -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · COURSE OVERVIEW</span></div>
+  <p class="socratic-insight">You're about to learn how to automate security policies across an enterprise. Before diving in, think about what "automation" really means in an IT security context — and what the risks are when the same script can change a policy across 1,000 sites simultaneously.</p>
+  <ul class="socratic-questions">
+    <li>If a script could push a policy change to every branch site in seconds, what happens if that policy has an error — and how is that different from making one manual change at a time?</li>
+    <li>What's the difference between a tool that helps you make changes faster versus one that helps you make changes correctly and consistently?</li>
+    <li>Why do you think APIs need to follow standards (like REST) rather than each vendor building their own bespoke interface — what would integration look like without standards?</li>
+  </ul>
+  <div class="answer-area" data-section="overview">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The "blast radius" of an automated change is fundamentally different from a manual one — a single bad script can corrupt policy on 1,000 sites in seconds, whereas manual changes have natural friction that lets you catch errors after the first or second site. This is why production automation must include staged rollouts, dry-run modes, and rollback plans; the speed advantage of APIs is also the speed at which mistakes propagate. Treat every script run as a deployment event, not a routine config tweak.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Speed and correctness are different problems. A tool that's just faster can replicate a flawed configuration 100 times; a tool that enforces consistency uses templates, version control, and validation to make sure every site ends up with the same intended state. APIs combined with JSON templates and CI/CD pipelines lean toward the second kind — they're not just typing faster, they're encoding intent so the result is deterministic.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Without standards like REST, every vendor would invent custom verbs, custom data formats, and custom auth schemes, forcing developers to relearn fundamentals for each product — integration would resemble the pre-USB world where every device needed its own cable. REST gives us a shared vocabulary (GET/POST/PUT/DELETE, status codes, JSON) so a developer fluent in one RESTful API can productively consume any other within hours. This is exactly the leverage OneAPI exploits across ZIA, ZPA, ZDX, and Client Connector.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-overview">
     <div class="section-label">COURSE OVERVIEW</div>
     <h2>EDU-270: Zero Trust Automation</h2>
@@ -241,6 +310,13 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>Discuss the necessary troubleshooting steps and best practices for using OneAPI</li>
     </ul>
   </div>
+  <div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">This course has one thread: APIs are the language → ZIdentity + OneAPI are the infrastructure → Architecture shows how it connects → Troubleshooting shows how to fix it. Each section builds on the last.</div>
+  </div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Course Overview')">Add Question</button></div></div>
@@ -249,6 +325,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- WHAT IS AN API -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · WHAT IS AN API</span></div>
+  <p class="socratic-insight">Every day you use dozens of APIs without thinking about it — when your phone shows weather, when you pay with Apple Pay, when you share a post. Think about the structure of those interactions before we define them formally.</p>
+  <ul class="socratic-questions">
+    <li>In the 'waiter' analogy, the waiter takes your order to the kitchen. But who decides the menu of what's available to order — and how does that map to an API?</li>
+    <li>What is the minimum information a server needs to know before it can respond to an API request? Think about it like receiving a letter — what must be on the envelope?</li>
+    <li>If a public API gets overloaded with millions of requests, what might the server return — and what should the client do with that response?</li>
+  </ul>
+  <div class="answer-area" data-section="api-fundamentals">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The "menu" is the API specification — the documented set of endpoints, methods, and parameters the server is willing to accept. The waiter (API) can only relay what the kitchen (backend) has been told to support, which is why API documentation and OpenAPI/Swagger specs matter so much. If you ask for something not on the menu, you get a 404 or 400 — not a custom dish.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">At minimum the server needs: WHO (identity/auth, typically a Bearer token in the Authorization header), WHERE (the endpoint URL identifying the resource), WHAT (the HTTP method specifying the operation), and HOW (the request body and content type for POST/PUT). Without any of these the request fails — much like a letter missing a recipient address or stamp cannot be delivered. This is the four-part mental model worth committing to memory.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">An overloaded API typically returns a 429 Too Many Requests (or 503 Service Unavailable), often with a Retry-After header indicating when to try again. A well-behaved client should not retry immediately in a tight loop — it should back off exponentially, respect the Retry-After value, and queue work rather than hammer the server. Zscaler's per-method rate limits in OneAPI exist precisely so clients learn to design with these constraints in mind.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-api">
     <div class="section-label">WHAT IS AN API</div>
     <h2>API Fundamentals</h2>
@@ -319,6 +416,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="diagram-caption">Private APIs (internal use) vs. Public APIs (external access) — both types are used within the Zscaler ecosystem</div>
     </div>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">Making an API call is exactly like ordering at a drive-through. You pull up to the window (endpoint), tell them what you want (GET/POST), they verify your payment (auth header), and hand you back the food (JSON response). The kitchen never talks to you directly — just like the database never talks to your browser directly.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">Every API call = 4 parts: WHO you are (Authorization header), WHERE you're sending it (endpoint URL), WHAT you want (HTTP method), WHAT data you're sending (request body). Miss any one of these and the request fails.</div>
+  </div>
+</div>
+<div class="img-display-block">
+  <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+  <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+  <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+  <div class="prompt-content" hidden>[Generate: flat blue illustration of a drive-through fast food window — a car on the left (API client), a cashier at the window (API endpoint), a kitchen visible behind (database/server), a food bag being handed over (JSON response), clean arrows showing the request/response flow, minimalist, no text labels]</div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-api" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('api','What is an API')">Add Question</button></div></div>
@@ -327,6 +441,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- RESTFUL APIS -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · RESTFUL APIS</span></div>
+  <p class="socratic-insight">"Stateless" is one of the core REST principles — and one of the hardest to fully grasp. Think about what "state" means in a conversation, and what it would mean for an API to have zero memory between calls.</p>
+  <ul class="socratic-questions">
+    <li>If a REST API is stateless and remembers nothing between requests, how does it know you're still authenticated on your second API call — given it has no memory of the first?</li>
+    <li>"Layered system" means the client doesn't know if it's talking to the actual server or a proxy in between. Why is this an advantage rather than a problem — what does the client gain from not knowing?</li>
+    <li>Caching GET responses improves performance — but what kind of data would be dangerous to cache, and why?</li>
+  </ul>
+  <div class="answer-area" data-section="restful">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">"Stateless" means the server keeps no per-client memory between calls — so every request must carry its own proof of identity. That's exactly why the Bearer token (or API key) is included in the Authorization header of every single request, not just the first one. The token itself is the state; the client carries it around so the server doesn't have to remember anything about the session.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">The client benefits from layering because the architecture behind the endpoint can evolve — load balancers, caches, gateways like OneAPI, even backend re-platforming — without breaking client code. If the client knew it was talking to a specific server, every infrastructure change would require client updates. Hiding the intermediaries is what lets Zscaler add capacity, route through OneAPI, or swap implementations transparently.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Anything personalized, security-sensitive, or rapidly changing is dangerous to cache: per-user policy results, real-time threat telemetry, authentication tokens, or session-specific data. If a shared cache serves stale or another user's data you get both a correctness and a security incident. The safe pattern is to cache only what is genuinely public and stable, and to use cache-control headers and short TTLs for everything else.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-restful">
     <div class="section-label">RESTFUL APIs</div>
     <h2>RESTful API Principles</h2>
@@ -360,6 +495,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">Because all Zscaler APIs follow RESTful principles through OneAPI, a developer only needs to learn one pattern. The same request structure, authentication approach, and response format works across ZIA, ZPA, ZDX, and Client Connector APIs.</div>
     </div>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">A stateless API is like a vending machine. Every time you interact with it, you insert money and select your item — it doesn't care that you used it yesterday. It gives you no loyalty discount. Each interaction is completely self-contained. That's why every API call includes the Bearer token: the vending machine needs your coins every single time.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">5 REST principles: Stateless (every request self-contained), Client-Server (separated concerns), Cacheable (GET responses can be cached), Uniform Interface (consistent patterns), Layered System (client doesn't see intermediaries). Stateless is why the Bearer token goes in EVERY request header.</div>
+  </div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-restful" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('restful','RESTful APIs')">Add Question</button></div></div>
@@ -368,6 +514,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- HTTP METHODS -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · HTTP METHODS</span></div>
+  <p class="socratic-insight">Four HTTP methods — GET, POST, PUT, DELETE — but their rate limits are dramatically different. DELETE gets 4 requests per hour. GET gets 4,000. Before reading, think about why Zscaler would make DELETE 1,000x more restrictive than GET.</p>
+  <ul class="socratic-questions">
+    <li>Why is it important that GET is "read-only" and cannot change data — what problem would occur if a read operation had side effects?</li>
+    <li>DELETE is limited to 4 requests per hour — that seems extremely conservative. Under what real scenario would someone need to make more than 4 DELETE calls per hour, and why might Zscaler want to slow that down?</li>
+    <li>PUT updates an entire resource — if you only want to change one field, what must your request body contain, and why might that be a problem?</li>
+  </ul>
+  <div class="answer-area" data-section="methods">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">In REST, GET is defined as "safe" and "idempotent" — calling it any number of times should not change server state. This matters because intermediaries (browsers, proxies, OneAPI gateway, monitoring tools) freely retry, prefetch, and cache GETs. If GET had side effects, simply refreshing a page or a probe by a monitoring system could accidentally create, update, or delete data. Reserving mutation strictly for POST/PUT/DELETE keeps the system predictable.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">DELETE is permanent and almost impossible to undo at the API layer, so legitimate bulk-delete scenarios — like cleaning up stale user objects or removing policy rules — are rare and should be deliberate. A loop that DELETEs hundreds of items per minute is far more often a runaway script or a credential leak than a real workflow. The aggressive limit (4/hr) is a safety throttle: it forces engineers to batch through alternate workflows or open a case, and it caps the damage from an attacker who steals a token.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">PUT is a full replacement, so your body must contain the entire object including the unchanged fields — not just the field you care about. The problem is twofold: you must first GET the current object to avoid wiping fields you didn't touch, and you risk a race condition if someone else updates the resource between your GET and your PUT. This is why PATCH (partial update) exists in some APIs, and why "GET then PUT" patterns should use ETags/version numbers to detect conflicts.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-methods">
     <div class="section-label">HTTP METHODS</div>
     <h2>HTTP Methods &amp; Request Structure</h2>
@@ -415,6 +582,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="diagram-caption">API request structure showing endpoint, method, headers, and JSON body components</div>
     </div>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">HTTP methods are like library privileges. GET = browse any book freely (unlimited). POST = add a new book to the catalog (requires work, some daily limit). PUT = replace a book with a revised edition (moderate restriction). DELETE = permanently remove a book from existence forever (very restricted — hard to undo, requires approval).</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">CRUD maps to HTTP: Create=POST, Read=GET, Update=PUT, Delete=DELETE. Rate limits reflect irreversibility: GET (read-only, reversible) = 2/sec, 4,000/hr. POST/PUT = 1/sec, 400/hr. DELETE (permanent) = 1/min, 4/hr. The more irreversible the action, the tighter the limit.</div>
+  </div>
+</div>
+<div class="img-display-block">
+  <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+  <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+  <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+  <div class="prompt-content" hidden>[Generate: flat blue 2x2 grid of HTTP method cards: GET (light blue, magnifying glass icon), POST (green, plus icon), PUT (amber, pencil icon), DELETE (red, trash can icon) — each card shows the method name as a badge and a rate limit indicator bar, clean minimalist, no text labels]</div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-methods" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('methods','HTTP Methods')">Add Question</button></div></div>
@@ -423,6 +607,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- WHY APIs MATTER -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · WHY APIS MATTER</span></div>
+  <p class="socratic-insight">Imagine an enterprise with 100 branch sites, 50,000 users, and a security team of 10 people. A new threat emerges and every site needs a policy update. Without APIs — just manual portal clicks — think through the math of what "fast response" actually means.</p>
+  <ul class="socratic-questions">
+    <li>If updating a URL filtering policy manually takes 5 minutes and you have 100 sites, how long does the full rollout take — and what's the risk of inconsistency between the sites updated first versus last?</li>
+    <li>"Reduced human error" is one of the automation benefits. But automation scripts can also have bugs. What practices would make an automation script more reliable than manual configuration?</li>
+    <li>"Faster threat response" is only valuable if the automation is triggered quickly. What needs to be in place for a new threat indicator to automatically block traffic within minutes of discovery?</li>
+  </ul>
+  <div class="answer-area" data-section="why-apis">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">At 5 minutes per site times 100 sites you are looking at roughly 8.3 hours of pure click time — and in practice much longer once you account for context switching, breaks, and verification. The bigger risk is the window of inconsistency: for most of that day, the first sites updated are protected while the last sites still carry the old policy, leaving an exploitable gap. APIs collapse the window from hours to seconds and make the change atomic across the fleet.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Reliability comes from engineering discipline applied to scripts: version control, peer review, automated tests, dry-run/preview modes, idempotency, structured logging, and staged rollouts (canary → batch → full). A script that has been reviewed, tested in a sandbox tenant, and rolled out to 1 site before 1,000 is far safer than a human clicking through the UI under deadline pressure. Manual work fails silently; automation can be designed to fail loudly and rollback automatically.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">You need a full detection-to-response pipeline: a trusted threat-intelligence source emitting IOCs, a SIEM or SOAR system that ingests and validates them, integration credentials (ZIdentity OAuth tokens) with appropriate scopes, a documented playbook describing exactly which Zscaler API calls to make, and guardrails like allowlists and approval thresholds to prevent false positives from blocking legitimate traffic. Speed without these controls turns an automation win into an outage.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-why">
     <div class="section-label">WHY APIS MATTER</div>
     <h2>Why APIs Power Zero Trust Automation</h2>
@@ -456,6 +661,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">Zscaler's goal is to empower enterprises to rapidly adopt Zero Trust Architecture. Key benefits of this automation approach include: Improved Security Posture, Streamlined Processes, Better ROI, Reduced Human Error, Faster Threat Response, and Enhanced Visibility and Control.</div>
     </div>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">APIs in security operations are like assembly lines in manufacturing. A skilled worker can hand-craft one product at a time with great care. An assembly line produces thousands per hour with consistent quality. You don't replace the skilled worker — you let them design and oversee the line instead of running it manually. The security team becomes the architects, not the operators.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">5 reasons APIs matter for Zero Trust Automation — memorize all five: Integration (connect ZIA/ZPA to SIEM/ITSM), Automation (replace repetitive policy tasks), Monitoring (pull real-time telemetry), Authentication (ZIdentity OAuth tokens), Developer Engagement (partners build on Zscaler platform).</div>
+  </div>
+</div>
+<div class="img-display-block">
+  <img src="3.png" alt="Diagram 3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+  <div class="img-missing-msg" style="display:none;">📷 <strong>3.png</strong> will appear here once you add it to this folder</div>
+  <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+  <div class="prompt-content" hidden>[Generate: flat blue horizontal automation pipeline illustration — a human icon pressing a button on the left, then an API server icon in the middle, then branching arrows pointing to 5 different service icons (SIEM, ITSM, threat feed, monitoring, policy manager) on the right — connected by a smooth pipeline, minimalist, no text labels]</div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-why" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('why','Why APIs Matter')">Add Question</button></div></div>
@@ -523,6 +745,10 @@ function renderQPanel(){const qs=getQuestions();const count=document.getElementB
 function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
 function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
 document.addEventListener('DOMContentLoaded',()=>{renderQPanel();initNotes();initChecks();if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}});
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>

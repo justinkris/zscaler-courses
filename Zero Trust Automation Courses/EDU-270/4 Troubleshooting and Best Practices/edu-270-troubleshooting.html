@@ -142,6 +142,54 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .quick-ref{background:#1c1204;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
 .quick-ref-term{font-size:11px;font-weight:600;color:#fbbf24;letter-spacing:0.06em;margin-bottom:4px;}
 .quick-ref-def{font-size:12px;color:#c0a060;line-height:1.6;}
+/* SOCRATIC COACHING */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--amber);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--amber);}
+/* MENTAL NOTES & ANALOGIES */
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--amber-glow);border:1px solid var(--amber-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--amber);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2);border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -188,6 +236,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <div class="main-content">
 
   <!-- STATUS CODES -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · HTTP STATUS CODES</span></div>
+  <p class="socratic-insight">When your API call fails, the HTTP status code is your first diagnostic clue. A 4xx means your request was wrong. A 5xx means the server had a problem. A 2xx means success. But within each range, the specific code tells you exactly what went wrong — if you know what each one means.</p>
+  <ul class="socratic-questions">
+    <li>You receive a 403 Forbidden. You know your API key is valid and your role has permissions. What other scenarios could cause a 403 — and which one often gets overlooked under deadline pressure?</li>
+    <li>A 409 means "edit conflict" — another admin saved a change simultaneously. What does this tell you about how Zscaler's backend handles concurrent modifications to the same configuration?</li>
+    <li>If you receive a 401 Unauthorized midway through a script that's been running for 90 minutes, what's the most likely cause — and how should a well-written script handle this automatically?</li>
+  </ul>
+  <div class="answer-area" data-section="errors">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Beyond a disabled key or insufficient role, two often-overlooked causes are a missing SKU subscription for the feature you're calling, and the ZIA Admin Portal being in maintenance mode during a scheduled upgrade (which blocks POST/PUT/DELETE specifically). Under deadline pressure the maintenance-window scenario is the silent killer — engineers assume "auth failure" and keep retrying credentials instead of checking the portal status banner. Always rule out maintenance mode and SKU entitlement before touching identity configuration.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">409 tells you Zscaler's backend uses optimistic concurrency rather than serialized locking — two admins can fetch the same config, edit it independently, and the first save wins while the second is rejected. This is a performance/UX trade-off: locking would prevent the conflict but would also block all concurrent edits across a large multi-admin tenant. The practical implication is that your script must treat a 409 as a normal, expected condition and implement retry-with-backoff (and ideally re-fetch the latest version before retrying) rather than treating it as a hard failure.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">The most likely cause is bearer-token expiry — Zscaler access tokens are time-limited, and a 90-minute run will typically outlast the token lifetime. A well-written script should not wait for the 401 to react: it should track the token issue time and pre-emptively refresh before expiry. As a safety net, it should also catch a 401 mid-execution, transparently re-authenticate, and retry the failed request once before surfacing the error to the user.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-errors">
     <div class="section-label">API RESPONSE CODES AND ERROR MESSAGES</div>
     <h2>HTTP Status Codes</h2>
@@ -217,6 +286,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">403 can occur for multiple reasons: the API key was disabled by your service provider; the user's role has no access permissions or functional scope; a required SKU subscription is missing; or API operations using POST, PUT, or DELETE are performed when the ZIA Admin Portal is in maintenance mode during a scheduled upgrade. Check each of these before escalating.</div>
     </div>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">HTTP status codes are like rejection letters with specific reasons. 400 = "Your application had errors — check the form." 401 = "You didn't include your ID — show us who you are." 403 = "We know who you are but you're not authorized here." 404 = "The address you wrote doesn't exist." 429 = "You've called us too many times — try again later." 500 = "We're having technical difficulties — it's not you, it's us."</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">403 has 4 causes — memorize ALL four: (1) API key disabled by service provider; (2) User role has no access permissions or functional scope; (3) Missing SKU subscription; (4) Portal in maintenance mode during POST/PUT/DELETE. 409 = retry after short delay. 429 = read Retry-After header. 401 = token expired, re-authenticate.</div>
+  </div>
+</div>
+<div class="img-display-block">
+  <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+  <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+  <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+  <div class="prompt-content" hidden>[Generate: flat amber decision tree — server icon at top with three branches: green "2xx Success" path leading to checkmark, amber "4xx Client Error" path leading to question mark with sub-labels for 401/403/404/429, red "5xx Server Error" path leading to warning triangle — clean minimalist, no text labels]</div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-errors" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('errors','Status Codes')">Add Question</button></div></div>
@@ -225,6 +311,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- RATE LIMITING -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · RATE LIMITING</span></div>
+  <p class="socratic-insight">Rate limiting protects the API from abuse — but it also affects well-intentioned automation scripts that run too aggressively. Think about the engineering challenge: how do you write a script that's both fast enough to be useful and rate-limit-aware enough to not fail mid-execution?</p>
+  <ul class="socratic-questions">
+    <li>GET has a rate limit of 4,000 req/hr but also 2 req/sec. If you fire 3 GET requests in one second, you hit the burst limit even though you're nowhere near the hourly limit. How should your script respond when it gets a 429 in this scenario?</li>
+    <li>DELETE is limited to 4 per hour. If you need to delete 100 resources, that's a 25-hour operation at that rate. How would you design a bulk deletion strategy that respects this limit?</li>
+    <li>The 429 response includes a Retry-After value. Why is it important to respect this value rather than just retrying immediately after receiving the error?</li>
+  </ul>
+  <div class="answer-area" data-section="ratelimit">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Your script should read the Retry-After value from the 429 response body, sleep for that duration, then retry the exact failed request — and going forward, throttle itself to honour the 2 req/sec burst rule rather than firing as fast as possible. The right pattern is to inject a small time.sleep() between every GET (e.g. ~0.5s) so the burst limit is never tripped in the first place. Reacting to 429s works, but proactively pacing the script is the production-grade approach.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">If you truly need 100 deletes against a 4/hour ceiling, you have three real options: (1) schedule the work as a 25+ hour background job that paces 4 deletes per hour and persists progress so it survives restarts; (2) check if the resource type supports a batch/bulk delete endpoint that counts as a single request; or (3) restructure the operation — for example, disable or de-reference the resources via PUT (medium weight, 400/hr) instead of deleting. The mental model is: DELETE is the most expensive verb in the rate-limit system, so design around it whenever possible.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Retry-After is the server telling you exactly when the bucket will have refilled — retrying earlier guarantees another 429 and burns one of your remaining quota slots on a doomed request. Hammering the endpoint also looks like abuse to upstream protections and can lead to longer cooldowns or temporary blocking. Respecting Retry-After is both more efficient (one successful retry instead of many failures) and a signal of well-behaved client design.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-ratelimit">
     <div class="section-label">RATE LIMITING</div>
     <h2>Rate Limiting in Zscaler APIs</h2>
@@ -259,6 +366,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">Use batch requests for bulk operations to minimise the number of individual API calls. Monitor OneAPI usage via the Postman REST API client to avoid exceeding rate limits. Build retry logic into scripts that respects the Retry-After header value when a 429 is received.</div>
     </div>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">Rate limiting is like a highway on-ramp with a metered traffic light. The light only lets one car through every few seconds (burst limit) even if the highway is empty. And there's a daily maximum of vehicles that can enter regardless of how spread out they are (volume limit). If you try to rush through when the light is red, you get stopped (429) and must wait. The best drivers time their approach to the ramp — they don't race to it and brake hard.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">Rate limits by weight: Heavy (DELETE) = 1/min, 4/hr. Medium (POST/PUT) = 1/sec, 400/hr. Light (GET) = 2/sec, 4,000/hr. Best practice: add time.sleep() after EVERY call — don't wait for 429 to react. When you do get 429: read Retry-After from the response body, sleep that duration, then retry. Build this into every script from the start.</div>
+  </div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-ratelimit" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('ratelimit','Rate Limiting')">Add Question</button></div></div>
@@ -267,6 +385,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- BEST PRACTICES -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · BEST PRACTICES</span></div>
+  <p class="socratic-insight">Security best practices for APIs often feel obvious in theory but get skipped under deadline pressure. Think about which of these "obvious" practices you'd actually be tempted to shortcut — because that's exactly when attackers look for gaps.</p>
+  <ul class="socratic-questions">
+    <li>"Never hardcode credentials in scripts" — but storing them in environment variables requires extra setup. What's the actual threat: if credentials are hardcoded in a private internal repo, who could realistically access them, and how?</li>
+    <li>"Always test in staging before production" — but what if you don't have a staging environment? What's the minimum viable testing strategy when a staging environment isn't available?</li>
+    <li>"Generate different Access Tokens for separate endpoints." Under what specific attack scenario does this actually protect you compared to using one universal super-admin token for everything?</li>
+  </ul>
+  <div class="answer-area" data-section="bestpractices">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">"Private" is rarely as private as it feels: anyone with repo access (current employees, contractors, ex-employees whose access wasn't revoked promptly, and anyone who forks/clones to a personal machine) can see the secret, and the credential is then preserved forever in git history even if you delete the line later. Repo backups, CI logs, and accidental promotion to a public mirror are also realistic exposure paths. The threat isn't "hacker breaks into GitHub" — it's the slow erosion of who has seen the credential over its lifetime, which is exactly what rotation and environment variables are designed to bound.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">When staging isn't available, build the safest possible production test: run a read-only dry run first (GET the resources you'd modify so you can confirm IDs and current state), then execute against a single low-impact resource and verify the result before fanning out. Wrap the change in a script that captures the pre-change state so you have a known-good rollback target. The minimum viable substitute for staging is "small blast radius + reversibility" — never a blind bulk operation.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Separate tokens protect you under credential-leak scenarios: if one script's token is exposed (committed to a repo, captured in a log, exfiltrated from a CI runner), the attacker only gains the scope of that one token rather than full tenant control. It also makes revocation cheap and surgical — you rotate the leaked token without breaking every other integration. A single super-admin token converts any one leak into a full-tenant compromise, which is the worst-case blast radius.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-bestpractices">
     <div class="section-label">BEST PRACTICES</div>
     <h2>API Best Practices</h2>
@@ -333,6 +472,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">Never share your Secret ID, JWT token, or Client ID with anyone — these are equivalent to passwords. Never use HTTP (always HTTPS). Never hardcode credentials in scripts — use environment variables. Never give super admin access when scoped access is sufficient. Never skip staging testing before pushing to production.</div>
     </div>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">API security best practices are like safe handling rules for a powerful tool — they feel unnecessary right up until the moment they prevent a catastrophe. "Always rotate tokens" = always assume a credential could be compromised. "Never give super admin when scoped access is enough" = never hand someone the master key when they only need to open one door. Rules matter most when you're in a hurry and feel like skipping them.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">4 best practice categories: (1) Secure Usage — rotate tokens, separate tokens per endpoint, validate/assign specific resources, NEVER share Secret ID/JWT/Client ID, always HTTPS; (2) Consistency — use Zscaler JSON templates, implement version control; (3) Scalability — batch requests, monitor usage via Postman; (4) Deployment — staging before production, environment variables for all sensitive info.</div>
+  </div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-bestpractices" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('bestpractices','Best Practices')">Add Question</button></div></div>
@@ -341,6 +491,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- DEBUGGING ERRORS -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · DEBUGGING ERRORS</span></div>
+  <p class="socratic-insight">Systematic debugging is a disciplined skill. The temptation is to randomly try changes until something works. The productive approach is to gather evidence first, form a hypothesis based on what the error code tells you, then test exactly one thing at a time. Think through the 5-step process before reading it.</p>
+  <ul class="socratic-questions">
+    <li>Your API call returns a 400. Your JSON looks correct when you read it. What else — beyond the JSON structure itself — could cause a 400 that isn't obvious from a quick visual scan?</li>
+    <li>Your script was working yesterday and returns a 401 today with zero code changes. List three possible explanations in order of likelihood, from most common to least.</li>
+    <li>You're debugging a 403 and you've confirmed the API key is active and the user role has permissions. What are your next three checks — in the order you'd perform them?</li>
+  </ul>
+  <div class="answer-area" data-section="debug">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The JSON can look right but still trip a 400 due to invisible issues: trailing whitespace or non-printing characters, smart quotes pasted from a doc instead of straight quotes, wrong data types (sending a number as a string or vice versa), missing required fields the docs specify, or a missing/incorrect Content-Type header. Method-endpoint mismatch (POSTing to a GET-only path) and query-parameter formatting can also surface as 400. Always re-validate against the API reference and run the body through a JSON linter before assuming the schema is fine.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">In order of likelihood: (1) the bearer token has expired — by far the most common cause, since tokens are time-limited and yesterday's token simply isn't valid today; (2) the API client/credential was rotated, disabled, or had its scope reduced by an admin; (3) an upstream change such as a ZIdentity configuration update, role change, or tenant migration that invalidated the existing session. Check token freshness first because it's both the most common and the fastest to remediate.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">First, check SKU/entitlement — the feature you're calling may require a subscription the tenant doesn't have, which presents as 403 even when auth is correct. Second, check whether the ZIA Admin Portal is in maintenance mode during a scheduled upgrade, since POST/PUT/DELETE are blocked during that window. Third, verify functional scope on the API client itself — the role may have permissions in the UI but the API client/token may be scoped to a narrower set of resources that excludes the endpoint you're calling.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-debug">
     <div class="section-label">DEBUGGING ERROR CODES</div>
     <h2>Systematic Error Debugging</h2>
@@ -380,6 +551,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <strong>Token Expiry Tip:</strong> Access tokens are time-sensitive. Build token refresh logic into your scripts so they automatically re-authenticate before the token expires rather than failing mid-execution with a 401 error.
     </div>
   </div>
+  <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">Debugging API errors is like diagnosing a car that won't start. Step 1: check the obvious first (is there fuel? = is the JSON valid?). Step 2: read the error carefully (what does the dashboard light actually say? = what does the status code mean precisely?). Step 3: check authentication (is the key in the ignition? = is the Bearer token present and unexpired?). Don't replace the engine before you've checked the fuel gauge.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">5-step debug process: (1) Check JSON for typos/whitespace/formatting — invalid JSON → 400; (2) Verify headers (Authorization: Bearer + Content-Type: application/json), body fields, query params, HTTP method against docs; (3) Check auth state — token expired=401, wrong scope=403; (4) For 429: implement Retry-After + time.sleep(); (5) For 409: retry with exponential backoff. Always build auto token-refresh logic into production scripts.</div>
+  </div>
+</div>
+<div class="img-display-block">
+  <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+  <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+  <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+  <div class="prompt-content" hidden>[Generate: flat amber 5-step vertical flow chart — 5 rounded rectangles connected by downward arrows: Step 1 = magnifying glass on code (JSON check), Step 2 = checklist with header/method/params (request verification), Step 3 = key and lock (authentication check), Step 4 = 429 warning with clock/timer (rate limit retry), Step 5 = circular refresh arrow (exponential backoff retry) — minimalist, no text labels]</div>
+</div>
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-debug" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('debug','Debugging Errors')">Add Question</button></div></div>
@@ -450,6 +638,10 @@ function renderQPanel(){const qs=getQuestions();const count=document.getElementB
 function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
 function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
 document.addEventListener('DOMContentLoaded',()=>{renderQPanel();initNotes();initChecks();if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}});
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>

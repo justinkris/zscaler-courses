@@ -180,6 +180,44 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .mod-nav-link:hover{background:var(--surface);}
 .mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
 .mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--green);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted,#4a7a5a);}
+.socratic-insight{font-size:13px;color:var(--text-soft,#1a3d24);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim,var(--border));line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--green);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,124,74,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--green);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.use-case-grid,.policy-type-grid,.feature-grid,.alert-grid,.lesson-tools-grid{grid-template-columns:1fr;}.policy-type+.policy-type{border-left:none;border-top:1px solid var(--border);}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -228,6 +266,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <div class="main-content">
 
   <!-- OVERVIEW -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · DATA IN MOTION</span></div>
+    <p class="socratic-insight">Data at rest sits in a vault; data in motion is a parade marching past you. The only chance you get to stop a leak is during the brief window when bytes flow through an inspection point — miss it, and the data is already on someone else's server.</p>
+    <ul class="socratic-questions">
+      <li>If a file is encrypted in transit, how can the DLP engine see what's inside?</li>
+      <li>What three vectors does "Secure Data in Motion" cover at Zscaler?</li>
+      <li>Why is inline inspection more powerful than scanning data after it has landed?</li>
+    </ul>
+    <div class="answer-area" data-section="overview">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Zscaler terminates the TLS session at the proxy and inspects the cleartext payload before re-encrypting it on its way out. Without this SSL decryption, encrypted traffic is opaque and DLP rules cannot evaluate the content. This is why decryption policy and certificate trust are foundational — every inline data security capability that operates above the transport layer depends on it.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Web (internet and SaaS via the secure web gateway), Email (outbound mail flow via journaling), and Endpoint (the file-system and clipboard activity captured by the Client Connector). Together they cover the channels users actually move data through every day — browser uploads, email sends, and local copy/paste or file transfer to removable media.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Inline inspection prevents the leak before the data leaves; post-event scanning only tells you the leak already happened. Once data lands on a third-party service, you cannot recall it — you can only request deletion and hope. Inline also lets you respond contextually (block, allow with warning, encrypt, isolate) at the exact moment of action, which makes user education and enforcement happen in the same gesture.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-overview">
     <div class="section-label">OVERVIEW</div>
     <h2>Securing data as it moves</h2>
@@ -249,6 +308,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li><strong>Gen AI Security</strong> — prompt visibility and blocking for generative AI platforms</li>
       <li><strong>UEBA &amp; Adaptive Access</strong> — responds to risky anomalies detected in user behaviour</li>
     </ul>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat green minimalist illustration of a flowing river of data packets passing through a translucent inspection gateway in the centre, with three branching channels labelled by icons only (web cloud, AI spark, envelope) — no text labels.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Think of Secure Data in Motion as airport security. Bags at home (data at rest) are nobody's concern, but the moment a passenger walks toward the gate, every bag passes through the same X-ray belt — regardless of whether it's headed to a domestic SaaS terminal, an international cloud, or a Gen AI departure lounge.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Secure Data in Motion = Internet/Email DLP + Gen AI Security + UEBA/Adaptive Access — all unified through the Zero Trust Exchange.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -259,6 +335,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- USE CASES -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · INLINE USE CASES</span></div>
+    <p class="socratic-insight">Real protection is rarely a single blanket "block" button — it's a stack of overlapping controls that each catch a different escape route. The same employee can leak data through a shadow app, the wrong tenant of a sanctioned app, or by simply opening a webmail tab on a personal laptop.</p>
+    <ul class="socratic-questions">
+      <li>If you allow Google Drive corporate-wide, what's stopping uploads to a personal Drive on the same domain?</li>
+      <li>How can you permit an app's "general" activity but block its file uploads — without two separate proxies?</li>
+      <li>Why does shadow IT discovery have to come before enforcement?</li>
+    </ul>
+    <div class="answer-area" data-section="usecases">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Tenant Restrictions. The corporate Google Drive and a personal Drive both live on drive.google.com — domain-level allow/block cannot tell them apart. Tenant Restrictions tells the proxy "permit this domain only for these tenant identifiers" so logins to a personal tenant from the corporate network are blocked while the corporate tenant continues to work. Without it, allowing the platform allows every tenant on it.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Cloud App Control breaks an application's behaviour into granular actions — view, share, upload, download, edit — and applies policy per action. So you can allow Box "view and edit" while denying "upload" or "share externally." This is what makes a single inline platform replace a stack of app-specific gateways: one engine recognises the action, one policy decides.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Because you cannot write meaningful enforcement against an app you do not know exists. Shadow IT discovery surfaces the unsanctioned tools in use, lets you classify them by risk, and only then can you decide which to block, sanction, or limit. Enforcement without discovery is enforcement against a guess — and the apps you do not know about are exactly the ones leaking the most.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-usecases">
     <div class="section-label">COMMON USE CASES</div>
     <h2>Six practical use cases for inline data protection</h2>
@@ -301,6 +398,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">★</div>CLOUD APP CONTROL EXAMPLE</div>
       <div class="callout-body">With Cloud App Control, you don't need to block an entire platform. Instead, you can permit General activities for social media but block file attachment sending. Or allow corporate OneDrive access while blocking uploads to personal OneDrive via tenancy restrictions — all with OCR-powered content inspection.</div>
     </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Inline data protection is like a building with six different doormen — one checks IDs, one inspects packages, one verifies you're entering the right wing, one watches for suspicious behaviour, one handles guests on personal devices, and one keeps a log of every door used. Skip any one and a determined visitor still slips through.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Six use cases: Shadow IT Discovery, Cloud App Control, Tenancy Restrictions, Inline DLP, UEBA/Adaptive Access, BYOD via Browser Isolation. Tenancy restrictions = corporate vs personal instance of the SAME app.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -311,6 +420,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- DLP POLICIES -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · CONTENT VS CONTEXT</span></div>
+    <p class="socratic-insight">Two questions every DLP engine must answer about a flowing transaction: <em>what is this data?</em> and <em>who is moving it, from where, on what device, at what time?</em> Each question alone leaks; combined, they form a verdict.</p>
+    <ul class="socratic-questions">
+      <li>If a credit card number is in a JPG screenshot, can keyword scanning catch it? What about OCR?</li>
+      <li>Why might the same file be allowed for a senior researcher but blocked for an intern?</li>
+      <li>What does it mean that Zscaler uses "one engine, one policy" across web, SaaS, and endpoint?</li>
+    </ul>
+    <div class="answer-area" data-section="dlp">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Plain keyword scanning cannot — the JPG is a pixel grid, not text. OCR (Optical Character Recognition) extracts the digits from the image so the DLP engine can apply pattern detection (Luhn check, card number regex) and EDM/IDM matching against known card data. Screenshots are a classic exfiltration channel precisely because un-OCRed DLP misses them; turning OCR on closes that gap.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Because policy is contextual, not just content-driven. The same document carries different risk depending on the actor's role, device posture, location, and the destination. A senior researcher uploading a draft to their authorised analytics workspace is normal; an intern uploading the same file to a personal cloud account is exfiltration. Contextual rules — role + device + destination + content — produce a verdict no content-only engine can reach.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">It means classifications, EDM/IDM templates, and policies are defined once and enforced uniformly wherever data moves — web upload, SaaS API, endpoint clipboard, email send. There is one definition of "sensitive," one place to update it, and one audit trail. The opposite — a different DLP per channel — is what creates the policy-drift and coverage gaps the unified platform exists to eliminate.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-dlp">
     <div class="section-label">DLP POLICIES</div>
     <h2>Zscaler Data Loss Prevention Policies</h2>
@@ -400,6 +530,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">!</div>KEY DIFFERENTIATOR</div>
       <div class="callout-body">Zscaler has been doing inline DLP for eight years. The same DLP dictionaries and engines that inspect web traffic can now also be enforced on endpoint data. One engine, one policy, across all vectors.</div>
     </div>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat green minimalist illustration of a magnifying glass over a document with structured data fingerprints on the left (content-driven) and a clock-plus-location pin-plus-shield arrangement on the right (context-driven), connected by a thin green line — no text labels.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Content-driven DLP is the customs officer who unzips your bag and reads the labels on the bottles. Context-driven DLP is the same officer noticing you flew in from a sanctioned country, at 3am, holding someone else's passport. The dangerous shipments are usually caught by combining both.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Content-driven = 6 features (Keyword, Pattern, AI/ML, EDM, IDM, File Type). Context-driven = 4 factors (User, Device, Location, Time). EDM = structured DB match; IDM = document fingerprint with confidence threshold; OCR = sees text in images.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -410,6 +557,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- UEBA -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · BEHAVIOURAL ANOMALIES</span></div>
+    <p class="socratic-insight">Most insider threats don't carry a banner — they look exactly like normal traffic until you compare today's volume to last quarter's average. UEBA's value isn't in detecting bad bytes; it's in detecting bad <em>patterns</em> over time.</p>
+    <ul class="socratic-questions">
+      <li>If John usually downloads 50 files in 90 days, why is downloading 500 in one day a problem even if each file is allowed?</li>
+      <li>Detection raises an alert — but who or what actually changes John's access? What is "adaptive" about adaptive access?</li>
+      <li>Which of the six default alerts would fire if a private GitHub repo was suddenly set to public?</li>
+    </ul>
+    <div class="answer-area" data-section="ueba">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Each individual file may be permitted, but 500 in a day represents a 10x deviation from the baseline — that magnitude almost always indicates bulk staging (resignation in progress, account compromise, or automated scraping). DLP examines each transaction in isolation; UEBA examines the pattern across time and against peers. The risk is not the individual permission grant — it is the rate, volume, and sequence that no single-transaction rule catches.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Adaptive Access. UEBA detects; Adaptive Access acts on the detection by automatically raising the policy bar — step-up authentication, read-only mode, isolation, or full block — based on the risk score. "Adaptive" means the access decision changes in response to behaviour in real time, rather than being a static permission set on day one. The detection is interesting only because something downstream enforces consequences.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">The "External Sharing" or "Public Exposure" alert (depending on terminology in the console) — a private SaaS asset becoming publicly accessible is one of the highest-signal events UEBA tracks, because it is both rare and immediately impactful. It usually triggers automatic ticket creation and, if Adaptive Access is wired in, can revert the sharing change pending review.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-ueba">
     <div class="section-label">UEBA &amp; ADAPTIVE ACCESS</div>
     <h2>User and Entity Behavior Analytics</h2>
@@ -464,6 +632,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         UEBA detects this as anomalous activity and raises a <strong>Bulk Download of Data</strong> alert. Once detected, <strong>Adaptive Access</strong> comes into play — actions can include requiring John to complete multifactor authentication, disabling his access to Google Drive, or forcing reauthentication.
       </div>
     </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">UEBA is the bank teller who knows you've withdrawn $100 every Friday for three years — and instinctively pauses when you suddenly ask for $50,000 in cash on a Tuesday morning. Adaptive Access is the manager who walks over and politely asks for a second form of ID before the cash leaves the drawer.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">UEBA = detection (raises alerts). Adaptive Access = response (MFA, revoke, reauth). Six default alerts: Impossible Travel, Failed Login, Bulk Upload, Bulk Download, Repository Exposure Modified, Repository Shared Externally.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -474,6 +654,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- PARALLEL PROCESSING -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · EVALUATE ALL RULES</span></div>
+    <p class="socratic-insight">A traditional firewall is a tournament — the first rule to match wins and everyone else goes home. That feels efficient until you realise the strictest rule was sitting just below the looser one, never given a chance to speak.</p>
+    <ul class="socratic-questions">
+      <li>If a finance user is allowed to upload PCI, but uploading PCI <em>plus</em> PII is blocked, which rule wins on a traditional proxy?</li>
+      <li>Why is "evaluate all rules + most restrictive wins" safer than depending on rule order?</li>
+      <li>Where do you toggle parallel processing in the Zscaler UI?</li>
+    </ul>
+    <div class="answer-area" data-section="parallel">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">On a traditional first-match proxy, whichever rule is listed first wins — so if "allow PCI for finance" sits above "block PCI+PII," the upload is allowed. The block rule never gets evaluated. This is why traditional ACLs are dangerous: a single misordering by an admin produces silent over-permission, and audits rarely catch it because the configuration "looks right."</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Because policy correctness no longer depends on the human authoring rules in the right order. Every applicable rule is evaluated; the most restrictive verdict wins. This eliminates the entire class of "permissive rule positioned above restrictive rule" mistakes. It also keeps policy meaning stable as rules are added over time — new rules cannot silently shadow earlier protections.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">In the ZIA admin console under Policy → DLP (and similar locations for Web/Cloud App Control), there is a "Parallel Policy Processing" toggle in the policy settings. Once enabled, every matching rule is considered and the most restrictive action is applied — rule order becomes documentation, not enforcement.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-parallel">
     <div class="section-label">PARALLEL POLICY PROCESSING</div>
     <h2>Why Zscaler doesn't stop at the first match</h2>
@@ -497,6 +698,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     </div>
 
     <p>The DLP policy engine at Zscaler allows for a lot of granularity, with a lot of exceptions — and is highly effective precisely because it doesn't stop at the first policy match.</p>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat green minimalist illustration of multiple parallel inspection lanes processing the same data packet simultaneously, with a small red "BLOCK" shield emerging from the most restrictive lane to the right — no text labels.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Parallel processing is like sending one job application to three reviewers at once and going with the strictest hiring decision — instead of letting the first reviewer's "yes" close the case before the security check has even started.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Enable "Evaluate All Rules" under DLP Advanced Settings. All policies are evaluated in parallel and the most restrictive verdict wins — eliminating the first-match gap of traditional proxies.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -507,6 +725,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- GEN AI SECURITY -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · GEN AI EXPOSURE</span></div>
+    <p class="socratic-insight">Every prompt is an outbound upload. The text employees paste into a chat box is data in motion just as surely as a file attachment — except the destination is a model that may remember it forever.</p>
+    <ul class="socratic-questions">
+      <li>Is blocking ChatGPT entirely the right move, or does it just drive usage underground?</li>
+      <li>How can DLP inspect a prompt the same way it inspects a file upload?</li>
+      <li>What role does URL Filtering's "General AI &amp; ML" category play alongside Cloud App Control?</li>
+    </ul>
+    <div class="answer-area" data-section="genai">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Blanket blocking creates Shadow AI — employees keep using the tools on personal devices or VPNs you cannot see. The better answer is structured access: allow sanctioned AI tools with DLP applied to prompts, block obvious high-risk endpoints, and use Browser Isolation for everything else so prompts can be inspected and downloads contained. Govern the usage rather than try to eliminate the demand.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">A prompt submitted via HTTPS POST is just an upload by another name. With SSL inspection enabled, the DLP engine sees the JSON or form payload, extracts the user's prompt text, and runs the same dictionaries, EDM, and pattern checks it would run against a file. The destination is different; the inspection technique is the same.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">URL Filtering's "General AI & ML" category catches the long tail of AI tools that haven't been individually profiled in Cloud App Control yet — new chatbots, niche models, browser-based wrappers. Cloud App Control gives you granular per-action policy for known apps; URL Filtering provides a category-level safety net for everything else. Together they cover both the sanctioned and the unsanctioned end of the AI usage spectrum.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-genai">
     <div class="section-label">GENERATIVE AI SECURITY</div>
     <h2>Protecting data flowing into and out of Gen AI</h2>
@@ -524,6 +763,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li><strong>Cloud App Control for AI</strong> — DLP's Cloud App Control with Browser Isolation can allow access to an AI platform while blocking certain sensitive data inputs. For example: PCI data inputs to ChatGPT can be prompted or blocked.</li>
       <li><strong>URL Filtering (URLF)</strong> — restricts websites categorised under "General AI &amp; ML", allowing organisations to block, caution, or isolate AI traffic based on risk level.</li>
     </ul>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">Image Placeholder</div>
+      <div class="img-gen-prompt">Generate: flat green minimalist illustration of a user silhouette typing into a chat bubble that flows through a green DLP filter before reaching an abstract AI neural node, with sensitive data tokens being stripped off mid-flight — no text labels.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Gen AI security is the editor who reviews every email before it leaves your hands — not to stop you from writing, but to redact the sentences that would embarrass the company if printed on the front page of tomorrow's newspaper.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Gen AI Security = visibility (Gen AI Security Report) + DLP inspection of prompts + Cloud App Control with Browser Isolation + URLF on "General AI &amp; ML" category. Allow the tool, block the sensitive payload.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -534,6 +790,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- EMAIL DLP -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · OUTBOUND EMAIL FLOW</span></div>
+    <p class="socratic-insight">Email is the oldest and most trusted exfiltration channel — and the hardest to revoke once "Send" is pressed. Zscaler doesn't inspect email at the proxy; it inserts itself into the Exchange mail flow as a detour the message must take before delivery.</p>
+    <ul class="socratic-questions">
+      <li>What component routes the email from Exchange to Zscaler, and what does it return?</li>
+      <li>Does Zscaler actually block the email, or does Exchange act on Zscaler's verdict?</li>
+      <li>How would you configure encryption for trusted partners while blocking unknown external domains?</li>
+    </ul>
+    <div class="answer-area" data-section="email">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Microsoft 365's mail flow rules use Journaling to send a copy of qualifying outbound messages to Zscaler. Zscaler inspects the message (subject, body, attachments) against DLP policy and returns a verdict — allow, block, encrypt, quarantine — which Exchange then enforces on the original message. The journaling-plus-callback pattern lets Zscaler sit in the decision path without replacing the email infrastructure.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Exchange acts on Zscaler's verdict. Zscaler is the inspector and decision-maker; Exchange is the enforcer. This separation matters because it preserves Exchange as the system of record for email — you can still see, audit, and reverse decisions inside the mail platform, while Zscaler stays the security policy authority. The same model applies to any inspector-plus-enforcer architecture.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Build a recipient-domain allowlist of trusted partners and apply the "encrypt" action when DLP matches on outbound mail to those domains. For unknown external domains, the same DLP rule applies the "block" action. The combination ensures sensitive content can still flow to legitimate partners via encryption while preventing accidental sends to addresses outside the trusted set.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-email">
     <div class="section-label">OUTBOUND EMAIL DLP</div>
     <h2>Zscaler Outbound Email DLP</h2>
@@ -595,6 +872,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">★</div>EMAIL SENDER PROFILES</div>
       <div class="callout-body">You can create <strong>email sender profiles</strong> and associate them with DLP policies. This allows different rules for different recipient domains — e.g., trusted partner domains may have encrypted delivery while unknown external domains are blocked. Incident forensics for email DLP are available in Zscaler Workflow Automation.</div>
     </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Outbound Email DLP works like a postal sorting facility that detours every letter through an X-ray room before it gets stamped. The X-ray machine doesn't open the envelope — it stamps a verdict on the outside, and the postal clerk back at the desk decides whether to deliver, encrypt, or shred it.</div>
+    </div>
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">6 steps: Send → Exchange mail flow rules → Zscaler Smart Host (SMTP) → DLP inspects + inserts headers → back to Exchange → Exchange enforces (block/encrypt/allow). Zscaler decides; Exchange acts.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -605,6 +894,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   </div>
 
   <!-- KNOWLEDGE CHECK -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · APPLY THE CONCEPTS</span></div>
+    <p class="socratic-insight">Before you read each scenario's answer, pause and reach for the right control yourself. The exam — and the real job — rarely tell you which lever to pull; you have to recognise the shape of the problem and match it to the tool.</p>
+    <ul class="socratic-questions">
+      <li>For a risky shadow app: do you block the whole platform, adjust the risk score, or both?</li>
+      <li>For corporate vs personal OneDrive: is this a content problem or a tenancy problem?</li>
+      <li>For a non-PCI app used by finance: who specifically should be blocked, and from doing what?</li>
+    </ul>
+    <div class="answer-area" data-section="kcheck">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Both — and the order matters. First, adjust the risk score so the app is treated as risky by every downstream rule. Then write a Cloud App Control or URL Filtering policy that uses that risk attribute to block or restrict actions. Blocking the whole platform without scoring leaves the verdict stranded outside policy, and scoring without enforcement just produces dashboards.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">A tenancy problem. The corporate and personal OneDrive accounts host the same content patterns on the same domain — content-only DLP cannot reliably distinguish them. Use Tenant Restrictions to permit only the corporate tenant identifier on the network and the policy resolves itself: the corporate workflow continues, personal logins are refused at the proxy.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Block the finance group specifically from uploading PCI-classified content to that non-PCI app. The user population is finance; the action is upload (not view, not download); the content trigger is the PCI dictionary. Targeting by user group, action, and content gives you precise enforcement without blocking the whole app for everyone — which is the entire point of granular Cloud App Control.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="section-block" id="section-kcheck">
     <div class="section-label">KNOWLEDGE CHECK — SCENARIOS</div>
     <h2>Apply what you've learned</h2>
@@ -834,6 +1144,9 @@ function navTo(id,btn){
     body.classList.add('open');hdr.classList.add('open');chev.textContent='▴';
   }
 })();
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
 </script>
 </body>
 </html>

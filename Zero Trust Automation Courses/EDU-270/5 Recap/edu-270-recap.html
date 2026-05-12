@@ -111,6 +111,54 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .quick-ref{background:var(--ink);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
 .quick-ref-term{font-size:11px;font-weight:600;color:#a78bfa;letter-spacing:0.06em;margin-bottom:4px;}
 .quick-ref-def{font-size:12px;color:#8a70cc;line-height:1.6;}
+/* SOCRATIC COACHING */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--purple);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--purple);}
+/* MENTAL NOTES & ANALOGIES */
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--purple-glow);border:1px solid var(--purple-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--purple);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2);border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.outcome-grid{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -147,6 +195,27 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <div class="main-content">
 
   <!-- COURSE SUMMARY -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · COURSE SUMMARY</span></div>
+  <p class="socratic-insight">You've covered 4 sections: APIs, the automation platform, architecture, and troubleshooting. Before reviewing the summary, try to explain what connects these four sections. What's the single thread that runs through all of them?</p>
+  <ul class="socratic-questions">
+    <li>Section 1 covered API fundamentals. Section 4 covered troubleshooting. How does deeply understanding fundamentals (request structure, status codes) directly enable more effective troubleshooting — rather than just guessing?</li>
+    <li>ZIdentity appears prominently in Sections 2, 3, and 4. What would break across the entire framework if ZIdentity became unavailable — and what does that tell you about its role?</li>
+    <li>The course moved from concepts (S1) → specific products (S2) → architecture (S3) → operations (S4). Why is this sequence more effective than jumping straight to technical product details?</li>
+  </ul>
+  <div class="answer-area" data-section="summary">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Understanding API fundamentals like request structure and status codes turns troubleshooting from guesswork into deduction — when you see a 401 or 429, you immediately know which layer failed (auth vs rate limit) and can target the fix. Without that grounding from Section 1, Section 4's debugging becomes pattern-matching error messages instead of reasoning about what's actually broken.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">If ZIdentity went down, authentication, token issuance, and SCIM provisioning would all stop — meaning OneAPI calls, admin SSO, and user onboarding across ZIA/ZPA/ZDX/ZCC would all fail simultaneously. This shows ZIdentity is the keystone of the unified framework: it's not just one component among many, it's the trust anchor every other service depends on.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Concepts before products means you can reason about any new API, not just memorize specific ones — and architecture before operations means you understand what should be happening before you try to fix what isn't. Jumping straight to product details creates surface-level competence that collapses the moment something unfamiliar comes up, because there's no conceptual scaffold to fall back on.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-summary">
     <div class="section-label">COURSE SUMMARY</div>
     <h2>In Summary</h2>
@@ -169,9 +238,41 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="section-summary-title">Section 4 — Troubleshooting and Best Practices</div>
       <div class="section-summary-body">Covered common API response codes (200–503). Discussed rate limiting with the two-tier system (burst and volume limits). Covered best practices: secure API usage, maintaining consistency, enhancing scalability, and deployment methodologies. Provided systematic error debugging approach.</div>
     </div>
+    <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">Learning this course is like learning to drive. Section 1 = understanding what a car is and its controls (API fundamentals). Section 2 = learning your specific vehicle's features (ZIA/ZPA/ZDX/ZCC APIs). Section 3 = learning road rules and maps (architecture). Section 4 = knowing what to do when things go wrong (troubleshooting). You need all four before you should be on the highway unsupervised.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">Course thread: APIs are the language → ZIdentity + OneAPI are the unified infrastructure → Architecture shows how it all connects → Troubleshooting shows how to fix it when it breaks. Each section builds on the previous — you can't troubleshoot what you don't understand architecturally, and you can't use the architecture without understanding the API fundamentals.</div>
+  </div>
+</div>
   </div>
 
   <!-- LEARNING OUTCOMES -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · LEARNING OUTCOMES</span></div>
+  <p class="socratic-insight">9 learning outcomes — each starts with an action verb: Describe, Discuss, Explain, Identify, Configure. These verbs matter. "Describe" tests recall. "Explain" tests understanding. "Configure" tests hands-on skill. Think about which type of knowledge is hardest to retain from reading alone.</p>
+  <ul class="socratic-questions">
+    <li>Outcome 7 is "Configure OneAPI using Postman" — a hands-on skill. If you've only read about it but never run Postman yourself, can you genuinely claim this outcome? What would it take to make it real knowledge?</li>
+    <li>Outcome 3 is "Explain the role and importance of OneAPI" — not just name it, but explain. What's the difference between being able to explain something versus being able to recite a definition?</li>
+    <li>If you could only deeply master 3 of the 9 outcomes before an exam, which 3 would give you the broadest coverage — and why those three specifically?</li>
+  </ul>
+  <div class="answer-area" data-section="outcomes">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Configuring OneAPI through Postman is a procedural skill — you can describe the steps from reading, but only running it shows you the friction points: where credentials live, what a real Bearer token looks like, how 401s appear when scopes are wrong. Genuine claim requires building an API Client in ZIdentity, fetching a token at the zslogin endpoint, and making at least one ZIA or ZPA call yourself.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Reciting a definition means reproducing words; explaining means reasoning about why OneAPI matters — that it consolidates ZIA/ZPA/ZCC under one host (api.zsapi.net), removes the multi-token complexity of the traditional framework, and routes geographically through a single gateway. Explanation also means you can answer follow-ups like "what problem did this solve?" without falling back to memorized phrasing.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Outcomes 3 (Explain OneAPI's role), 4 (ZIdentity auth/provisioning), and 6 (architecture and workflow) give the broadest coverage because they form the conceptual backbone — every other outcome references them. If you deeply understand OneAPI, ZIdentity, and the framework architecture, you can reason your way through use cases, troubleshooting, and even unfamiliar Postman configurations on the exam.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-outcomes">
     <div class="section-label">LEARNING OUTCOMES</div>
     <h2>From this course, you should now be able to:</h2>
@@ -214,9 +315,37 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="outcome-text"><span class="outcome-verb">Discuss</span> the necessary troubleshooting steps and best practices for using OneAPI</div>
       </div>
     </div>
+    <div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">Outcomes by verb type: Describe (01, 04, 06) = conceptual recall. Discuss (02, 09) = applied explanation with examples. Explain (03) = deep understanding of why. Identify (05, 08) = recognition and matching. Configure (07) = hands-on practical skill. Exam questions targeting "Explain" and "Configure" verbs require more than memorization — they test whether you understand deeply enough to reason under new conditions.</div>
+  </div>
+</div>
   </div>
 
   <!-- QRG REFERENCE -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · QRG REFERENCE</span></div>
+  <p class="socratic-insight">A Quick Reference Guide is only useful if you've internalized the core facts to the point that the QRG is verification, not primary reference. The real test is whether you can reproduce key facts from memory before opening it. Try that now.</p>
+  <ul class="socratic-questions">
+    <li>Without looking: what are the rate limits for GET, POST/PUT, and DELETE — both the burst limit (per second or per minute) and the hourly limit?</li>
+    <li>Without looking: describe the 3 steps to access OneAPI in your own words. Not the exact procedure — the concepts behind each step.</li>
+    <li>Without looking: what are all four possible causes of a 403 Forbidden error in Zscaler APIs?</li>
+  </ul>
+  <div class="answer-area" data-section="qrg">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">GET is 2 requests per second and 4,000 per hour; POST and PUT are both 1 per second and 400 per hour; DELETE is the strictest at 1 per minute and 4 per hour. Note the asymmetry — DELETE's hourly cap (4) is the practical reason bulk-delete scripts must batch and pace themselves, and it ties directly to why Section 4 emphasizes Retry-After handling on 429s.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Step 1 is locating the base URL (api.zsapi.net plus the product path) — knowing where you're talking to. Step 2 is authenticating against the ZIdentity token endpoint with your Client ID and Secret to receive a short-lived Bearer JWT — proving who you are. Step 3 is making the actual API call with Authorization: Bearer {token} — using that proof to access scoped resources. Conceptually: address, identity, request.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">The four causes of 403 Forbidden are: (1) the API key/client is disabled, (2) the role lacks permission for the resource, (3) the tenant is missing the required SKU, and (4) the portal is in maintenance mode blocking write operations. The shared pattern is "you're authenticated but not authorized" — which is why fixing 403 means checking entitlements, not credentials.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-qrg">
     <div class="section-label">QUICK REFERENCE GUIDE</div>
     <h2>QRG Summary</h2>
@@ -286,9 +415,41 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <tr><td><strong>Error Debugging</strong></td><td>Check JSON formatting → Verify headers/body/params/method → Check auth state → Handle 429 with Retry-After → Retry 409 after delay</td></tr>
       </tbody>
     </table>
+    <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">A QRG is like a pilot's pre-flight checklist. Experienced pilots have the checklist memorized — they could recite every item. But they still run through it every time because memory fails under stress and fatigue. Use the QRG to drill until the facts are automatic, then use it as a verification tool — not the primary source you're reading for the first time during the exam.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">Flash-card these facts: OneAPI host = api.zsapi.net. Token endpoint = &lt;VanityDomain&gt;.zslogin.net/oauth2/v1/token. ZIA = /zia/api/v1. ZPA = /zpa/mgmtconfig/v1 (or /v2 or /userconfig/v1). ZCC = /zcc/papi/public/v1. Branch/Cloud = /ztw/api/v1. GET limits: 2/sec, 4,000/hr. POST/PUT: 1/sec, 400/hr. DELETE: 1/min, 4/hr. 403 causes: (1) key disabled, (2) no role permissions, (3) missing SKU, (4) maintenance mode.</div>
+  </div>
+</div>
   </div>
 
   <!-- VISUAL AIDS -->
+  <div class="socratic-block">
+  <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · VISUAL AIDS</span></div>
+  <p class="socratic-insight">Visual memory aids work because our brains encode images differently from text. A diagram you've actively reconstructed from memory sticks far better than one you've passively read. Think about which flow you could draw on a whiteboard right now — and which one you couldn't.</p>
+  <ul class="socratic-questions">
+    <li>If you had to sketch the complete OneAPI flow — API Client → ZIdentity → OneAPI → Products — from memory on a whiteboard right now, could you get all the components and arrows correct?</li>
+    <li>The Traditional vs ZTA Framework comparison is specifically highlighted. Why would an exam question ask you to compare these two — what conceptual understanding does that test beyond just naming the components?</li>
+    <li>Which of the 4 visual aids (OneAPI flow, Traditional vs ZTA, ZIdentity SSO, Workflow Automation) is most critical for the exam — and which aspect of it would you focus on most?</li>
+  </ul>
+  <div class="answer-area" data-section="visuals">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The flow goes: API Client (registered in ZIdentity) → POST to ZIdentity token endpoint (vanity.zslogin.net/oauth2/v1/token) → receive Bearer JWT → call OneAPI host (api.zsapi.net/{product}/api/v1) with Authorization header → OneAPI validates scope and routes to ZIA/ZPA/ZDX/ZCC. If you can't draw all the arrows and label both hosts correctly, that's the gap to close before exam day.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Comparing Traditional vs ZTA forces you to articulate the *why* of OneAPI — three separate endpoints, three separate tokens, three separate auth flows collapsed into one unified ZIdentity-plus-OneAPI path. That comparison tests whether you understand the problem OneAPI solved, not just its existence, which is exactly the kind of conceptual reasoning exam writers use to separate surface knowledge from real understanding.</div></div>
+      <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Traditional vs ZTA Framework is the most exam-critical because it anchors the "why" behind every other concept in the course — the unified host, single token, geographic routing, and reduced operational overhead all flow from that contrast. Focus on the auth path: in Traditional, three independent token requests to three hosts; in ZTA, one ZIdentity token used across all OneAPI calls. That single shift is the course's central insight.</div></div>
+    </div>
+  </div>
+</div>
   <div class="section-block" id="section-visuals">
     <div class="section-label">VISUAL MEMORY AIDS</div>
     <h2>Diagrams &amp; Visual Placeholders</h2>
@@ -330,6 +491,23 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">i</div>MEMORY TIP — THE 3 STEPS TO ONEAPI</div>
       <div class="callout-body"><strong>1. Locate</strong> — Find your base URL (api.zsapi.net/{product}/api/v1). <strong>2. Authenticate</strong> — POST to ZIdentity token endpoint with your Client ID and Secret to get a Bearer token. <strong>3. Call</strong> — Include Authorization: Bearer {token} in every API request header. That's it — OneAPI handles the rest.</div>
     </div>
+    <div class="analogy-box">
+  <div class="analogy-label">Analogy</div>
+  <div class="analogy-text">Visual diagrams in a study guide are like maps versus GPS turn-by-turn directions. Turn-by-turn (text) tells you exactly what to do step by step — but if you miss a turn, you're lost. A map (diagram) shows you the whole terrain — where everything sits in relation to everything else. Understanding the map means you can navigate even when a specific step isn't memorized. Understanding the architecture diagram means you can reason about the system even when specific details escape you under exam pressure.</div>
+</div>
+<div class="mental-note-block">
+  <div class="mental-note-block-icon">🧠</div>
+  <div class="mental-note-block-inner">
+    <div class="mental-note-block-label">MENTAL NOTE</div>
+    <div class="mental-note-block-text">4 visual aids in this section: (1) OneAPI Full Flow, (2) Traditional vs ZTA Framework comparison, (3) ZIdentity SSO flow, (4) Workflow Automation. The most important for the exam is #2 — Traditional vs ZTA Framework. It tests whether you understand WHY OneAPI was built (the problems it solved), not just WHAT it is. The "why" is what separates understanding from memorization.</div>
+  </div>
+</div>
+<div class="img-display-block">
+  <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+  <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+  <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+  <div class="prompt-content" hidden>[Generate: flat purple side-by-side comparison — left panel labeled "Before" shows three separate auth paths from one laptop to ZIA, ZPA, and ZCC each with their own locks; right panel labeled "After" shows one unified path from the same laptop through ZIdentity + OneAPI gateway to all three products — bold visual contrast between the two approaches, minimalist, no text labels]</div>
+</div>
   </div>
 
 </div><!-- end main-content -->
@@ -384,7 +562,10 @@ const PAGE_KEY='edu270-recap';
 function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
 function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
 function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
-document.addEventListener('DOMContentLoaded',()=>{initChecks();});
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',()=>{initChecks();document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>

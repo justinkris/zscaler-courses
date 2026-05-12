@@ -147,6 +147,44 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .mod-nav-link:hover{background:var(--surface);}
 .mod-nav-link.current{background:var(--surface);font-weight:700;pointer-events:none;color:var(--text);}
 .mod-nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--purple);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted,#6a5a9a);}
+.socratic-insight{font-size:13px;color:var(--text-soft,#2a1a5c);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim,var(--border));line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--purple);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(108,53,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--purple);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
+.img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.uc-grid,.apptotal-steps,.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -183,6 +221,28 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 <main>
 <div class="main-content">
 
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">🤔</span><span class="socratic-label">BEFORE YOU READ — THINK FIRST</span></div>
+    <div class="socratic-insight">Your sensitive data no longer lives only inside your network — it sits at rest inside hundreds of SaaS apps your users signed up for, often without IT knowing. That changes the entire shape of "data security."</div>
+    <ul class="socratic-questions">
+      <li>If a user uploads a confidential file to a SaaS app you don't even know exists, who is responsible for protecting it — you, the vendor, or the user?</li>
+      <li>Inline DLP can stop data on the way <em>to</em> the cloud. What about data that's already sitting in OneDrive, Box, or Salesforce from years ago?</li>
+      <li>Why might Zscaler need both <em>inline</em> and <em>out-of-band</em> approaches rather than just one or the other?</li>
+    </ul>
+    <div class="answer-area" data-section="overview">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Under shared responsibility, the SaaS vendor secures the platform; the customer remains responsible for the data they put into it. That responsibility does not transfer just because IT did not know about the app. The user owns the immediate act, but the organisation owns the policy, monitoring, and consequence — which is exactly why CASB and Shadow IT discovery are first-class capabilities, not optional add-ons.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Inline DLP cannot — by the time you turn it on, that file is already at rest in the SaaS tenant. You need an out-of-band CASB that connects via API and scans the historical contents of OneDrive, Box, Salesforce, and the rest. The "today" gate is inline; the "everything that came before today" sweep is API-based scanning. Both are required for full coverage.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Because the two approaches answer different questions. Inline catches data in transit and prevents the leak from happening — it is preventive, real-time, and surgical. Out-of-band scans data at rest and catches what already landed — it is investigative, historical, and comprehensive. Use only inline and you cannot remediate the past; use only out-of-band and every new leak happens before you see it.</div></div>
+      </div>
+    </div>
+  </div>
+
   <!-- OVERVIEW -->
   <div class="section-block" id="section-overview">
     <div class="section-label">OVERVIEW</div>
@@ -198,12 +258,52 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="key-concept">
       <strong>Secure SaaS Data covers:</strong> CASB (control shadow IT & sharing), SSPM (misconfigurations & compliance), Supply Chain (secure integrations), and Microsoft Copilot Security (control sensitive data access & output).
     </div>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">IMAGE PROMPT</div>
+      <div class="img-gen-prompt">A flat isometric illustration in deep purple (#6c35cc) and lavender tones showing a translucent fortress-like enterprise data vault with glowing API tendrils reaching outward to floating SaaS app icons (cloud, document, chat, code repo) — symbolising data at rest being secured across many cloud applications simultaneously.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">ANALOGY</div>
+      <div class="analogy-text">Inline DLP is like the security guard at the front door checking everyone walking in. Out-of-band SaaS security is the auditor who walks through every filing cabinet inside the building — months or years later — to make sure nothing sensitive ended up in the wrong drawer.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <span class="mental-note-block-icon">🧠</span>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Unified SaaS Security = CASB + SSPM + Supply Chain + Copilot Security. It protects data <em>already inside</em> the SaaS, not just data in transit.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
       <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">🤔</span><span class="socratic-label">BEFORE YOU READ — THINK FIRST</span></div>
+    <div class="socratic-insight">An "out-of-band" CASB sits outside the live traffic path — it talks to SaaS apps directly through their APIs. That seems slower than inline inspection, but it unlocks something inline can never do: read the entire history of what's already there.</div>
+    <ul class="socratic-questions">
+      <li>If a contractor shared a folder publicly six months before you turned on DLP, how would inline scanning ever catch it?</li>
+      <li>What's the trade-off between a one-time "retro scan" of an entire SaaS tenant versus an "iterative scan" that only watches for changes?</li>
+      <li>Why would a CASB need to look at <em>misconfigurations</em> (SSPM) and not just sensitive content?</li>
+    </ul>
+    <div class="answer-area" data-section="casb">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">It cannot — inline scanning only sees traffic flowing right now, and the public share was created six months ago through normal authenticated activity. The fix is a retro scan via the SaaS provider's API: the CASB reads the tenant's permission state and content, identifies the public folder, and flags or remediates it. Without an out-of-band capability, six months of public exposure remains invisible forever.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Retro scans are heavy and one-time-ish — useful for the initial sweep when CASB is first turned on, since they cover the entire tenant. Iterative scans are continuous and incremental — they catch new and changed objects without re-scanning the world. The trade-off is depth versus efficiency: retro tells you the full state today, iterative keeps that state current without the cost of repeated full scans. Most deployments do an initial retro then live on iterative.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Because the most damaging SaaS breaches often start with a misconfiguration — public buckets, over-permissive sharing defaults, dormant admin accounts, missing MFA — not with sensitive content sitting in the wrong place. SSPM (SaaS Security Posture Management) catches the structural drift that makes the content leakable in the first place. Watching only the content is treating the symptom; watching the configuration is treating the cause.</div></div>
+      </div>
     </div>
   </div>
 
@@ -260,12 +360,52 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">★</div>SSPM KEY POINT</div>
       <div class="callout-body">SSPM is built into the OOB CASB solution. It identifies SaaS application misconfigurations — comparing them against predefined best practices — and provides compliance mapping against standards. It also discovers third-party application integrations (e.g., apps connected to Office 365) that may be risky.</div>
     </div>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">IMAGE PROMPT</div>
+      <div class="img-gen-prompt">A clean diagram in purple (#6c35cc) tones depicting a CASB control plane with API hooks reaching into stacked SaaS app cards (M365, Salesforce, Box, GitHub) — one hook labelled "retro scan" sweeping a long historical timeline, another labelled "iterative scan" watching a single new file event in real time.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">ANALOGY</div>
+      <div class="analogy-text">Out-of-band CASB is like hiring a librarian with master keys to every cabinet in the building. They quietly walk shelf by shelf (retro scan), then keep an eye only on books being moved or added (iterative scan) — without ever blocking someone walking through the front door.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <span class="mental-note-block-icon">🧠</span>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">5 OOB CASB use cases: <em>Discover · Prevent Exposure · Threats · SSPM · 3rd Party Apps</em>. Same DLP policies as inline — applied via API to data at rest.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-casb" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('casb','Out-of-Band CASB')">Add Question</button></div></div>
       <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-casb" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-casb"></span></div></div>
+    </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">🤔</span><span class="socratic-label">BEFORE YOU READ — THINK FIRST</span></div>
+    <div class="socratic-insight">Detecting thousands of DLP incidents is useless if nobody can turn that volume into action. A summary report is where raw scan output becomes a prioritised investigation queue.</div>
+    <ul class="socratic-questions">
+      <li>If you saw 2,700 incidents across multiple apps, where would you start — by user, by department, by app category, or by DLP engine?</li>
+      <li>Why does it matter to see incidents broken down by category (Repository, Gen AI, CRM, Collab) rather than just one giant number?</li>
+      <li>What story does "one user generated 2,400 incidents" tell — and what would you do about it?</li>
+    </ul>
+    <div class="answer-area" data-section="report">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Start by user — one heavy hitter often accounts for a wildly disproportionate share of incidents (a single export-happy account, a misconfigured automation, or a departing employee). Sorting by user reveals concentration; sorting by department reveals systemic process gaps; sorting by app and DLP engine helps you tune policy. The right first cut is "where is the concentration?" because that surfaces both the worst risk and the cheapest fix.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Because the response is category-specific. A Repository incident usually means source code or secrets — escalate to engineering. Gen AI means prompt leakage — that is a user-education and policy-tuning problem. CRM means customer PII — privacy and legal get looped in. Collab means external sharing — a permissions clean-up. One big number tells you nothing; the breakdown points to the right responder.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">It almost always means one of three things: the user is doing legitimate bulk work the policy was not tuned for (false positives, fix the rule), the user is preparing to leave (insider threat, freeze and investigate), or there is an automated process running under their account (compromised credentials or rogue automation). The next step is to look at the temporal pattern and the destinations — that disambiguates quickly.</div></div>
+      </div>
     </div>
   </div>
 
@@ -294,12 +434,47 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">★</div>EXAMPLE METRICS</div>
       <div class="callout-body">A sample report showed <strong>2.7K total incidents</strong> across 3,530 files scanned, with Repository Applications generating 2,280 DLP incidents. The top department (Default Department) had 2.8K incidents, while the top user had 2.4K incidents — surfacing exactly where to focus investigation and policy tightening.</div>
     </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">ANALOGY</div>
+      <div class="analogy-text">The SaaS Assets Summary Report is like a hospital triage board. Out of every patient walking through the door, it highlights who is bleeding the most, in which ward, and which doctor needs to be paged first — so admins stop scrolling logs and start fixing the biggest leaks.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <span class="mental-note-block-icon">🧠</span>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">The report surfaces 4 lenses: <em>incident trend, app category, top departments, top users</em> — so you act on the highest-risk corner of your SaaS estate first.</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-report" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('report','SaaS Assets Report')">Add Question</button></div></div>
       <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-report" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-report"></span></div></div>
+    </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">🤔</span><span class="socratic-label">BEFORE YOU READ — THINK FIRST</span></div>
+    <div class="socratic-insight">Every time a user clicks "Sign in with Microsoft" or "Allow access" on a free third-party tool, they may be silently handing OAuth tokens to a vendor you've never reviewed. That third-party app now reads your corporate data on a user's behalf — 24/7.</div>
+    <ul class="socratic-questions">
+      <li>Why is an OAuth grant from one employee potentially more dangerous than a stolen password? What can the app still do if the user later changes their password?</li>
+      <li>If a marketing intern connects a free PDF-signing app to your Microsoft 365 tenant, what supply chain risk have they just introduced?</li>
+      <li>Why does AppTotal offer three different remediation options (End User Review, Revoke, Ban) instead of just blocking everything risky by default?</li>
+    </ul>
+    <div class="answer-area" data-section="apptotal">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Because OAuth grants persist independent of the user's password. The app holds long-lived tokens that read mail, files, calendar — 24/7 — using the user's identity. Changing the password does not revoke the token; only revoking the grant or expiring the refresh token does. Stolen passwords are caught by MFA and detection; rogue OAuth grants are silent, persistent, and look like the user themselves.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">A third-party vendor of unknown security posture now has standing access to corporate documents through the user's identity. If that vendor is breached, the attacker inherits a quiet, fully-authenticated tunnel into your tenant. The intern made a click-level decision; the organisation inherited a supply-chain risk in a vendor it has never reviewed. This is exactly the failure mode AppTotal is built to surface.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Because risk is on a spectrum and so should the response be. End User Review pushes lightweight clarifications back to the user (good for grey-zone apps). Revoke cuts the existing grant without banning the app for everyone (good for known issues, single user). Ban prevents future grants org-wide (good for confirmed malicious or unacceptable apps). Defaulting everything to ban produces user revolt and shadow workarounds; graduated response lets you scale enforcement to the actual risk.</div></div>
+      </div>
     </div>
   </div>
 
@@ -341,6 +516,24 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-header"><div class="callout-icon">★</div>APPTOTAL SUMMARY</div>
       <div class="callout-body">Zscaler AppTotal profiles third-party apps <em>before</em> they're connected to IT-approved platforms, continuously monitors app behaviour in your environment, and streamlines end-user recertifications to revoke dormant or over-privileged app access.</div>
     </div>
+
+    <div class="img-gen-placeholder">
+      <div class="img-gen-label">IMAGE PROMPT</div>
+      <div class="img-gen-prompt">A purple (#6c35cc) themed conveyor-belt illustration showing a third-party app icon moving through three glowing stations labelled "Discover", "Analyze", and "Remediate" — the analyze station shows a sandbox bubble with a magnifier and gears; the remediate station forks into three coloured paths labelled End User Review, Revoke, and Ban.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">ANALOGY</div>
+      <div class="analogy-text">AppTotal is the airport security checkpoint for OAuth-connected apps. Discover is the passenger manifest, Analyze is the x-ray and behavioural screening, and Remediate is the customs officer who can wave them through, revoke their visa, or ban them permanently from the country.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <span class="mental-note-block-icon">🧠</span>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">AppTotal = <em>Discover → Analyze → Remediate</em>. Static Analysis + Sandbox + Heuristics. Three remediation options: End User Review, Revoke (Google), Ban (Microsoft).</div>
+      </div>
+    </div>
   </div>
 
   <div class="lesson-tools">
@@ -348,6 +541,16 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-apptotal" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('apptotal','AppTotal Security')">Add Question</button></div></div>
       <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-apptotal" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-apptotal"></span></div></div>
     </div>
+  </div>
+
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">🤔</span><span class="socratic-label">BEFORE YOU ANSWER — THINK FIRST</span></div>
+    <div class="socratic-insight">A good DLP-driven response is proportional: it neutralises the immediate exposure without breaking the business or punishing the wrong people. Look for the option that removes the risk surgically and tells someone who can investigate.</div>
+    <ul class="socratic-questions">
+      <li>What is the <em>actual</em> exposure here — the file existing, or the public link giving external users access to it?</li>
+      <li>Which options over-react (delete data, block all future uploads) versus under-react (just warn)?</li>
+      <li>Why is admin notification almost always paired with the remediation step instead of being the remediation itself?</li>
+    </ul>
   </div>
 
   <!-- KNOWLEDGE CHECK -->
