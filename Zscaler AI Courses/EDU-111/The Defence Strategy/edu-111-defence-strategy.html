@@ -195,6 +195,14 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
 .model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
 .model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.pillar-grid,.debrief-grid,.lesson-tools-grid{grid-template-columns:1fr;}.timeline-step{grid-template-columns:1fr;}.timeline-right{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -277,10 +285,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">A medieval castle did not protect itself with one tall wall. It used moats, gatehouses, inner baileys, and a constant watch — each layer compensating for the one before it. The Zscaler framework is the same idea: See is the watchtower, Control is the gatehouse, Protect is the keep, and Governance is the captain who walks the walls every night so no torch goes unlit.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a medieval castle in wide cross-section as an analogy for layered defence. Four labelled-by-imagery defensive layers visible left-to-right. Layer 1 (See): a tall stone watchtower at the outer edge with a vigilant sentry holding a telescope and a signal horn, banners flying, a wide view of the surrounding countryside. Layer 2 (Control): a fortified gatehouse with a drawbridge over a moat, portcullis halfway down, a stern guard inspecting visitors, allow-and-deny gesture. Layer 3 (Protect): a strong central keep with thick stone walls, brave knights in shining armour ready with shields and swords at the doorway. Layer 4 (Governance): a captain of the watch in a long cloak walking the battlements at twilight carrying a lantern, lighting torches along the wall, a calm reassuring presence. Stars beginning to appear in the sky, dragon-shaped pennants. A small enemy archer figure outside the moat illustrates that no single layer is the only defence. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">Image Placeholder</div>
-      <div class="img-gen-prompt">Generate: flat green minimalist illustration of three concentric defensive rings around a central node, with a continuous thin band weaving through all three layers, palette of emerald and forest green with cream accents, geometric and clean, no text labels</div>
+    <div class="img-display-block">
+      <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat green minimalist illustration of three concentric defensive rings around a central node, with a continuous thin band weaving through all three layers, palette of emerald and forest green with cream accents, geometric and clean, no text labels</div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -351,10 +367,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Think of the human immune system. Innate immunity scans for anything unfamiliar (See). Skin and mucous membranes filter what comes in (Control). White blood cells engage what gets past the barrier (Protect). And the lymphatic system runs continuously in the background, remembering, adapting, sustaining (Govern). Remove any layer and the body still functions briefly — until a single infection cascades.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of the human immune system as an analogy for layered cybersecurity defence. Four anatomically friendly cartoon scenes inside a transparent human body silhouette standing tall. Scene 1 (See / Innate Immunity): tiny anthropomorphic sentinel cells at the surface of the skin holding little magnifying glasses, scanning incoming pathogens for anything unfamiliar. Scene 2 (Control / Barriers): a cross-section of skin and mucous membranes drawn like a fortress wall with tiny soft hairs and trapdoors, friendly-looking microbes being filtered out or let through. Scene 3 (Protect / White Blood Cells): heroic white blood cell characters with capes engaging cartoon viruses and bacteria in playful combat. Scene 4 (Govern / Lymphatic System): a glowing branching network of vessels with a smart-looking memory-cell character at a control desk reviewing a chart, with little adaptation gears spinning continuously in the background. Soft pastel anatomical colours, warm friendly tone, mood of coordinated whole-body teamwork. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">Image Placeholder</div>
-      <div class="img-gen-prompt">Generate: flat green minimalist illustration of three vertical pillars supporting a horizontal beam, with a continuous green thread weaving through and around all three pillars, palette of forest green, sage, and cream, geometric and architectural, no text labels</div>
+    <div class="img-display-block">
+      <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat green minimalist illustration of three vertical pillars supporting a horizontal beam, with a continuous green thread weaving through and around all three pillars, palette of forest green, sage, and cream, geometric and architectural, no text labels</div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -535,10 +559,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Picture a fighter pilot and the aircraft's flight computer. The computer sees a thousand telemetry signals per second, predicts stall conditions, and offers corrections. But the pilot decides whether to engage, evade, or hold. Strip away the computer and the pilot is overwhelmed; strip away the pilot and the aircraft has no purpose. The SOC analyst and the AI work the same way — and at 8:15 AM with seconds to act, both seats are occupied.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a fighter-jet cockpit cutaway as an analogy for human-AI co-piloting in the SOC. Centre: a sleek jet with the canopy open showing two seats occupied. Front seat: a focused human pilot in flight helmet and oxygen mask, gloved hands on the stick, eyes calmly scanning the horizon at sunrise, decision-arrows pointing forward (engage / evade / hold). Back seat / dashboard: a friendly anthropomorphic flight computer character with multiple screens, dozens of telemetry dials, line graphs, predictive stall-warning indicators, a thousand glowing data streams represented as flowing ribbons of numbers entering its sensors. The computer is whispering suggestions in a speech bubble containing little chart icons; the pilot's speech bubble contains a thumbs-up decision icon. A small digital clock on the dashboard shows an early-morning time (visualised as a sun barely above the horizon). Clouds streaking past, sunrise gradient. Both seats clearly indispensable. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">Image Placeholder</div>
-      <div class="img-gen-prompt">Generate: flat green minimalist illustration of a horizontal timeline with seven nodes connected by a flowing line, each node a different small abstract icon, palette of emerald green with cream and charcoal accents, clean and editorial, no text labels</div>
+    <div class="img-display-block">
+      <img src="3.png" alt="Diagram 3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>3.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat green minimalist illustration of a horizontal timeline with seven nodes connected by a flowing line, each node a different small abstract icon, palette of emerald green with cream and charcoal accents, clean and editorial, no text labels</div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -604,6 +636,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">A surgical team is the cleanest analogy. The monitoring equipment tracks every vital sign at machine speed, flags anomalies before a human could feel them, and recommends interventions. But the surgeon decides where to cut. After the operation, the nurses debrief, the surgeon updates the protocol, and the equipment learns nothing on its own. Speed and scale belong to the machines; consequence and context belong to the humans.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an operating theatre as an analogy for the human-machine division of labour. Central scene: a calm surgical team gathered around a draped patient on an operating table under a bright overhead lamp. To one side: tall monitoring machines drawn with friendly digital faces, beeping rhythmically, displaying ECG waveforms and oxygen saturation bars, with little spark icons and warning flag icons signalling anomalies the instant they appear. To the other side: the lead surgeon in cap, mask and gown holding a scalpel with steady, thoughtful concentration, eyes intent on the patient, a halo of decision arrows above her head pointing to a precise spot to cut. In the foreground: two nurses afterward holding clipboards in a small debrief huddle, while the surgeon updates a binder labelled with a protocol-update icon. The machines stand quietly in the corner — unable to learn on their own (shown by a small "no update" icon over them). Mood of disciplined teamwork, sterile pale-green and soft-blue surgical palette. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -658,6 +696,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Reactive security is a goalkeeper diving for the shot already in the air. Proactive security is the defender who reads the striker's run two passes earlier and closes the lane before the shot is taken. The goalkeeper still matters — but the team that wins is the one whose defenders never let the shot happen. Both require the same field of view; proactive defence just acts on it sooner.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a football (soccer) pitch as an analogy for reactive versus proactive defence. Wide composition viewed from above and from the side. Right side scene (Reactive): a goalkeeper in bright gloves and jersey heroically diving full-stretch through the air toward a ball already screaming past him into the top corner of the net — dramatic motion lines, sweat drops, last-second desperation, mood of "too late". Left side scene (Proactive): a calm, clever defender further up the field, eyes wide and tracking the striker's run, intercepting the pass long before a shot can be attempted, predictive dotted arcs showing future passing lanes drawn across the pitch, the would-be shooter frustrated with hands on hips, the threat snuffed out early, mood of foresight and ease. Same green pitch, same white lines, same teammates visible — emphasising same field of view but earlier action. A scoreboard in the distance shows the proactive team winning. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -741,6 +785,7 @@ document.addEventListener('DOMContentLoaded',()=>{renderQPanel();initNotes();if(
 function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
 function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
 document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>

@@ -159,6 +159,32 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
 .img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
 .img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:900px){header{padding:24px 20px 20px;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.dspm-flow{grid-template-columns:1fr 1fr;}.compare-grid,.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -201,6 +227,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>A cloud bucket, a laptop, and a personal iPad — which of these does your current security stack actually see today?</li>
       <li>What is the boundary you're trying to protect — the network, the device, or the data itself?</li>
     </ul>
+    <div class="answer-area" data-section="boundary">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">In most modern environments, more than half — sometimes much more. Local USB copies, screenshots, prints, drag-and-drop between apps on the same device, cloud-to-cloud transfers between SaaS apps that never touch your network, AI prompts from personal devices on home wifi — none of it appears in proxy logs. Network-only DLP measures one slice of one channel and calls it coverage. The real number is uncomfortable.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Honestly: usually none of them, fully. The cloud bucket may be visible to a CSPM tool you bought but don't operationalise. The laptop may have an EDR agent but no DLP. The personal iPad accesses everything via SaaS and is completely invisible. The exercise of asking the question is more useful than expecting a yes — it makes the gap concrete and points at which tool fills which seam.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">The data itself. The network and device are increasingly impermanent containers — users switch them constantly, and SaaS removes them from the equation entirely. Data-centric security follows the data: classify it, enforce policy at every channel it traverses, and tie access to identity rather than location. The network and device become enforcement surfaces, not the boundary.</div></div>
+      </div>
+    </div>
   </div>
 
   <!-- OVERVIEW -->
@@ -216,6 +254,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">ANALOGY</div>
       <div class="analogy-text">Inline web traffic is the front door of an office building. Cloud, endpoint, and BYOD are the loading dock, the employees' briefcases, and the visitors' phones. A guard at the front door — no matter how diligent — never sees those three. You need cameras in all four places, or you don't have security; you have a checkpoint.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an office building cutaway as an analogy for four data control points. Wide composition. Front Door (Inline Web): a diligent guard at the main entrance checking visitors politely, a CCTV camera on the wall above. Loading Dock (Cloud): around the side of the building a busy loading dock with trucks dropping off enormous cloud-shaped pallets directly into a back warehouse — no guard in sight, no camera. Briefcases (Endpoint): inside the lobby employees stroll past carrying briefcases bulging with documents, the front-door guard cheerfully waves them through without inspection. Visitors' Phones (BYOD): in a waiting area visitors casually photograph confidential whiteboards on their personal phones, completely unmonitored. Above the scene: four small dotted-line outlines of cameras hover, one over each location, three of them greyed out / missing while only the front door's camera is active. A speech bubble from the front-door guard says it all with a clueless shrug icon. Mood: a single checkpoint is not security. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
 
     <div class="mental-note-block">
@@ -242,6 +286,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>A bucket created by an engineer last quarter, with public read access, holding a CSV of test data that turned out to be production — how would you discover it before an attacker does?</li>
       <li>What's the difference between knowing data exists and knowing whether it is exposed?</li>
     </ul>
+    <div class="answer-area" data-section="cloud">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Without DSPM, almost nobody can. Cloud sprawl, multi-cloud, ephemeral environments, dev/test copies, snapshots, backups, data lakes — sensitive data ends up in dozens of stores nobody is tracking centrally. A week is generous; most organisations cannot answer it in a month, which means in any breach the first painful job is discovery. DSPM exists to make that question answerable in real time, not after the fact.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">DSPM continuously scans cloud accounts for stores, classifies their contents, and overlays exposure (public access, over-permissive IAM, shared keys, third-party access). It would flag the bucket as containing PII-class data with public read — exactly the combination an attacker would scan for. Without DSPM, the bucket sits invisible to the security team and visible to the internet, which is the recipe for the cloud breaches that make the news.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Knowing data exists is an inventory question — what is here? Knowing whether it is exposed is a posture question — who can reach it, with what credentials, over which network paths? The first is necessary but not sufficient; the second tells you whether you have a problem. Mature DSPM joins both: a single view that says "this customer PII lives in this bucket and is currently exposed to the internet."</div></div>
+      </div>
+    </div>
   </div>
 
   <!-- SECURE CLOUD DATA -->
@@ -277,14 +333,22 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">DSPM provides: Data Discovery (identify sensitive data across cloud), Posture Control (find misconfigurations &amp; vulnerabilities), and Actionable Insights (correlate, prioritise, auto-remediate). It also offers a geographical data breakdown — showing the types and volume of data stored in each location.</div>
     </div>
 
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">IMAGE PROMPT</div>
-      <div class="img-gen-prompt">Editorial illustration in amber and warm cream tones: a vast warehouse with countless unmarked crates stretching to the horizon. A figure in the foreground holds a glowing amber lantern, illuminating crates that reveal labels — "PII", "PCI", "PUBLIC", "EXPOSED". The unlit crates remain dark and anonymous. Caption mood: discovery before defense.</div>
+    <div class="img-display-block">
+      <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Editorial illustration in amber and warm cream tones: a vast warehouse with countless unmarked crates stretching to the horizon. A figure in the foreground holds a glowing amber lantern, illuminating crates that reveal labels — "PII", "PCI", "PUBLIC", "EXPOSED". The unlit crates remain dark and anonymous. Caption mood: discovery before defense.</div>
     </div>
 
     <div class="analogy-box">
       <div class="analogy-label">ANALOGY</div>
       <div class="analogy-text">DSPM is the home inspector for your cloud. The Scanner walks every room with a clipboard — "What's in this closet? Who has a key? Is the window unlocked?" The Orchestrator is the contractor who follows behind: locking the windows, changing the keys, and writing the report. Without both, you have either a list of problems no one fixes, or fixes applied to problems no one mapped.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a house inspection as an analogy for DSPM's Scanner and Orchestrator. Cross-section of a cute two-storey suburban house with multiple visible rooms. Scene 1 (Scanner): a friendly home inspector in a hard hat with a clipboard moving methodically from room to room, opening closets to peer at what's stored inside, checking who has keys hanging by the door, testing window latches and noting findings; trailing dotted-line footprints show the entire walking route. Scene 2 (Orchestrator): a cheerful contractor in overalls and a tool belt follows behind, locking the windows the inspector flagged, swapping out lock cylinders, and stapling the completed inspection report on the front door with a satisfied stamp. To the side: two warning vignettes — "Scanner only" showing a stack of unread reports piling up while broken windows remain ajar, and "Orchestrator only" showing the contractor randomly hammering at things that were fine while the real problem upstairs goes unmapped. Friendly residential setting, garden, mailbox. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
 
     <div class="mental-note-block">
@@ -311,6 +375,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>A user uploads a sensitive file to personal Google Drive — they may be exfiltrating, or they may be working over the weekend. How do you tell the difference without slowing both down?</li>
       <li>Is a hard block always the right answer, or does a justified soft-block sometimes produce better outcomes — for security AND productivity?</li>
     </ul>
+    <div class="answer-area" data-section="endpoint">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Network-only DLP goes offline with the network. At the coffee shop, the device is on hostile wifi and the user can print, USB-copy, screenshot, and drag-and-drop locally with no inspection. Endpoint DLP — enforced by an agent on the device — keeps policy alive regardless of the network. The agent is the only thing that follows the device home; everything else assumes a network path that may not exist.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Use a soft-block with justification. The user is presented with the policy and asked to enter a business reason; the upload proceeds, the justification is logged, and the security team gets context for review. Legitimate weekend work continues with friction-and-evidence; intent to exfiltrate produces a self-incriminating justification or no justification at all. Soft-block is the cheapest insider-threat signal you can deploy.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">No. Hard blocks are right when the action is unambiguously harmful (classified data to a personal cloud, credentials to an attacker's site). Soft blocks with justification are right when intent is the unknown variable — they protect the data, capture the reason, and avoid the productivity damage and shadow-workaround backlash that come from blanket hard blocking. The right answer is the proportional one, and the proportionality lives in the policy.</div></div>
+      </div>
+    </div>
   </div>
 
   <!-- SECURE ENDPOINT DATA -->
@@ -341,14 +417,22 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">The rule name <strong>"Block sensitive data to the cloud"</strong> is set to protect personal cloud storage — e.g., blocking uploads to personal Google Drive, Dropbox, or OneDrive while allowing uploads to corporate accounts. This is a named rule that appears in the Endpoint DLP policy configuration.</div>
     </div>
 
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">IMAGE PROMPT</div>
-      <div class="img-gen-prompt">Editorial illustration in amber and warm cream: a person at a laptop is mid-action — about to drag a glowing amber document toward a cloud labeled "Personal Drive." A translucent amber dialog box hovers in front of the screen asking "Why?" rather than a red STOP sign. The mood is dialogue, not denial.</div>
+    <div class="img-display-block">
+      <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Editorial illustration in amber and warm cream: a person at a laptop is mid-action — about to drag a glowing amber document toward a cloud labeled "Personal Drive." A translucent amber dialog box hovers in front of the screen asking "Why?" rather than a red STOP sign. The mood is dialogue, not denial.</div>
     </div>
 
     <div class="analogy-box">
       <div class="analogy-label">ANALOGY</div>
       <div class="analogy-text">User Confirmation is the librarian who lets you check out the rare book — but only after you sign your name and say what you need it for. A hard block is the locked cage. Both protect the book, but only one tells you who wanted it, why, and how often. Over time, the signatures teach you more about your library than the cage ever could.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a special collections library as an analogy for User Confirmation versus hard blocks. Wide composition with two parallel rooms. Left room (User Confirmation): a warm rare-books reading room with a gentle librarian at an oak desk, offering a rare leather-bound book to a researcher in exchange for a signed checkout slip with handwritten name, reason, and date; an elegant ledger nearby shows growing rows of past signatures. Right room (Hard Block): a stark vault-like corridor with the same kind of rare book displayed in a heavy iron birdcage, padlocked, untouchable — a frustrated researcher stares longingly through the bars, no ledger, no signatures. Above both rooms: a tall stack of accumulated signed slips on the User Confirmation side morphs into a clear bar chart showing who, why, and how often, while the Hard Block side shows just a flat empty graph. Mood: the signatures teach you more than the cage. Soft library lighting on left, cold institutional light on right. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
 
     <div class="mental-note-block">
@@ -375,6 +459,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>Traditional VDI solves this by streaming pixels — but at what cost in dollars, latency, and operational complexity? Is there a lighter path?</li>
       <li>What's the difference between a web app (which fits in a browser) and a thick-client app (which doesn't) — and why does that distinction matter for BYOD security?</li>
     </ul>
+    <div class="answer-area" data-section="byod">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Browser Isolation. The application is rendered in a remote, ephemeral browser in Zscaler's cloud and only pixels (and limited input events) are streamed to the BYOD device. Copy/paste, screenshots, downloads, and printing can be selectively disabled per policy. Nothing sensitive ever touches the local browser cache, OS clipboard, or local disk — there is no local copy to leak.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">VDI ships a full virtual desktop, which is expensive, latency-sensitive, agent-heavy, and operationally complex — and the user experience is often poor enough that adoption fails. Browser Isolation accomplishes the same data-containment goal for browser-based work without the OS-level overhead. For most BYOD use cases (SaaS, web apps, internal portals), isolation is the right-sized answer; VDI remains for thick-client work that has no browser equivalent.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">A web app runs entirely in the browser — its UI, state, and rendering live there — so Browser Isolation can host it remotely and stream pixels. A thick-client app needs a native OS runtime (CAD tools, locally installed Office, custom Windows software) that cannot be containerised in a browser, so for thick clients you fall back to VDI or managed devices. The distinction matters because it tells you which BYOD architecture (isolation vs VDI) is the right fit per app.</div></div>
+      </div>
+    </div>
   </div>
 
   <!-- BYOD -->
@@ -413,14 +509,22 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>The dual approach achieves VDI-like controls in a cost-effective, agile, and scalable manner</li>
     </ul>
 
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">IMAGE PROMPT</div>
-      <div class="img-gen-prompt">Editorial illustration in amber and cream: a personal laptop sits open on a kitchen table. On its screen, a glowing amber bubble contains a small office scene — files, charts, an app — but the bubble is sealed off from the laptop's keyboard, clipboard, and download folder by a faint amber boundary. The data is visible but untouchable. Mood: containment without weight.</div>
+    <div class="img-display-block">
+      <img src="3.png" alt="Diagram 3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>3.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Editorial illustration in amber and cream: a personal laptop sits open on a kitchen table. On its screen, a glowing amber bubble contains a small office scene — files, charts, an app — but the bubble is sealed off from the laptop's keyboard, clipboard, and download folder by a faint amber boundary. The data is visible but untouchable. Mood: containment without weight.</div>
     </div>
 
     <div class="analogy-box">
       <div class="analogy-label">ANALOGY</div>
       <div class="analogy-text">Browser Isolation is the museum glass case. You can see the artifact, walk around it, photograph the placard — but you cannot touch it, pocket it, or take it home. PRA is the same idea for the back rooms — RDP and SSH conducted through a glass corridor that ends before it reaches the visitor's hands. VDI tried to do this by handing visitors hazmat suits. The new approach is just to put the artifact behind glass.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a museum as an analogy for Browser Isolation, PRA, and VDI. Wide composition. Centre (Browser Isolation): a polished museum gallery where a curious visitor stands before a rare artifact (depicted as a shining ancient vase shaped like a tiny computer monitor) sealed inside a crystal-clear glass case; she happily walks around it, leans in close, snaps a photo of the placard with a camera — but cannot touch, pocket, or remove it. Right wing (PRA / Back Rooms): a back-of-house corridor labelled by imagery as the "staff archive" containing server-shaped artifacts; a glass corridor extends partway in, allowing an external admin to perform careful RDP/SSH interactions through a transparent wall, the glass corridor visibly ending before reaching the admin's hands. Left wing (VDI / Old Way): a comedic contrasting vignette of visitors awkwardly suited up in clunky hazmat gear with helmets and gloves trying to interact with artifacts directly — old and impractical, crossed out. A small caption arrow points from VDI hazmat to the glass case as the modern simpler solution. Polished marble floors, museum lighting, velvet ropes. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
 
     <div class="mental-note-block">
@@ -447,6 +551,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>Is the "Block sensitive data to the cloud" rule aimed at corporate Drive/OneDrive accounts, or at personal ones?</li>
       <li>Does DSPM expose geographical distribution of data, or only the types of data discovered?</li>
     </ul>
+    <div class="answer-area" data-section="kcheck">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Allowed — the entire point of a soft-block plus justification is that the action proceeds once the user accepts policy and gives a reason. The justification is logged for review, but the user is not blocked. If justification were ignored or the action denied anyway, the user would have no incentive to engage with the prompt, and the system would degrade into a hard-block-with-an-extra-click.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Personal cloud accounts. Corporate Drive and OneDrive are the sanctioned destinations — DLP applies its rules there but is not designed to block them. The "Block sensitive data to the cloud" rule targets the exfiltration channel: personal accounts on the same providers (and other unsanctioned cloud storage) that look identical at the domain level but are not your tenant. Tenant Restrictions and content classification together make this distinction enforceable.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Both. DSPM tells you what types of data exist (PII, PCI, source code, secrets) and where — including geographic region, which is essential for regulatory compliance (GDPR, data residency requirements, regional privacy laws). Knowing customer PII exists is useful; knowing it crosses the EU border into a US-region bucket is what determines whether you have a regulatory problem on your hands.</div></div>
+      </div>
+    </div>
   </div>
 
   <!-- KNOWLEDGE CHECK -->
@@ -531,6 +647,10 @@ function toggleCheck(li){li.classList.toggle('done');const s=getStore();if(!s.ch
 (function restoreChecks(){const s=getStore();if(!s.checks)return;document.querySelectorAll('#checklist li').forEach(li=>{if(s.checks[li.querySelector('span').textContent])li.classList.add('done');});})();
 function navTo(id,btn){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');}
 (function init(){renderQPanel();const s=getStore();if(s.qOpen){const body=document.getElementById('qpanel-body');const hdr=document.getElementById('qpanel-header');const chev=document.getElementById('qpanel-chevron');body.classList.add('open');hdr.classList.add('open');chev.textContent='▴';}})();
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>

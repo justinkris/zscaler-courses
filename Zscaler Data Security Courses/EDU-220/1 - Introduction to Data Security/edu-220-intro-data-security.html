@@ -215,6 +215,14 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
 .model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
 .model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.stats-grid{grid-template-columns:1fr 1fr;}.pillar-grid{grid-template-columns:1fr;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -318,6 +326,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Data is the new oil — but unlike oil, it doesn't sit in one tanker. It seeps through pipelines made of SaaS apps, cloud buckets, email threads, and BYOD phones. Bolting a single padlock on the refinery door no longer works when the pipeline runs through everyone's pocket.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a sprawling oil-refinery landscape as an analogy for distributed data flows. Left side: a classic squat oil refinery with tall smokestacks and a single big steel front door bolted with a comically large padlock — but the refinery itself is mostly empty inside. Right side: a vast spider-web of glowing pipelines snaking outward in every direction, branching across the scene into multiple destinations — a small cloud-bucket shaped tank labelled with a cloud icon, a SaaS-application building shaped like a friendly app window, an email-envelope depot, and a tiny pipeline that runs all the way into a person's trouser pocket holding a smartphone (BYOD). Droplets of glowing amber data leak from various unexpected joints in the pipeline. A confused security guard with a single key stands at the refinery door realising it's no longer the bottleneck. Mood of sprawling distribution. Industrial cartoon style with valves, pressure gauges and warning lights. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -326,9 +340,11 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="mental-note-block-text">Modern data security must protect data at rest, in motion, in cloud, and on unmanaged/BYOD devices — a unified layer across every channel, not a stack of disconnected tools.</div>
       </div>
     </div>
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">Image Placeholder</div>
-      <div class="img-gen-prompt">Generate: flat blue minimalist illustration of scattered data nodes — laptops, phones, cloud icons, SaaS app tiles — connected by glowing thin lines forming a single protective ring around them, no text labels</div>
+    <div class="img-display-block">
+      <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat blue minimalist illustration of scattered data nodes — laptops, phones, cloud icons, SaaS app tiles — connected by glowing thin lines forming a single protective ring around them, no text labels</div>
     </div>
   </div>
 
@@ -436,6 +452,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">A breach timeline is like a weather log of broken levees. One year, the flood comes over the top (LinkedIn scraping). Another, a hidden crack spreads through the wall (MOVEit). The next, the gatekeeper himself opens the gate (Tesla insider). You don't defend a city against floods by patching only the spot the last one came through.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a river city defended by levees as an analogy for diverse breach modes. Wide composition. A long winding levee wall protects a small picturesque town with church spire, rooftops and trees. Three labelled-by-imagery breach vignettes along the levee: Vignette 1 (Overtopping / LinkedIn scraping): floodwaters rising and spilling over the top of one section of the wall, carrying tiny LinkedIn-style profile cards downstream like litter. Vignette 2 (Hidden crack / MOVEit): a stealthy hairline fissure spreading through a different stretch of the levee wall from inside, secret seepage of data droplets — a tiny file-transfer icon visible in the crack. Vignette 3 (Insider / Tesla): a uniformed gatekeeper at a sluice gate cheerfully opening it from the inside, water gushing through, a bag of company secrets under his arm. Looking down on it all: a meteorologist with a clipboard and weather log writing entries, looking exasperated — patching only the last spot won't solve the next storm. Stormy sky, sandbags scattered. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -535,6 +557,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">A breach is less like a robbery and more like a slow leak in a sinking ship. By the time you hear the water (258 days later), the cargo is ruined, the crew is exhausted, and the auditors are at the dock with clipboards. The visible damage is just the tip — what you don't see in the hold costs the most.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a slowly sinking cargo ship as an analogy for the hidden cost of breaches. Cross-section view of an old wooden cargo vessel listing in calm grey-green ocean water. Top deck above the waterline: the visible portion shows a small puddle of water seeping up through floorboards, and a captain just now noticing it with a startled face, holding a calendar showing day 258 circled in red. Below the waterline (the bulk of the iceberg-like hidden damage): cavernous cargo hold filled with ruined crates of "data" depicted as soaked envelopes and folders, exhausted sailors slumped against barrels, a leaking gash in the hull with seawater gushing in unnoticed for months, mould creeping up the inner walls. At the dock above: a row of stern auditor figures in suits with clipboards and gavels waiting in formation. Faint outline of an iceberg-style "what you see vs what you don't" silhouette overlaid. Mood of slow undetected catastrophe. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -543,9 +571,11 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="mental-note-block-text">2024 averages: $4.88M cost per breach (up 10% YoY), 258 days to identify + contain (194 MTTI + 64 MTTC). Customer PII = most common (48%); Employee PII = costliest.</div>
       </div>
     </div>
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">Image Placeholder</div>
-      <div class="img-gen-prompt">Generate: flat blue minimalist illustration of an iceberg with a small visible tip above a waterline and a vast submerged mass below, divided into stacked layers representing hidden costs — no text labels</div>
+    <div class="img-display-block">
+      <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat blue minimalist illustration of an iceberg with a small visible tip above a waterline and a vast submerged mass below, divided into stacked layers representing hidden costs — no text labels</div>
     </div>
   </div>
 
@@ -618,6 +648,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">A patchwork of disconnected security tools is like guarding a house with five different locksmiths — one for the front door, one for the back, one for windows, one for the garage, and one for the mailbox. Each does fine work, but no one is watching the whole house. Zscaler's unified platform is the single security system that sees every door, window, and vent at once.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a suburban house as an analogy for unified versus patchwork security. Left scene (Patchwork): a cute two-storey cottage with five different locksmiths, each in a different uniform and toolbelt, working in stubborn isolation on a different entry point — one at the front door fitting a deadbolt, one at the back door installing a chain, one at a sash window adding a latch, one at the garage door fiddling with a roller mechanism, and one at the mailbox with a tiny key. None of them are talking to each other, each has their own clipboard, and a sneaky burglar in a striped shirt is crawling unnoticed through an open chimney while everyone is busy. Right scene (Unified): the same cottage now wired to a single, friendly central control panel mounted on a wall with one calm operator at it; glowing sensor-eye icons cover every door, window, vent, garage and mailbox simultaneously; clean wires connect every entry point into the single hub; the burglar is spotted instantly. Lawn, picket fence, gentle daylight. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -712,6 +748,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Manual data classification is like trying to label every drop in a river with a sticker as it flows past. AI-driven discovery is the sonar that sees the whole current at once — what's flowing, where it's going, and which currents are carrying the dangerous cargo.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a river ecosystem as an analogy for manual versus AI-driven data classification. Wide composition along a flowing river. Left scene (Manual): a frantic worker in rolled-up trousers crouched on the bank with a giant roll of sticker labels and a tiny pair of tweezers, hopelessly trying to slap one labelled sticker on each individual droplet of water as the current rushes past — droplets escaping downstream uncategorised, sweat flying, mood of futility. Right scene (AI sonar): a sleek modern research boat gliding on the same river, its underside emitting glowing sonar ripples that fan out across the entire current; a researcher in headphones at a screen sees a clear holographic chart visualising the full river, where each currents and tributary is color-coded by content — some glowing green with friendly fish-like data, others tinted red and labelled with skull-and-crossbones for dangerous cargo. Riverbank trees, mountains in the distance, gentle daylight. Mood of effortless comprehensive awareness. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -914,6 +956,7 @@ function navTo(id,btn){
 function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
 function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
 document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>

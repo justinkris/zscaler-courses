@@ -159,6 +159,32 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
 .img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
 .img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:900px){header{padding:24px 20px 20px;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.notif-grid,.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -200,6 +226,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>When does asking the end user to justify their own violation save admin time, and when does it just shift the problem somewhere less visible?</li>
       <li>What's the difference between an "incident" and a "ticket" — and why does that distinction matter for how you measure your team's effectiveness?</li>
     </ul>
+    <div class="answer-area" data-section="what">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">They sit in a backlog and quietly age. Practically, "alerts you cannot review" function as "no detection" from a risk standpoint — except they also create legal exposure ("you generated the alert and did nothing") and operational drag. It is actively worse than not detecting them, which is why the goal of incident management is not "more alerts" but "fewer-better-higher-fidelity" alerts: tuning, grouping, deduplication, and end-user self-service to keep the queue inside human capacity.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">End-user justification works when the action is ambiguous — soft block on a personal upload, print of a flagged document — where the user holds the context the admin lacks. It saves admin time and creates an audit trail. It shifts the problem when admins stop reviewing the justifications: "I needed it for a project" becomes a magic password, and the queue moves invisibly back to the unreviewed pile. Justification is only useful with periodic spot-review.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">An incident is a policy event — a specific DLP violation, an exposure, a behaviour anomaly. A ticket is a work item assigned to a human to investigate or remediate. Conflating them creates the wrong metric: counting tickets created looks like activity but tells you nothing about risk reduction. Measuring incidents resolved (and their MTTD/MTTR) tells you whether the team is keeping up. Tickets are administration; incidents are the work.</div></div>
+      </div>
+    </div>
   </div>
 
   <!-- WHAT IS INCIDENT MANAGEMENT -->
@@ -222,6 +260,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">ANALOGY</div>
       <div class="analogy-text">Incident management is the emergency room triage nurse — not the doctor. Her job isn't to cure anyone; it's to decide, in seconds, who bleeds out without attention and who can safely wait. A DLP platform without triage is an ER where every cut and every gunshot wound get the same waiting-room ticket.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a busy hospital emergency room as an analogy for incident triage. Wide composition. Left scene (With Triage): a sharp, focused triage nurse in scrubs at the entrance with a clipboard, rapidly sorting incoming patients — pointing a stick-figure with a gunshot wound straight into the trauma bay marked with a red icon, ushering a patient with a sprained ankle to a comfortable yellow waiting bench, and waving a minor papercut to a green self-care kiosk. Stopwatch around her neck emphasising speed. Behind her, doctors operate efficiently on the worst cases first. Right scene (Without Triage): a chaotic waiting room where every patient — from someone clutching a tiny cut on a finger to someone with a serious gunshot wound bleeding through their shirt — clutches an identical paper ticket numbered randomly, all sitting in plastic chairs while one overwhelmed receptionist robotically calls "next". An obvious tragic mismatch of urgency. ER signage, gurneys, IV poles, anxious crowd. Mood of disciplined prioritisation vs anarchic equality. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
 
     <div class="mental-note-block">
@@ -232,9 +276,11 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       </div>
     </div>
 
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">IMAGE GENERATION PROMPT</div>
-      <div class="img-gen-prompt">A minimalist diagram showing a funnel: at the top, hundreds of small red alert icons pouring in; in the middle, a triage layer splitting flow into three labelled streams ("user self-serve", "admin review", "manager escalation"); at the bottom, a single resolved checkmark. Muted reds, white background, thin line-art style.</div>
+    <div class="img-display-block">
+      <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>A minimalist diagram showing a funnel: at the top, hundreds of small red alert icons pouring in; in the middle, a triage layer splitting flow into three labelled streams ("user self-serve", "admin review", "manager escalation"); at the bottom, a single resolved checkmark. Muted reds, white background, thin line-art style.</div>
     </div>
   </div>
 
@@ -253,6 +299,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>Why might a Slack notification get a more honest justification than an SMTP email that arrives 20 minutes later?</li>
       <li>What's the cost of routing every admin notification through SIEM, ServiceNow, AND email — and at what point does redundancy become alert fatigue?</li>
     </ul>
+    <div class="answer-area" data-section="notify">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">In practice, most users skim and reflexively paste — especially under deadline pressure. The browser block has to do design work: clear policy statement, required justification field with a minimum length, contextual reason ("This file contains 12 credit card numbers"), and a visible audit notice. Without those, the block becomes a speed bump and the data still goes where the user wanted it. Block UX is policy enforcement; bad UX is theatre.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Latency and context. Slack notifications arrive in seconds, in the channel where the user is already working, with the incident fresh in mind. Email arrives 20 minutes later — by then the user has moved on, the context is gone, and the message either becomes "what was this about?" or gets archived unread. Honest justifications happen when the user remembers what they were doing, which is right now, not later.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Triple-routing has real cost: it triples the surfaces to monitor, multiplies the chance of inconsistent acknowledgement, and is the classic recipe for alert fatigue (everyone sees the alert; nobody acts because someone else must be). The right pattern is one system of record (SIEM or ServiceNow) and one human-attention channel (Slack/Teams) for urgent action. Email is documentation, not alert. Redundancy becomes fatigue the moment ownership becomes ambiguous.</div></div>
+      </div>
+    </div>
   </div>
 
   <!-- NOTIFICATION METHODS -->
@@ -297,6 +355,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">ANALOGY</div>
       <div class="analogy-text">A browser block is a speed bump — it forces a moment of friction at the exact place the user was going. A Slack ping is a tap on the shoulder afterward — quieter, but easier to dismiss. An SMTP email to the admin is a letter in the mail — accurate, slow, and almost never read first.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of three notification channels as an analogy for immediacy of feedback. Three side-by-side scenes arranged left-to-right with a connecting timeline. Scene 1 (Browser Block / Speed Bump): a driver in a car approaching a literal yellow striped speed bump painted across the road labelled by imagery as a stop sign in front of a destination — the car jolts and the driver is forced into a moment of friction at the exact moment of the trip, right at the spot they were going. Scene 2 (Slack Ping / Shoulder Tap): the same person at their desk afterwards, a friendly chat-bubble character gently tapping them on the shoulder — they glance over their cup of coffee and can easily wave it off and turn back to work, quieter and easier to dismiss. Scene 3 (SMTP Email / Letter in the Mail): an old metal mailbox at the curb with a single neat envelope inside, days later — the admin has a stack of unopened envelopes in his hand, sighing, the latest letter dusty on the bottom of the pile, almost never read first. A simple timeline arrow underneath shows progression from "instant friction" to "delayed paperwork". Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
 
     <div class="mental-note-block">
@@ -323,6 +387,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>When you escalate to a manager automatically, are you accelerating resolution — or just diffusing accountability up the org chart?</li>
       <li>What does "Time to Triage" tell you that "Time to Resolve" doesn't, and which one should the team actually be optimising for?</li>
     </ul>
+    <div class="answer-area" data-section="wfa">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Cross-user patterns. Auto-grouping by user surfaces one person's behaviour clearly but hides coordinated activity — five users in finance all uploading to the same external domain at the same hour. A human reviewing alerts in isolation might spot the cluster; grouped views by user alone will not. The fix is multiple lenses (by user, by destination, by policy, by time window) — automation should make alternate views easier, not collapse them.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Both. Auto-escalation accelerates resolution when the manager has the context and authority to act faster than the analyst. It diffuses accountability when escalation becomes a reflex — every ambiguous alert gets sent up, the manager is overloaded, and nobody actually owns the decision. The cure is escalation criteria that are specific (severity, asset class, dwell time) rather than "when in doubt" — making escalation a deliberate action, not a default.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Time to Triage measures how quickly the team acknowledges and assigns an incident; Time to Resolve measures how quickly it closes. Optimising only for Resolve hides backlog growth — incidents may close fast but newer ones sit untouched for hours. Triage time is the leading indicator: it tells you whether new alerts are getting human eyes promptly, before they age. Both matter, but Triage is where queue health shows up first.</div></div>
+      </div>
+    </div>
   </div>
 
   <!-- WORKFLOW AUTOMATION -->
@@ -381,6 +457,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">ANALOGY</div>
       <div class="analogy-text">Workflow Automation is a factory conveyor belt for incidents. Raw alerts go in one end, get sorted into bins (incident groups), routed to the right station (admin, user, manager), and roll out the other end stamped "resolved" with a full paper trail. Without it, you have the same parts — but every worker is sprinting between piles on the floor.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a factory floor as an analogy for workflow automation versus manual chaos. Wide composition. Left side (With Automation): a long polished conveyor belt running left to right. Raw alert items (depicted as glowing exclamation-mark widgets) drop in at the start through a funnel, slide through a sorting gate that drops them into labelled bins (incident groups visualised as differently-shaped boxes), then route along branching belts to three orderly workstations — one staffed by an admin in a vest, one by a regular user at a workbench, and one by a manager in a tie — each handling their assigned items. At the end of the line each item rolls out the chute stamped with a bright green "RESOLVED" ink stamp, falling neatly into a tidy archive box with a paper-trail receipt attached. Right side (Without Automation): the same parts and workers now scattered across a messy factory floor, sprinting between giant chaotic piles of alerts, papers flying, no belt, a manager waving his arms frantically. Mood contrast of orderly production vs frantic chaos. Industrial cartoon style with conveyor rollers, gears, warehouse lights. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
 
     <div class="mental-note-block">
@@ -391,9 +473,11 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       </div>
     </div>
 
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">IMAGE GENERATION PROMPT</div>
-      <div class="img-gen-prompt">A horizontal pipeline diagram in muted red and dark slate: stage 1 "Trigger" (alert icon), stage 2 "Group" (cluster of dots merging), stage 3 "Notify" (chat bubble), stage 4 "Justify" (user with speech bubble), stage 5 "Escalate" (upward arrow to manager silhouette), stage 6 "Resolve" (checkmark). Thin connecting lines with small clock icons between each stage representing measured time.</div>
+    <div class="img-display-block">
+      <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>A horizontal pipeline diagram in muted red and dark slate: stage 1 "Trigger" (alert icon), stage 2 "Group" (cluster of dots merging), stage 3 "Notify" (chat bubble), stage 4 "Justify" (user with speech bubble), stage 5 "Escalate" (upward arrow to manager silhouette), stage 6 "Resolve" (checkmark). Thin connecting lines with small clock icons between each stage representing measured time.</div>
     </div>
   </div>
 
@@ -412,6 +496,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>What would "automatically shut down the user's system" cost the business compared to a soft block with justification?</li>
       <li>If the right answer is three channels (browser, Slack/Teams, Client Connector), what does that tell you about Zscaler's philosophy on user experience vs. enforcement?</li>
     </ul>
+    <div class="answer-area" data-section="kcheck">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">It confuses one-off ad-hoc communication with platform-level integration. Zscaler does not "send a personal email" — it integrates with email infrastructure (SMTP relays), collaboration platforms (Slack, Teams), and endpoint UX (Client Connector notifications). The distractor is plausible because "email the user" sounds like a notification; the right answer is structured channels that scale, are auditable, and respect the same security boundaries as the platform itself.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Shutting down a user's system is hours of lost work, a help-desk ticket, possibly an executive complaint, and zero new information about whether the user actually intended harm. A soft block with justification costs the user thirty seconds, surfaces intent through the justification text, and keeps the team productive. The proportionate response always wins unless the action is unambiguously catastrophic — at which point a hard block (not a system shutdown) is the right tool.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Three channels mean Zscaler reaches the user in whatever context they are working — browser for web actions, Slack/Teams for chat-driven workflows, Client Connector for OS-level events. The philosophy: notify the user where the action happened, in the channel they are already attending to. Enforcement remains strict; user experience is preserved by meeting people in their workflow rather than dragging them out of it. Block what must be blocked, but communicate humanely.</div></div>
+      </div>
+    </div>
   </div>
 
   <!-- KNOWLEDGE CHECK -->
@@ -495,6 +591,10 @@ function toggleCheck(li){li.classList.toggle('done');const s=getStore();if(!s.ch
 (function restoreChecks(){const s=getStore();if(!s.checks)return;document.querySelectorAll('#checklist li').forEach(li=>{if(s.checks[li.querySelector('span').textContent])li.classList.add('done');});})();
 function navTo(id,btn){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');}
 (function init(){renderQPanel();const s=getStore();if(s.qOpen){const body=document.getElementById('qpanel-body');const hdr=document.getElementById('qpanel-header');const chev=document.getElementById('qpanel-chevron');body.classList.add('open');hdr.classList.add('open');chev.textContent='▴';}})();
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>

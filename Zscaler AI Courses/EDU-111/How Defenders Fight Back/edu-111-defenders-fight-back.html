@@ -220,6 +220,14 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
 .model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
 .model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.prompt-cols,.technique-grid,.lesson-tools-grid{grid-template-columns:1fr;}.prompt-col+.prompt-col{border-left:none;border-top:1px solid var(--border);}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -307,6 +315,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">An attacker with AI is a sniper using a thermal scope. A defender without AI is a guard with binoculars in the dark. You can match their gear, or you can keep losing in the time it takes to focus.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a moonlit battlefield as an analogy for the asymmetric AI arms race. Wide composition split into two contrasting halves. Left side (Attacker): a stealthy sniper in dark camouflage perched on a rooftop using a sleek thermal scope; through his scope view (shown as a small inset circle) the entire scene glows in vivid heat-map oranges and reds revealing every hidden target instantly, crosshairs locking confidently. Right side (Defender): a tired-looking guard in uniform standing in inky darkness on a watchtower, holding old-fashioned binoculars up to his eyes, squinting hopelessly into pure black, a faint silhouette he cannot quite resolve, fumbling with the focus dial. Stars overhead, distant city skyline. Between the two: a small visual swap-icon suggesting the defender could pick up a matching thermal scope from a nearby crate. Mood of urgent technological mismatch. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -315,9 +329,11 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="mental-note-block-text">The Defender's Dilemma: access to AI is table stakes — Prompt Engineering is what turns access into advantage.</div>
       </div>
     </div>
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">Image Placeholder</div>
-      <div class="img-gen-prompt">Generate: flat blue minimalist illustration of two figures facing off — one with futuristic AI visor seeing rich data streams, the other holding outdated binoculars in fog, suggesting the speed-and-vision gap defenders must close, no text labels.</div>
+    <div class="img-display-block">
+      <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat blue minimalist illustration of two figures facing off — one with futuristic AI visor seeing rich data streams, the other holding outdated binoculars in fog, suggesting the speed-and-vision gap defenders must close, no text labels.</div>
     </div>
   </div>
   <div class="lesson-tools">
@@ -398,6 +414,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">A prompt is a search warrant. "Look around for anything suspicious" gets thrown out by the judge. "Seize the laptop in the second-floor office bearing serial number X, between 8 and 10 AM" gets executed precisely. The AI, like the officer, can only act on what you specify.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a courthouse and a police raid as an analogy for prompt specificity. Two scenes side-by-side. Left scene (Vague warrant): a stern judge in long robes and powdered wig at a tall wooden bench, theatrically ripping a flimsy warrant paper labelled with only a fuzzy "?" symbol into pieces and tossing them into a wastebasket, a confused officer in cap shrugging in the background. Mood of rejection. Right scene (Specific warrant): the same officer striding confidently into an office building, holding a crisp warrant with detailed icons drawn on it (a tiny laptop, a "2nd floor" arrow icon, a serial-number barcode, and a clock face showing the time range), three deputies executing the action precisely, lifting one specific laptop from one specific desk, ignoring everything else around it. Wood-panelled courtroom and a tidy modern office side-by-side. Mood of crisp precision. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -521,6 +543,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">A vague prompt to an AI is like ordering "food" at a restaurant — you get whatever the kitchen feels like. An engineered prompt is ordering "medium-rare ribeye, no garnish, broccoli on the side" — the kitchen has no room to improvise, and your meal arrives exactly as needed.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a restaurant as an analogy for vague versus engineered prompts. Two adjacent dining scenes. Left scene (Vague order): a customer in a booth slumping back saying just "food" (shown as a generic plate icon in his speech bubble); the bemused chef in the open kitchen shrugs and tosses random unrelated items onto a plate — a single banana, a cold hotdog, some uncooked spaghetti, a flower garnish — slides it across the counter as an absurd mismatched meal. Mood of comedic uncertainty. Right scene (Engineered order): a confident customer in a sharp outfit holding up a beautifully detailed order card with crisp pictographs of a perfectly cooked steak with a "medium-rare" doneness thermometer icon, broccoli florets, and a strikethrough over a garnish leaf; the chef beams, follows it exactly, and presents a flawless plated dish under a polished metal cloche — ribeye seared just right, broccoli on the side, no garnish. Restaurant ambience: chequered tablecloths, candle, warm pendant lights. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -529,9 +557,11 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="mental-note-block-text">Threat Intel → TTPs + IOCs + Mitigations in a table. Malware → 5 categories with ATT&CK IDs. IR → Containment, Evidence, RCA, Recovery, Hardening. Memorize the lists.</div>
       </div>
     </div>
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">Image Placeholder</div>
-      <div class="img-gen-prompt">Generate: flat blue minimalist illustration of an open structured form being filled by an AI — three clean rows labeled by shape (table, list, timeline) replacing a blurry paragraph of text, suggesting structure beating narrative, no text labels.</div>
+    <div class="img-display-block">
+      <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat blue minimalist illustration of an open structured form being filled by an AI — three clean rows labeled by shape (table, list, timeline) replacing a blurry paragraph of text, suggesting structure beating narrative, no text labels.</div>
     </div>
   </div>
   <div class="lesson-tools">
@@ -621,6 +651,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Prompt injection is slipping a forged note into a letter you ask a receptionist to read aloud — and the receptionist obeys it as if it were policy. Jailbreaking is hypnotising the same receptionist into ignoring the rulebook. Data poisoning is rewriting the rulebook before they were ever hired.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an office reception desk as an analogy for three AI attack types. The same friendly receptionist appears in three side-by-side scenes around a single curving art-deco lobby. Scene 1 (Prompt Injection): the receptionist reading aloud from an open letter — and tucked between the pages is a forged sticky note with bold scribbled commands that she dutifully obeys, ordering a delivery person nearby to hand over a parcel of sensitive files; a sneaky attacker in a trench coat peeks from a potted plant. Scene 2 (Jailbreaking): the same receptionist with swirling spiral hypnosis eyes, a stage magician holding a pendulum, the official rulebook lying discarded on the floor; she happily breaks her own rules with a dreamy smile. Scene 3 (Data Poisoning): a flashback panel set "before hiring" — a shady figure in HR slipping into the records room and rewriting the rulebook itself with a quill, the new pages full of harmful instructions; later, the receptionist newly trained from this tampered book performs harmful actions while believing she is following policy. Marble lobby floor, brass desk lamp, decorative ferns. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -629,9 +665,11 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="mental-note-block-text">Three adversarial AI attacks: Prompt Injection (hidden instructions in data), Jailbreaking (bypass safety rails), Data Poisoning (corrupt the training set). Each targets a different stage of the AI lifecycle.</div>
       </div>
     </div>
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">Image Placeholder</div>
-      <div class="img-gen-prompt">Generate: flat blue minimalist illustration of an envelope being scanned by a robotic eye, with a tiny hidden note inside the letter whispering commands back to the robot, suggesting trust-flow being hijacked by content the AI was meant to inspect, no text labels.</div>
+    <div class="img-display-block">
+      <img src="3.png" alt="Diagram 3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>3.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat blue minimalist illustration of an envelope being scanned by a robotic eye, with a tiny hidden note inside the letter whispering commands back to the robot, suggesting trust-flow being hijacked by content the AI was meant to inspect, no text labels.</div>
     </div>
   </div>
   <div class="lesson-tools">
@@ -750,6 +788,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Hardening an AI is like fortifying a castle: a moat (Input Sanitization) keeps invaders out, walls (Instruction Separation) separate the throne room from the courtyard, guards check everyone leaving (Output Validation), and even the king carries no sword (Least Privilege). One layer alone falls. Four layers stand.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a fortified castle cross-section as an analogy for four-layer AI hardening. Wide composition with four nested defensive layers clearly visible. Layer 1 (Input Sanitization): a wide blue moat with cartoon crocodiles and a sturdy drawbridge filtering visitors at the perimeter, suspicious characters bouncing off the water. Layer 2 (Instruction Separation): tall stone curtain walls with thick gates dividing the inner courtyard from the throne room, banners marking distinct zones, a clear physical separation. Layer 3 (Output Validation): polite but firm guards at every exit door inspecting departing visitors' satchels with handheld magnifying glasses, holding up a "no" sign at one trying to sneak out with stolen jewels. Layer 4 (Least Privilege): the king himself on his throne wearing a crown but carrying a simple wooden cane instead of a sword — a small empty scabbard nearby — emphasising that even the most privileged user has minimised capabilities. Pennants flying, sunset sky, mood of layered confidence. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -846,6 +890,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Treat every AI interaction the way an air traffic controller treats every blip on the radar: assume nothing, verify identity, enforce strict lanes, and record every transmission. Confidence in fluent output without verification is how planes collide.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A6.png" alt="Analogy illustration A6" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A6.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an air traffic control tower at night as an analogy for treating every AI interaction with verification discipline. Central scene: a glass-walled control tower high above an airport, inside which sits an alert controller with a headset speaking into a microphone. Around her: glowing circular radar scopes with multiple blips, each blip tagged with a tiny ID icon (verifying identity), neat parallel approach corridors drawn on the sky (strict lanes), an old-style reel-to-reel recorder rolling capturing every transmission, and a wall clock. Outside the tower windows: cartoon airplanes are descending in orderly procession along the painted lanes, none colliding, mood of calm professional vigilance. On the side a small warning vignette shows what happens without verification: two cheerful but unchecked planes drifting toward each other with a worried sweat drop. Stars overhead, runway lights glowing below. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -943,6 +993,7 @@ document.addEventListener('DOMContentLoaded',()=>{renderQPanel();initNotes();if(
 function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
 function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
 document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>

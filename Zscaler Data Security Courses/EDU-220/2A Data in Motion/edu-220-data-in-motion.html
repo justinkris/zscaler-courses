@@ -218,6 +218,14 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
 .model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
 .model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.use-case-grid,.policy-type-grid,.feature-grid,.alert-grid,.lesson-tools-grid{grid-template-columns:1fr;}.policy-type+.policy-type{border-left:none;border-top:1px solid var(--border);}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -309,14 +317,22 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li><strong>UEBA &amp; Adaptive Access</strong> — responds to risky anomalies detected in user behaviour</li>
     </ul>
 
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">Image Placeholder</div>
-      <div class="img-gen-prompt">Generate: flat green minimalist illustration of a flowing river of data packets passing through a translucent inspection gateway in the centre, with three branching channels labelled by icons only (web cloud, AI spark, envelope) — no text labels.</div>
+    <div class="img-display-block">
+      <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat green minimalist illustration of a flowing river of data packets passing through a translucent inspection gateway in the centre, with three branching channels labelled by icons only (web cloud, AI spark, envelope) — no text labels.</div>
     </div>
 
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Think of Secure Data in Motion as airport security. Bags at home (data at rest) are nobody's concern, but the moment a passenger walks toward the gate, every bag passes through the same X-ray belt — regardless of whether it's headed to a domestic SaaS terminal, an international cloud, or a Gen AI departure lounge.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an airport security checkpoint as an analogy for data in motion. Wide composition. Left side (Data at Rest): a cosy living room where a suitcase sits unmonitored on a sofa next to a houseplant — no one cares about it. Centre (The Gate): a busy airport terminal where the same suitcase, now carried by a relaxed traveller, passes through a single shared X-ray conveyor belt under the alert eye of a friendly TSA-style agent. Multiple traveller-figures form a queue, each suitcase glowing different colours depending on what's inside (sensitive icons visible through the X-ray). Right side (Three Destinations): three brightly-coloured departure-lounge signs branching off after the checkpoint — Domestic SaaS gate labelled with a friendly app-window icon, an International Cloud gate with a stylised globe and cloud, and a Gen AI Departure Lounge with a futuristic robot greeter at the door. All three are downstream of the same single X-ray belt, emphasising that every destination shares the same inspection point. Polished modern terminal, soft fluorescent light, neat queueing barriers. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -402,6 +418,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Inline data protection is like a building with six different doormen — one checks IDs, one inspects packages, one verifies you're entering the right wing, one watches for suspicious behaviour, one handles guests on personal devices, and one keeps a log of every door used. Skip any one and a determined visitor still slips through.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a grand corporate lobby as an analogy for six inline data-protection layers. Wide composition with six distinctly uniformed doormen arranged in a single processional row from the front door inward, each guarding a sub-checkpoint. Doorman 1: checking a guest's photo ID against a clipboard. Doorman 2: opening and inspecting a wrapped parcel with a magnifying glass. Doorman 3: pointing to a wall map showing East wing vs West wing and verifying the guest is going to the correct wing. Doorman 4: in plainclothes watching guest behaviour with a discreet headset, eyes narrowed at one fidgety visitor. Doorman 5: at a desk handling visitors who are carrying personal phones/laptops, attaching a "BYOD" lanyard. Doorman 6: at the final desk writing every entry into a fat leather logbook of every door used. The lobby is marble-floored with brass fittings, potted ferns and chandeliers. A determined-looking visitor in dark glasses tries to dodge around one of them but cannot bypass the chain. Mood of layered, polite, exhaustive scrutiny. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -531,14 +553,22 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">Zscaler has been doing inline DLP for eight years. The same DLP dictionaries and engines that inspect web traffic can now also be enforced on endpoint data. One engine, one policy, across all vectors.</div>
     </div>
 
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">Image Placeholder</div>
-      <div class="img-gen-prompt">Generate: flat green minimalist illustration of a magnifying glass over a document with structured data fingerprints on the left (content-driven) and a clock-plus-location pin-plus-shield arrangement on the right (context-driven), connected by a thin green line — no text labels.</div>
+    <div class="img-display-block">
+      <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat green minimalist illustration of a magnifying glass over a document with structured data fingerprints on the left (content-driven) and a clock-plus-location pin-plus-shield arrangement on the right (context-driven), connected by a thin green line — no text labels.</div>
     </div>
 
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Content-driven DLP is the customs officer who unzips your bag and reads the labels on the bottles. Context-driven DLP is the same officer noticing you flew in from a sanctioned country, at 3am, holding someone else's passport. The dangerous shipments are usually caught by combining both.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a customs desk at an international airport as an analogy for content versus context DLP. Wide composition with a single customs officer in uniform working two adjacent stations. Left station (Content): the officer has a traveller's suitcase open on the counter, holding up labelled glass bottles to read the labels under a desk light, magnifying glass in hand, examining what's literally inside the bag. Right station (Context): the same officer leans back from his terminal screen and looks pointedly at the same traveller, who has arrived at 3am (visible through a window with stars and a wall clock showing 3:00), is sweating nervously, is holding a passport whose photo clearly belongs to someone else, and whose boarding pass shows origin from a country marked with a sanctions stamp. The officer raises an eyebrow knowingly. A speech-bubble Venn-diagram between the two stations shows both circles overlapping — illustrating that combining both catches the dangerous shipments. Mood of disciplined customs scrutiny, neutral booth lighting, flags on the wall. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -636,6 +666,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">UEBA is the bank teller who knows you've withdrawn $100 every Friday for three years — and instinctively pauses when you suddenly ask for $50,000 in cash on a Tuesday morning. Adaptive Access is the manager who walks over and politely asks for a second form of ID before the cash leaves the drawer.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a friendly small-town bank as an analogy for UEBA and Adaptive Access. Wide composition. Left scene (Baseline): a calendar wall showing three years of Fridays, each marked with a small "$100" coin icon, with a familiar customer at the teller window receiving a tidy $100 bill every week, the teller smiling warmly. Right scene (Anomaly + Step-up): the same teller is suddenly wide-eyed mid-pause, holding back a huge stack of $50,000 in cash, the wall calendar showing a Tuesday morning, the customer looking unusually jittery. Above the teller's head a thought-bubble pattern-graph dramatically spikes upward against the flat Friday baseline. From a side office a calm and dignified bank manager in a vest walks over politely with a clipboard, asking the customer for a second form of ID (a small inset shows a passport and a thumbprint icon). Mood of friendly but firm verification. Bank interior with marble counters, brass cages, a stately clock, an old vault behind. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -699,14 +735,22 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 
     <p>The DLP policy engine at Zscaler allows for a lot of granularity, with a lot of exceptions — and is highly effective precisely because it doesn't stop at the first policy match.</p>
 
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">Image Placeholder</div>
-      <div class="img-gen-prompt">Generate: flat green minimalist illustration of multiple parallel inspection lanes processing the same data packet simultaneously, with a small red "BLOCK" shield emerging from the most restrictive lane to the right — no text labels.</div>
+    <div class="img-display-block">
+      <img src="3.png" alt="Diagram 3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>3.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat green minimalist illustration of multiple parallel inspection lanes processing the same data packet simultaneously, with a small red "BLOCK" shield emerging from the most restrictive lane to the right — no text labels.</div>
     </div>
 
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Parallel processing is like sending one job application to three reviewers at once and going with the strictest hiring decision — instead of letting the first reviewer's "yes" close the case before the security check has even started.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an HR hiring panel as an analogy for parallel policy processing. Wide composition. Centre: a single job application resume document with a candidate's headshot photo, photocopying itself into three identical copies via three pneumatic tubes shooting outward. Each copy lands on the desks of three different reviewer characters seated around a circular meeting table, all reading simultaneously: Reviewer 1 (skills checker) gives a cheerful green thumbs-up; Reviewer 2 (culture fit) gives a thoughtful yellow neutral hand; Reviewer 3 (security/background check) raises a serious red stop hand. In the centre of the table a fair adjudicator chairperson stacks their three verdicts and stamps the application with the strictest decision — red "Hold". Beside this, a small "wrong way" vignette shows what would happen sequentially: Reviewer 1's quick green "yes" prematurely sealing the file in an envelope marked "Hired", with Reviewers 2 and 3 frozen with hands up, never consulted. Office boardroom setting, neat folders, water carafe. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -764,14 +808,22 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li><strong>URL Filtering (URLF)</strong> — restricts websites categorised under "General AI &amp; ML", allowing organisations to block, caution, or isolate AI traffic based on risk level.</li>
     </ul>
 
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">Image Placeholder</div>
-      <div class="img-gen-prompt">Generate: flat green minimalist illustration of a user silhouette typing into a chat bubble that flows through a green DLP filter before reaching an abstract AI neural node, with sensitive data tokens being stripped off mid-flight — no text labels.</div>
+    <div class="img-display-block">
+      <img src="4.png" alt="Diagram 4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>4.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat green minimalist illustration of a user silhouette typing into a chat bubble that flows through a green DLP filter before reaching an abstract AI neural node, with sensitive data tokens being stripped off mid-flight — no text labels.</div>
     </div>
 
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Gen AI security is the editor who reviews every email before it leaves your hands — not to stop you from writing, but to redact the sentences that would embarrass the company if printed on the front page of tomorrow's newspaper.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A6.png" alt="Analogy illustration A6" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A6.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a newsroom editor at work as an analogy for Gen AI security review. Central scene: a seasoned editor in shirtsleeves and green visor sitting at a wooden desk under a green banker's lamp, with a thick red wax pencil and a roll of black redaction tape. He's calmly reviewing a draft email handed to him by a young eager writer (representing the user); the email is full of sentences but a few specific sensitive phrases (depicted as squiggle-bars without real text) are being struck through with red lines and replaced with neat black censor bars. The editor smiles encouragingly at the writer — clearly not stopping the writing, just polishing it. To the side: a humorous "what-if" panel of a sensational front-page newspaper showing the unredacted email blown up as an embarrassing headline with the company logo on the masthead — a horrified executive at his breakfast table dropping his coffee. Editor's desk littered with pencils, typewriter, stack of style guides, deadline clock. Mood of helpful gatekeeping. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -876,6 +928,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Outbound Email DLP works like a postal sorting facility that detours every letter through an X-ray room before it gets stamped. The X-ray machine doesn't open the envelope — it stamps a verdict on the outside, and the postal clerk back at the desk decides whether to deliver, encrypt, or shred it.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A7.png" alt="Analogy illustration A7" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A7.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a vintage postal sorting facility as an analogy for outbound email DLP. Wide composition with a conveyor-belt journey of a single letter. Stage 1: a stack of envelopes drops onto a conveyor belt at the sender's mailbox end. Stage 2: the belt detours each envelope into a small "X-ray room" booth where an X-ray machine scans it without opening — the envelope passes through and emerges with a coloured rubber-stamp verdict stamped on the outside (green tick, yellow padlock, red shredder). Stage 3: the stamped envelopes arrive at a postal clerk's desk where the clerk reads the stamp and routes accordingly into three labelled chutes: a "Deliver" chute leading out a window with cheerful pigeons, an "Encrypt" chute wrapping the letter in a padlocked steel jacket, and a "Shred" chute feeding into a paper shredder bin. The envelopes themselves remain sealed throughout. Old-fashioned sorting facility with wooden pigeonholes, brass scales, hand-stamping ink pads, warm sepia lighting. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -1147,6 +1205,7 @@ function navTo(id,btn){
 function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
 function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
 document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>

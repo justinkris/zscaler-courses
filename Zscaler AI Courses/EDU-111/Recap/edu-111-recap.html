@@ -103,6 +103,14 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
 .model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
 .model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
 .model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:700px){.page-body{padding:40px 20px 80px;}header{padding:32px 20px 28px;}.recap-block-header,.recap-points{padding:16px 20px;}.outcomes-block{padding:28px 24px;}.mod-nav-panel{display:none;}}
 </style>
 </head>
@@ -185,6 +193,12 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
   <div class="analogy-box">
     <div class="analogy-label">Analogy</div>
     <div class="analogy-text">AI is a turbocharger bolted onto an old engine. The attack chain still has the same cylinders — recon, access, lateral movement, action — but each stroke fires faster, and the engine itself becomes a target for sabotage.</div>
+    <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+      <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+      <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+      <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a vintage engine in a garage as an analogy for AI turbocharging the attack chain. Central scene: a cutaway view of an old-fashioned four-cylinder engine sitting on a workshop bench, with four labelled-by-imagery pistons firing in sequence — each piston decorated with a small icon: a magnifying glass (Recon), a key (Access), a footprints-across-walls icon (Lateral Movement), and a fist striking a target (Action). Bolted on top of the engine is a shiny new chrome turbocharger with sleek modern fins, spinning rapidly with motion swirls, glowing faintly, contrasting against the dusty, oily age of the older engine. The pistons are visibly firing faster than normal — speed lines blurring around them. Beside the engine: a sneaky saboteur in overalls holding a wrench, eyeing the turbocharger itself as a brand-new attack surface, a small target icon hovering over it. Workshop background with toolboxes, hanging spanners, oil cans, a calendar showing the present day. Warm mechanic-shop lighting. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+    </div>
   </div>
   <div class="mental-note-block">
     <div class="mental-note-block-icon">🧠</div>
@@ -193,9 +207,11 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
       <div class="mental-note-block-text">AI does not rewrite the attack chain — it accelerates every phase and adds a new surface (the AI system itself) that defenders must also protect.</div>
     </div>
   </div>
-  <div class="img-gen-placeholder">
-    <div class="img-gen-label">Image Prompt</div>
-    <div class="img-gen-prompt">A minimalist purple-toned illustration of a four-link chain (reconnaissance, access, lateral movement, action) glowing with violet energy, with a small AI chip embedded at the centre — conveying acceleration and a new attack surface.</div>
+  <div class="img-display-block">
+    <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+    <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+    <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+    <div class="prompt-content" hidden>A minimalist purple-toned illustration of a four-link chain (reconnaissance, access, lateral movement, action) glowing with violet energy, with a small AI chip embedded at the centre — conveying acceleration and a new attack surface.</div>
   </div>
 
   <div class="socratic-block">
@@ -247,6 +263,12 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
   <div class="analogy-box">
     <div class="analogy-label">Analogy</div>
     <div class="analogy-text">Letting AI tools flow through legacy controls is like installing a glass pipe inside an opaque wall — data is moving in plain sight, but the wall was never designed with a window. Shadow AI is the second pipe nobody told the plumber about.</div>
+    <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+      <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+      <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+      <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a house wall in cutaway as an analogy for AI flowing through legacy controls and shadow AI. Central scene: a thick old plaster wall cut open to reveal its plumbing. Running through it is a beautiful transparent glass pipe carrying glowing droplets of data clearly visible to the viewer — but on the outside the wall is solid, painted, with no window and no instrumentation, illustrating that the wall was never designed to look in. A confused plumber in overalls stands holding a clipboard and scratching his head; he can see the pipe through the cutaway but his own diagrams on the clipboard don't include any monitoring port. Below the floorboards: a second, hidden, rusty pipe routed by mischievous hands not on the plumber's blueprint, dripping data into a shadowy basement bucket — this is the shadow-AI pipe. A small cartoon figure in a hoodie sneaks the data into a side door. Mood of accidental visibility plus dangerous unknown channels. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+    </div>
   </div>
   <div class="mental-note-block">
     <div class="mental-note-block-icon">🧠</div>
@@ -305,6 +327,12 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
   <div class="analogy-box">
     <div class="analogy-label">Analogy</div>
     <div class="analogy-text">The framework is a three-legged stool sitting on a Governance floor. Remove any leg (Asset Management, Secure Access, or Secure Apps) and it tips; remove the floor and every leg sinks. AI is the power tool — humans still decide where to cut.</div>
+    <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+      <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+      <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+      <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a workshop scene as an analogy for the Zscaler framework as a three-legged stool on a governance floor. Central object: a sturdy wooden three-legged stool, each leg engraved with a small evocative icon — Leg 1 a tagged-inventory clipboard (Asset Management), Leg 2 a smart key on a badge lanyard (Secure Access), Leg 3 a stack of shielded application windows (Secure Apps). The stool sits squarely on a richly patterned tiled floor labelled by imagery as governance — featuring tiny gavel, scales, and rulebook motifs woven into the tile pattern. To one side a comedic vignette shows the stool wobbling and tipping when one leg has been removed; another vignette shows the floor itself collapsing into a sinkhole with all three legs plunging through. Standing next to the stool is a friendly human craftsperson holding a power tool (drill or saw) that is clearly a fancy AI-branded gadget with little circuit-board patterns; she points thoughtfully at a measurement mark on the wood, demonstrating that humans still decide where to cut. Warm workshop lighting, sawdust motes. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+    </div>
   </div>
   <div class="mental-note-block">
     <div class="mental-note-block-icon">🧠</div>
@@ -313,9 +341,11 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
       <div class="mental-note-block-text">Three pillars, one continuous Governance layer, and a partnership between AI speed and human judgment — that is the defence strategy in one sentence.</div>
     </div>
   </div>
-  <div class="img-gen-placeholder">
-    <div class="img-gen-label">Image Prompt</div>
-    <div class="img-gen-prompt">A clean isometric illustration in deep purple (#5c35cc) of three vertical pillars labelled "AI Asset Management," "Secure Access to AI," and "Secure AI Apps," resting on a horizontal slab labelled "Governance and Compliance" — minimal, editorial, soft violet glow.</div>
+  <div class="img-display-block">
+    <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+    <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+    <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+    <div class="prompt-content" hidden>A clean isometric illustration in deep purple (#5c35cc) of three vertical pillars labelled "AI Asset Management," "Secure Access to AI," and "Secure AI Apps," resting on a horizontal slab labelled "Governance and Compliance" — minimal, editorial, soft violet glow.</div>
   </div>
 
   <!-- LEARNING OUTCOMES -->
@@ -351,6 +381,7 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
 function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
 function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
 document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>

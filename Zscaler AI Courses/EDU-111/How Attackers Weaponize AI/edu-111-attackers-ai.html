@@ -196,6 +196,14 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
 .model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
 
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -292,6 +300,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Before AI, an attacker was a skilled chef hand-cooking each meal — slow, expensive, and only for the highest-value targets. AI hands them a fast-food kitchen: identical quality, served in seconds, for anyone who walks through the door. The menu didn't change. The volume did.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration contrasting two kitchens side-by-side as an analogy for how AI scales cyberattacks. Left scene: a single elegant gourmet kitchen with a meticulous chef in a tall white hat hand-plating one exquisite dish, copper pans, candlelight, dark wood, slow-cooking pots, only one wealthy customer at the door, hourglass nearby, mood of slow craft. Right scene: a bright fast-food kitchen with conveyor belts churning out identical burger meals at high speed, robot arms, neon menu screens overhead, a long queue of dozens of ordinary customers stretching out the door, stopwatch icon, mood of mass production. Identical menu items shown on both sides to emphasise that the product is the same, only the volume changes. Clean geometric shapes, flat illustration style, bold outlines, soft warm lighting, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -300,9 +314,11 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="mental-note-block-text">AI gives attackers three things — scale, speed, and quality — not new goals. The skill barrier collapses, so nation-state-grade phishing, malware, and impersonation become commodity capabilities. Plan defences for attack volumes orders of magnitude higher than last year.</div>
       </div>
     </div>
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">Image Placeholder</div>
-      <div class="img-gen-prompt">Generate: flat red minimalist illustration of a single hooded silhouette at a laptop, with a cascading swarm of identical phishing envelopes streaming outward at machine scale — no text labels.</div>
+    <div class="img-display-block">
+      <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat red minimalist illustration of a single hooded silhouette at a laptop, with a cascading swarm of identical phishing envelopes streaming outward at machine scale — no text labels.</div>
     </div>
   </div>
   <div class="lesson-tools">
@@ -375,6 +391,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">A traditional phishing email is a stranger handing out a generic flyer on a street corner. AI-powered spear-phishing is a tailor who has read your diary, knows your boss's name, your project deadlines, and your dog's birthday — and slides a hand-stitched suit under your door at exactly the moment you needed one.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration comparing generic phishing to AI spear-phishing through two contrasting scenes. Left scene: a bored stranger in a hoodie on a windy street corner shoving identical photocopied flyers at uninterested passers-by, flyers blowing into puddles, grey cloudy backdrop, simple uniform leaflets, mood of impersonal mass mailing. Right scene: an immaculate tailor's atelier where a sharply-dressed tailor figure is reading a thick leather-bound diary stamped with the target's name, walls covered in pinned photographs of the victim's boss, family pets, calendar deadlines, project notes, and a dog's birthday card; the tailor slides a perfectly hand-stitched suit through the gap under a polished apartment door, exactly when the victim inside is reaching out for clothes. Warm intimate lighting, measuring tapes, thread spools, charts of personal data on a corkboard, sense of unsettling tailored precision. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -461,6 +483,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">A deepfake is a perfect mask worn over a phone call. You can spend hours studying the mask for cracks, or you can ask the wearer something only the real person could answer — and ask it down a channel the impersonator hasn't compromised. The mask is unbeatable; the conversation isn't.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration showing two ways to defeat a deepfake masquerade. Central character: an impersonator wearing a hyper-realistic theatrical mask of someone's CEO face, holding an old-fashioned telephone handset, with thin cracks barely visible at the edges of the mask. Left sub-scene: a frustrated detective with a magnifying glass squinting at every tiny crack and pore of the mask under a bright spotlight, surrounded by piles of forensic notes and clocks showing wasted hours, mood of futile inspection. Right sub-scene: a clever employee at her desk lifting a completely separate channel — a tin-can-and-string phone line going out a window to a verified secondary device — and asking a personal question (visualised as a thought bubble containing a childhood photo and a secret handshake icon) that only the real person could answer; the masked impersonator on the phone freezes and starts to sweat. Theatrical curtains as a backdrop, warm stage lighting, masquerade ball props. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -557,6 +585,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Signature-based AV is a bouncer with a photo album of banned faces. Polymorphic malware shows up wearing a different face every single time. The only bouncer who still works is one who watches what people do once they're inside — and throws out anyone reaching for the till, no matter what they look like.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a nightclub entrance and dancefloor as an analogy for signature versus behaviour-based detection. Left half (outside the velvet rope): a confused old-school bouncer flipping desperately through a thick photo album of mugshots while a single shape-shifting troublemaker walks past him repeatedly, each time wearing a comically different disguise — clown wig, business suit, sunglasses, fake moustache, drag costume — the bouncer never recognises any of them. A long line of these disguised duplicates strolls right in. Right half (inside the club): a sharp-eyed security guard with a headset standing on a balcony scanning the crowd; he spots one of the disguised characters sneaking a hand into the cash till behind the bar and instantly grabs them by the collar to throw them out, ignoring their costume entirely. Other dancing patrons continue normally. Disco ball, neon lights, velvet rope, cash register glinting. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -565,9 +599,11 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
         <div class="mental-note-block-text">LLMs let attackers scaffold malware in hours, mutate it polymorphically on every deployment, and tailor it to OSINT-derived target stacks. Dark LLMs like WormGPT and FraudGPT remove guardrails entirely. The defensive answer is behavioural inspection and sandboxing — judge what code does, not what it looks like.</div>
       </div>
     </div>
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">Image Placeholder</div>
-      <div class="img-gen-prompt">Generate: flat red minimalist illustration of a single piece of malware code shape-shifting through a row of identical scanner outlines, each scanner failing to recognise it because every copy looks different — no text labels.</div>
+    <div class="img-display-block">
+      <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>Generate: flat red minimalist illustration of a single piece of malware code shape-shifting through a row of identical scanner outlines, each scanner failing to recognise it because every copy looks different — no text labels.</div>
     </div>
   </div>
   <div class="lesson-tools">
@@ -632,6 +668,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Each public data point is a single jigsaw piece left on a park bench — meaningless on its own. AI is the patient stranger who collects every piece in the city, assembles them on a table, and ends up with a full street map of your house, your keys, and the hours when nobody's home.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an AI as a patient jigsaw-puzzle stranger doing open-source reconnaissance. Wide composition. Background: a stylised cityscape with park benches, café tables, bus stops and lamp posts; on each surface lies a single colourful jigsaw piece — each piece subtly depicting a tiny LinkedIn icon, a posted holiday photo, a public birthday, a job-title nameplate, a gym check-in, a dog photo. Foreground: a calm, slightly mysterious stranger in a long coat walking through the city carrying a wicker basket, gently picking up every scattered jigsaw piece one by one. Right side: the same stranger sits at a large wooden table indoors, assembling all the pieces into a single completed picture — a full annotated street map of a target's house, with little markers showing key locations, a copy of the front-door key, and a clock face showing the hours when nobody is home. Magnifying glass, warm desk lamp light, sense of unsettling thoroughness. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -719,6 +761,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">An agentic AI is a brilliant intern who follows any written instruction it reads, anywhere — including the sticky note an attacker slipped onto a document in your shared drive. Telling the intern "only listen to me" doesn't help, because to read the document at all the intern has to read the sticky note too.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A6.png" alt="Analogy illustration A6" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A6.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an office intern as an analogy for prompt injection in agentic AI. Central scene: a bright, eager young intern in a cardigan and lanyard, glasses, surrounded by a swirl of papers from a shared filing cabinet labelled with a cloud icon. The intern is dutifully reading a tall stack of documents at a desk. On top of one document sits a small bright-yellow sticky note that was secretly slipped on by a sneaky cartoon attacker peeking out from behind a potted plant, snickering — the sticky note contains a bold scribbled command (drawn as exaggerated handwriting squiggles, no real text). The intern is mid-action obediently doing whatever the sticky note says (e.g. emailing a folder of files to a shady envelope marked with a skull). To the side: the intern's boss, slightly to the left at her own desk, gestures at the intern and points to a sign saying simply "ONLY ME" (drawn as a portrait icon, not words) — but the intern can't separate the sticky note from the document because both look like written instructions. Filing cabinets, cubicle walls, fluorescent lighting, gentle satire. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
     <div class="mental-note-block">
       <div class="mental-note-block-icon">🧠</div>
@@ -883,6 +931,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
 function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
 document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>

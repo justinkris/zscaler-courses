@@ -101,6 +101,32 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
 .img-gen-placeholder{background:var(--surface-2,var(--bg));border:2px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
 .img-gen-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted,#999);text-transform:uppercase;margin-bottom:8px;}
 .img-gen-prompt{font-size:11.5px;color:var(--text-muted,#999);font-style:italic;max-width:440px;margin:0 auto;line-height:1.6;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2,var(--bg));cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted,#666);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2,var(--bg));}
+.model-answers{margin-top:12px;background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim,var(--border));}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:700px){.page-body{padding:40px 20px 80px;}header{padding:32px 20px 28px;}.mod-nav-panel{display:none;}.qrg-grid{grid-template-columns:1fr;}.summary-points,.summary-block-header{padding:16px 18px;}.outcomes-block{padding:28px 24px;}}
 </style>
 </head>
@@ -143,6 +169,18 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
       <li>Why does AI-driven discovery need to look at users, destinations, and behaviour together rather than just file content?</li>
       <li>How does GLBA/PCI/HIPAA themed classification reduce policy authoring effort compared to building rules from raw regex?</li>
     </ul>
+    <div class="answer-area" data-section="intro-synth">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The personal-cloud upload from the laptop is caught at the endpoint by Endpoint DLP (or at the proxy by inline DLP if the device is on-net). The email from the unmanaged phone is invisible to both — it traverses neither the corporate network nor a managed endpoint — so the only surface that catches the link is the SaaS-side OOB CASB, which sees the email at rest in the corporate mailbox (or external sharing on the destination SaaS). Endpoint/inline first, OOB CASB second; without all three, parts of the chain are dark.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Because risk is contextual. A file containing customer PII may be fine for the CRM administrator and exfiltration for an intern. A familiar destination is normal for the CFO and suspicious for the engineer. AI classification gives content fidelity; pairing it with user role, destination reputation, and behavioural baselines elevates "this file matches a PCI dictionary" to "this is a likely exfiltration event" — only the joint signal supports proportional enforcement.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Themed classifications are pre-built dictionaries that already encode the regulator's data types — GLBA covers financial account numbers, PCI covers card data, HIPAA covers protected health information. Authoring those from raw regex means months of work, edge-case testing, and brittle maintenance whenever a new format appears. Themed templates ship with curated patterns plus contextual proximity rules (e.g., "Luhn-valid number near 'expiration date'") that catch the right matches without the false-positive flood of pure regex.</div></div>
+      </div>
+    </div>
   </div>
 
   <!-- SECTION 1 SUMMARY -->
@@ -172,6 +210,12 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
   <div class="analogy-box">
     <div class="analogy-label">ANALOGY</div>
     <div class="analogy-text">Fragmented DLP tools are like having a different lock on every door, window, and vent — each with its own key. Unified DLP is one master keycard system that knows who you are, what room you're in, and what you're carrying — regardless of the entry point.</div>
+    <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+      <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+      <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+      <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an office building front as an analogy for fragmented locks versus unified keycard DLP. Wide composition. Left scene (Fragmented): a quirky building façade where every single door, window, and vent is fitted with a totally different style of lock — a brass padlock, a digital keypad, an old skeleton-key keyhole, a combination dial, a fingerprint scanner, a deadbolt — and a frantic employee outside is fumbling with a giant overflowing keyring of dozens of mismatched keys, some falling on the ground. Mood of chaotic complexity. Right scene (Unified): the same building cleanly redesigned with elegant glowing keycard readers on every entry point (doors, windows, vents) all wired to a single central reader. The employee strolls up confidently, taps one sleek keycard, and a friendly head-up display silently confirms her identity, the specific room she's entering, and the contents of the bag she's carrying (a small inset icon shows person + room + bag), regardless of which entry point she uses. Mood of effortless universality. Modern corporate architecture, glass panels. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+    </div>
   </div>
 
   <div class="mental-note-block">
@@ -196,6 +240,20 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
       <li>BYOD covers two scenarios — web SaaS and internal apps. Which control fits which (Browser Isolation vs PRA), and why does data never "land" on the device in either case?</li>
       <li>AppTotal discovers a third-party app connected to Salesforce with broad scopes. Which remediation tier (End User Review / Revoke / Ban) would you choose, and on what evidence?</li>
     </ul>
+    <div class="answer-area" data-section="advanced-synth">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">It runs everywhere: inline DLP enforces it as data moves through the proxy; OOB CASB applies it to historical SaaS content via API; DSPM applies it to cloud storage at rest; the endpoint agent applies it to local file operations. The practical benefit is one definition of "sensitive" with one place to update it — fix it once, every channel inherits the change, and audit trails converge on a single classification model. No drift, no per-channel translation, no "did we update the CASB too?"</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">All three rules are evaluated and the most restrictive verdict wins — Block. The safer-default rationale is that human-authored rule order is fragile: someone reorders the list, adds a new HR exception, or misplaces the size rule, and a permissive rule silently shadows a restrictive one. Parallel processing makes correctness order-independent, so policy meaning stays stable as the ruleset grows. Restrictiveness wins; admin error loses.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Adaptive Access ingests the UEBA risk score and steps up the policy bar in real time — step-up authentication, read-only mode, isolation, or full block depending on the score. Downstream, DLP policies tighten: actions that were "allow with notify" become "block," external sharing becomes "internal only," and high-sensitivity destinations get added to the denylist for that user until the score returns to baseline. Detection becomes enforcement automatically.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q4 — MODEL ANSWER</div><div class="model-answer-text">Browser Isolation fits web SaaS — the app renders in a remote browser, only pixels stream to the BYOD device, no local cache. PRA (Privileged Remote Access) fits internal apps — the user connects to an internal portal that brokers the session, and the app's data never traverses the device's storage. In both, the device is a screen, not a destination: data is shown, not delivered.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q5 — MODEL ANSWER</div><div class="model-answer-text">For a broad-scope OAuth grant on Salesforce, Revoke is usually right: cut the existing grant immediately without org-wide ban, then evaluate the app's vendor risk profile before deciding to permanently Ban or sanction it. End User Review is too soft for broad scopes (the damage may already be ongoing); blanket Ban without vendor review may break legitimate use elsewhere. Evidence: scope breadth, vendor reputation, prior usage volume, and presence of any data movement signals.</div></div>
+      </div>
+    </div>
   </div>
 
   <!-- SECTION 2 SUMMARY -->
@@ -237,6 +295,12 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
   <div class="analogy-box">
     <div class="analogy-label">ANALOGY</div>
     <div class="analogy-text">Think of the DLP engine as a single recipe written in one cookbook. Inline traffic is the takeout window, OOB CASB is the walk-in fridge being audited overnight, DSPM is the warehouse, and endpoint is the lunchbox the employee carries home. Same recipe — four kitchens.</div>
+    <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+      <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+      <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+      <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a restaurant chain as an analogy for one DLP engine applied across four data-control points. Central image: a single open cookbook standing on a pedestal in the middle of the composition with a glowing recipe page — the same recipe radiates lines of light outward to four different culinary scenes. Scene 1 (Inline / Takeout Window): a busy takeout window where customers receive freshly made meals in real time, a friendly chef at the counter, traffic flowing past. Scene 2 (OOB CASB / Walk-in Fridge Audit): an overnight walk-in fridge filled with stacked containers being meticulously checked by an inspector with a flashlight and clipboard while the restaurant sleeps. Scene 3 (DSPM / Warehouse): a vast pallet-stacked warehouse of bulk ingredients, a forklift driver scanning crates, mapping what's stored. Scene 4 (Endpoint / Lunchbox): a worker on the sidewalk happily heading home with the same recipe packed into a personal lunchbox. All four scenes share identical recipe-card icons visibly tethered to the central cookbook to emphasise "same recipe, four kitchens". Warm culinary palette, chef hats, mixing bowls, soft kitchen lighting. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+    </div>
   </div>
 
   <div class="mental-note-block">
@@ -247,9 +311,11 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
     </div>
   </div>
 
-  <div class="img-gen-placeholder">
-    <div class="img-gen-label">Image Prompt</div>
-    <div class="img-gen-prompt">Cartoon-style illustration in flat purple palette (#5c35cc). A single central engine block labelled "DLP" with four colour-coded pipes branching outward to four kitchens labelled "Inline", "SaaS at rest", "Cloud", and "Endpoint" — each kitchen has a chef holding the identical recipe card.</div>
+  <div class="img-display-block">
+    <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+    <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+    <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+    <div class="prompt-content" hidden>Cartoon-style illustration in flat purple palette (#5c35cc). A single central engine block labelled "DLP" with four colour-coded pipes branching outward to four kitchens labelled "Inline", "SaaS at rest", "Cloud", and "Endpoint" — each kitchen has a chef holding the identical recipe card.</div>
   </div>
 
   <!-- Socratic — Section 3 synthesis -->
@@ -264,6 +330,18 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
       <li>Workflow Automation auto-groups incidents by user, manager, or policy. When would each grouping be most useful — and what does manager escalation buy you that admin-only handling does not?</li>
       <li>Why is real-time log streaming to an external SIEM still valuable even though Zscaler can fully automate the workflow internally?</li>
     </ul>
+    <div class="answer-area" data-section="incident-synth">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The user sees a Client Connector toast on the endpoint (since the action is local, the agent is the appropriate channel) showing the policy hit, the file, and a justification prompt. The admin path is parallel: ICAP or webhook posts the incident to the SIEM, ServiceNow gets a ticket if integrated, and an email notification fires for high-severity matches. The user and admin views never share a channel — the user gets a coaching moment in their workflow; the admin gets structured data in the system of record.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Group-by-user surfaces concentration (one person generating most incidents — insider risk or misconfigured automation). Group-by-policy surfaces tuning opportunities (a rule that fires constantly is probably too broad). Group-by-manager enables escalation to someone with HR or business context, which is often the only path to closing an ambiguous incident — managers know whether the action was sanctioned, and they have authority admins do not. Each grouping answers a different question.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Because the SIEM is the cross-source correlation point — Zscaler incidents need to be joined to EDR telemetry, identity events, and threat intelligence to tell the full story. Internal automation handles the Zscaler-only loop fast; SIEM enables the bigger picture (this DLP event correlates with the failed login from this IP an hour earlier). Real-time streaming also keeps an immutable audit trail outside the Zscaler tenant, which matters for forensics, compliance, and post-incident review.</div></div>
+      </div>
+    </div>
   </div>
 
   <!-- SECTION 3 SUMMARY -->
@@ -289,6 +367,12 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
   <div class="analogy-box">
     <div class="analogy-label">ANALOGY</div>
     <div class="analogy-text">Without Workflow Automation, every alert is a separate phone call — admins answering one ring at a time. With it, calls are routed by topic, grouped by caller, escalated to the right manager, and logged in a journal the SIEM can read at any hour.</div>
+    <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+      <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+      <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+      <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a call centre as an analogy for workflow automation versus manual alerts. Wide composition. Left scene (Without Automation): one harried admin at a desk surrounded by dozens of ringing rotary telephones all going off at once, each phone a separate call he must pick up one at a time, sweat drops, papers scattered, a clock ticking past business hours. Right scene (With Automation): the same office reimagined as a sleek modern call routing centre — a polished switchboard with glowing topic-labelled lines automatically routing incoming calls into themed queues, grouping calls from the same caller into single threads, an escalation arrow lifting urgent ones up to a manager's desk on a mezzanine, and a quiet automated journal pen at the side writing each interaction into an open ledger book that another character (a SIEM analyst) reads calmly at any hour even at 3am (visible by a small moon icon in the window). Mood of pandemonium versus disciplined orchestration. Office cubicles, headsets, neat dashboards. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+    </div>
   </div>
 
   <div class="mental-note-block">
@@ -312,11 +396,26 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
       <li>DSPM and OOB CASB both inspect data at rest. What's the boundary between them, and when would you choose one over the other?</li>
       <li>BYOD users hit Browser Isolation for SaaS and PRA for internal apps — what's the single underlying principle that makes both safer than full VDI?</li>
     </ul>
+    <div class="answer-area" data-section="cross-synth">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Discover first (Shadow IT Discovery) — you cannot manage what you cannot see, and in a new subsidiary the inventory is the foundation. Then categorise (Cloud App Control) so risk can be scored and actions can be governed per-app. Finally apply Tenant Restrictions where corporate-versus-personal tenancy matters (Google Drive, OneDrive, Box). The order matters: enforcement without discovery is enforcement against guesses; categorisation without tenant restrictions leaves the personal-account exfiltration channel wide open.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">A user screenshots a customer's credit card from a CRM and pastes the image into Slack from their laptop. OCR converts the image text so the DLP engine sees the PCI dictionary match. Parallel Policy Processing evaluates every applicable rule — the "Slack to external" rule may notify, but the "PCI to any non-PCI app" rule blocks, and the most restrictive wins. Endpoint DLP catches the action even if Slack is configured to use TLS pinning and inline inspection is blind — the agent sees the clipboard and the upload at the OS layer.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">DSPM inspects cloud-native infrastructure data stores — S3, Azure Blob, BigQuery, Snowflake — where the security posture (IAM, public exposure) is as important as the content. OOB CASB inspects SaaS app data via the app's API — OneDrive, Salesforce, Box. Choose DSPM when the question is about cloud infrastructure (developer-managed stores, big data, multi-cloud). Choose OOB CASB when the question is about SaaS-managed data (end-user files, sharing, collaboration). They are complementary — most environments need both.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q4 — MODEL ANSWER</div><div class="model-answer-text">The data never lands on the endpoint. Both Browser Isolation and PRA stream pixels or proxied sessions to the BYOD device — copy/paste, download, screenshot, and local-cache behaviours are controlled by the remote runtime, not the device. Full VDI ships an entire OS image to the user's machine, which still has to be managed, agented, and trusted. The underlying principle: contain the data at the source by treating the device as a display, not a destination. Less device trust required, less attack surface created.</div></div>
+      </div>
+    </div>
   </div>
 
-  <div class="img-gen-placeholder">
-    <div class="img-gen-label">Image Prompt</div>
-    <div class="img-gen-prompt">Cartoon-style flat illustration in purple (#5c35cc) and lavender. A bookshelf labelled "QRG" with twelve labelled binders (Shadow IT, CAC, Tenant Restrictions, OCR, UEBA, PPP, OOB CASB, DSPM, Endpoint DLP, BYOD, Workflow, AppTotal). Coloured threads connect binders that work together in common scenarios.</div>
+  <div class="img-display-block">
+    <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+    <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+    <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+    <div class="prompt-content" hidden>Cartoon-style flat illustration in purple (#5c35cc) and lavender. A bookshelf labelled "QRG" with twelve labelled binders (Shadow IT, CAC, Tenant Restrictions, OCR, UEBA, PPP, OOB CASB, DSPM, Endpoint DLP, BYOD, Workflow, AppTotal). Coloured threads connect binders that work together in common scenarios.</div>
   </div>
 
   <!-- QRG SUMMARY -->
@@ -382,6 +481,12 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
   <div class="analogy-box">
     <div class="analogy-label">ANALOGY</div>
     <div class="analogy-text">The QRG isn't a checklist of features — it's a toolbox. Real incidents rarely use one tool; they use two or three together, the way a carpenter reaches for a saw, a clamp, and a square on the same cut.</div>
+    <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+      <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+      <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+      <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a carpenter's workshop as an analogy for the QRG as a toolbox of combined tools. Wide composition. Left scene (Wrong way / Checklist): a bored worker with a thick checklist on a clipboard mechanically ticking off boxes one by one beside a single hammer hovering uselessly — a half-finished crooked piece of wood lies beside him. Crossed-out with a faint red X. Right scene (Right way / Toolbox): a focused carpenter in an apron at a sturdy workbench reaching simultaneously into a beautifully organised wooden toolbox lined with felt; she pulls out three tools at once — a handsaw, a sturdy clamp, and a try-square — and applies them together to the same precise cut on a wooden board, with little arrows showing all three contributing to one clean result. Wood shavings curl on the floor, warm afternoon light streams through a workshop window, tools hang neatly on a pegboard wall. Mood of skilled craft, combining the right instruments for one job. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+    </div>
   </div>
 
   <div class="mental-note-block">
@@ -425,6 +530,12 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
   </div>
 
 </div>
+<script>
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+</script>
 
 </body>
 </html>

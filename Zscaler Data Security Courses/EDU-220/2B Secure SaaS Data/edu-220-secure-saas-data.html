@@ -185,6 +185,14 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
 .model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted,#666);margin-bottom:4px;}
 .model-answer-text{font-size:13px;color:var(--text-soft,var(--text));line-height:1.7;}
+.img-display-block{background:var(--surface-2,var(--bg));border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted,#666);font-size:13px;margin-bottom:12px;}
+.img-missing-msg strong{color:var(--text);}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted,#666);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted,#666);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.uc-grid,.apptotal-steps,.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
@@ -259,14 +267,22 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <strong>Secure SaaS Data covers:</strong> CASB (control shadow IT & sharing), SSPM (misconfigurations & compliance), Supply Chain (secure integrations), and Microsoft Copilot Security (control sensitive data access & output).
     </div>
 
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">IMAGE PROMPT</div>
-      <div class="img-gen-prompt">A flat isometric illustration in deep purple (#6c35cc) and lavender tones showing a translucent fortress-like enterprise data vault with glowing API tendrils reaching outward to floating SaaS app icons (cloud, document, chat, code repo) — symbolising data at rest being secured across many cloud applications simultaneously.</div>
+    <div class="img-display-block">
+      <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>A flat isometric illustration in deep purple (#6c35cc) and lavender tones showing a translucent fortress-like enterprise data vault with glowing API tendrils reaching outward to floating SaaS app icons (cloud, document, chat, code repo) — symbolising data at rest being secured across many cloud applications simultaneously.</div>
     </div>
 
     <div class="analogy-box">
       <div class="analogy-label">ANALOGY</div>
       <div class="analogy-text">Inline DLP is like the security guard at the front door checking everyone walking in. Out-of-band SaaS security is the auditor who walks through every filing cabinet inside the building — months or years later — to make sure nothing sensitive ended up in the wrong drawer.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a corporate office building cutaway as an analogy for inline DLP versus out-of-band SaaS security. Wide composition. Left side (Inline / Front Door): a stern but friendly uniformed security guard stationed at the front entrance, with a metal detector and visitor desk, checking visitors as they walk in in real time, a clear "now" clock above. Right side (Out-of-band / Internal Audit): inside the building rooms full of tall filing cabinets, with a meticulous auditor in glasses and a tweed jacket carrying a clipboard, slowly opening drawer after drawer, magnifying glass in hand, discovering a misfiled folder marked "CONFIDENTIAL" that's been sitting in the wrong drawer for months. A calendar on the wall shows pages flipping forward through many months/years to suggest delayed retroactive review. Mood split: real-time vigilance on the left, patient archival inspection on the right. Marble floor, glass partitions, vintage filing cabinets. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
 
     <div class="mental-note-block">
@@ -361,14 +377,22 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">SSPM is built into the OOB CASB solution. It identifies SaaS application misconfigurations — comparing them against predefined best practices — and provides compliance mapping against standards. It also discovers third-party application integrations (e.g., apps connected to Office 365) that may be risky.</div>
     </div>
 
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">IMAGE PROMPT</div>
-      <div class="img-gen-prompt">A clean diagram in purple (#6c35cc) tones depicting a CASB control plane with API hooks reaching into stacked SaaS app cards (M365, Salesforce, Box, GitHub) — one hook labelled "retro scan" sweeping a long historical timeline, another labelled "iterative scan" watching a single new file event in real time.</div>
+    <div class="img-display-block">
+      <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>A clean diagram in purple (#6c35cc) tones depicting a CASB control plane with API hooks reaching into stacked SaaS app cards (M365, Salesforce, Box, GitHub) — one hook labelled "retro scan" sweeping a long historical timeline, another labelled "iterative scan" watching a single new file event in real time.</div>
     </div>
 
     <div class="analogy-box">
       <div class="analogy-label">ANALOGY</div>
       <div class="analogy-text">Out-of-band CASB is like hiring a librarian with master keys to every cabinet in the building. They quietly walk shelf by shelf (retro scan), then keep an eye only on books being moved or added (iterative scan) — without ever blocking someone walking through the front door.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a grand library as an analogy for out-of-band CASB. Wide composition. Centre: a kindly bespectacled librarian in a cardigan holding a large ring of master keys, calmly walking shelf-by-shelf through towering wooden bookshelves, opening locked glass cabinets and quietly inspecting every book inside (representing the retro scan). On a side rolling cart she carries a tidy ledger noting findings. Right side (Iterative): the same librarian now standing watchfully near a small "new arrivals" trolley and a "recently moved" cart, only checking books that are being moved or added rather than re-scanning the whole library again, with subtle glowing indicators on those specific books. Foreground: an open library front door where patrons walk freely in and out unhindered — the librarian explicitly never blocks them. Warm reading-room lighting, dark wood shelving, brass desk lamp, comfy armchairs. Mood of unobtrusive thorough oversight. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
 
     <div class="mental-note-block">
@@ -438,6 +462,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <div class="analogy-box">
       <div class="analogy-label">ANALOGY</div>
       <div class="analogy-text">The SaaS Assets Summary Report is like a hospital triage board. Out of every patient walking through the door, it highlights who is bleeding the most, in which ward, and which doctor needs to be paged first — so admins stop scrolling logs and start fixing the biggest leaks.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a hospital triage area as an analogy for a SaaS assets summary report. Central scene: a large overhead triage whiteboard mounted on a busy hospital ward wall, divided into colour-coded rows for several wards (each row a different SaaS app icon drawn as a friendly cartoon building, e.g. cloud drive ward, chat-app ward, email ward, CRM ward). Each row shows tiny stick-figure patients with severity icons — red drops next to the worst bleeders, yellow band-aids for moderate cases, green smiley faces for healthy. A clipboard with priority order highlights the worst bleeders at the top. A calm head triage nurse points to the top row and pages a specific doctor over an intercom. To the side: a contrasting vignette of an exhausted admin scrolling endless logs at a computer — crossed out — replaced by the focused triage board approach. Hospital corridor with stretchers, IV poles, medical posters. Mood of focused prioritisation. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
 
     <div class="mental-note-block">
@@ -517,14 +547,22 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="callout-body">Zscaler AppTotal profiles third-party apps <em>before</em> they're connected to IT-approved platforms, continuously monitors app behaviour in your environment, and streamlines end-user recertifications to revoke dormant or over-privileged app access.</div>
     </div>
 
-    <div class="img-gen-placeholder">
-      <div class="img-gen-label">IMAGE PROMPT</div>
-      <div class="img-gen-prompt">A purple (#6c35cc) themed conveyor-belt illustration showing a third-party app icon moving through three glowing stations labelled "Discover", "Analyze", and "Remediate" — the analyze station shows a sandbox bubble with a magnifier and gears; the remediate station forks into three coloured paths labelled End User Review, Revoke, and Ban.</div>
+    <div class="img-display-block">
+      <img src="3.png" alt="Diagram 3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>3.png</strong> will appear here once you add it to this folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
+      <div class="prompt-content" hidden>A purple (#6c35cc) themed conveyor-belt illustration showing a third-party app icon moving through three glowing stations labelled "Discover", "Analyze", and "Remediate" — the analyze station shows a sandbox bubble with a magnifier and gears; the remediate station forks into three coloured paths labelled End User Review, Revoke, and Ban.</div>
     </div>
 
     <div class="analogy-box">
       <div class="analogy-label">ANALOGY</div>
       <div class="analogy-text">AppTotal is the airport security checkpoint for OAuth-connected apps. Discover is the passenger manifest, Analyze is the x-ray and behavioural screening, and Remediate is the customs officer who can wave them through, revoke their visa, or ban them permanently from the country.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an airport security and customs flow as an analogy for AppTotal's Discover-Analyze-Remediate stages. Wide three-scene composition. Scene 1 (Discover / Manifest): a check-in counter where a list of arriving passenger app-creatures (each a cute anthropomorphic OAuth app icon — gears, puzzle-pieces, plug-shaped figures with friendly faces) line up; an agent ticks each off on a long manifest clipboard. Scene 2 (Analyze / Screening): the same app-creatures walk through an X-ray scanner conveyor belt where their requested permissions are shown lit up inside their carry-on bags — some glowing green, some red flagged — while a behavioural-screening officer watches their movements for suspicious twitches and notes a risk score on a tablet. Scene 3 (Remediate / Customs): three exit lanes manned by a customs officer with stamps — a green-lit "Pass" lane waving an app onward into the country, a yellow "Visa Revoked" lane where an app's badge is being clipped off, and a red "Banned" lane with a giant "no entry" sign blocking an app being escorted to a departure gate. Bright terminal architecture, flags, gates. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
     </div>
 
     <div class="mental-note-block">
@@ -551,6 +589,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>Which options over-react (delete data, block all future uploads) versus under-react (just warn)?</li>
       <li>Why is admin notification almost always paired with the remediation step instead of being the remediation itself?</li>
     </ul>
+    <div class="answer-area" data-section="kcheck">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The public link. The file existing in OneDrive or Box is fine — that is what the platform is for. The exposure is that anyone with the URL can read it, and URLs leak through email forwards, search engines, and screenshots. The proportional response is to remove the public sharing link (or convert it to a domain-restricted/recipient-specific share), not to delete the file or punish the user.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Deleting the data over-reacts — you destroy work that was probably legitimate apart from the share setting, and you create a recovery problem. Blocking all future uploads from that user over-reacts in the opposite direction — you punish behaviour that has not happened yet. Just warning under-reacts — the public link is still live. Surgical removal of the public link plus admin notification is the sweet spot.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Because the notification itself does not stop the bleed. Telling an admin "someone shared a sensitive file publicly" only matters if a human can act on it in time — and most exposures need to be remediated within minutes, not the next business day. Pairing notification with automated remediation gives you both: the risk is neutralised immediately, and a human still gets the chance to investigate, contextualise, and follow up.</div></div>
+      </div>
+    </div>
   </div>
 
   <!-- KNOWLEDGE CHECK -->
@@ -633,6 +683,10 @@ function toggleCheck(li){li.classList.toggle('done');const s=getStore();if(!s.ch
 (function restoreChecks(){const s=getStore();if(!s.checks)return;document.querySelectorAll('#checklist li').forEach(li=>{if(s.checks[li.querySelector('span').textContent])li.classList.add('done');});})();
 function navTo(id,btn){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');}
 (function init(){renderQPanel();const s=getStore();if(s.qOpen){const body=document.getElementById('qpanel-body');const hdr=document.getElementById('qpanel-header');const chev=document.getElementById('qpanel-chevron');body.classList.add('open');hdr.classList.add('open');chev.textContent='▴';}})();
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});});
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 </script>
 </body>
 </html>
