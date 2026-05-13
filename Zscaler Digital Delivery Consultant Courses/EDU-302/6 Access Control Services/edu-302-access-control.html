@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Access Control Services — EDU-302</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#fef2f2;--surface:#ffffff;--surface-2:#fefafa;--border:#fecaca;--border-dim:#fee2e2;
+  --text:#1f0a0a;--text-soft:#3d1414;--text-muted:#9a4040;
+  --red:#b91c1c;--red-glow:rgba(185,28,28,0.07);--red-dim:#fecaca;--red-deep:#7a1414;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+  --amber:#b45309;--amber-light:#fef3c7;--amber-border:#fde68a;
+}
+html.pt-init body{opacity:0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:#1f0a0a;display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#9a4040;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#fca5a5;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#3d1414;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(252,165,165,0.1);border:1px solid rgba(252,165,165,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#fca5a5;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#fca5a5;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#fca5a5;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--red);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#1f0a0a;color:#fca5a5;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
+.q-del:hover{color:var(--red);background:var(--red-glow);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 16px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--red);border-bottom-color:var(--red);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+h4{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;margin-top:16px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--red);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--red-glow);border:1px solid var(--red-dim);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--red);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--red-glow);border-color:var(--red-dim);}
+.callout-note .callout-header{color:var(--red);}
+.callout-note .callout-icon{background:var(--red-dim);color:var(--red);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-warn{background:#fff7ed;border-color:#fed7aa;}
+.callout-warn .callout-header{color:var(--amber);}
+.callout-warn .callout-icon{background:#fed7aa;color:var(--amber);}
+.callout-warn .callout-body{color:#7a3a0c;}
+.callout-tip{background:var(--green-light);border-color:var(--green-border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-tip .callout-body{color:#0f4a28;}
+.callout-info{background:var(--blue-light);border-color:var(--blue-border);}
+.callout-info .callout-header{color:var(--blue);}
+.callout-info .callout-icon{background:var(--blue-border);color:var(--blue);}
+.callout-info .callout-body{color:#1a3a5c;}
+
+/* CARDS / GRIDS */
+.policy-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.policy-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.policy-card-title{font-size:13px;font-weight:700;color:var(--red);margin-bottom:6px;}
+.policy-card-body{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+@media(max-width:700px){.policy-grid{grid-template-columns:1fr;}}
+
+/* PHASE STEPS / METHOD STEPS */
+.phase-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:18px;}
+.phase-step{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:0 12px 12px 0;padding:14px 16px;}
+.phase-num{width:34px;height:34px;border-radius:50%;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.phase-body{flex:1;}
+.phase-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.phase-text{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+
+/* SCENARIO BOX */
+.scenario{background:var(--red-glow);border:1px solid var(--red-dim);border-radius:12px;padding:16px 18px;margin-bottom:16px;}
+.scenario-h{font-size:10px;font-weight:700;letter-spacing:0.16em;color:var(--red);margin-bottom:6px;}
+.scenario-h.problem{color:#9a4040;}
+.scenario-h.solution{color:var(--green);}
+.scenario-body{font-size:13px;color:var(--text-soft);line-height:1.7;margin-bottom:10px;}
+.scenario-body:last-child{margin-bottom:0;}
+
+/* METHOD CARDS */
+.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.method-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.method-tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:0.14em;color:#fff;background:var(--red);padding:2px 8px;border-radius:8px;margin-bottom:6px;}
+.method-title{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.3;}
+.method-body{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+.method-body strong{color:var(--red-deep);}
+.method-eg{margin-top:6px;font-family:'JetBrains Mono','Courier New',monospace;font-size:11.5px;color:var(--text);background:var(--red-glow);padding:5px 9px;border-radius:6px;display:inline-block;}
+@media(max-width:700px){.method-grid{grid-template-columns:1fr;}}
+
+/* RULE TABLE */
+.rule-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.rule-table th{background:#1f0a0a;color:#fca5a5;padding:10px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;}
+.rule-table td{padding:10px 12px;border-top:1px solid var(--border);vertical-align:top;color:var(--text-soft);line-height:1.55;}
+.rule-table td:first-child{font-weight:600;color:var(--text);}
+
+/* OVERVIEW / RECS TOGGLE */
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:0;}
+.tab-btn{flex:1;padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:0.12em;color:var(--text-muted);background:var(--surface-2);border:1px solid var(--border);border-bottom:none;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.tab-btn.active{color:var(--red);background:var(--surface);}
+.tab-btn:first-child{border-radius:10px 0 0 0;}
+.tab-btn:last-child{border-radius:0 10px 0 0;}
+.tab-panel{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;padding:16px 18px;font-size:13px;color:var(--text-soft);line-height:1.7;margin-bottom:18px;display:none;}
+.tab-panel.active{display:block;}
+.tab-panel ol{padding-left:20px;}
+.tab-panel ol li{margin-bottom:8px;}
+.tab-panel strong.lk{color:var(--red);font-weight:600;}
+
+/* SOCRATIC */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--red);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--red);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--red-glow);border:1px solid var(--red-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--red);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fff5f5;border:1px solid var(--red-dim);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--red);margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:var(--red-deep);line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img .img-missing-msg{display:none !important;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+.img-display-block{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-display-block img.zoomed{max-width:100% !important;cursor:zoom-out;}
+.img-display-block .img-missing-msg{display:none !important;}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--red);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:#1f0a0a;color:#fca5a5;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{background:#3d1414;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--red);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#1f0a0a;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
+.mod-nav-hub:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:#1f0a0a;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#fca5a5;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#c97a7a;line-height:1.6;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../digital-delivery-consultant-hub.html">Digital Delivery Consultant</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-302-hub.html">EDU-302</a>
+      <span class="breadcrumb-sep">›</span>
+      Access Control Services
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Section 6 · EDU-302</div>
+    <h1>Access Control <em>Services</em></h1>
+    <p>Granular control policies (URL &amp; Cloud App Control, File Type Controls, Firewall), Application Segment design for ZPA (5 deployment methods, characteristics, what NOT to use), Segment Groups, Application Tenant Restriction, and the diagnostic workflow when a user can't reach a private application. The layer where ZIA and ZPA stop being "deployed" and start being "tuned".</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Initial protection is broad. Access control is where it becomes <em>specific</em>.</div>
+  <p class="motivation-sub">The earlier sections got connectivity, identity, and platform services in place — every user can reach Zscaler, prove who they are, and get the platform's baseline protections. Section 6 is where you encode the customer's actual business rules: which URLs, which apps, which file types, which firewalls, which ZPA application segments, and how to diagnose the inevitable "but I can't reach my app" ticket.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-recap',this)">Recap</button>
+  <button class="nav-tab" onclick="navTo('section-granular',this)">Granular Control</button>
+  <button class="nav-tab" onclick="navTo('section-url',this)">URL &amp; Cloud Apps</button>
+  <button class="nav-tab" onclick="navTo('section-file',this)">File Types</button>
+  <button class="nav-tab" onclick="navTo('section-fw',this)">Firewall</button>
+  <button class="nav-tab" onclick="navTo('section-appseg',this)">App Segments</button>
+  <button class="nav-tab" onclick="navTo('section-methods',this)">Deployment Methods</button>
+  <button class="nav-tab" onclick="navTo('section-groups',this)">Groups &amp; Tenant</button>
+  <button class="nav-tab" onclick="navTo('section-diagnose',this)">Diagnose</button>
+  <button class="nav-tab" onclick="navTo('section-recap-final',this)">Recap</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · OVERVIEW</span></div>
+    <p class="socratic-insight">Access Control Services brings together <em>five</em> different policy surfaces — URL/Cloud Apps, File Types, Firewall, Application Segments, Tenant Restriction. Before reading on, ask yourself: why are these grouped together as one course, when each could be its own deep-dive?</p>
+    <ul class="socratic-questions">
+      <li>The course pitches itself as moving "from initial broad protections to implementation tuned to the customer." What is the cost of staying at broad protections too long — and what is the cost of tuning too aggressively, too soon?</li>
+      <li>Five lessons of this course are about ZPA Application Segments alone. Why does ZPA get so much more attention than ZIA's URL/firewall in this course, when both are "access control"?</li>
+      <li>The very last lesson is "Verify Private Application Reachability." Why is the reachability check placed at the end of access control, instead of at the end of connectivity?</li>
+    </ul>
+    <div class="answer-area" data-section="overview">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Staying broad too long means users hit broad blocks that don't match the business — finance can't reach financial-news sites, HR can't reach LinkedIn — and the customer loses confidence. Tuning too fast means policies multiply faster than they can be tested; you ship a maze of exceptions that nobody can audit. The right cadence is "block what corporate-policy explicitly says block, then tune by exception with a paper trail."</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">ZIA's URL/firewall are mostly about <em>category choices</em> against well-known taxonomies. ZPA Application Segments are about <em>shape decisions</em> — wildcard FQDN vs specific ports vs IP, segment groups, what to bypass — that map directly to ZTNA principles. The shape directly determines whether users can reach the right apps and whether least-privilege is real or theatre, so it deserves more lessons.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Because reachability isn't a connectivity question once App Connectors are live — it's a policy question. The user is unreachable because nobody wrote them a policy, or the policy has the wrong criteria, or the App Connector is in the wrong group. The diagnostic flow lives where the cause lives.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-overview">
+    <div class="section-label">COURSE OVERVIEW</div>
+    <h2>Welcome to Access Control Services</h2>
+    <p>This course explores advanced techniques for regulating and troubleshooting user access in Zscaler environments. We'll focus on shaping <strong>granular policies</strong>, segmenting private applications, restricting unauthorised cloud tenants, and diagnosing the common access issues — all the essential aspects of a Zero Trust security model.</p>
+
+    <p>The course is divided into <strong>four main sections</strong>, each crafted to build your understanding gradually:</p>
+
+    <div class="policy-grid">
+      <div class="policy-card">
+        <div class="policy-card-title">1 · Granular Control Policies</div>
+        <div class="policy-card-body">Discover how to move beyond initial broad protections to implement finely-tuned controls using URL &amp; Cloud Application rules, File Type policies, and Firewall configurations.</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-card-title">2 · Application Segmentation</div>
+        <div class="policy-card-body">Learn to group and manage applications in ZPA using FQDN or IP-based segments. See how auto-discovery methods, wildcard configurations, and segment groups enable flexible, zero-trust network access tailored to your organisation's needs.</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-card-title">3 · Application Tenant Restriction</div>
+        <div class="policy-card-body">Explore how Zscaler's Tenant Restriction feature can limit or allow specific cloud application access based on business or personal accounts. Understand key recommendations for SSL inspection and the apps where this approach applies.</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-card-title">4 · Diagnose Private Application Access Error</div>
+        <div class="policy-card-body">Examine real-world troubleshooting scenarios where users can't reach private applications, often due to missing access policies or device posture mismatches. Learn how to use ZPA diagnostics and best practices for preventing and resolving such errors.</div>
+      </div>
+    </div>
+
+    <h3>By the End of This Course, You'll Be Able To:</h3>
+    <ul class="content-list">
+      <li><strong>Design</strong> granular control policies to align with specific business requirements.</li>
+      <li><strong>Construct</strong> application segments to enforce zero trust network access.</li>
+      <li><strong>Configure</strong> tenant restriction rules to limit unauthorised cloud application access.</li>
+      <li><strong>Diagnose</strong> private application access issues using ZPA troubleshooting methodologies.</li>
+      <li><strong>Verify</strong> private application reachability.</li>
+    </ul>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">If platform services was the <em>conductor's score</em>, access control is the <em>dress rehearsal</em>. The stage is set, the orchestra knows their parts — now you walk through each scene and decide who actually enters, who waits in the wings, and which props each character is allowed to touch. Get this right and opening night is smooth. Get it wrong and the audience sees the seams.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a theatre dress rehearsal as an analogy for access control. Wide composition on a warmly-lit stage. Centre: a friendly stage director in a clipboard-and-headset, walking actors through their entry cues — pointing one actor through a glowing door labelled with a tiny URL icon, ushering another off-stage past a "blocked" curtain with a small lock, and inspecting a third actor's prop tray with a small file-type icon. Stage left: stagehands moving labelled flats representing firewall zones. Stage right: a stage manager checking a master cast-list on a tablet. The orchestra in the pit plays softly in the background. Soft amber stage lighting, mood of careful coordination. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Access Control = <strong>broad protections → tuned protections</strong>. The first sections of EDU-302 deployed the platform. This section tunes <em>policy</em>. Every customer's tune is different — what stays the same is the order: block what corporate-policy explicitly mandates, then earn each exception with a written reason.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · RECAP</span></div>
+    <p class="socratic-insight">EDU-200 introduced URL Filtering, Bandwidth, M365, Private App Access, Firewall as a feature inventory. EDU-202 added Cloud Firewall enhancements, DNS Control, Tenant Restrictions, Segmentation policies. EDU-302 is where you stop reciting the feature names and start <em>choosing between them</em>.</p>
+    <ul class="socratic-questions">
+      <li>Why does Zscaler teach the same access-control topics three times (admin, engineer, consultant)? What's the difference between an admin who "knows" URL Filtering and a consultant who "knows" URL Filtering?</li>
+      <li>EDU-202 added "Tenant Restrictions" as a new feature. Which problem does it solve that URL Filtering and Cloud App Control alone cannot?</li>
+    </ul>
+    <div class="answer-area" data-section="recap">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">An admin clicks the right toggles in the right order; an engineer designs the policy structure that the admin will operate; a consultant <em>chooses</em> the structure with the customer, knowing which trade-offs survive contact with real users. Same feature, three different audiences for three different decision densities.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">URL Filtering says "you can't reach YouTube." Cloud App Control says "you can reach YouTube but you can't upload." Tenant Restriction says "you can reach YouTube but only the corporate organisation, not personal accounts." It's the only one that distinguishes <em>which tenant within a cloud app</em> — needed when the app itself is allowed but bring-your-own-account is the leak.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-recap">
+    <div class="section-label">RECAP FROM EDU-200 + EDU-202</div>
+    <h2>What You Should Already Know</h2>
+
+    <h3>From Zscaler for Users — Administrator (EDU-200)</h3>
+    <ul class="content-list">
+      <li><strong>Access Control Services basics</strong> — fundamental principles of Zscaler's framework. Served as the "locks-and-keys" system.</li>
+      <li><strong>URL/Web Filtering</strong> — how to enforce policies that allow or block, with category lists and access rules.</li>
+      <li><strong>Bandwidth Control</strong> — how to optimise critical business traffic, ensuring core apps get the resources they need.</li>
+      <li><strong>Microsoft 365 (M365)</strong> — optimise and secure access to M365 by leveraging Zscaler's specific policies and configurations.</li>
+      <li><strong>Private App Access</strong> — provide secure connectivity to private applications without traditional VPN, lower complexity, better UX.</li>
+      <li><strong>Segmentation</strong> — limit lateral movement in the network by segmenting access.</li>
+      <li><strong>Firewall</strong> — Zscaler's firewall capabilities, granular policies that protect networks while permitting legitimate traffic.</li>
+    </ul>
+
+    <h3>From Zscaler for Users — Engineer (EDU-202)</h3>
+    <ul class="content-list">
+      <li><strong>Zscaler Cloud Firewall</strong> — introduced advanced firewall capabilities, adapting it to varying environments, ensuring consistent protection no matter what they tunnel.</li>
+      <li><strong>DNS Control</strong> — Zscaler's DNS Control, safeguarding clients from DNS-level attacks. Examined how DNS resolution + configurable access controls offer customisable access controls.</li>
+      <li><strong>Tenant Restrictions</strong> — explored Tenant Restrictions and Cloud App Control policies. Restrict applications by allowing third-party access to authorised tenants and blocking unauthorised tenants. The approach helps minimise data leakage and violations while offering detailed control over access.</li>
+      <li><strong>Segmentation and Conditional Access Policies</strong> — segmentation strategies to fortify integrity around stringent access controls. Conditional access rules ensure that users can only access the applications they are authorised for. Additionally, segmentation and policies contribute to maintaining a secure and efficient environment.</li>
+    </ul>
+
+    <div class="callout callout-info">
+      <div class="callout-header"><div class="callout-icon">i</div>WHY THIS RECAP MATTERS</div>
+      <div class="callout-body">EDU-302 doesn't re-explain how each feature is configured. It assumes you can already configure them and asks you to <strong>choose between them</strong>, <strong>sequence them</strong>, and <strong>justify them</strong> in front of a customer.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap','Recap')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap"></span></div></div>
+    </div>
+  </div>
+
+  <!-- GRANULAR CONTROL -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · GRANULAR CONTROL</span></div>
+    <p class="socratic-insight">Granular Control = moving from initial early protection to a customised implementation tuned to the customer. Three deployment patterns: new deployment with no existing solution, migration from a current solution, and rapid deployment in response to an event.</p>
+    <ul class="socratic-questions">
+      <li>"Rapid deployment in response to an event" sounds reactive. What does it mean in practice — what's the event, and what's the consultant's job in those first 48 hours?</li>
+      <li>When you migrate a customer from a current solution, the temptation is to copy their existing 47 firewall rules into Zscaler "to be safe." Why is that the wrong move, and what's the right move?</li>
+    </ul>
+    <div class="answer-area" data-section="granular">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The event is usually a breach, an audit finding, or a regulator deadline. The consultant's job is to ship the <em>minimum policy</em> that closes the incident's blast radius — typically a tight URL/IP block plus targeted firewall rules — while the customer's existing solution still runs the rest. Document what was rushed so it gets revisited in 30 days.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Copying 47 rules ports 47 unaudited decisions, half of which were workarounds for a now-retired system. Right move: capture the <em>intent</em> behind each rule (which user group, which app, which threat), then re-express that intent in Zscaler-native primitives. Often 47 rules collapse to 8.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-granular">
+    <div class="section-label">GRANULAR CONTROL POLICIES</div>
+    <h2>What Are Granular Control Policies?</h2>
+    <p>Granular Control policies deployment involves going from initial early protection to a <strong>more customised implementation tuned to the customer's needs and environment</strong>. You implement more granular settings using common features, but with particular policies for business needs. Each deployment will use some aspect of the features discussed, but the policy configuration is driven by the individual organisation's use cases and needs.</p>
+
+    <h3>Three Deployment Types</h3>
+    <div class="phase-steps">
+      <div class="phase-step">
+        <div class="phase-num">1</div>
+        <div class="phase-body">
+          <div class="phase-title">New Deployment with No Existing Solution</div>
+          <div class="phase-text">With this deployment, URL and Cloud Application Control and the Firewall features are introduced quickly, following the Zscaler recommended settings. You should consider the browser and File Type combos on a case-by-case basis for when and if they apply as part of the deployment.</div>
+        </div>
+      </div>
+      <div class="phase-step">
+        <div class="phase-num">2</div>
+        <div class="phase-body">
+          <div class="phase-title">Deployment and Migration from a Current Solution</div>
+          <div class="phase-text">The policy migration for these features is typically the most complex deployment of all possible scenarios. The complexity is due to organisations having spent years defining rules in an existing solution and the desire to duplicate those efforts within Zscaler. Zscaler recommends clearly understanding the intent of a rule before attempting to replicate it during the migration. The intent could be lost over time.</div>
+        </div>
+      </div>
+      <div class="phase-step">
+        <div class="phase-num">3</div>
+        <div class="phase-body">
+          <div class="phase-title">Rapid Deployment in Response to an Event</div>
+          <div class="phase-text">The timing for introducing policy when the deployment is event-based depends on the feature's intent. Most often the deployment may involve a newly established environment or might require a previous solution. Each will require a different approach when establishing services. As with any deployment, understanding the immediate needs and outcomes of the customer will determine the timing for implementation. With this approach, we want to err on being more protective than loose during deployment.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Three Examples You'll Cover</h3>
+    <ol style="margin-left:20px;font-size:14px;color:var(--text-soft);line-height:1.8;">
+      <li><strong>URL &amp; Cloud Application Control</strong> (Granular Control Policies)</li>
+      <li><strong>File Type Controls</strong></li>
+      <li><strong>Firewall</strong></li>
+    </ol>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">!</div>BEFORE THE EXAMPLES</div>
+      <div class="callout-body">URL Filtering &amp; Cloud Application Control come first because they're the most consequential — they decide what users can <em>reach</em>. File Type Controls and Firewall refine what they can <em>do</em> once reached.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Granular Control is a <em>master locksmith re-keying a building you've just inherited</em>. The locks are already there. The locksmith doesn't replace every lock at once; she audits which doors need which kind of key, decides which doors will share a master key, and which need a one-off. The previous owner had 47 keys jingling on a ring; her job is to leave only the keys that still match a door.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a master locksmith re-keying an inherited building as an analogy for granular control. Wide composition with a cutaway view of a friendly multi-storey office building. Centre foreground: a cheerful locksmith in a smart apron at a workbench full of brass keys, holding up two keys side-by-side and comparing them against a master key ring. Each floor of the building shows different doors with little category labels — one with a URL icon, one with a file icon, one with a small firewall shield. Behind her, a discarded tangled keyring of 47 mismatched keys sits in a bin. Soft warm interior lighting, plush carpet, mood of careful precision. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+
+    <div class="img-display-block">
+      <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>1.png</strong> — add this diagram to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show diagram prompt</button>
+      <div class="prompt-content" hidden>Flat red minimalist illustration of three deployment scenarios side-by-side as three vertical lanes. Lane 1 "New": an empty plot with a fresh signpost and a workman placing a single new policy block. Lane 2 "Migration": an older building with a tangled rope of policy strings being carefully untangled and re-tied onto a new fence. Lane 3 "Rapid": a single firefighter erecting an emergency barrier with one big red stripe. All three feed into a single Zscaler-cloud shield on the right. Clean simple shapes, no text labels.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-granular" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('granular','Granular Control')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-granular" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-granular"></span></div></div>
+    </div>
+  </div>
+
+  <!-- URL & CLOUD APP -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · URL &amp; CLOUD APP CONTROL</span></div>
+    <p class="socratic-insight">Zscaler recommends Cloud Application Control over URL Filtering for blocking apps — the URL list grows, the app catalogue is curated. URL Filtering still earns its keep for the long tail and the explicit "Block-Known-Bad-URL_Categories" baseline.</p>
+    <ul class="socratic-questions">
+      <li>If Cloud App Control always wins precedence over URL Filtering, when does a URL Filtering rule still fire? What's the customer's incentive to maintain both layers?</li>
+      <li>The Safemarch scenario: HR needs LinkedIn, the rest of the company shouldn't have social media. Why is "URL rule with HR excluded from the social-media block" the wrong design — and what's the right design?</li>
+    </ul>
+    <div class="answer-area" data-section="url">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">URL Filtering fires for everything Cloud App Control didn't classify — newly registered domains, niche sites, the entire "long tail" outside the curated app catalogue. The Block-Known-Bad-URL_Categories baseline (Adult Material sub-categories, Legal Liability class) is also a URL Filtering rule. Both layers because Cloud App is precise-but-narrow, URL is broad-but-noisy.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Excluding HR from a URL rule gives HR access to <em>all</em> social media (Facebook, X, TikTok…), not just LinkedIn. The right design is: URL rule "block social media for everyone, no exceptions" + Cloud App Control "allow LinkedIn for HR." The Cloud App rule takes precedence and threads the needle. The URL rule keeps the rest of social media closed even for HR.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-url">
+    <div class="section-label">EXAMPLE 1 · URL &amp; CLOUD APPLICATION CONTROL</div>
+    <h2>URL Filtering &amp; Cloud Application Control</h2>
+    <p><strong>Zscaler recommends using Cloud Application Control policies over URL policies to block access to sites or categories</strong>. By doing this, an organisation does not have to try to keep up with the ever-growing list of URLs that a site may use, instead allowing Cloud Application Control to recognise the application and correctly apply policy.</p>
+
+    <p>URL filtering still has an important place, catching applications that fall outside of the Cloud Application Control policy. <strong>Zscaler recommends editing Block-Known-Bad-URL_Categories by adding all sub-categories in the Adult Material main category and then enabling it</strong>. Alternatively, you can create a new rule that blocks access to all categories in the Legal Liability class.</p>
+
+    <h3>Policy Types and Recommendations</h3>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'url-over')">Overview</button>
+      <button class="tab-btn" onclick="switchTab(this,'url-rec')">Recommendations</button>
+    </div>
+    <div class="tab-panel active" id="url-over">
+      As you consider implementation, <strong>it's essential to start with blocking content following corporate policy, then add additional policies to refine and develop desired outcomes and business use cases.</strong>
+    </div>
+    <div class="tab-panel" id="url-rec">
+      In addition to created policies, Zscaler recommends configuring the following in the <strong class="lk">Advanced URL Policy Settings</strong> tab:
+      <ol>
+        <li><strong class="lk">Enable Newly Registered Domain Lookup</strong>: Select Enable. Enables use of the Newly Registered Domains URL category in URL Filtering policy.</li>
+        <li><strong class="lk">Enable Dynamic Content Categorization</strong>: Analyses content of uncategorised websites and slots them into Adult Material, Drugs, Gambling, or Violence if appropriate.</li>
+        <li><strong class="lk">Enable Embedded Sites Categorization</strong>: Enforces URL Filtering for sites that make encapsulated/embedded requests — translation services (Google Translate), etc.</li>
+        <li><strong class="lk">Enforce SafeSearch</strong>: Returns safe content only from Google, Yahoo, Bing, Ask, Live, YouTube, blip.tv, Dailymotion, Flickr, AOL Video, Friendster. <em>Requires SSL Inspection enabled.</em></li>
+      </ol>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>PRECEDENCE</div>
+      <div class="callout-body">The Cloud Application Control policy <strong>takes precedence over URL Filtering</strong>. If both apply, the Cloud App Control verdict wins and the URL Filter is skipped. To override that, go to Advanced Settings and enable <strong>Allow Cascading to URL Filtering</strong>.</div>
+    </div>
+
+    <h3>Scenario — Safemarch Corp / Social Media + HR</h3>
+    <div class="scenario">
+      <div class="scenario-h">SCENARIO</div>
+      <div class="scenario-body">During the review of existing policies on the legacy system, you learn that <strong>Safemarch Corp</strong> uses URL Filtering to prevent users from visiting social media sites. When you question intent, you realise they need to block <strong>all users from using social media except employees in the HR department</strong>.</div>
+      <div class="scenario-h problem">PROBLEM</div>
+      <div class="scenario-body">The HR department is being excluded from the social media URL rule so they can get to LinkedIn — but this allows HR employees to access <em>all</em> social media sites.</div>
+      <div class="scenario-h solution">SOLUTION</div>
+      <div class="scenario-body">It's not enough to simply create a new URL policy that blocks social media. The best approach is creating a <strong>Cloud Application Control</strong> policy assigned to the HR department that allows viewing and posting to LinkedIn. You will also have a URL filtering policy that is set to block social media and apply that to all users, including the HR department. Remember, the Cloud Application policy always takes precedence over a URL policy.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">URL Filtering is the <em>library's blacklist of book titles</em> — finite, ever-growing, gets stale. Cloud App Control is the <em>librarian who recognises the author</em> — knows a Stephen King novel even with a new cover. Tenant Restriction is the <em>library card that says you can borrow King books but only from the corporate library, not the personal one across town</em>.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a friendly public library as an analogy for URL vs Cloud App Control. Wide composition. Left scene: a stressed librarian behind a counter trying to maintain a sprawling, overflowing "blacklist" binder with thousands of book-title cards (URL Filtering). Right scene: a calm librarian recognising an author by face from across the room and waving away a returned book regardless of which cover edition it has (Cloud App Control). Centre foreground: a happy reader carrying a labelled library card past a small turnstile that scans her tenant affiliation (Tenant Restriction). Warm interior light, plush carpet, plants in the corner. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Cloud App Control <strong>&gt;</strong> URL Filtering for "block this app." URL Filtering still owns the broad baseline + the long-tail. <strong>Cloud App wins precedence</strong>; toggle <em>Allow Cascading</em> only if you need URL rules to still fire after a Cloud App match.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-url" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('url','URL &amp; Cloud Apps')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-url" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-url"></span></div></div>
+    </div>
+  </div>
+
+  <!-- FILE TYPE -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · FILE TYPE CONTROLS</span></div>
+    <p class="socratic-insight">By default, Zscaler allows uploading and downloading of all file types. File Type Controls are associated with URL Filtering (not Cloud Application Control). To block a file type in Gmail, you must select the Webmail URL category.</p>
+    <ul class="socratic-questions">
+      <li>Why are File Type Controls tied to URL Filtering rather than Cloud Application Control — given Cloud App Control is the recommended-default for everything else?</li>
+      <li>The recommended baseline is "Caution for executable downloads, Block for executable uploads." Why is the action different for download vs upload?</li>
+    </ul>
+    <div class="answer-area" data-section="file">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">URL Filtering is the layer that operates on raw URL categories — and "file uploaded to Webmail" is a URL-shaped event (POST to a specific URL category). Cloud App Control operates on app-level verbs (post / view / share) and doesn't expose raw file-type matching across categories the way URL Filtering does. The pairing is structural.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Download = inbound risk (malware). Caution surfaces a click-through so users acknowledge they're getting an executable; the trade-off is download speed and legitimate IT tooling. Upload = outbound risk (data exfil + admin executables ending up in webmail). There's almost no legitimate workflow that uploads an executable to webmail, so Block is safe.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-file">
+    <div class="section-label">EXAMPLE 2 · FILE TYPE CONTROLS</div>
+    <h2>File Type Controls</h2>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'ft-over')">Overview</button>
+      <button class="tab-btn" onclick="switchTab(this,'ft-rec')">Recommendations</button>
+    </div>
+    <div class="tab-panel active" id="ft-over">
+      By default, the Zscaler service allows uploading and downloading of all file types. However, organisations may elect to control the allowances of various file types. <strong>File Type Controls are associated with URL Filtering and not Cloud Applications</strong>. For example, if you wish to block a file type in Gmail, you must select the Webmail URL category.
+    </div>
+    <div class="tab-panel" id="ft-rec">
+      The Zscaler recommended policy uses a <strong class="lk">Caution</strong> action for Executable downloads from any URL category and <strong class="lk">Block</strong> for Executable uploads to any URL category. Additionally, depending on the customer's corporate policy, you may elect to block downloads from other URL categories or block the general file type of Undetectable.
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">✓</div>RULE OF THUMB</div>
+      <div class="callout-body">Downloads → <strong>Caution</strong> (click-through). Uploads → <strong>Block</strong>. Undetectable file types → <strong>Block</strong> if corporate policy allows.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">File Type Controls are the <em>customs scanner at the airport gate</em>, not the visa officer at the embassy. The visa officer (Cloud App Control) said "yes, you can enter this country." The customs scanner is checking your carry-on regardless — and treats outgoing parcels (uploads) stricter than incoming souvenirs (downloads), because exfiltration risk is what customs is really for.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an airport customs gate as an analogy for File Type Controls. Wide composition. Left lane (arrivals / downloads): a friendly customs officer holding a yellow "caution" flag and inspecting suitcases full of file-type icons (a small EXE document, a PDF, a ZIP) before waving travellers through. Right lane (departures / uploads): a stricter officer at a barrier with a red "block" flag stopping a traveller trying to send an EXE-marked parcel out the door. Behind the lanes, a glowing visa-officer booth in the background labelled with a cloud icon (Cloud App Control) shows already-stamped passports. Warm airport lighting, cheerful round-faced characters. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-file" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('file','File Types')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-file" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-file"></span></div></div>
+    </div>
+  </div>
+
+  <!-- FIREWALL -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · FIREWALL</span></div>
+    <p class="socratic-insight">Two flavours: Standard (5-tuple + FQDN) and Advanced (user-based, app-ID, DNS, IPS, granular logging). Predefined rules are the recommended starting point — edit and extend, don't rebuild. Tunnel 2.0 + ZCC + non-HTTP traffic is the gotcha.</p>
+    <ul class="socratic-questions">
+      <li>Standard Cloud-Gen Firewall vs Advanced — when does the customer's use case demand the Advanced licence, and when can Standard carry the whole deployment?</li>
+      <li>The Tunnel 2.0 + SSH-port-22 scenario from the screenshots: why does this break "after installing Zscaler" specifically, and what does the default firewall config tell us about Zscaler's deployment philosophy?</li>
+    </ul>
+    <div class="answer-area" data-section="fw">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Standard works when the customer thinks in network primitives (IP, port, protocol) and doesn't need IPS or per-user policy. Advanced is necessary when policy must reflect identity (which user, which group), application identity (Slack-vs-not-Slack on the same port), DNS-level threats, or when forensics requires per-flow granular logs. Most enterprise rollouts end up on Advanced for the per-user + IPS combo.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Tunnel 2.0 forwards <em>all</em> TCP/UDP through Zscaler. Before Zscaler, port 22 SSH went direct to the public internet; after, it goes through the firewall. The default firewall has a deny-all rule pinned above ZIA's Default Allow — so port 22 gets blocked. The deployment philosophy: <strong>fail closed, then open by explicit rule</strong>. The fix is a TCP-22 allow rule placed above the default block.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-fw">
+    <div class="section-label">EXAMPLE 3 · FIREWALL</div>
+    <h2>Types of Firewall</h2>
+    <p>Zscaler offers two types of firewalls: <strong>Standard</strong> and <strong>Advanced</strong>. The Standard Cloud-gen Firewall is a stateful, 5-tuple, and FQDN-oriented firewall. The Advanced Cloud-gen Firewall adds user-based policies, full application identification, DNS controls, IPS controls, and detailed, granular logging.</p>
+
+    <p><strong>The default and predefined rules in a Zscaler instance are the Zscaler recommended selections.</strong> These are rules in each of the Firewall Filtering areas spanning Firewall Control, NAT Control, DNS Control, IPS Control, and more. It is recommended that you edit and create additional rules to meet the requirements of your deployment.</p>
+
+    <p>During the initial deployment of Tunnel 2.0 in the Zscaler Client Connector, configure a default allow policy for all traffic. Before the end of the deployment, have other firewall policies in place to allow other traffic and change the default to <strong>deny</strong>.</p>
+
+    <h3>Policy Types and Recommendations</h3>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'fw-over')">Overview</button>
+      <button class="tab-btn" onclick="switchTab(this,'fw-rec')">Recommendations</button>
+    </div>
+    <div class="tab-panel active" id="fw-over">
+      For Firewall policies to apply to a location, you must enable them in the Admin Portal. Enabling per location is done by editing the <strong class="lk">Location</strong> in the Administrative Console and selecting <strong class="lk">Enforce Firewall Control</strong> (Enable IPS Control as well to enable Zscaler IPS controls available with the Advanced Cloud-gen Firewall subscription).
+      <br><br>
+      Enabling and disabling Firewall controls for all Tunnel 1.0 is done in Advanced Settings under <strong class="lk">Enable Firewall for Z-Tunnel 1.0 and PAC Remote Users (Road Warriors)</strong>.
+    </div>
+    <div class="tab-panel" id="fw-rec">
+      <ol>
+        <li>For Firewall policies to apply to <strong>non-HTTP traffic</strong> on Zscaler Client Connector, you must have <strong class="lk">Tunnel 2.0</strong> configured. Tunnel 2.0 is NOT enabled by default for Zscaler Client Connector and must be requested from Zscaler.</li>
+        <li>Once enabled, you must configure the <strong class="lk">Forwarding Profile</strong> for the Zscaler Client Connector to use it when forwarding traffic. Tunnel 2.0 allows you to enforce all firewall rules to the user's web traffic, HTTP or not.</li>
+      </ol>
+    </div>
+
+    <h3>Scenario — Tunnel 2.0 + SSH Blocked</h3>
+    <div class="scenario">
+      <div class="scenario-h">SCENARIO</div>
+      <div class="scenario-body">The company uses Zscaler Client Connector to forward traffic and is configured for <strong>Tunnel 2.0</strong>. The customer is reporting that since installing Zscaler, <strong>they are unable to SSH into hosts outside of the organisation</strong>.</div>
+      <div class="scenario-h problem">PROBLEM</div>
+      <div class="scenario-body">When a customer is unable to SSH to hosts outside their organisation, it is usually caused by a default deny rule in the Firewall Policy. Usually, the rule is put just above the ZIA-supplied <strong>Default Allow Firewall Policy Rule</strong>.<br><br>In this case, since Tunnel 2.0 forwards all TCP/UDP ports, port 22 (used for SSH and tunnelled through Zscaler) must be explicitly allowed or the firewall policy default will block the traffic.</div>
+      <div class="scenario-h solution">SOLUTION</div>
+      <div class="scenario-body">To overcome this issue, simply <strong>create a Firewall Rule allowing TCP port 22 and place it above the default Block/Drop rule</strong>.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Standard firewall is a <em>property fence with named gates</em> — pedestrian gate, vehicle gate, service gate. Advanced firewall is the <em>same fence with a guard who recognises faces</em> — same gates, but the guard checks who you are and what you're carrying before opening anything. The default policy is "if you're not on the list, you wait" — Tunnel 2.0 puts every kind of traffic on that fence, which is why SSH that used to ride the back roads now needs an explicit named entry.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a property fence with two guard styles as an analogy for Standard vs Advanced firewall. Wide composition. Left half (Standard): a tall fence with three named gates labelled by tiny pictograms — a pedestrian icon, a car icon, a delivery-truck icon — and a relaxed guard at a small kiosk checking a clipboard against entries. Right half (Advanced): the same fence and same gates, but a vigilant guard with a glowing facial-recognition tablet, examining each visitor and noting their identity in a thicker logbook. Centre foreground: a worried delivery driver labelled "SSH:22" trying to enter through a previously-open back path that's now fenced off (Tunnel 2.0 scenario). Soft afternoon light, cheerful round-faced characters. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text"><strong>Standard = 5-tuple + FQDN. Advanced = +user / +app-ID / +DNS / +IPS / +granular logs.</strong> Default rules are the baseline — edit, don't rebuild. Tunnel 2.0 forwards non-HTTP, so the firewall finally sees SSH/RDP/etc. — write the allow rules <em>above</em> the default block.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-fw" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('fw','Firewall')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-fw" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-fw"></span></div></div>
+    </div>
+  </div>
+
+  <!-- APPLICATION SEGMENTS -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · APPLICATION SEGMENTS</span></div>
+    <p class="socratic-insight">An Application Segment is a grouping of defined applications, based upon access type or user privileges. ZPA features such as double encryption, health reporting, etc. are configured per Application Segment. <strong>Migration to ZPA does not happen overnight</strong> — it's a gradual process, FQDN by FQDN.</p>
+    <ul class="socratic-questions">
+      <li>The doc says "an Application Segment can only be assigned to one Segment Group." Why this restriction — what would break if a segment could live in multiple groups?</li>
+      <li>FQDN-overlap and subnet-overlap rules: when a wildcard segment <code>*.company-domain.tld</code> overlaps a specific segment <code>web.company-domain.tld</code>, the specific FQDN gets removed from the wildcard. Why this de-duping logic, and what does that mean for the design — should you start with wildcards or specifics?</li>
+    </ul>
+    <div class="answer-area" data-section="appseg">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">If a segment belonged to N groups, access policy and App Connector group assignment could conflict — the same app reachable through two different connector pools, with two different policies, possibly granting different access. The 1:1 rule makes the segment's identity unambiguous: one home, one connector path, one set of policy rules at the group level.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">The de-duping ensures the most specific match wins, so wildcards don't accidentally shadow narrow rules. For design, start wide (wildcard FQDN) to onboard everything fast, then carve out specific FQDN segments as you tighten policy. The platform handles the override correctness for you.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-appseg">
+    <div class="section-label">APPLICATION SEGMENTS</div>
+    <h2>What Is an Application Segment?</h2>
+    <p>An <strong>Application</strong> in Zscaler Private Access (ZPA) is defined as a Fully Qualified Domain Name (FQDN), local domain name, or IP address, which you define on a standard set of ports. Applications must be defined within an Application Segment.</p>
+
+    <p>An <strong>Application Segment</strong> is a grouping of defined applications, based upon access type or user privileges. ZPA features such as double encryption, health reporting, etc. are configured per Application Segment. In most cases, the <strong>migration to ZPA does not happen overnight</strong>. It is a gradual process and application auto-discovery policies provide visibility into which applications are being used and who uses them. Gradually, the administrator starts to create more specific Application Segments and restrict access.</p>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>RANGES &amp; LIMITATIONS</div>
+      <div class="callout-body">When planning for Application Segments, it's important to be aware of the licensed number of applications allowed per the customer's subscription. Overages can incur additional costs to the customer. Apart from licensing considerations, there are other limits that you need to be aware of. These ranges and limitations change frequently — refer to the <em>Ranges &amp; Limitations</em> doc for the most current information.</div>
+      </div>
+
+    <h3>Application Segment Characteristics</h3>
+    <ul class="content-list">
+      <li>It is <strong>not permitted</strong> to have an overlapping FQDN and TCP/UDP port number with another Application Segment.</li>
+      <li>An Application Segment can only be assigned to <strong>one Segment Group</strong>.</li>
+      <li>When a domain wildcard Application Segment has been configured (<code>*.company-domain.tld</code>), if there is another Application Segment that uses a specific FQDN with the same domain name (<code>web.company-domain.tld</code>), the FQDN hostname will be removed from the wildcard Application Segment.</li>
+      <li>When a subnet-based Application Segment has been configured, if there is another Application Segment that contains only a specific IP address, the IP address will be removed from the subnet-based Application Segment.</li>
+    </ul>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Application Segments are the <em>floor plan in an architect's blueprint</em>. The building (your ZPA tenant) is one thing; how you carve it into rooms — open-plan office, executive corner, server closet, single-occupancy meeting pod — is the segmentation decision. Each room belongs to one wing of the building (Segment Group). A wildcard wing claims the whole floor unless a specific room is carved out — at which point the floor still exists, minus that one room.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A6.png" alt="Analogy illustration A6" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A6.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an architect's floor plan as an analogy for Application Segments. Wide composition with a top-down cutaway view of one cheerful office floor. A friendly architect at a drafting table on the left holds up a blueprint and points at rooms being labelled with tiny pictograms (database, webapp, file-server). The floor is divided into clearly-bordered rooms, each shaded a different soft colour to indicate its Segment, and outer wing-borders mark Segment Groups. A faint dotted outline shows a wildcard wing that's been "carved out" to make room for a specific labelled room. Warm interior light, plants by the drafting table. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-appseg" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('appseg','App Segments')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-appseg" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-appseg"></span></div></div>
+    </div>
+  </div>
+
+  <!-- DEPLOYMENT METHODS -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · DEPLOYMENT METHODS</span></div>
+    <p class="socratic-insight">Five App Segment deployment methods: (1) wildcard FQDN + all ports, (2) wildcard FQDN + targeted ports, (3) IP-based, (4) ZPA Bypass, plus the catch-all "Applications NOT suited for ZPA." They're not mutually exclusive — most deployments use several.</p>
+    <ul class="socratic-questions">
+      <li>Method 1 (wildcard + all ports, except 53) is the closest thing to VPN-style access. The catch is "avoid port 53 because hostname-resolution would return the real IP, not the synthetic IP." Why does that one detail matter, and what would happen if you ignored it?</li>
+      <li>"ZPA Bypass" exists as a method — but bypassing means the traffic doesn't go through ZPA at all. Why deliberately create an Application Segment whose purpose is to <em>not be a ZPA application</em>?</li>
+    </ul>
+    <div class="answer-area" data-section="methods">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">ZPA fakes a "synthetic IP" for the endpoint so the client connector knows to send the traffic over the ZPA tunnel. If port 53 (DNS) is in the segment, the endpoint's resolver query goes through ZPA — and the server answer returns the real internal IP. The client then connects to the real IP directly, bypassing ZPA. Result: app appears broken or routed incorrectly.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Because in flat-DNS environments, internal and external apps share the same domain (e.g. <code>*.company.com</code>). The wildcard segment would claim them all — including the publicly-facing marketing site or the vendor monitoring app that needs to phone home. ZPA Bypass tells the client connector "this FQDN is in the wildcard, but never tunnel it through ZPA." It's a carve-out, not a fail-open.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-methods">
+    <div class="section-label">5 APP SEGMENT DEPLOYMENT METHODS</div>
+    <h2>Application Segment Deployment Methods</h2>
+    <p>While each customer's environment will be different, it's beneficial to have a consistent design approach for adding an application. The approach should be a step toward attaining <strong>Zero Trust Network Access (ZTNA)</strong>, but still provide flexibility to adapt to an individual customer's needs.</p>
+
+    <p>Break this approach into <strong>five possible methods</strong>. These methods are different ways to create Application Segments, and the choices are <strong>not mutually exclusive</strong>. In most deployments, at least a few methods from the choices below will be used.</p>
+
+    <div class="method-grid">
+      <div class="method-card">
+        <div class="method-tag">METHOD 1</div>
+        <div class="method-title">Generic Auto-Discovery — Wildcard FQDN + All Ports</div>
+        <div class="method-body">Maximum flexibility for application auto-discovery; most closely resembles VPN-style access. <strong>Avoid port 53</strong> in the segment, otherwise hostname resolution returns the real IP instead of the synthetic IP and the app breaks.<div class="method-eg">*.safemarch.com</div></div>
+      </div>
+      <div class="method-card">
+        <div class="method-tag">METHOD 2</div>
+        <div class="method-title">App Auto-Discovery — Wildcard FQDN + Targeted Ports</div>
+        <div class="method-body">Keeps auto-discovery but limits to ports the app actually uses. Better security than Method 1. Start configuring policy with <strong>Segment Group</strong> as criteria, narrow to specific Application Segment as you learn the app's behaviour.<div class="method-eg">*.safemarch.com  ·  TCP 80, 443</div></div>
+      </div>
+      <div class="method-card">
+        <div class="method-tag">METHOD 3</div>
+        <div class="method-title">IP-Based</div>
+        <div class="method-body">Limit to as few as possible. Typical: network/system admins accessing devices by IP. Use specific subnet ranges (avoid <code>/8</code> mask); exclude printer/DHCP IPs; don't include client machine IPs; consider routing-table size on the endpoint.<div class="method-eg">192.168.1.1  ·  TCP 3389</div></div>
+      </div>
+      <div class="method-card">
+        <div class="method-tag">METHOD 4</div>
+        <div class="method-title">ZPA Bypass Applications</div>
+        <div class="method-body">For apps inside the wildcard that should NEVER route through ZPA — vendor phone-home, publicly-facing sites in the corporate domain, whistleblower forms. Set <strong>"Bypass = Always"</strong> in the Client Connector Access section. Bypass applies to the entire hostname for ALL ports — you can't bypass HTTP and allow SSH on the same FQDN.</div>
+      </div>
+    </div>
+
+    <h3>Method 5 — Applications NOT Suited for ZPA</h3>
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>NOT SUITABLE FOR ZPA</div>
+      <div class="callout-body">
+        <strong>Internal DNS</strong> — if corporate DNS is over ZPA, the Client Connector can't recognise ZPA applications.<br>
+        <strong>Unified Communications</strong> — VoIP/SIP is architecturally unsuited (no server-to-client init; real-time TCP would be sub-optimal).<br>
+        <strong>Active-Mode FTP</strong> — server call-back to client not supported.<br><br>
+        <em>Modifying or creating an Application Segment might cause traffic disruption — schedule changes accordingly.</em>
+      </div>
+    </div>
+
+    <div class="img-display-block">
+      <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>2.png</strong> — add this diagram to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show diagram prompt</button>
+      <div class="prompt-content" hidden>Flat red minimalist illustration of four App Segment deployment methods as four parallel lanes from a customer site on the left to a Zscaler ZPA cloud on the right. Lane 1 (wildcard + all ports) drawn as the widest open pipe with a "*.domain" tag. Lane 2 (wildcard + targeted ports) the same width but with two thin sub-pipes labelled "80" and "443". Lane 3 (IP-based) drawn as a narrow targeted pipe with a "192.x" tag. Lane 4 (bypass) drawn as a small detour pipe veering off and going directly to the internet, with a small "BYPASS" tag floating beside it. Clean simple shapes, no text labels other than the tags described.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">The five methods are <em>five different keying strategies</em> for the apartment building. (1) Master key opens every door — biggest blast radius, fastest to provision. (2) Master key but only between 9-5 — same speed, narrower exposure. (3) Individual unit keys — most secure, slowest to provision. (4) "These rooms aren't part of the lockup at all" — bypass. (5) "These rooms can't take a key from this system" — not suited for ZPA. A real deployment carries a key ring with several of these at once.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A7.png" alt="Analogy illustration A7" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A7.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a building manager's keyboard wall with five keying strategies as an analogy for App Segment deployment methods. Wide composition with a friendly building manager standing in front of a wall-mounted keyboard. Hooks labelled with tiny pictograms: (1) a glowing master key on a large ring; (2) the same master key but with a small clock icon next to it; (3) a row of unique brass keys each with a tiny room-number tag; (4) a key with a "BYPASS" flag and a back-alley exit door behind it; (5) a key with a big red "X" labelled with a tiny VoIP phone, an FTP tape, and a DNS server. The manager holds a clipboard ticking off which combination to use for which apartment. Warm interior lobby lighting, cheerful round-faced character. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text"><strong>Methods are not mutually exclusive.</strong> Start broad (wildcard + targeted ports), carve specifics over time, bypass the carve-outs that don't belong, and recognise the apps that ZPA can't host (DNS, VoIP, FTP-active). The order of Methods reflects increasing precision, not increasing preference.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-methods" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('methods','Deployment Methods')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-methods" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-methods"></span></div></div>
+    </div>
+  </div>
+
+  <!-- GROUPS & TENANT -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · GROUPS &amp; TENANT</span></div>
+    <p class="socratic-insight">Segment Groups gather Application Segments into a unit you write policy against. Application Tenant Restriction limits which tenant of a cloud app a user can use — corporate Google account, yes; personal Gmail, no.</p>
+    <ul class="socratic-questions">
+      <li>If access policies could be written directly against Application Segments, why introduce Segment Groups at all? What does the extra abstraction layer give you operationally?</li>
+      <li>Tenant Restriction is "limited to only specific applications." Why is the feature deliberately narrow — what's the difficulty in extending it to every cloud app?</li>
+    </ul>
+    <div class="answer-area" data-section="groups">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Segment Groups let you write <em>one</em> policy that covers <em>many</em> apps that share an access pattern — "Sales Apps," "Finance Apps," "DBA Tools." Without groups, adding a new app means adding a new policy line; with groups, you add the app to the right group and inherit the policy. Operational cost drops dramatically as the catalogue grows.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Tenant Restriction needs the cloud app to expose a tenant-identifier in its protocol (a header, a URL pattern, an SSL extension). Zscaler can only enforce restrictions on apps that publish one. Google, Microsoft, YouTube, Slack, etc. do; many SaaS apps don't yet. The feature is narrow because the underlying app ecosystem is uneven, not because Zscaler chose to limit scope.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-groups">
+    <div class="section-label">SEGMENT GROUPS · TENANT RESTRICTION</div>
+    <h2>Application Segment Groups</h2>
+    <p>Let's return to your ZPA configuration elements and discuss Segment Groups. Remember, <strong>you must place each Application Segment you configure into a Segment Group</strong>. This allows you to configure user access policies based on Segment Groups.</p>
+
+    <p>For example, if you have a set of defined applications that you want only users from the "Sales" department to access, you can create a Segment Group called "Sales Applications" and apply to it all sales-related applications. You can then create an access policy that allows the Segment Group instead of needing to add every application individually.</p>
+
+    <p>However, you cannot assign an Application Segment to multiple Segment Groups. For example, if you place Salesforce in the "Sales Applications" Group, you cannot add Salesforce to another group.</p>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">✓</div>VERIFY THE CONFIG</div>
+      <div class="callout-body">Once an Application Segment has been configured, it is best practice to verify the validity of the configuration and double-check whether the Application Segment is associated with the correct <strong>Segment Group</strong>, <strong>Server Group</strong>, <strong>App Connector Group</strong>, and <strong>App Connectors</strong>.</div>
+    </div>
+
+    <h3>Application + App Segment Scenario — Safemarch DBAs</h3>
+    <div class="scenario">
+      <div class="scenario-h">SCENARIO</div>
+      <div class="scenario-body">Safemarch's <strong>Database Administrators</strong> need access to databases on several servers and use a variety of tools to access the database based on role. Now that decisions have been made for authentication and App Connectors, you want to focus on the initial applications that will be made available.</div>
+      <div class="scenario-h problem">DESIGN QUESTION</div>
+      <div class="scenario-body">The DBA team uses well-known database ports (1433, 1521, 3306, 5432, etc.) but they don't yet have a definitive list of every server where these databases live.</div>
+      <div class="scenario-h solution">RECOMMENDED APPROACH</div>
+      <div class="scenario-body">Create an Application Segment using <strong>commonly identified database ports + a wildcard FQDN</strong> for the company domain. Databases are targeted (so port range is known) — but you're unsure of all servers on which databases are present, so the wildcard FQDN catches them all. As servers get identified, carve out specific FQDN segments.</div>
+    </div>
+
+    <h3>Application Tenant Restriction</h3>
+    <p>Zscaler's Tenant Restriction feature allows you to restrict access either to personal accounts, business accounts, or both for specific cloud applications. You can provide restricted access to the cloud applications that support tenancy restriction by creating tenant profiles for these apps and associating them with the respective Cloud Application Control policy rules.</p>
+
+    <p>For example, you can restrict access to content specific to your organisation on YouTube by creating a tenant profile, corporate YouTube channel with your organisation's YouTube channel ID, and associating it to a YouTube Cloud Application Control policy rule with Allow action.</p>
+
+    <div class="callout callout-info">
+      <div class="callout-header"><div class="callout-icon">i</div>RECOMMENDATION + CAVEAT</div>
+      <div class="callout-body">
+        <strong>Recommendation:</strong> Ensure to select the cloud applications in your SSL Inspection rule.<br><br>
+        <strong>Additional consideration:</strong> Application Tenant Restriction is limited to only specific applications — verify support before promising the customer.
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Segment Groups are <em>departments in an office building</em>. The individual apps are people; the group is the department name. You don't write a policy for each employee — you write a policy for "the Sales department" and let HR keep the roster current. Tenant Restriction is the <em>badge that says you can enter the building, but only the corporate library, not the personal library next door</em> — same brand of library, different membership.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A8.png" alt="Analogy illustration A8" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A8.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of departmental groupings + tenant badge as an analogy for Segment Groups and Tenant Restriction. Wide composition with a cutaway office building. Three floors are colour-coded by department — Sales (blue), Finance (green), DBAs (purple) — and each floor has a single shared department door with the department-name pictogram (a small handshake / coin stack / database icon). A friendly building manager checks a clipboard at the entrance. To the right of the building, a security gate shows a person scanning a badge that allows them into the "corporate" library next to a separate identical-looking "personal" library which has a polite "no entry from this badge" sign — Tenant Restriction. Warm interior lighting, plush carpet. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-groups" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('groups','Groups &amp; Tenant')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-groups" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-groups"></span></div></div>
+    </div>
+  </div>
+
+  <!-- DIAGNOSE -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · DIAGNOSE &amp; VERIFY</span></div>
+    <p class="socratic-insight">The two diagnostic lessons close out the course: <em>Diagnose Private Application Access Error</em> (user can't reach the app — usually no matching policy) and <em>Check Private Application Reachability</em> (verify the path end-to-end after a change).</p>
+    <ul class="socratic-questions">
+      <li>The error code "SE: Policy is not configured for access" sounds like the policy is missing — but the user already exists in the SCIM directory and the App Segment is configured. What other conditions can trigger that error, and how do you distinguish them?</li>
+      <li>"Verify Private Application Reachability" is the last lesson of the entire course. Why is it the closing note rather than something you do once at the end of connectivity setup?</li>
+    </ul>
+    <div class="answer-area" data-section="diagnose">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">The policy exists but the user/device <em>doesn't match its criteria</em>. Common reasons: user isn't a member of the SCIM group used as criteria; device posture check fails (anti-virus not running, OS version, certificate missing); trusted-network condition not met (user is on a coffee-shop wifi). Use ZPA Diagnostics → User Metadata to inspect what SCIM attributes / posture / network the policy evaluated against, then reconcile with what's actually true on the device.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Reachability is a function of policy <em>and</em> configuration — domain joining, DNS search domain, Client Connector logs, app segment correctness. Verifying once at the end of connectivity catches "the tunnel works"; verifying at the end of access control catches "the user, on this device, in this group, with this posture, can reach this app today." It belongs at the end because it's the integration test for everything earlier.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-diagnose">
+    <div class="section-label">DIAGNOSE + VERIFY</div>
+    <h2>Diagnose Private Application Access Error</h2>
+
+    <div class="scenario">
+      <div class="scenario-h">SCENARIO / EXPECTED RESULT</div>
+      <div class="scenario-body">User is granted access to a private application.</div>
+      <div class="scenario-h problem">PROBLEM</div>
+      <div class="scenario-body">User is unable to access the application, and ZPA diagnostics indicate that a <strong>policy is not configured</strong>.</div>
+      <div class="scenario-h solution">TIPS FOR AVOIDING THIS ISSUE</div>
+      <div class="scenario-body">Check the configured access policies to be aware of what has been configured as criteria. Check that users and devices will meet any criteria related to device posture, trusted networks, or SCIM attributes configured in the access rules.</div>
+    </div>
+
+    <h3>Troubleshooting Walkthrough</h3>
+    <table class="rule-table">
+      <thead><tr><th>Activity / Symptom</th><th>Tools</th><th>Sample Output</th><th>Analysis / Cause</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Policy Not Configured for Access Error</td>
+          <td>Expand to log entry in the Diagnostics view of the ZPA Admin Portal.</td>
+          <td>Check for indications of underlying errors or unresolved references. e.g. the User Metadata will show information on criteria such as SCIM attributes, posture profiles, trusted networks.</td>
+          <td>Posture-profile evaluation result in the example shows that the device posture was evaluated against the criteria of needing to be a domain-joined device; this was not satisfied. This provides context for examining the configured access policy to see what criteria are configured for access. In this case, since the device was not domain-joined, it did not match the criteria for access, and the unsuccessful attempt was logged.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 style="margin-top:32px;">Check Private Application Reachability</h2>
+
+    <div class="scenario">
+      <div class="scenario-h">SCENARIO / EXPECTED RESULT</div>
+      <div class="scenario-body">User is granted access to a private application.</div>
+      <div class="scenario-h problem">PROBLEM</div>
+      <div class="scenario-body">Unable to access application; ZPA diagnostic logs show error <strong>"SE: Policy not configured for access"</strong>. Internal status code: <code>BRK_MT_SETUP_FAIL_NO_POLICY_FOUND</code>.</div>
+      <div class="scenario-h solution">TIPS FOR AVOIDING THIS ISSUE</div>
+      <div class="scenario-body">Ensure that testing exercises <strong>all</strong> of the access rules to <strong>all</strong> of the configured apps. Check Client Connector logs and diagnostic results to see what criteria are checked and the results for each test.</div>
+    </div>
+
+    <h3>Verify Configuration Walkthrough</h3>
+    <table class="rule-table">
+      <thead><tr><th>Activity / Symptom</th><th>Tools</th><th>Sample Output</th><th>Analysis / Cause</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Verify Application Domain Seen by Client Connector Is in ZPA Domain</td>
+          <td>Check Client Connector ZIATunnel.log for results of any DNS and application domain lookups.</td>
+          <td>e.g. Forwarding Profile: DoeBootcamper · {} Condition Match Type: {Any} Predicated Networks: {} Trusted DNS Servers: {} DNS Resolved IPs: [] DNS Search Domains: []</td>
+          <td>Log entries show that the Client Connector is not seeing any specific configurations related to the trusted network. Such configurations may need to be in trusted-network criteria. This can be checked against the configuration in the ZPA Admin Portal as the configuration relates to items like the configured DNS search domains for the App Segments.</td>
+        </tr>
+        <tr>
+          <td>Check App Segment Configuration</td>
+          <td>ZPA Admin Portal → Administration → Application Segments → DNS Search Domains</td>
+          <td>—</td>
+          <td>In this example, the DNS Search Domains are not configured and the Client Connector is not set to validate the domain. If these are configured then it will be written in the Client Connector logs for the results of any validation.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Diagnose is a <em>doctor's three-pass differential</em>. Pass 1: ask the patient (the error code says "no policy"). Pass 2: read the chart (User Metadata — what criteria did we actually evaluate?). Pass 3: physical exam (posture, group membership, trusted network on this device, right now). The error message tells you which symptom; the chart tells you which organ.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A9.png" alt="Analogy illustration A9" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A9.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a doctor's three-pass examination as an analogy for ZPA diagnose. Wide composition in a friendly clinic. Left scene: a doctor leaning forward listening to a patient's complaint (the error code) with a stethoscope in hand. Middle scene: the same doctor flipping through a thick patient chart with tabs labelled with tiny icons (SCIM, posture, trusted network). Right scene: the doctor running a small handheld device over the patient's wrist while a colour-coded "match / no match" indicator glows softly. The patient looks relieved as the diagnosis becomes clear. Soft warm medical lighting, mood of calm methodical inquiry. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">"<strong>SE: Policy is not configured for access</strong>" rarely means the policy is literally missing. It usually means the <em>criteria didn't match this user / this device / this network</em>. Open ZPA Diagnostics → User Metadata, reconcile against the access rule's criteria, and the gap will be obvious.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-diagnose" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('diagnose','Diagnose')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-diagnose" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-diagnose"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div class="section-block" id="section-recap-final">
+    <div class="section-label">RECAP &amp; RESOURCES</div>
+    <h2>In Summary</h2>
+    <p>You explored advanced access control strategies designed to help create precise user- and application-level restrictions within the Zscaler platform. By mastering these concepts, you are now better prepared to design, implement, and troubleshoot granular security policies that align with diverse organisational needs.</p>
+
+    <ul class="content-list">
+      <li><strong>Granular Control Policies</strong> — move from broad protective measures to fine-tuned controls using URL &amp; Cloud App Control, File Type, and Firewall configurations. The section highlights different deployment types (new, migrated, event-based) — for the migration scenario, capture <em>intent</em> not rules, and adapt to each customer's unique needs.</li>
+      <li><strong>Application Segmentation</strong> — delivered hands-on auto-discovery and FQDN-based segments, exploring how zero-trust principles are applied. Learned best practices for grouping applications, handling IP-based segments, and maintaining a trust approach.</li>
+      <li><strong>Application Tenant Restriction</strong> — examined Tenant Restriction features, allowing you to selectively grant or deny access to personal or business accounts on specific cloud applications. You discovered how to configure tenant profiles, integrate them into Cloud App Control policies, and apply them to SSL Inspection rules.</li>
+      <li><strong>Diagnose Private Application Access Issues</strong> — hands-on scenarios for troubleshooting user-access issues to private applications. You saw how missing policies, posture mismatches, or incomplete configuration can block user access, and learned to leverage ZPA logs and diagnostics for swift resolution.</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">60-SECOND PITCH</div>
+        <div class="mental-note-block-text"><strong>Cloud App Control &gt; URL Filter. File Types live on URL Filter. Firewall = default rules + your edits. App Segments = wildcard then carve. 1 segment, 1 group. Bypass for don't-route. Apps NOT suited = DNS, VoIP, FTP-active. Tenant Restriction = which org of the same app. Diagnose error = read the User Metadata. Verify reachability before you call it done.</strong></div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Access Control Services is the <em>building manager's clipboard at the end of move-in week</em>. Every tenant has a key (Application Segment), every floor has a department label (Segment Group), the lobby scanners check IDs (Tenant Restriction), and when somebody calls down "my key doesn't work" the manager walks through the same checklist every time — what's on your badge, what's on the lock, what changed today (Diagnose). The course teaches the clipboard.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A10.png" alt="Analogy illustration A10" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A10.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a building manager's master clipboard as an analogy for Access Control Services course summary. Wide composition with a cheerful building manager in a smart vest standing in a warm lobby. The manager holds open a thick clipboard with five tabbed sections, each labelled with a tiny pictogram: a URL/web globe (URL/Cloud Apps), a folder with a file-type icon (File Types), a small fence (Firewall), a labelled key (App Segments), a badge with a "corp" marker (Tenant Restriction). Behind the manager, a wall of pigeon-hole mailboxes shows each tenant's name on a label. To the side, a friendly resident gives a small thumbs-up — their key now works. Warm interior lobby lighting, plush carpet, plants in the corner. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap-final" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap-final','Recap')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap-final" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap-final"></span></div></div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-302-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-302 Hub
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleDone(this,0)"><div class="subtopic-check"></div><span>4 main course pillars (Granular Control · App Segmentation · Tenant Restriction · Diagnose)</span></li>
+      <li onclick="toggleDone(this,1)"><div class="subtopic-check"></div><span>5 learning outcomes (Design / Construct / Configure / Diagnose / Verify)</span></li>
+      <li onclick="toggleDone(this,2)"><div class="subtopic-check"></div><span>3 deployment types (New · Migration · Rapid)</span></li>
+      <li onclick="toggleDone(this,3)"><div class="subtopic-check"></div><span>Cloud App Control &gt; URL Filtering for blocking apps</span></li>
+      <li onclick="toggleDone(this,4)"><div class="subtopic-check"></div><span>Block-Known-Bad-URL_Categories + Adult Material sub-categories baseline</span></li>
+      <li onclick="toggleDone(this,5)"><div class="subtopic-check"></div><span>4 Advanced URL settings (Newly Registered · Dynamic Categorization · Embedded · SafeSearch)</span></li>
+      <li onclick="toggleDone(this,6)"><div class="subtopic-check"></div><span>File Type Controls live on URL Filtering (Caution down / Block up)</span></li>
+      <li onclick="toggleDone(this,7)"><div class="subtopic-check"></div><span>Standard vs Advanced Cloud-Gen Firewall</span></li>
+      <li onclick="toggleDone(this,8)"><div class="subtopic-check"></div><span>Tunnel 2.0 + Forwarding Profile for non-HTTP firewall enforcement</span></li>
+      <li onclick="toggleDone(this,9)"><div class="subtopic-check"></div><span>Application Segment = FQDN/IP grouping, one segment → one Segment Group</span></li>
+      <li onclick="toggleDone(this,10)"><div class="subtopic-check"></div><span>5 App Segment deployment methods (wildcard + all · wildcard + targeted · IP · Bypass · Not Suited)</span></li>
+      <li onclick="toggleDone(this,11)"><div class="subtopic-check"></div><span>Apps NOT suited for ZPA (Internal DNS · VoIP/SIP · Active FTP)</span></li>
+      <li onclick="toggleDone(this,12)"><div class="subtopic-check"></div><span>Avoid port 53 in wildcard segments (real-IP vs synthetic-IP)</span></li>
+      <li onclick="toggleDone(this,13)"><div class="subtopic-check"></div><span>Tenant Restriction limited to specific cloud apps</span></li>
+      <li onclick="toggleDone(this,14)"><div class="subtopic-check"></div><span>Diagnose "SE: Policy not configured" = criteria mismatch (User Metadata)</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="quick-ref"><div class="quick-ref-term">Granular Control Policy</div><div class="quick-ref-def">Tuned implementation built from URL/Cloud App, File Type, and Firewall features for the customer's specific business intent.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Cloud Application Control</div><div class="quick-ref-def">App-aware policy layer. <strong>Takes precedence</strong> over URL Filtering; recommended for blocking known apps.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">SafeSearch</div><div class="quick-ref-def">Advanced URL setting that forces safe results from Google, Bing, YouTube, etc. <em>Requires SSL Inspection.</em></div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Standard vs Advanced FW</div><div class="quick-ref-def">Standard = 5-tuple + FQDN. Advanced = +user, +app-ID, +DNS, +IPS, +granular logs.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Tunnel 2.0</div><div class="quick-ref-def">ZCC tunnel that forwards all TCP/UDP (not just HTTP/HTTPS) to Zscaler. Required for firewall enforcement on non-HTTP traffic.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Application Segment</div><div class="quick-ref-def">ZPA grouping of FQDN/IP definitions + ports. One segment → one Segment Group. ZPA features (double encryption, health) configured here.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Synthetic IP</div><div class="quick-ref-def">ZPA-generated fake IP returned to the client for FQDN segments. Avoid port 53 in segments — real-IP would leak.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">ZPA Bypass</div><div class="quick-ref-def">App Segment with "Bypass = Always" — FQDN matches the wildcard but never tunnels through ZPA. Whole hostname, all ports.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Segment Group</div><div class="quick-ref-def">Grouping unit for App Segments. Access policies are written against Segment Groups for operational scale.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Tenant Restriction</div><div class="quick-ref-def">Cloud App Control add-on that restricts access by tenant identifier (corp YouTube channel, corp Google tenant). Limited to specific apps.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">SE: Policy Not Configured</div><div class="quick-ref-def">ZPA error code (BRK_MT_SETUP_FAIL_NO_POLICY_FOUND). Usually means criteria mismatch (posture / SCIM / trusted network), not literally missing policy.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-302 · <span>Section 6</span></div>
+  <div class="footer-right">Access Control Services · Section 6 of 11</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu302-acs';
+const SECTIONS={overview:'Overview',recap:'Recap',granular:'Granular Control',url:'URL &amp; Cloud Apps',file:'File Types',fw:'Firewall',appseg:'App Segments',methods:'Deployment Methods',groups:'Groups &amp; Tenant',diagnose:'Diagnose','recap-final':'Recap'};
+
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+function switchTab(btn,id){const wrap=btn.parentElement.parentElement;wrap.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');wrap.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));const target=document.getElementById(id);if(target)target.classList.add('active');}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();initNotes();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
+  document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
+  document.querySelectorAll('.analogy-img img, .img-display-block img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+});
+</script>
+<script src="../../../transitions.js"></script>
+</body>
+</html>
