@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Security Services — EDU-302</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f0f9f3;--surface:#ffffff;--surface-2:#f4fbf6;--border:#a7e0c0;--border-dim:#d4f0e0;
+  --text:#0a1c12;--text-soft:#143821;--text-muted:#3d6650;
+  --green:#1a7c4a;--green-glow:rgba(26,124,74,0.07);--green-dim:#a7e0c0;--green-deep:#0f4a28;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+  --amber:#b45309;--amber-light:#fef3c7;--amber-border:#fde68a;
+}
+html.pt-init body{opacity:0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:#0a1c12;display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#3d6650;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#5fc88d;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#143821;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(95,200,141,0.1);border:1px solid rgba(95,200,141,0.28);padding:5px 14px;border-radius:20px;font-size:11px;color:#5fc88d;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#5fc88d;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#5fc88d;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--green);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#0a1c12;color:#5fc88d;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 16px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--green);border-bottom-color:var(--green);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+h4{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;margin-top:16px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--green);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--green-glow);border:1px solid var(--green-dim);border-left:3px solid var(--green);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--green);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--green-glow);border-color:var(--green-dim);}
+.callout-note .callout-header{color:var(--green);}
+.callout-note .callout-icon{background:var(--green-dim);color:var(--green);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-warn{background:#fff7ed;border-color:#fed7aa;}
+.callout-warn .callout-header{color:var(--amber);}
+.callout-warn .callout-icon{background:#fed7aa;color:var(--amber);}
+.callout-warn .callout-body{color:#7a3a0c;}
+.callout-tip{background:var(--green-glow);border-color:var(--green-dim);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-dim);color:var(--green);}
+.callout-tip .callout-body{color:var(--green-deep);}
+.callout-info{background:var(--blue-light);border-color:var(--blue-border);}
+.callout-info .callout-header{color:var(--blue);}
+.callout-info .callout-icon{background:var(--blue-border);color:var(--blue);}
+.callout-info .callout-body{color:#1a3a5c;}
+.callout-warn-red{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn-red .callout-header{color:var(--red);}
+.callout-warn-red .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn-red .callout-body{color:#7a1414;}
+
+.policy-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.policy-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.policy-card-title{font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;}
+.policy-card-body{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+@media(max-width:700px){.policy-grid{grid-template-columns:1fr;}}
+
+.phase-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:18px;}
+.phase-step{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--green);border-radius:0 12px 12px 0;padding:14px 16px;}
+.phase-num{width:34px;height:34px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.phase-body{flex:1;}
+.phase-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.phase-text{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+
+.scenario{background:var(--green-glow);border:1px solid var(--green-dim);border-radius:12px;padding:16px 18px;margin-bottom:16px;}
+.scenario-h{font-size:10px;font-weight:700;letter-spacing:0.16em;color:var(--green);margin-bottom:6px;}
+.scenario-h.problem{color:var(--red);}
+.scenario-h.solution{color:var(--green);}
+.scenario-body{font-size:13px;color:var(--text-soft);line-height:1.7;margin-bottom:10px;}
+.scenario-body:last-child{margin-bottom:0;}
+
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:0;}
+.tab-btn{flex:1;padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:0.12em;color:var(--text-muted);background:var(--surface-2);border:1px solid var(--border);border-bottom:none;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.tab-btn.active{color:var(--green);background:var(--surface);}
+.tab-btn:first-child{border-radius:10px 0 0 0;}
+.tab-btn:last-child{border-radius:0 10px 0 0;}
+.tab-panel{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;padding:16px 18px;font-size:13px;color:var(--text-soft);line-height:1.7;margin-bottom:18px;display:none;}
+.tab-panel.active{display:block;}
+.tab-panel ol{padding-left:20px;}
+.tab-panel ol li{margin-bottom:8px;}
+.tab-panel ul{padding-left:20px;margin-top:4px;}
+.tab-panel ul li{margin-bottom:6px;list-style:disc;}
+.tab-panel strong.lk{color:var(--green);font-weight:600;}
+
+.rule-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.rule-table th{background:#0a1c12;color:#5fc88d;padding:10px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;}
+.rule-table td{padding:10px 12px;border-top:1px solid var(--border);vertical-align:top;color:var(--text-soft);line-height:1.55;}
+.rule-table td:first-child{font-weight:600;color:var(--text);}
+
+/* DLP STACK / POLICY STACK */
+.policy-stack{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.policy-line{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.policy-line:last-child{border-bottom:none;}
+.policy-num{width:50px;flex-shrink:0;font-family:'Fraunces',serif;font-weight:700;color:var(--green);font-size:13px;}
+.policy-body{flex:1;font-size:12.5px;color:var(--text-soft);line-height:1.6;}
+.policy-action{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.1em;padding:2px 8px;border-radius:6px;margin-right:6px;}
+.policy-action.allow{background:var(--green-dim);color:var(--green-deep);}
+.policy-action.block{background:var(--red-border);color:var(--red);}
+.policy-action.monitor{background:var(--blue-border);color:var(--blue);}
+.policy-action.caution{background:var(--amber-border);color:var(--amber);}
+
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--green);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--green);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--green-glow);border:1px solid var(--green-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--green);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#f0faf3;border:1px solid var(--green-dim);border-left:3px solid var(--green);border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--green);margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:var(--green-deep);line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img .img-missing-msg{display:none !important;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+.img-display-block{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-display-block img.zoomed{max-width:100% !important;cursor:zoom-out;}
+.img-display-block .img-missing-msg{display:none !important;}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--green);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:#0a1c12;color:#5fc88d;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{background:#143821;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--green);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#0a1c12;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
+.mod-nav-hub:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:#0a1c12;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#5fc88d;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#88b89c;line-height:1.6;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../digital-delivery-consultant-hub.html">Digital Delivery Consultant</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-302-hub.html">EDU-302</a>
+      <span class="breadcrumb-sep">›</span>
+      Data Security Services
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Section 8 · EDU-302</div>
+    <h1>Data Security <em>Services</em></h1>
+    <p>Zscaler's Data Loss Prevention story — Content-Driven vs Context-Driven policies, First Match vs Evaluate All policy ordering, the 10-step iterative operationalising loop, the 7-step deploy lifecycle (Implement → Build → Allow → Tune → Block → Test → Production), EDM/IDM/OCR, SaaS Security API, and three real-world use cases (AI/ChatGPT prompts, Endpoint DLP for employee offboarding, Outbound Email DLP).</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Data security is where Zscaler stops being a network product and starts being a <em>compliance product</em>.</div>
+  <p class="motivation-sub">Access Control governed who could reach what. Cyberthreat governed what they were protected from. Data Security governs <em>what leaves the building</em> — and unlike threat protection where false positives are tolerable, DLP false positives wreck trust fast. The consultant's job is the slow, iterative tuning loop: Allow → tune → Block → tune → Production.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-recap',this)">Recap</button>
+  <button class="nav-tab" onclick="navTo('section-policies',this)">DLP Policies</button>
+  <button class="nav-tab" onclick="navTo('section-types',this)">Policy Types</button>
+  <button class="nav-tab" onclick="navTo('section-order',this)">Order &amp; Creation</button>
+  <button class="nav-tab" onclick="navTo('section-ops',this)">Operationalising</button>
+  <button class="nav-tab" onclick="navTo('section-deploy',this)">Deploy Lifecycle</button>
+  <button class="nav-tab" onclick="navTo('section-tools',this)">EDM/IDM/OCR/SaaS</button>
+  <button class="nav-tab" onclick="navTo('section-usecases',this)">Use Cases</button>
+  <button class="nav-tab" onclick="navTo('section-recap-final',this)">Recap</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · OVERVIEW</span></div>
+    <p class="socratic-insight">Four outcomes — <em>Describe / Explain / Operationalize / Deploy</em>. "Operationalize" is the new verb. Cyberthreat got "Apply"; Data Security gets "Operationalize." Why the difference?</p>
+    <ul class="socratic-questions">
+      <li>DLP outcomes include "Operationalize the DLP policies to reduce false positives." Why is false-positive reduction elevated to its own learning outcome, instead of being a side-effect of normal tuning?</li>
+      <li>Cyberthreat said "rules must sit above general access rules." DLP says "rules must be stacked Allow-first-then-Block under First Match." Why does the stacking advice flip when you move from threat to data?</li>
+      <li>One use case in this course is ChatGPT prompts. Why is "preventing PII from being typed into a chat box" a DLP problem and not a Cloud App Control problem?</li>
+    </ul>
+    <div class="answer-area" data-section="overview">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">In threat protection, a false positive (a blocked legitimate file) is irritating but recoverable — IT moves on. In DLP, a false positive blocks a salesperson from emailing a contract to a customer, or HR from sending a payroll spreadsheet. Each one is a phone call, an audit trail, and a credibility hit for "the system." False-positive tuning isn't optional polish; it's the difference between a deployment that survives Week 2 and one that gets shut off.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Cyberthreat is binary at the rule level ("this URL is malicious; block"). DLP is graduated — exceptions for specific apps/groups need to fire <em>before</em> the broad block, otherwise everyone gets caught. So with First Match: Allow rules (the carve-outs) sit at the top, Block rules (the broad rules) sit at the bottom. With Evaluate All, the most restrictive wins regardless of order — which is why moving from First Match to Evaluate All requires deleting all DLP policies and rebuilding.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Cloud App Control can allow/deny <em>access</em> to ChatGPT but can't see what's typed into the prompt. DLP inspects the actual payload — the words the user types and the file they paste — and can block submission of PII patterns. The two layers work together: Cloud App says "ChatGPT is permitted for Marketing," DLP says "but no credit card numbers in the prompt."</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-overview">
+    <div class="section-label">COURSE OVERVIEW</div>
+    <h2>Welcome to Data Protection Services</h2>
+    <p>This course provides an overview of how to operationalise and deploy Zscaler data protection policies. Additionally, you'll identify which data protection policies need to be implemented based on various organisational needs.</p>
+
+    <div class="policy-grid">
+      <div class="policy-card">
+        <div class="policy-card-title">1 · Course Overview</div>
+        <div class="policy-card-body">A quick recap of Zscaler for Users — Administrator (EDU-200) and Engineer (EDU-202) courses on data protection.</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-card-title">2 · Data Protection Policies Implementation</div>
+        <div class="policy-card-body">Explore the Zscaler DLP policies deployment based on various organisational needs.</div>
+      </div>
+    </div>
+
+    <h3>By the End of This Course, You'll Be Able To:</h3>
+    <ul class="content-list">
+      <li><strong>Describe</strong> the policies that Zscaler provides to secure data on all channels.</li>
+      <li><strong>Explain</strong> the importance of policy order and creation considerations for effective DLP deployment.</li>
+      <li><strong>Operationalize</strong> the DLP policies to reduce false positives and ensure seamless implementation.</li>
+      <li><strong>Deploy</strong> the data protection policies based on the organisational needs.</li>
+    </ul>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Data Security is the <em>shipping department of a high-volume warehouse</em>. Boxes leave all day, every day; the customer trusts that nothing sensitive walks out by mistake. The shipping clerk (DLP engine) opens every parcel above a threshold (Content-Driven) <em>and</em> checks the sender + recipient + destination on every form (Context-Driven). Mistakes here aren't just leaks — they're a salesperson unable to send a contract, an HR rep unable to email payroll. The clerk earns trust through accuracy.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--green-dim);border-radius:8px;color:var(--green-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a busy warehouse shipping department as an analogy for Data Security. Wide composition with rows of conveyor belts moving labelled parcels. Centre foreground: a cheerful shipping clerk in a green vest at a desk, opening one parcel to inspect its contents (Content-Driven) while glancing at a separate clipboard with sender/recipient details (Context-Driven). Around her: small categorised bins labelled with tiny icons — a credit card, a passport (PII), a SKU sheet, a source-code printout. A "Pending Allow" tray on the left and a "Block" stamp on the right. Background: parcels flowing toward outbound trucks. Warm warehouse lighting, plants by the office window. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div class="section-block" id="section-recap">
+    <div class="section-label">RECAP FROM EDU-200 + EDU-202</div>
+    <h2>Recap from Zscaler for Users — Administrator (EDU-200)</h2>
+    <p><em>Data protection is the practice of safeguarding sensitive information from unauthorised access, disclosure, alteration, and destruction.</em></p>
+    <ul class="content-list">
+      <li><strong>Zscaler Data Protection</strong> — In today's digital landscape, the widespread adoption of software-as-a-service (SaaS) and public cloud solutions has significantly transformed how organisations operate. Zscaler's data protection services provide innovative and comprehensive solutions designed to safeguard enterprise cloud data, ensuring that sensitive information remains secure and compliant in an ever-evolving threat landscape. As an important component of Zscaler's data protection platform, it focuses on securing data in motion, at rest, with-cloud, and on endpoints, while also addressing the challenges posed by unmanaged or BYOD devices.</li>
+      <li><strong>AI-Driven Auto Data Discovery and Classification</strong> — leverages AI/ML for data classification across all channels. Provides visibility into where data resides and what protections apply.</li>
+      <li><strong>Secure Data in Motion</strong> — Zscaler's comprehensive DLP engine inspects data in motion by chunking, decrypting, and extracting data across multiple channels.</li>
+      <li><strong>Secure SaaS Data</strong> — Out-of-band SaaS security via API. Uses CASB and DLP capabilities.</li>
+      <li><strong>Secure Cloud Data</strong> — Zscaler Cloud Data Security Posture Management (DSPM) for IaaS/PaaS misconfig and vulnerability discovery.</li>
+      <li><strong>Secure Endpoint Data</strong> — Endpoint DLP for files leaving the device (printing, USB, removable storage, etc.).</li>
+      <li><strong>Secure BYOD</strong> — Browser Isolation for personal/unmanaged devices.</li>
+      <li><strong>Incident Management</strong> — streamlines the process of identifying, analysing, and resolving incidents that disrupt normal operations. It enables end-users to delegate violations through customisable browser-based notifications. SOAR, etc.</li>
+    </ul>
+
+    <h2>Recap from Zscaler for Users — Engineer (EDU-202)</h2>
+    <p><em>Data protection with Zscaler ensures secure access and safeguarding of sensitive information across the cloud.</em></p>
+    <ul class="content-list">
+      <li><strong>Shadow IT visibility</strong> with customisable risk scoring, AI/ML-powered automatic data classification, granular policy enforcement through Cloud App Control for 45,000 cloud apps, and enhanced contextual data loss prevention with tenancy restrictions to differentiate between personal and corporate accounts.</li>
+      <li><strong>Inline DLP</strong> — enhances data security with OCR powered by ML/AI to extract and protect sensitive data from images. API integrations with Microsoft's IIP SaK for labelling and enforcing policies, EDM for detecting anomalous user behaviour, comprehensive risk-based policies with predictive analytics, and prevention of data exfiltration of sensitive data through email content and attachments.</li>
+      <li><strong>Zscaler's Data Security Posture Management (DSPM)</strong> solution offers comprehensive visibility and protection for cloud data by identifying its location, type, and access pattern using AI classifiers and DLP engines. The DSPM dashboard provides detailed insights into data distribution, including geographical breakdowns, enabling users to assess and prioritise security risks based on configurations, entitlements, and potential vulnerabilities, and offering clear remediation guidance to mitigate these risks.</li>
+      <li><strong>Zscaler's DLP solution</strong> enables blocking sensitive data uploads to personal cloud storage, use confirmation prompts to educate users and reduce help-desk overhead, and comprehensive dashboards and reports for real-time incident visibility and detailed analytics, all through consistent and intuitive policy settings and analytics.</li>
+      <li><strong>Zscaler's CASB solution</strong> provides comprehensive data security agility by leveraging API integrations for DLP and malware scanning across cloud applications, using existing DLP policies to identify and protect sensitive data, triggering remediation actions for malware, and utilising AppTotal Security to discover, monitor, and revoke access to risky third-party applications through automation and continuous monitoring.</li>
+      <li><strong>Zscaler Browser Isolation</strong> provides secure, clientless access to SaaS and private web applications from unmanaged devices, preventing data exfiltration and maintaining application security. This approach reduces reliance on VDIs by enabling secure, isolated access without direct communication between the client and internal applications, ensuring the security posture of unmanaged devices does not compromise the accessed applications.</li>
+      <li><strong>Zscaler's Incident Management</strong> streamlines the process of identifying, analysing, and resolving incidents that disrupt normal operations. It enables end-users to delegate violations through customisable browser-based notifications. SOAR, Teams, or Zscaler Client Connector, and allows administrators to view essential features of Browser Isolation, such as safe document rendering, evidence collection, automated incident management, and CDR for automated remediation, etc. Additionally, Zscaler Workflow Automation enhances data protection by integrating with Microsoft Sentinel.</li>
+    </ul>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap','Recap')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap"></span></div></div>
+    </div>
+  </div>
+
+  <!-- POLICIES OVERVIEW -->
+  <div class="section-block" id="section-policies">
+    <div class="section-label">ZSCALER DATA PROTECTION POLICIES</div>
+    <h2>Secure the Crown Jewels — Across All Channels</h2>
+    <p>Sensitive data is considered the enterprise's crown jewels. Zscaler's approach focuses on data in motion, ensuring accurate classification and embedding it across all relevant channels. Zscaler offers extensive data protection across multiple channels, examining data over the web, email, Gen AI apps, SaaS apps, services, and the cloud, with consistent DLP classification for endpoints and BYOD.</p>
+
+    <p>Organisations face data breaches that target their sensitive data across these varied channels, risking unauthorised access and potential data loss. <strong>Zscaler's robust Data Protection Policies are carefully designed to detect and prevent attacks, ensuring comprehensive security.</strong> By deploying Data Loss Prevention (DLP) techniques, Zscaler safeguards sensitive information across all data states, providing a fortified defense against unauthorised access and potential data breaches.</p>
+
+    <h3>Auto Data Discovery — AI-Powered Classification Across Data Categories</h3>
+    <ul class="content-list">
+      <li><strong>Secure SaaS Data</strong> — CASB (Shadow IT &amp; collaboration control), SSPM (Misconfigurations &amp; compliance), Supply Chain (SaaS integrations).</li>
+      <li><strong>Secure Cloud Data (DSPM)</strong> — Data discovery (buckets, VMs, DBs with concentrations), Posture Control (misconfigurations &amp; vulnerabilities), Actionable insights (risk prioritisation).</li>
+      <li><strong>Web &amp; Email Data in Motion</strong> — Inspect structured, unstructured, images. <strong>Secure the use of Gen AI apps</strong> with inline DLP on prompts and uploads.</li>
+      <li><strong>Secure Endpoint Data</strong> — Endpoint DLP (offline, printing, removable storage).</li>
+      <li><strong>Secure BYOD (VDI Alternative)</strong> — Browser Isolation.</li>
+    </ul>
+
+    <div class="img-display-block">
+      <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--green-dim);border-radius:8px;color:var(--green-deep);font-size:12px;margin-bottom:10px;">📷 <strong>1.png</strong> — add this diagram to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show diagram prompt</button>
+      <div class="prompt-content" hidden>Flat green minimalist illustration of Auto Data Discovery as a hub-and-spokes diagram. Centre: a Zscaler-cloud shield labelled "Zero Trust Exchange Auto Data Discovery." Spokes radiating to 5 labelled categories: (1) Secure SaaS Data (CASB / SSPM / Supply Chain); (2) Secure Cloud Data DSPM (Buckets / VMs / DBs); (3) Web & Email Data in Motion (with a Gen AI app icon); (4) Secure Endpoint Data; (5) Secure BYOD (VDI alternative). Each spoke ends at a small data-category icon. Clean simple shapes, no text labels other than the bracket tags described.</div>
+    </div>
+  </div>
+
+  <!-- POLICY TYPES -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · POLICY TYPES</span></div>
+    <p class="socratic-insight">Two DLP policy types: <em>Content-Driven</em> (looks at the data itself — keyword, pattern, AI/ML, EDM, IDM, file-type) and <em>Context-Driven</em> (looks at who's transmitting and how — user/role, device, location, time-of-access).</p>
+    <ul class="socratic-questions">
+      <li>If Content-Driven inspects the actual payload, why would you ever need a Context-Driven rule? Isn't payload-detection always more reliable than circumstantial signals?</li>
+      <li>EDM (Exact Data Match) requires uploading a structured table of real sensitive values. IDM (Indexed Document Match) requires uploading whole-document fingerprints. What's the operational cost of each — and why do regulated industries reach for these despite the cost?</li>
+    </ul>
+    <div class="answer-area" data-section="types">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Content alone misses intent. A salesperson sending a customer list to a customer at the customer's own domain is fine; the same list to a personal Gmail is exfiltration. Context-driven rules catch the second case without flagging the first. Also, some sensitive content (e.g. industrial control configurations, financial term sheets) doesn't match generic patterns — context is the only signal you have.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">EDM cost = building and maintaining a clean, current export of the sensitive table (customer database, employee SSN list); needs refresh whenever the source changes. IDM cost = ingesting and re-fingerprinting documents on every revision. Regulated industries pay because <em>generic pattern detection</em> can't distinguish "any 9-digit number" from "this specific SSN from our customer table" — and the regulator cares about the second.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-types">
+    <div class="section-label">DLP POLICY TYPES</div>
+    <h2>Two Approaches to Data Loss Prevention</h2>
+    <p>Data Loss Prevention policies are essential for safeguarding sensitive information from unauthorised access and breaches. Zscaler utilises <strong>two primary types of DLP policies</strong> to provide comprehensive protection — Content-Driven and Context-Driven. Each policy type addresses different aspects of data security, ensuring that all potential vulnerabilities are effectively managed.</p>
+
+    <div class="policy-grid">
+      <div class="policy-card">
+        <div class="policy-card-title">CONTENT-DRIVEN</div>
+        <div class="policy-card-body">Focus on inspecting and analysing the <strong>content of the data itself</strong>. Identifies sensitive information based on its contents, regardless of where or how it is transmitted (when sent over a supported port or channel).</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-card-title">CONTEXT-DRIVEN</div>
+        <div class="policy-card-body">Focus on the <strong>context in which data is being used or moved</strong>, applying security measures based on the circumstances surrounding data usage.</div>
+      </div>
+    </div>
+
+    <h3>Content-Driven Sub-Types</h3>
+    <ul class="content-list">
+      <li><strong>Keyword Scanning</strong> — detects sensitive or confidential words or phrases, including credit card numbers, social security numbers, and specific business-related technical terms.</li>
+      <li><strong>Pattern Recognition</strong> — pattern recognition involves detecting specific patterns in data, such as a sequence that matches the format of a credit card or social security number.</li>
+      <li><strong>Artificial Intelligence or Machine Learning</strong> — advanced algorithms can analyse data to detect more complex information types, such as health records or financial information.</li>
+      <li><strong>Exact Data Match (EDM)</strong> — with a defined Exact Data Match template, the system will identify and match against records from a structured data source such as a database export.</li>
+      <li><strong>Indexed Document Match (IDM)</strong> — indexed Document Match (IDM) templates allow you to fingerprint and index critical documents with sensitive data, creating a repository the Zscaler service uses to identify matches in outbound traffic for DLP.</li>
+      <li><strong>File Type Detection</strong> — this method identifies sensitive information based on the file type, such as PDFs, Word documents, or Excel spreadsheets.</li>
+    </ul>
+
+    <h3>Context-Driven Sub-Types</h3>
+    <ul class="content-list">
+      <li><strong>User Identity and Role</strong> — different rules based on who is accessing or transmitting the data. For example, a senior researcher might have more permissions than an intern.</li>
+      <li><strong>Device Security</strong> — looks at the device's security level when accessing or transmitting data. For instance, accessing data from a company-secured laptop might be safer than a personal smartphone. Zscaler Client Connector is used to perform <strong>Posture Management</strong>, e.g. the laptop has CrowdStrike or Microsoft Defender, and the Firewall is enabled and Patches to the Latest Level → Profile Risk Score.</li>
+      <li><strong>Location Awareness</strong> — the policies can be sensitive to the location from which data access is attempted. Accessing data from a secure corporate network might be allowed, whereas attempts from high-risk countries might be blocked.</li>
+      <li><strong>Time of Access</strong> — access to specific data might be restricted by day or week, reflecting typical business hours or specific operational schedules.</li>
+    </ul>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Content-Driven is the <em>customs scanner</em> — it reads what's actually in your suitcase regardless of who you are. Context-Driven is the <em>passport officer</em> — they check who you are, where you're flying from, what time of day, whether your visa stamps look consistent. Real airports use both. Zscaler's DLP does the same: the scanner catches material, the officer catches intent.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--green-dim);border-radius:8px;color:var(--green-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an airport customs and immigration counter as an analogy for Content-Driven vs Context-Driven DLP. Wide composition. Left lane (Content-Driven): a friendly customs officer at a glowing X-ray belt examining a suitcase that shows tiny icons inside — a credit card, a passport (PII), a small file labelled with a fingerprint (EDM/IDM). Right lane (Context-Driven): a passport officer at a counter studying a traveller's passport, looking at the stamps, photo, departure country, time-of-day clock, and a device-icon badge on the traveller's lapel. Above both: a warm welcome sign. Cheerful round-faced characters, bright warm airport lighting. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-types" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('types','Policy Types')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-types" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-types"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ORDER & CREATION -->
+  <div class="section-block" id="section-order">
+    <div class="section-label">POLICY ORDER &amp; CREATION CONSIDERATIONS</div>
+    <h2>Why Is Policy Order Important?</h2>
+    <p>By default, Policy Order is on <strong>First Match</strong> basis, unless <strong>Evaluate All Policies</strong> has been enabled.</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'order-fm')">First Match Wins</button>
+      <button class="tab-btn" onclick="switchTab(this,'order-ea')">Evaluate All Policies</button>
+    </div>
+    <div class="tab-panel active" id="order-fm">
+      As the system evaluates each policy in sequence, the first policy that matches the event's criteria (like source IP, destination URL, user group, etc.) will be applied. <strong>Once a matching policy is found, the system stops evaluating further policies.</strong> This "first match" approach ensures that the most specific policies have precedence and are applied immediately when their conditions are met.
+    </div>
+    <div class="tab-panel" id="order-ea">
+      The Evaluate All Rules method is a comprehensive approach to policy enforcement, particularly relevant when configuring inline DLP policies. You can configure exception child rules (subrules) that exclude specific users or groups. <strong>Exception rules require the main rule to be matched first.</strong> After assessing all rules, Zscaler enforces the rule that prescribes the <strong>most restrictive action</strong> instead of applying the first match. Ensures the highest level of data protection by prioritising the strictest rule applicable to the situation.
+      <br><br>Evaluate All Policies <strong>requires a support ticket to be raised</strong>.
+    </div>
+
+    <div class="callout callout-warn-red">
+      <div class="callout-header"><div class="callout-icon">!</div>CAUTION</div>
+      <div class="callout-body">To go from <strong>First Match</strong> to <strong>Evaluate All</strong>, you will need to <strong>delete all DLP policies</strong>. It is recommended that you engage with Zscaler Professional Services before doing this.</div>
+    </div>
+
+    <h3>Policy Creation Considerations for DLP Deployments</h3>
+    <p>In a <strong>First Match configuration</strong> — Policies should be configured as <span class="policy-action allow">ALLOW</span> first followed by <span class="policy-action block">BLOCK</span>. More granular/specific policies should be configured, followed by generic policies.</p>
+
+    <h4>Example Stack — DLP Policy Rules</h4>
+    <div class="policy-stack">
+      <div class="policy-line"><div class="policy-num">Rule 1</div><div class="policy-body"><span class="policy-action allow">ALLOW</span><strong>Initial Credit Card Discovery</strong> — DLP Engines: Initial Credit Card Discovery DLP Dictionaries. Protocols: Native FTP, HTTPS, HTTP. <em>Initial DLP Discovery rule.</em></div></div>
+      <div class="policy-line"><div class="policy-num">Rule 2</div><div class="policy-body"><span class="policy-action allow">ALLOW</span><strong>Encrypted or Passworded Files</strong> — File Types: Password Protected / Encrypted. Protocols: Native FTP, HTTPS, HTTP. <em>Allow rule for files that are encrypted or password-protected (so File Type Control can pick them up downstream).</em></div></div>
+      <div class="policy-line"><div class="policy-num">Rule 3</div><div class="policy-body"><span class="policy-action allow">ALLOW</span><strong>Initial PII Discovery</strong> — DLP Engines: SSN or NI. Protocols: Native FTP, HTTPS, HTTP. <em>Initial Allow rule to monitor PII data such as Social Security Numbers.</em></div></div>
+      <div class="policy-line"><div class="policy-num">Rule 4</div><div class="policy-body"><span class="policy-action block">BLOCK</span><strong>PCI_DSS_Credit_Card</strong> — DLP Engines: PCI. Protocols: Native FTP, HTTPS, HTTP. <em>Test-group feedback and testing of Credit Card numbers greater than 50.</em></div></div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text"><strong>First Match (default): Allow → Block, specific → generic.</strong> Evaluate All: most-restrictive wins, requires support ticket + deletion of all DLP policies to switch. Engage Professional Services before flipping.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Policy Order is the <em>parking-attendant's checklist</em>. First Match is "go down the list, stop at the first sign that applies" — so you list "DISABLED PERMIT — PARK FREELY" above "RESERVED FOR PHARMACY" above "NO PARKING ANYTIME," and a disabled-permit holder with a pharmacy errand gets the free spot. Evaluate All is "check every sign and apply the most restrictive" — same parker still has to park somewhere they can, but the answer is now "the strictest sign wins" no matter the order on the post.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--green-dim);border-radius:8px;color:var(--green-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a tall street post stacked with parking signs as an analogy for DLP policy order. Wide composition. Foreground: a friendly parking attendant standing next to a tall metal pole with a vertical stack of clearly bordered parking signs — green "DISABLED PERMIT" at the top, blue "RESERVED PHARMACY" in the middle, red "NO PARKING" at the bottom. Two side-by-side speech bubbles from the attendant: one labelled "First Match" with a finger pointing to the top green sign; the other labelled "Evaluate All" with the attendant pondering the whole stack and pointing to the red one. A car waits politely in the background. Warm afternoon street light, cheerful round-faced character, plants in a planter box. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels other than as described, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-order" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('order','Order &amp; Creation')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-order" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-order"></span></div></div>
+    </div>
+  </div>
+
+  <!-- OPERATIONALISING -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · OPERATIONALISING</span></div>
+    <p class="socratic-insight">Operationalising = iterative / circular: <em>observe the rule, tune it, then block (testing your test groups) and add exceptions for users or departments</em>. Step 1 isn't "deploy a perfect rule" — it's "deploy a rule in Allow mode and watch."</p>
+    <ul class="socratic-questions">
+      <li>The e-commerce scenario starts with Allow rules in monitor mode before any Block rules. Why this order — what would happen if you led with a Block?</li>
+      <li>The doc names a specific sequence "Block CCN &gt; 4 with keywords and proximity" followed by "Monitor CCN &gt; 0 with keywords" followed by "Monitor CCN &gt; 25 for all apps." Why three rules instead of one, and what does the count threshold buy you?</li>
+    </ul>
+    <div class="answer-area" data-section="ops">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">If you lead with Block, the very first false positive is a real-user incident — a help-desk ticket, a stressed salesperson, the customer wondering why the contract didn't arrive. Allow-first lets you collect the same data (logs, hit counts, distributions) <em>without</em> creating user pain — then you tune until the false-positive rate is acceptable, and only then flip to Block.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Each rule is a different confidence band. "&gt; 4 with keywords and proximity" = high confidence this is bulk PCI (block hard). "&gt; 0 with keywords" = single match with corroborating signal (monitor — could be legitimate). "&gt; 25 for all apps" = catches the long-tail bulk-exfil attempts even without keyword context (monitor and review). Three rules let you act differently at different confidence levels instead of false-positive-blocking everyone who mentions a card.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-ops">
+    <div class="section-label">OPERATIONALISING DLP POLICIES</div>
+    <h2>Iterative / Circular Process</h2>
+    <p>DLP policies help prevent data loss by monitoring and controlling the transfer of sensitive information across networks. The process is iterative: <strong>observe the rule, tune it, then block (testing your test groups), and add exceptions for users or departments — depending on the business case.</strong></p>
+
+    <h3>Scenario — E-commerce Customer Data Project</h3>
+    <div class="scenario">
+      <div class="scenario-h">SCENARIO</div>
+      <div class="scenario-body">During your project discovery for your customer — an e-commerce company — the following requirements were discovered. An e-commerce company embarks on a data loss prevention project to safeguard sensitive customer information, including credit card data and Personally Identifiable Information (PII). The DLP system is configured to monitor and block the unencrypted transmission of credit card numbers and PII through transaction processes and communication channels.</div>
+      <div class="scenario-h solution">PROJECT GOALS</div>
+      <div class="scenario-body"><strong>1 · Reduce Risk of Data Breaches</strong> — Implement stringent DLP measures to prevent unauthorised access and leakage of sensitive data.<br><strong>2 · Achieve Regulatory Compliance</strong> — Enforce proper encryption and access controls for credit card data and PII to ensure adherence to PCI-DSS and GDPR regulations.<br><strong>3 · Enhance Customer Trust</strong> — Demonstrate a commitment to data security, increasing customer confidence and loyalty through transparent and robust data protection practices.</div>
+    </div>
+
+    <h3>10-Step Operationalising Walkthrough</h3>
+    <div class="phase-steps">
+      <div class="phase-step"><div class="phase-num">1</div><div class="phase-body"><div class="phase-title">Block Unscannable Files (File Type Rule)</div><div class="phase-text">Block files that have been zipped multiple times, use proprietary encryption, or have an unrecognisable MIME type. These cannot be inspected. <em>Note: not a DLP Policy rule — a File Type rule.</em></div></div></div>
+      <div class="phase-step"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">Initial Allow — Password-Protected &amp; Encrypted Files</div><div class="phase-text">Set up <em>Rule Without Content Inspection</em> to <span class="policy-action allow">Allow</span> with Monitor or Block on Password-Protected / Encrypted file types. Gain visibility for both uploads and downloads.</div></div></div>
+      <div class="phase-step"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Allow or Caution — Files Over a Size Threshold (e.g. 10 MB)</div><div class="phase-text">Large outbound files indicate exfil or oversharing. Initial File Type Control sets <span class="policy-action caution">Caution</span> for files &gt; 10 or 100 MB (align with customer's Acceptable Use Policy or IT Security Policy).</div></div></div>
+      <div class="phase-step"><div class="phase-num">4</div><div class="phase-body"><div class="phase-title">Initial Credit Card Rules After Iterative Improvement</div><div class="phase-text"><strong>Policy 1:</strong> People in specific groups can upload CCN to their corporate instance of OneDrive. <strong>Policy 2:</strong> Block CCN &gt; 4 with keywords and proximity, All Users &amp; All Apps, Only Office and PDF files. <strong>Policy 3:</strong> Monitor CCN &gt; 0 with keywords and Proximity, All Users &amp; All Apps, Only Office and PDF file types. <strong>Policy 4:</strong> Monitor CCN &gt; 25, All Users &amp; All Apps.</div></div></div>
+      <div class="phase-step"><div class="phase-num">5</div><div class="phase-body"><div class="phase-title">Other Ways to Reduce Credit-Card False Positives</div><div class="phase-text">Disable inspection of URL encoded data; exempt certain known URLs (you don't care about or determine as false positives); add a rule per file-size criteria (e.g. &gt; 2 KB files to your DLP exception); add more Boolean logic in your engine (look for CCN in combination with ML categories such as financial data); work on False Negatives (try reducing your counts for blocking to &gt; 0); add advanced detection techniques like EDM/IDM/OCR.</div></div></div>
+      <div class="phase-step"><div class="phase-num">6</div><div class="phase-body"><div class="phase-title">Initial Allow Rule — PII Data After Iterative Improvement, Stacked With Credit Cards</div><div class="phase-text"><strong>Policy 5:</strong> People in HR groups can upload PII to their corporate instance of Workday. <strong>Policy 6:</strong> Block PII &gt; 4 with keywords and proximity, All Users &amp; All Apps, Only Office and PDF files. <strong>Policy 7:</strong> Monitor PII &gt; 0 with keywords and Proximity, All Users &amp; All Apps, Only Office and PDF file types. <strong>Policy 8:</strong> Monitor PII &gt; 25, All Users &amp; All Apps.</div></div></div>
+      <div class="phase-step"><div class="phase-num">7</div><div class="phase-body"><div class="phase-title">Stacking Policies (First Match Wins)</div><div class="phase-text">When using Match Only, DLP Policies should be stacked with <span class="policy-action allow">Allow</span> at the top and <span class="policy-action block">Block</span> at the bottom. Ensure to arrange your DLP Policies in this order when using First Match Wins.</div></div></div>
+      <div class="phase-step"><div class="phase-num">8</div><div class="phase-body"><div class="phase-title">Control Sensitive Data Flows to Unsanctioned Destinations</div><div class="phase-text">Use DLP Rule with Content Inspection. Select Personal Apps and enforce by app such as Personal vs Enterprise. Actions: Allow (Monitor) or Block.</div></div></div>
+      <div class="phase-step"><div class="phase-num">9</div><div class="phase-body"><div class="phase-title">Control Sensitive Data to SaaS Security API Tenants</div><div class="phase-text">Onboard Sanctioned SaaS Applications with Webhook for near real-time visibility and remediation. Once onboarded, create DLP Rules to start <span class="policy-action allow">Allow (Monitor)</span> for Out-of-Band CASB Sensitive Data.</div></div></div>
+      <div class="phase-step"><div class="phase-num">10</div><div class="phase-body"><div class="phase-title">Tune Rules Further, Then Move into Block Mode for Test Groups</div><div class="phase-text">When the customer is happy with the rules and tuning, move the rules to <span class="policy-action block">Block</span> mode for your test groups. Use Groups + DLP Test Group + DLP Incident Receiver (ICAP or Zscaler Incident Receiver) + Notification Template.</div></div></div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>NOTE</div>
+      <div class="callout-body"><strong>DLP Dictionaries and Engines are also an iterative process not covered here.</strong> Plan time in the deployment for ongoing tuning of these foundational artefacts.</div>
+    </div>
+
+    <h3>Examples of Policies by Vertical</h3>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'v-health')">Healthcare</button>
+      <button class="tab-btn" onclick="switchTab(this,'v-hitech')">Hi-Tech / Mfg</button>
+      <button class="tab-btn" onclick="switchTab(this,'v-finance')">Financial</button>
+    </div>
+    <div class="tab-panel active" id="v-health">
+      <strong>Healthcare (Hospitals / Insurance / Drug Research)</strong>
+      <ul>
+        <li><span class="policy-action allow">Exception</span> PHI data for Medical Professionals and Technicians to specific Apps. Source code data for R&amp;D teams to specific apps. PII Data for HR and medical teams to specific apps. Patient Records (EDM) and PCI are for billing teams to specific apps. Lab Codes (EDM) and Drug codes (EDM) for Medical professionals. Images for Medical professionals to specific Apps.</li>
+        <li><span class="policy-action block">Block</span> PHI/PII/PCI/Patient Records/Drug and Disease names and codes for ALL users for ALL apps at counts greater than 25. Block files with ICD10 Drug and Disease names of counts greater than 25. Block files with EDM matches.</li>
+        <li><span class="policy-action monitor">Alert</span> Alert on PHI/PII/PCI/Patient Records/Drug and Disease names and codes for ALL users for ALL apps at counts less than 25. Alert on all predefined identifiers.</li>
+      </ul>
+    </div>
+    <div class="tab-panel" id="v-hitech">
+      <strong>Hi-Tech / Manufacturing</strong>
+      <ul>
+        <li><span class="policy-action allow">Exception</span> Intellectual property and company confidential data for R&amp;D teams to specific apps. Source code data for R&amp;D teams to specific apps. PII Data for HR teams to specific Apps. SKU numbers (EDM) are only for sales, OPS teams, and specific apps. Quotes and invoice documents for accounting and sales teams to specific apps. M&amp;A forms and data for Business Development teams.</li>
+        <li><span class="policy-action block">Block</span> Source code/Intellectual Property data/PII/SKU numbers/Quotes/M&amp;A data for ALL users for ALL apps at counts &gt; 25. Block files with EDM or IDM matches.</li>
+        <li><span class="policy-action monitor">Alert</span> Alert on Source code/Intellectual Property data/PII/SKU numbers/Quotes/M&amp;A data for ALL users for ALL apps at counts &lt; 25. Alert on all predefined identifiers.</li>
+      </ul>
+    </div>
+    <div class="tab-panel" id="v-finance">
+      <strong>Financial Institutions</strong>
+      <ul>
+        <li><span class="policy-action allow">Exception</span> PCI data is used for legal and audit teams for specific apps. Source code data for R&amp;D teams for specific apps. PII Data for HR teams to specific Apps and Instances (including EDM). Sensitive Forms for client-facing teams to specific Apps. Financial and SEC forms for legal teams for specific apps.</li>
+        <li><span class="policy-action block">Block</span> PCI/PII/Source Code/Forms data for ALL users for ALL apps at counts greater than 25. Block files with Company Confidential Data. Block files with EDM and IDM matches.</li>
+        <li><span class="policy-action monitor">Alert</span> Alert on PCI/PII/Source Code/Forms data for ALL users for ALL apps at counts less than 25. Alert on all predefined identifiers.</li>
+      </ul>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Operationalising DLP is the <em>physiotherapist's progression</em>. You don't lift a 100 kg deadlift in week 1 — you observe form (Allow / Monitor), correct the small mistakes that won't injure anyone (tune false positives), gradually add weight (Block on a test group), then watch how the body responds before moving to the full programme. Skip steps and someone tears a hamstring (a salesperson can't email a customer).</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--green-dim);border-radius:8px;color:var(--green-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a physiotherapist working with a patient as an analogy for iterative DLP operationalisation. Wide composition in a friendly clinic. Left scene: the physio observing the patient's posture as they lift a light bar (Allow/Monitor) — physio holds a clipboard, makes a small chalk note. Middle scene: the physio adjusting the patient's stance, no weight change (tune false positives). Right scene: the patient lifting a slightly heavier dumbbell on one knee with the physio steadying them (Block on test group). Above the trio, a small dashed-arc arrow showing the circular nature of the routine. Soft warm clinic lighting, plants in the corner, cheerful round-faced characters. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-ops" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('ops','Operationalising')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-ops" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-ops"></span></div></div>
+    </div>
+  </div>
+
+  <!-- DEPLOY LIFECYCLE -->
+  <div class="section-block" id="section-deploy">
+    <div class="section-label">TESTING &amp; DEPLOY LIFECYCLE</div>
+    <h2>7-Step DLP Rule Lifecycle</h2>
+    <p>With the understanding of DLP policies and their goals, focus now on DLP rules — the precise settings that implement the policies, playing a crucial role in monitoring data, preventing breaches, and strengthening security measures. Operationalising DLP rules within an organisation involves <strong>strategically safeguarding sensitive data</strong> by implementing well-defined steps. <em>Cloud SaaS appliance deployments + data visibility</em> run concurrently — both processes culminating in the ability to apply blocking rules effectively.</p>
+
+    <div class="phase-steps">
+      <div class="phase-step"><div class="phase-num">1</div><div class="phase-body"><div class="phase-title">Implementation</div><div class="phase-text"><strong>Action:</strong> Integrate a Security SaaS API to gain visibility into data at rest and deploy DLP dictionaries and engines to monitor data in motion.<br><strong>Objective:</strong> Establish the foundational infrastructure for DLP, enabling comprehensive visibility and tracking of sensitive data across the organisation.</div></div></div>
+      <div class="phase-step"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">Build DLP Dictionaries and Engines Based on Customer Requirements</div><div class="phase-text"><strong>Action:</strong> Build initial DLP Dictionaries for Visibility.</div></div></div>
+      <div class="phase-step"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Configure DLP Rules in Allowed Mode</div><div class="phase-text"><strong>Action:</strong> Based on the initial customer data assessment, configure DLP rules in "Allowed" mode to monitor data at rest and in motion.<br><strong>Objective:</strong> Monitor data activities to understand the flow and identify potential risks without obstructing business operations.</div></div></div>
+      <div class="phase-step"><div class="phase-num">4</div><div class="phase-body"><div class="phase-title">Tune Rules to Reduce False Positives</div><div class="phase-text"><strong>Action:</strong> Analyse the alerts / logs generated by the DLP rules and adjust the rules to minimise false positives.<br><strong>Objective:</strong> Ensure the DLP rules accurately identify true data loss events, improving their efficiency and reducing false positives.</div></div></div>
+      <div class="phase-step"><div class="phase-num">5</div><div class="phase-body"><div class="phase-title">Move Rules into Block Mode for the Testing Cohort</div><div class="phase-text"><strong>Action:</strong> Transition the tuned DLP rules from "Allowed" mode to "Block" mode.<br><strong>Objective:</strong> Start actively preventing unauthorised data transfers while maintaining a balance to avoid disrupting legitimate business processes.</div></div></div>
+      <div class="phase-step"><div class="phase-num">6</div><div class="phase-body"><div class="phase-title">Test and Tune</div><div class="phase-text"><strong>Action:</strong> Conduct thorough testing of the DLP system in "Block" mode and make further adjustments as needed.<br><strong>Objective:</strong> Validate the effectiveness of the DLP system in a controlled environment, ensuring it blocks unauthorised data transfers without hindering business activities.</div></div></div>
+      <div class="phase-step"><div class="phase-num">7</div><div class="phase-body"><div class="phase-title">Move to Production</div><div class="phase-text"><strong>Action:</strong> Deploy the fully tested and tuned DLP rules into the production environment.<br><strong>Objective:</strong> Operationalise the DLP system organisation-wide, providing robust protection for sensitive data in real time.</div></div></div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text"><strong>7-step DLP lifecycle:</strong> Implementation → Build Dictionaries/Engines → Allow Mode → Tune → Block Mode (Test Cohort) → Test &amp; Tune → Production. <em>Two parallel streams (SaaS API + Inline DLP) converge at Step 5.</em></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-deploy" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('deploy','Deploy Lifecycle')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-deploy" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-deploy"></span></div></div>
+    </div>
+  </div>
+
+  <!-- EDM/IDM/OCR/SaaS -->
+  <div class="section-block" id="section-tools">
+    <div class="section-label">DEPLOYING DLP POLICIES</div>
+    <h2>Deploy DLP Policies with Predefined Templates</h2>
+    <p>Deploy DLP policies with predefined templates to <strong>quickly protect sensitive information</strong>.</p>
+
+    <h3>EDM and IDM Deployment</h3>
+    <p>Zscaler's DLP solutions, <strong>Exact Data Match (EDM)</strong> and <strong>Indexed Document Match (IDM)</strong>, offer advanced capabilities to identify and protect sensitive data accurately. These technologies address the limitations of traditional pattern-based DLP tools by reducing false positives and enhancing security posture, making them crucial for compliance with regulations like GDPR, HIPAA, and PCI-DSS.</p>
+    <p>Building on these powerful capabilities, you can create and utilise index templates to build DLP dictionaries with exact data matches and configure DLP engines to group these dictionaries for specific policies. By activating these settings and creating rules for content inspection, you can effectively manage and protect sensitive information.</p>
+
+    <h3>OCR Deployment</h3>
+    <p>Optical Character Recognition (OCR) is a technology that converts various types of documents into machine-readable text. It plays a crucial role in DLP by identifying and protecting sensitive information within <strong>images and non-text files</strong>.</p>
+
+    <h3>SaaS Security API</h3>
+    <p>The SaaS Security API service ensures that sensitive information is accurately identified, classified, and protected from unauthorised access or leaks by leveraging advanced DLP dictionaries and engines. Furthermore, it helps organisations enforce consistent security policies, comply with regulatory requirements, and mitigate the risks associated with <strong>shadow IT</strong> by providing detailed insights into cloud application usage.</p>
+
+    <div class="callout callout-info">
+      <div class="callout-header"><div class="callout-icon">i</div>WHEN TO REACH FOR EACH</div>
+      <div class="callout-body"><strong>EDM</strong> — when you have a structured table of sensitive values (customer DB, SSN export) and need exact matches. <strong>IDM</strong> — when you have whole documents (contracts, board decks) that should never leave intact. <strong>OCR</strong> — when sensitive data appears inside images / screenshots / PDFs. <strong>SaaS Security API</strong> — when you need out-of-band visibility into data that's already at rest inside sanctioned SaaS.</div>
+    </div>
+  </div>
+
+  <!-- USE CASES -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · USE CASES</span></div>
+    <p class="socratic-insight">Three real-world use cases: <em>ChatGPT prompts at a financial institution</em>, <em>Endpoint DLP at a global corporation</em>, <em>Outbound Email DLP across communication channels</em>. Each one starts with a fragmented, inconsistent legacy and ends with a Zscaler-unified solution.</p>
+    <ul class="socratic-questions">
+      <li>The endpoint use case names "employee resignation" as a specific risk. Why does offboarding deserve its own DLP carve-out — what's unique about a departing employee that a normal user-based rule misses?</li>
+      <li>The outbound-email use case mentions "either filters legitimate emails or misses sensitive content." That's the symptom of a fundamental DLP trade-off. What's the trade-off, and how does Zscaler propose to thread it?</li>
+    </ul>
+    <div class="answer-area" data-section="usecases">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Departing employees have a window where they still have access but have stopped acting in the company's interest — often unconsciously (saving their work) or deliberately (taking the customer list to the next employer). A normal rule allows everyone to use USB drives; the offboarding rule blocks USB transfers for users in the "Resigning" group from their notice date until exit. Same machine, different employee state, different rule.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Trade-off: a tight rule catches more sensitive leaks but blocks more legitimate emails (false positives); a loose rule lets more legitimate email through but misses more leaks (false negatives). Zscaler threads it with granular, policy-based protection — different sensitivity bands for different recipient domains, different sender groups, different content classifications. The same rule isn't "tight" or "loose" globally — it's tight for unknown-recipient + sensitive-content and loose for internal-recipient + low-sensitivity.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-usecases">
+    <div class="section-label">USE CASES</div>
+    <h2>Three Real-World Use Cases</h2>
+    <p>With a solid understanding of the various DLP policies in Zscaler, let's explore some use cases to see how you can implement these policies tailored to different customer needs.</p>
+
+    <h3>Use Case 1 — Managing AI Application Usage (Financial Institution)</h3>
+    <div class="scenario">
+      <div class="scenario-h">SCENARIO</div>
+      <div class="scenario-body">Your customer, a financial institution, is leveraging ChatGPT and other generative AI technologies to assist its staff with data analysis and content creation. However, they are concerned that AI prompts might inadvertently disclose private client information. The organisation aims to implement a mechanism that prevents sensitive data from leaking through prompts and restricts the use of specific AI applications to designated teams only.</div>
+      <div class="scenario-h solution">SOLUTION — THREE LAYERS</div>
+      <div class="scenario-body"><strong>1 · AI Risk-Based Usage Control</strong> — Implement granular policies that permit only authorised AI applications (ChatGPT) for specific teams (Marketing, R&amp;D) based on predefined risk thresholds.<br><br><strong>2 · DLP Integration</strong> — Establish DLP procedures to check all generative AI queries and prompts for sensitive information, including account numbers, financial records, and personal information.<br><br><strong>3 · Secure Browsing</strong> — Enable browser isolation for these applications to prevent users from downloading confidential documents or copying large amounts of potentially sensitive data to AI tools.</div>
+    </div>
+
+    <h3>Use Case 2 — Endpoint DLP (Global Corporation)</h3>
+    <div class="scenario">
+      <div class="scenario-h">SCENARIO</div>
+      <div class="scenario-body">An organisation, a large global corporation, has been struggling to manage data security across all its endpoints. Despite using various traditional endpoint DLP technologies, each addressing different security areas, these systems are cumbersome to operate, expensive, and lack integration. As a result, the organisation faces inconsistent data protection, especially as sensitive data is accessed from multiple devices and locations. Data loss during the resignation process is a significant concern, highlighted by a recent incident where a departing employee attempted to exfiltrate private client information using a USB drive.</div>
+      <div class="scenario-h problem">PROBLEM</div>
+      <div class="scenario-body">The organisation's fragmented legacy DLP systems have led to numerous security vulnerabilities and inefficiencies. <strong>Inconsistent policy enforcement</strong> across endpoints places sensitive data, including customer information and intellectual property, at risk — particularly during employee departures.</div>
+      <div class="scenario-h solution">SOLUTION — ZSCALER ENDPOINT DLP</div>
+      <div class="scenario-body">
+        <strong>1 · Retire Legacy Endpoint DLP</strong> — Zscaler replaces the organisation's outdated, fragmented DLP systems with a single, unified solution, streamlining endpoint data security under a centralised approach.<br><br>
+        <strong>2 · Boost Data Protection Accuracy</strong> — Zscaler ensures that sensitive data is consistently monitored and protected across all endpoints, whether remote or on-premises. Its centralised classification engine provides the visibility and control needed to accurately identify and secure critical consumer and financial data.<br><br>
+        <strong>3 · Stop Data Loss When Employees Resign</strong> — Zscaler automatically blocks unauthorised transfers to personal or portable storage devices, preventing departing employees from exfiltrating confidential information during the offboarding process.<br><br>
+        <strong>4 · Easily Maintain Compliance</strong> — Zscaler enforces data protection standards uniformly across all endpoints, helping the organisation maintain regulatory compliance. Automated monitoring and policy enforcement reduce manual effort, assisting in adherence to data regulations such as GDPR and HIPAA.
+      </div>
+    </div>
+
+    <h3>Use Case 3 — Outbound Email DLP</h3>
+    <div class="scenario">
+      <div class="scenario-h">SCENARIO</div>
+      <div class="scenario-body">The organisation has been facing the risk of sensitive data leakage through outbound emails. Employees frequently share documents and information containing sensitive data, such as financial reports and customer personal information. The current email DLP system's inability to apply different policies based on the sensitivity of the content results in inconsistent policy enforcement, raising security and compliance concerns. An internal investigation was recently initiated when a customer's private information was accidentally sent to an unauthorised recipient, potentially exposing the business to compliance penalties.</div>
+      <div class="scenario-h problem">PROBLEM</div>
+      <div class="scenario-body">The organisation's current outbound email DLP system lacks flexibility and accuracy, resulting in inconsistent policy enforcement. This system often either filters legitimate emails or misses sensitive content, leading to compliance issues. Additionally, the DLP system does not integrate with other channels, causing operational inefficiencies and increasing the risk of data exfiltration, particularly involving sensitive customer information.</div>
+      <div class="scenario-h solution">SOLUTION — ZSCALER OUTBOUND EMAIL DLP</div>
+      <div class="scenario-body">
+        <strong>1 · Granular, Policy-Based Protection</strong> — Customised regulations based on the specific sensitivity of the data. For instance, emails containing sensitive information can be blocked from being sent to foreign sites.<br><br>
+        <strong>2 · Seamless Integration with Microsoft Exchange</strong> — Outbound and inbound connections in Microsoft Exchange are routed through the Zscaler smart server for DLP examination. Every outgoing email is screened for sensitive content before reaching an external domain.<br><br>
+        <strong>3 · Centralised DLP Policy &amp; Simplified Management</strong> — Apply the same DLP policy tools across SaaS Security API DLP, Endpoint DLP, and Inline Web DLP. Unified policy enforcement streamlines IT processes, reduces costs, and enhances overall data security without the need for multiple point solutions.<br><br>
+        <strong>4 · Automated Detection &amp; Enforcement</strong> — The Zscaler DLP engine examines email content (subject lines, body text, attachments) and automatically applies custom headers based on policy judgments. The organisation's Exchange server then takes appropriate enforcement actions, such as blocking or logging emails with sensitive information.<br><br>
+        <strong>5 · Enhanced Compliance &amp; Security</strong> — Zscaler's pre-configured and customisable DLP engines enable the organisation to detect and act on any sensitive data that could lead to compliance breaches or data leaks. This helps the organisation protect client information, adhere to industry standards, and prevent costly data breaches.
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">The three use cases are <em>three customers walking into the same locksmith's shop</em>. The bank wants the back-office terminal to refuse to ring up a credit-card number (AI prompts). The manufacturer wants the side door to autolock when an employee gives notice (offboarding). The accountant wants every outgoing envelope screened, but not so aggressively that the post never goes out (email). Same locksmith, same locks — three different conversations about the customer's specific failure mode.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--green-dim);border-radius:8px;color:var(--green-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of three different customers consulting one locksmith as an analogy for DLP use cases. Wide composition with a cheerful locksmith shop window front. Foreground: three friendly customers in a line at the counter. (1) A banker in a smart suit holding up a small ChatGPT-style chat-bubble icon and pointing at a tiny lock for it; (2) a manufacturing worker in a hi-vis vest with a labelled "RESIGNATION" envelope, asking the locksmith to install an auto-lock on a side door; (3) an accountant with a stack of outbound envelopes wanting a screening grille that lets most through but stops sensitive ones. Behind the counter, a wall of brass keys of different shapes (different DLP engines). Warm interior lighting, plants on the windowsill. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-usecases" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('usecases','Use Cases')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-usecases" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-usecases"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div class="section-block" id="section-recap-final">
+    <div class="section-label">RECAP &amp; RESOURCES</div>
+    <h2>In Summary</h2>
+    <p>In this course, you learned about the different types of Zscaler DLP policies, how to operationalise these policies and rules, the deployment process, and how to identify which policies should be implemented based on various organisational needs.</p>
+
+    <ul class="content-list">
+      <li><strong>Data Loss Prevention (DLP) policies</strong> are crucial for protecting sensitive information from unauthorised access and breaches. Zscaler employs two main types of DLP policies to ensure comprehensive security: <strong>Content-Driven Policies</strong> and <strong>Context-Driven Policies</strong>.</li>
+      <li><strong>Content-driven policies</strong> inspect and analyse the actual content of the data to identify sensitive information, regardless of its transmission method or location. <strong>Context-driven policies</strong> focus on the context in which data is used or moved, applying security measures based on the circumstances surrounding data usage. By leveraging both content and context-driven approaches, Zscaler effectively addresses various aspects of data security and manages potential vulnerabilities.</li>
+      <li><strong>Policy order</strong> is crucial because it determines how security measures are applied, with the "First Match Wins" approach applying the first matching policy and "Evaluate All Policies" enforcing the most restrictive action for maximum data protection. Proper policy ordering ensures effective security and data protection.</li>
+      <li><strong>Operationalising DLP Policies</strong> involves an iterative process: observe, tune, and block, starting with test groups and adding exceptions as needed. Key steps include blocking unscannable files, allowing password-protected/encrypted files, managing large file transfers, refining credit card and PII data policies, stacking policies, and controlling sensitive data flows. Initially, rules are set to allow for monitoring and tuning to reduce false positives and negatives, then moved to block mode for test groups, and finally to production with customer approval. DLP policies are based on project discovery and agreed outcomes.</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">60-SECOND PITCH</div>
+        <div class="mental-note-block-text"><strong>DLP = Content (keyword/pattern/AI-ML/EDM/IDM/file-type) + Context (user/device/location/time). Order: First Match (Allow-first → Block-last) OR Evaluate All (most restrictive wins, needs support ticket + total rebuild). Lifecycle: Implement → Build dictionaries → Allow mode → Tune → Block (test cohort) → Test/tune → Production. False positives are the deployment killer — tune before you block, every time.</strong></div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Data Security Services is the <em>company's reception desk after hours</em>. Everyone leaves something on the way out — files, emails, chat prompts, USB sticks, photos. The receptionist (DLP engine) doesn't refuse all departures; she checks the parcel against a list (content), checks the person's badge and time-of-day (context), waves through the salesperson with a contract, and quietly stops the departing employee from taking the customer list. The desk earns its keep by being right almost every time — never blocking the easy yes, never missing the hard no.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A6.png" alt="Analogy illustration A6" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--green-dim);border-radius:8px;color:var(--green-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A6.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a friendly after-hours office reception desk as an analogy for Data Security Services course summary. Wide composition. Centre: a cheerful receptionist behind a polished wooden desk with an open ledger. Three departing employees in line: (1) a salesperson with a labelled contract envelope being waved through with a smile; (2) an engineer with a "USB" memory stick being politely redirected; (3) a third person looking puzzled while the receptionist gently lifts a document for a closer look (Content + Context check). Above the desk: a softly glowing sign with a tiny shield. The wall clock shows after-hours time. Warm interior lobby lighting, plush carpet, plants in the corner. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap-final" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap-final','Recap')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap-final" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap-final"></span></div></div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-302-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-302 Hub
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleDone(this,0)"><div class="subtopic-check"></div><span>4 learning outcomes (Describe · Explain · Operationalize · Deploy)</span></li>
+      <li onclick="toggleDone(this,1)"><div class="subtopic-check"></div><span>Auto Data Discovery — 5 categories (SaaS · Cloud · Web/Email · Endpoint · BYOD)</span></li>
+      <li onclick="toggleDone(this,2)"><div class="subtopic-check"></div><span>Content-Driven sub-types (Keyword · Pattern · AI/ML · EDM · IDM · File Type)</span></li>
+      <li onclick="toggleDone(this,3)"><div class="subtopic-check"></div><span>Context-Driven sub-types (User · Device · Location · Time)</span></li>
+      <li onclick="toggleDone(this,4)"><div class="subtopic-check"></div><span>First Match Wins (default)</span></li>
+      <li onclick="toggleDone(this,5)"><div class="subtopic-check"></div><span>Evaluate All Policies (most restrictive) — needs support ticket + DLP rebuild</span></li>
+      <li onclick="toggleDone(this,6)"><div class="subtopic-check"></div><span>Stacking — Allow at top, Block at bottom, specific before generic</span></li>
+      <li onclick="toggleDone(this,7)"><div class="subtopic-check"></div><span>Operationalising 10-step e-commerce walkthrough</span></li>
+      <li onclick="toggleDone(this,8)"><div class="subtopic-check"></div><span>3 confidence bands: Block CCN&gt;4 / Monitor CCN&gt;0 / Monitor CCN&gt;25</span></li>
+      <li onclick="toggleDone(this,9)"><div class="subtopic-check"></div><span>7-step DLP lifecycle (Implement → Dictionaries → Allow → Tune → Block test → Test/Tune → Production)</span></li>
+      <li onclick="toggleDone(this,10)"><div class="subtopic-check"></div><span>EDM = structured table match · IDM = whole-document fingerprint</span></li>
+      <li onclick="toggleDone(this,11)"><div class="subtopic-check"></div><span>OCR for images / non-text files</span></li>
+      <li onclick="toggleDone(this,12)"><div class="subtopic-check"></div><span>SaaS Security API for shadow-IT visibility</span></li>
+      <li onclick="toggleDone(this,13)"><div class="subtopic-check"></div><span>Vertical examples — Healthcare · Hi-Tech · Finance</span></li>
+      <li onclick="toggleDone(this,14)"><div class="subtopic-check"></div><span>Use Case 1 — AI/ChatGPT (Risk Control + DLP + CBI)</span></li>
+      <li onclick="toggleDone(this,15)"><div class="subtopic-check"></div><span>Use Case 2 — Endpoint DLP (Retire Legacy + Offboarding USB block)</span></li>
+      <li onclick="toggleDone(this,16)"><div class="subtopic-check"></div><span>Use Case 3 — Outbound Email DLP (Exchange integration)</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="quick-ref"><div class="quick-ref-term">DLP</div><div class="quick-ref-def">Data Loss Prevention. Monitors and controls sensitive data flows across web, email, endpoints, SaaS, cloud, Gen AI.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Content-Driven</div><div class="quick-ref-def">Inspects payload (keyword / pattern / AI-ML / EDM / IDM / file type). Wins when sensitive data is detectable.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Context-Driven</div><div class="quick-ref-def">Inspects circumstances (user/role, device posture, location, time). Wins when content alone misses intent.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">EDM</div><div class="quick-ref-def">Exact Data Match — fingerprints a structured table (customer DB, SSN list). Reduces FPs to near-zero on known records.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">IDM</div><div class="quick-ref-def">Indexed Document Match — fingerprints whole documents (contracts, board decks). Detects intact-document exfil.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">First Match Wins</div><div class="quick-ref-def">Default policy ordering. Stop at first match. Stack Allow → Block, specific → generic.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Evaluate All Policies</div><div class="quick-ref-def">Most-restrictive-wins ordering. Requires support ticket + deletion of all DLP rules before flipping.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">OCR</div><div class="quick-ref-def">Optical Character Recognition. Lets DLP read sensitive text inside images, scans, photos.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">SaaS Security API</div><div class="quick-ref-def">Out-of-band data-at-rest visibility into sanctioned SaaS apps via webhook + API. Complements inline DLP.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Endpoint DLP</div><div class="quick-ref-def">Local agent that enforces DLP on offline, printing, removable storage. Especially relevant during employee offboarding.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">DLP Incident Receiver</div><div class="quick-ref-def">ICAP or Zscaler Incident Receiver — destination for DLP incident metadata + notifications.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-302 · <span>Section 8</span></div>
+  <div class="footer-right">Data Security Services · Section 8 of 11</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu302-data-security';
+const SECTIONS={overview:'Overview',recap:'Recap',policies:'DLP Policies',types:'Policy Types',order:'Order &amp; Creation',ops:'Operationalising',deploy:'Deploy Lifecycle',tools:'EDM/IDM/OCR',usecases:'Use Cases','recap-final':'Recap'};
+
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+function switchTab(btn,id){const wrap=btn.parentElement.parentElement;wrap.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');wrap.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));const target=document.getElementById(id);if(target)target.classList.add('active');}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();initNotes();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
+  document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
+  document.querySelectorAll('.analogy-img img, .img-display-block img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+});
+</script>
+<script src="../../../transitions.js"></script>
+</body>
+</html>
