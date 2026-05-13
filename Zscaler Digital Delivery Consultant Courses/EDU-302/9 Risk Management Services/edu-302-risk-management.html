@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Risk Management Services — EDU-302</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f6f3fc;--surface:#ffffff;--surface-2:#faf8ff;--border:#c8bbff;--border-dim:#ece8ff;
+  --text:#1a0f3d;--text-soft:#2c1f5c;--text-muted:#5a4a9c;
+  --purple:#5c35cc;--purple-glow:rgba(92,53,204,0.07);--purple-dim:#c8bbff;--purple-deep:#3a1f8c;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef3c7;--amber-border:#fde68a;
+}
+html.pt-init body{opacity:0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:#1a0f3d;display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#5a4a9c;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#a78bfa;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#2c1f5c;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.28);padding:5px 14px;border-radius:20px;font-size:11px;color:#a78bfa;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#a78bfa;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#a78bfa;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--purple);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--purple);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#1a0f3d;color:#a78bfa;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 16px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--purple);border-bottom-color:var(--purple);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+h4{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;margin-top:16px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--purple);font-weight:700;font-size:18px;line-height:1.2;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--purple-glow);border-color:var(--purple-dim);}
+.callout-note .callout-header{color:var(--purple);}
+.callout-note .callout-icon{background:var(--purple-dim);color:var(--purple);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-info{background:var(--blue-light);border-color:var(--blue-border);}
+.callout-info .callout-header{color:var(--blue);}
+.callout-info .callout-icon{background:var(--blue-border);color:var(--blue);}
+.callout-info .callout-body{color:#1a3a5c;}
+.callout-tip{background:var(--green-light);border-color:var(--green-border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-tip .callout-body{color:#0f4a28;}
+
+.policy-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.policy-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.policy-card-title{font-size:13px;font-weight:700;color:var(--purple);margin-bottom:6px;}
+.policy-card-body{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+@media(max-width:700px){.policy-grid{grid-template-columns:1fr;}}
+
+.phase-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:18px;}
+.phase-step{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--purple);border-radius:0 12px 12px 0;padding:14px 16px;}
+.phase-num{width:34px;height:34px;border-radius:50%;background:var(--purple);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.phase-body{flex:1;}
+.phase-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.phase-text{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.product-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;border-left:4px solid var(--purple);}
+.product-tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:0.14em;color:#fff;background:var(--purple);padding:2px 8px;border-radius:8px;margin-bottom:6px;}
+.product-title{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.3;}
+.product-body{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+@media(max-width:700px){.product-grid{grid-template-columns:1fr;}}
+
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--purple);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--purple);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--purple-glow);border:1px solid var(--purple-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--purple);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#f8f5ff;border:1px solid var(--purple-dim);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--purple);margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:var(--purple-deep);line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img .img-missing-msg{display:none !important;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+.img-display-block{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-display-block img.zoomed{max-width:100% !important;cursor:zoom-out;}
+.img-display-block .img-missing-msg{display:none !important;}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--purple);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:#1a0f3d;color:#a78bfa;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{background:#2c1f5c;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--purple);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#1a0f3d;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
+.mod-nav-hub:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:#1a0f3d;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#a78bfa;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#8c7ec4;line-height:1.6;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../digital-delivery-consultant-hub.html">Digital Delivery Consultant</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-302-hub.html">EDU-302</a>
+      <span class="breadcrumb-sep">›</span>
+      Risk Management Services
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Section 9 · EDU-302</div>
+    <h1>Risk Management <em>Services</em></h1>
+    <p>Zscaler's Risk Management suite — <strong>Risk360</strong> (risk quantification dashboards), <strong>UVM</strong> (Unified Vulnerability Management), <strong>EASM</strong> (External Attack Surface Management), <strong>Deception</strong>, <strong>ITDR</strong> (Identity Threat Detection &amp; Response), and <strong>Breach Predictor</strong>. Strategic risk frameworks, third-party integrations (Tenable, Okta, Entra ID, PingFederate, ZIdentity), data-driven reporting via Zscaler Data Fabric, and stakeholder consultation patterns.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Risk Management is where Zscaler stops being a security product and starts being a <em>boardroom product</em>.</div>
+  <p class="motivation-sub">Sections 6 – 8 hardened the platform against attackers. Section 9 asks a different question: how do you <em>quantify</em>, <em>prioritise</em>, and <em>report</em> risk so that the customer's CISO can defend the security spend to the board, and the SOC can act on the right things first. The verbs change too — Develop, Implement, Provide, Analyze, Collaborate.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-intro',this)">Intro to Risk Mgmt</button>
+  <button class="nav-tab" onclick="navTo('section-products',this)">Products &amp; Services</button>
+  <button class="nav-tab" onclick="navTo('section-risk-mgmt-overview',this)">Risk Mgmt Overview</button>
+  <button class="nav-tab" onclick="navTo('section-mitigation',this)">Adv. Mitigation</button>
+  <button class="nav-tab" onclick="navTo('section-assessment',this)">Adv. Assessment</button>
+  <button class="nav-tab" onclick="navTo('section-integration',this)">3rd-Party Integration</button>
+  <button class="nav-tab" onclick="navTo('section-implementation',this)">Strategic Impl.</button>
+  <button class="nav-tab" onclick="navTo('section-data',this)">Data-Driven</button>
+  <button class="nav-tab" onclick="navTo('section-stakeholder',this)">Stakeholder</button>
+  <button class="nav-tab" onclick="navTo('section-recap-final',this)">Recap</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · OVERVIEW</span></div>
+    <p class="socratic-insight">Outcomes: <em>Develop / Implement / Provide / Analyze / Collaborate</em>. Notice the shift — earlier sections asked the consultant to design and operationalise security <em>features</em>; Section 9 asks them to develop strategic <em>frameworks</em> and collaborate with stakeholders. Frameworks live in slide decks and board meetings, not in policy tables.</p>
+    <ul class="socratic-questions">
+      <li>"Risk Management" sounds like a CISO concern, not a Zscaler concern. What does Zscaler bring to risk management that a Zscaler-less customer with traditional GRC tools can't get?</li>
+      <li>The course covers six distinct products (Risk360, UVM, EASM, Deception, ITDR, Breach Predictor). Why does Zscaler split risk management into so many products instead of one unified "Risk" feature — and what does the consultant's product-choice conversation look like?</li>
+      <li>The final outcome is "Collaborate with stakeholders." Why is collaboration its own learning outcome here when it wasn't in DLP or Cyberthreat?</li>
+    </ul>
+    <div class="answer-area" data-section="overview">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Zscaler sees the actual telemetry — every connection, every blocked threat, every user behaviour across the entire Zero Trust Exchange. Traditional GRC tools survey what the customer <em>thinks</em> their risk is; Zscaler measures what their risk <em>actually is</em>. Risk360 + UVM + EASM are the platform's way of turning that telemetry into a quantified, prioritised, reportable risk posture. The CISO finally has numbers to point to instead of "we feel covered."</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Each product targets a different risk surface: Risk360 = overall risk quantification + dashboards; UVM = vulnerabilities (CVEs); EASM = external attack surface (your public IPs / domains / certs); Deception = active-defence honeypots; ITDR = identity-side threats (credential theft, privilege escalation); Breach Predictor = predictive ML. A customer probably won't buy all six on Day 1 — the consultant's conversation maps each product to a specific business question ("can we quantify cyber risk for the audit?" → Risk360; "do we know what's facing the public internet?" → EASM).</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Because Risk Management is the layer where <em>technical findings have to be translated into business actions</em>. DLP and Cyberthreat outputs are mostly self-evident to the SOC. Risk Management outputs (CVE backlogs, attack-surface inventories, identity hygiene gaps) only become decisions when CISOs, finance, application owners, and platform teams agree on priorities. Without collaboration, the risk reports become wallpaper.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-overview">
+    <div class="section-label">COURSE OVERVIEW</div>
+    <h2>Welcome to Risk Management</h2>
+    <p>Throughout this course, we will delve into various Zscaler products and solutions that enhance your organisation's security posture through comprehensive Risk Management Strategies.</p>
+
+    <h3>By the End of This Course, You'll Be Able To:</h3>
+    <ul class="content-list">
+      <li><strong>Develop</strong> strategic risk management frameworks using Zscaler Risk Management suite.</li>
+      <li><strong>Implement</strong> automation and integration strategies for comprehensive risk insights.</li>
+      <li><strong>Provide</strong> actionable risk management plans tailored to organisational needs.</li>
+      <li><strong>Analyze</strong> and report risk posture using advanced visualisation techniques.</li>
+      <li><strong>Collaborate</strong> with stakeholders to address risk priorities effectively.</li>
+    </ul>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Risk Management is the <em>insurance underwriter walking through your warehouse before quoting your premium</em>. They count exits, inspect sprinklers, check the locks on the rear door, ask who has the keys, look at how often you ran your fire drills, and read your incident log. They don't <em>install</em> safety equipment — they read your existing setup, quantify the risk you carry, and tell you what's most likely to burn down. The factory owner uses the report to fix the worst three things and to argue with finance for the budget.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--purple-dim);border-radius:8px;color:var(--purple-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an insurance underwriter inspecting a warehouse as an analogy for Risk Management. Wide composition with a cutaway warehouse. Centre foreground: a friendly underwriter in a smart vest with a clipboard, ticking boxes while walking past tiny labelled hazards — a leaky pipe (vulnerability), a propped-open back door (attack surface), a single key dangling from a lock (identity hygiene), a smouldering wastebasket (active threat). To one side, the warehouse owner in coveralls looks over the underwriter's shoulder at a final glowing scorecard with a risk rating. Soft warm warehouse lighting, plants by the office window. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- INTRODUCTION -->
+  <div class="section-block" id="section-intro">
+    <div class="section-label">LESSON 2 · INTRODUCTION TO RISK MANAGEMENT</div>
+    <h2>Foundational Principles</h2>
+    <p>In this lesson, we explore the foundational principles of Risk Management and why it is critical for organisations in today's evolving threat landscape.</p>
+
+    <div class="phase-steps">
+      <div class="phase-step"><div class="phase-num">1</div><div class="phase-body"><div class="phase-title">Identifying Threats</div><div class="phase-text">Understanding various types of cyber threats, such as external attacks, insider threats, and environmental risks.</div></div></div>
+      <div class="phase-step"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">Assessing Risks</div><div class="phase-text">Prioritising risks based on their potential impact and likelihood.</div></div></div>
+      <div class="phase-step"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Mitigating Risks</div><div class="phase-text">Deploying controls to minimise vulnerabilities and maintain operational continuity.</div></div></div>
+      <div class="phase-step"><div class="phase-num">4</div><div class="phase-body"><div class="phase-title">Introduction to Risk360</div><div class="phase-text">An overview of how Zscaler's Risk360 quantifies risks and provides actionable insights.</div></div></div>
+      <div class="phase-step"><div class="phase-num">5</div><div class="phase-body"><div class="phase-title">Unified Vulnerability Management (UVM)</div><div class="phase-text">Tool to prioritise and remediate vulnerabilities based on context and severity.</div></div></div>
+    </div>
+  </div>
+
+  <!-- PRODUCTS & SERVICES -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · PRODUCTS &amp; SERVICES</span></div>
+    <p class="socratic-insight">Six products: <em>Risk360</em>, <em>UVM</em>, <em>EASM</em>, <em>Deception</em>, <em>ITDR</em>, <em>Breach Predictor</em>. Each one addresses a different layer of "what might go wrong" — quantification, vulnerabilities, surface, lateral movement, identity, prediction.</p>
+    <ul class="socratic-questions">
+      <li>EASM (External Attack Surface Management) discovers and inventories the customer's public-facing assets. Why is this a fresh problem in 2026 when port-scanners have existed for decades — what does EASM bring that nmap doesn't?</li>
+      <li>ITDR focuses on credential theft and privilege escalation. How is this categorically different from a traditional IPS or EDR — what does "Identity" being its own threat category say about modern attack patterns?</li>
+    </ul>
+    <div class="answer-area" data-section="products">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">nmap finds open ports; EASM finds <em>unknown assets</em>. A modern customer has cloud subscriptions across AWS / Azure / GCP, marketing-launched microsites no one tracks, expired certificates on dev domains, S3 buckets that should be private but aren't. EASM crawls the customer's brand, DNS, certificates, public IP ranges, and exposes the shadow inventory — then continuously monitors. The output isn't "port 22 is open"; it's "you have 47 web properties, here are the 6 you didn't know about."</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Modern breaches don't usually start with malware on an endpoint — they start with a phished credential, a leaked API key, or an over-privileged service account. EDR sees the endpoint; IPS sees the network; neither sees "this user just authenticated from Vietnam at 3 AM and tried to escalate to domain admin." ITDR sits at the identity layer and catches that pattern. Identity is its own threat category because <em>identity is now the perimeter</em>.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-products">
+    <div class="section-label">LESSON 3 · RISK MANAGEMENT PRODUCTS &amp; SERVICES</div>
+    <h2>Zscaler's Comprehensive Suite</h2>
+    <p>This lesson focused on Zscaler's comprehensive suite of risk management products.</p>
+
+    <div class="product-grid">
+      <div class="product-card">
+        <div class="product-tag">RISK360</div>
+        <div class="product-title">Risk360</div>
+        <div class="product-body">A powerful risk quantification and visualisation framework for remediating cybersecurity risk. It maps risk data from external sources and your Zscaler environment to <strong>generate a detailed profile of your risk posture</strong>. The Risk360 model leverages over 100 data-driven factors across the four stages of attack.</div>
+      </div>
+      <div class="product-card">
+        <div class="product-tag">UVM</div>
+        <div class="product-title">Unified Vulnerability Management</div>
+        <div class="product-body">Zscaler Unified Vulnerability Management solution taps into an aggregated, comprehensive remediation program. UVM is powered by our <strong>Data Fabric for Security</strong>, which ingests data from traditional vulnerability and asset-exposure tools (e.g. internal pentests, cloud security findings, and container scanning), feeds, and applications.</div>
+      </div>
+      <div class="product-card">
+        <div class="product-tag">EASM</div>
+        <div class="product-title">External Attack Surface Management</div>
+        <div class="product-body">Provides continuous visibility, risk assessment, and remediation recommendations so you can reduce exposure of your internet-facing assets. By employing open-source intelligence (OSINT) and advanced scanning techniques, plus Zscaler ThreatLabz research, the platform identifies and analyses your exposed assets, providing the alerts and findings you need for proactive defence.</div>
+      </div>
+      <div class="product-card">
+        <div class="product-tag">DECEPTION</div>
+        <div class="product-title">Zscaler Deception</div>
+        <div class="product-body">It's a key component of the security services in the Zscaler Zero Trust Exchange. You can think of Deception as a threat-detection layer (a Zero Trust Architecture). Zscaler Deception will help you detect and stop stealthy attacks that have bypassed existing defences. These attacks could be anything ranging from hands-on-keyboard ransomware operators to malicious insiders.</div>
+      </div>
+      <div class="product-card">
+        <div class="product-tag">ITDR</div>
+        <div class="product-title">Identity Threat Detection &amp; Response</div>
+        <div class="product-body">It enables Zscaler's security teams to investigate thoroughly and allow automatic remediation, enhancing danger signals with user-specific data. This solution improves your Zero Trust posture by swiftly detecting and fixing risks and misconfigurations, providing precise, detailed instructions to safeguard user identities.</div>
+      </div>
+      <div class="product-card">
+        <div class="product-tag">BREACH PREDICTOR</div>
+        <div class="product-title">Breach Predictor</div>
+        <div class="product-body">It provides AI-driven Multi-Attack Factors, Techniques, and Procedures (TTPs), enabling real-time insights on affected users and helping to understand and stop attacks underway.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">The six products are <em>six different inspectors visiting the same building</em>. The risk surveyor (Risk360) writes the executive report. The plumbing inspector (UVM) lists which pipes need fixing. The drone surveyor (EASM) maps the roof, the back-alley entrance, and the chimney no-one remembered. The undercover security tester (Deception) leaves tempting fake briefcases around to see who picks them up. The badge auditor (ITDR) checks who's using which keys and whether their hours look normal. The weather forecaster (Breach Predictor) tells you the storm front is two days out. Same building, six lenses.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--purple-dim);border-radius:8px;color:var(--purple-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of six different inspectors visiting one building as an analogy for the Zscaler Risk Management suite. Wide composition with a cutaway suburban office building. Six cheerful inspectors visible across the scene each with a different tool and a small label: (1) a risk surveyor with a glowing risk-rating scorecard (Risk360); (2) a plumber with a wrench checking pipes (UVM); (3) a drone surveyor with a flying drone mapping the roof and back alley (EASM); (4) a covert tester placing a tempting fake briefcase in a corridor (Deception); (5) a badge auditor at a turnstile checking ID cards under a clock (ITDR); (6) a weather forecaster pointing at a small dashboard predicting an incoming storm (Breach Predictor). Warm afternoon light, plants by the entrance, cheerful round-faced characters. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-products" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('products','Products &amp; Services')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-products" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-products"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RISK MGMT OVERVIEW -->
+  <div class="section-block" id="section-risk-mgmt-overview">
+    <div class="section-label">LESSON 4 · ZSCALER RISK MANAGEMENT OVERVIEW</div>
+    <h2>In-Depth Technical Overview</h2>
+    <p>This lesson provided an in-depth technical overview of Zscaler's risk management framework, focusing on <strong>implementation and hands-on configuration</strong>.</p>
+
+    <div class="phase-steps">
+      <div class="phase-step"><div class="phase-num">1</div><div class="phase-body"><div class="phase-title">Configuring Risk360 Dashboards</div><div class="phase-text">Setting up and customising dashboards to visualise security metrics.</div></div></div>
+      <div class="phase-step"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">Alert Systems</div><div class="phase-text">Automating alerts for critical risks based on defined thresholds.</div></div></div>
+      <div class="phase-step"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Managing External Attack Surfaces</div><div class="phase-text">Tools to identify and resolve vulnerabilities in public-facing assets.</div></div></div>
+      <div class="phase-step"><div class="phase-num">4</div><div class="phase-body"><div class="phase-title">Role of Predictive Analytics</div><div class="phase-text">Leveraging machine learning to predict breaches and assess risk probability.</div></div></div>
+    </div>
+  </div>
+
+  <!-- ADV MITIGATION -->
+  <div class="section-block" id="section-mitigation">
+    <div class="section-label">LESSON 5 · ADVANCED RISK MITIGATION TECHNIQUES</div>
+    <h2>Advanced Integration and Mitigation</h2>
+    <p>This lesson focused on advanced integration and mitigation techniques.</p>
+
+    <div class="phase-steps">
+      <div class="phase-step"><div class="phase-num">1</div><div class="phase-body"><div class="phase-title">Integrating UVM with SIEM Platforms</div><div class="phase-text">Automating vulnerability tracking and remediation workflows.</div></div></div>
+      <div class="phase-step"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">EASM in Hybrid Environments</div><div class="phase-text">Strategies for managing cloud and on-premises risks.</div></div></div>
+      <div class="phase-step"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Deception Deployment</div><div class="phase-text">Configuring honeypots to identify and neutralise attackers.</div></div></div>
+      <div class="phase-step"><div class="phase-num">4</div><div class="phase-body"><div class="phase-title">Enhancing Identity Protection</div><div class="phase-text">Using ITDR to prevent identity-based breaches, such as credential theft and privilege escalation.</div></div></div>
+    </div>
+  </div>
+
+  <!-- ADV ASSESSMENT -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ADVANCED RISK ASSESSMENT</span></div>
+    <p class="socratic-insight">Risk360 framework — overview of architecture + data sources (ThreatLabz, third-party tools). Evaluating threats with predictive analytics. Prioritising risks by business impact + organisational objectives.</p>
+    <ul class="socratic-questions">
+      <li>"Aligning risk prioritisation with organisational objectives" sounds easy in a slide. In practice, why does Sales' "we must close the quarter on AWS" routinely beat Security's "this S3 bucket is exposed" — and what's the consultant's leverage in that conversation?</li>
+      <li>Predictive analytics for breach prediction implies the model has been trained on real breach data. What does that say about the customer's relationship with Zscaler's broader telemetry — and what objections might a privacy-conscious customer raise?</li>
+    </ul>
+    <div class="answer-area" data-section="assessment">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Security loses because their argument is abstract ("there's exposure") while Sales' is concrete ("$3 M deal closes Friday"). The consultant's leverage is to put a dollar number on the exposure — Risk360's quantification translates the bucket leak into "$X expected loss from a probable breach class," and the conversation shifts from priority-versus-priority to risk-vs-revenue. The decision still goes either way, but it goes with eyes open.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Zscaler's models work because they see <em>aggregate</em> patterns across many customers' telemetry — phishing trends, ransomware lineage, credential-stuffing waves. A privacy-conscious customer will worry that their data is being "mined" for someone else's benefit. The answer is the standard SaaS contract: aggregate anonymised threat intelligence is shared; individual customer data is not. The consultant's job is making that contractual boundary visible early in the conversation.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-assessment">
+    <div class="section-label">LESSON 6 · ADVANCED RISK ASSESSMENT STRATEGIES</div>
+    <h2>Strategic Risk Management Frameworks</h2>
+    <p>In this section, we explore the <strong>Development of strategic risk management frameworks</strong> using Zscaler Risk Management suite.</p>
+
+    <h3>Understanding the Risk360 Framework</h3>
+    <ul class="content-list">
+      <li>Overview of Risk360's architecture and capabilities.</li>
+      <li>Data sources leveraged for risk quantification (e.g. <strong>ThreatLabz</strong>, third-party tools).</li>
+    </ul>
+
+    <h3>Evaluating Threats</h3>
+    <ul class="content-list">
+      <li>Using predictive analytics for breach prediction.</li>
+      <li>Case studies on high-impact risk scenarios.</li>
+    </ul>
+
+    <h3>Prioritising Risks</h3>
+    <ul class="content-list">
+      <li>Assigning severity scores to risks based on business impact.</li>
+      <li>Aligning risk prioritisation with organisational objectives.</li>
+    </ul>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-assessment" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('assessment','Adv. Assessment')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-assessment" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-assessment"></span></div></div>
+    </div>
+  </div>
+
+  <!-- INTEGRATION -->
+  <div class="section-block" id="section-integration">
+    <div class="section-label">LESSON 7 · INTEGRATION WITH THIRD-PARTY TOOLS</div>
+    <h2>Automation &amp; Integration for Comprehensive Risk Insights</h2>
+    <p>Once the risk has been assessed, it is important to implement automation and integration strategies for comprehensive risk insights.</p>
+
+    <h3>Tenable Integration</h3>
+    <ul class="content-list">
+      <li>Steps to integrate Risk360 with platforms like <strong>Tenable</strong>.</li>
+      <li>Automating workflows for risk-related information; categorises the risk under Risk360's <strong>External Attack Surface</strong> category; quantifies risk by taking into account the <strong>CVSS</strong> score, <strong>Vulnerability Priority Rating (VPR)</strong> score, exploit code maturity, and threat recency.</li>
+    </ul>
+
+    <h3>Identity Provider Integration</h3>
+    <ul class="content-list">
+      <li>Using <strong>Okta</strong>, <strong>Entra ID</strong>, <strong>PingFederate</strong>, <strong>ZIdentity</strong> for seamless user authentication.</li>
+      <li>Enforcing MFA and adaptive access controls.</li>
+    </ul>
+
+    <h3>Cloud Platforms and Risk Management</h3>
+    <ul class="content-list">
+      <li>Integrating Zscaler Risk Management services with <strong>ZIdentity</strong>.</li>
+      <li>Addressing multi-cloud risk management challenges.</li>
+    </ul>
+
+    <div class="callout callout-info">
+      <div class="callout-header"><div class="callout-icon">i</div>WHY THIRD-PARTY INTEGRATION MATTERS</div>
+      <div class="callout-body">Risk360 only gets stronger when it pulls signal from outside Zscaler's own telemetry. <strong>Tenable</strong> feeds the vulnerability surface; <strong>Okta / Entra / PingFederate / ZIdentity</strong> feed the identity context; <strong>cloud platforms</strong> feed the cloud-config posture. Without integrations, Risk360 sees only what travels through ZIA / ZPA — and that's the smaller half of the picture.</div>
+    </div>
+  </div>
+
+  <!-- STRATEGIC IMPLEMENTATION -->
+  <div class="section-block" id="section-implementation">
+    <div class="section-label">LESSON 8 · STRATEGIC IMPLEMENTATION</div>
+    <h2>Actionable Risk Management Plans</h2>
+    <p>Once the risk has been identified, let's explore the strategic implementation of actionable risk management plans tailored to organisational needs.</p>
+
+    <h3>Deploying Deception for Threat Detection</h3>
+    <ul class="content-list">
+      <li>Configuring honeypots for targeted threat detection.</li>
+      <li>Case studies on successful deception deployments.</li>
+    </ul>
+
+    <h3>Enhancing Identity Protection with ITDR</h3>
+    <ul class="content-list">
+      <li>Detecting and mitigating credential theft and lateral movement attacks.</li>
+      <li>Automating identity cleanup tasks (e.g. removing unused permissions).</li>
+    </ul>
+
+    <h3>Customising UVM for Specific Use Cases</h3>
+    <ul class="content-list">
+      <li>Industry-specific configurations (e.g. finance, healthcare).</li>
+      <li>Reporting vulnerability remediation progress to stakeholders.</li>
+    </ul>
+  </div>
+
+  <!-- DATA DRIVEN -->
+  <div class="section-block" id="section-data">
+    <div class="section-label">LESSON 9 · DATA-DRIVEN RISK MANAGEMENT</div>
+    <h2>Analyse and Report Risk Posture</h2>
+    <p>Zscaler's Data-Driven Risk Management helps to Analyse and report risk posture using advanced visualisation techniques in enhancing an organisation's security posture.</p>
+
+    <h3>Leveraging Zscaler Data Fabric</h3>
+    <ul class="content-list">
+      <li>Aggregating data from diverse sources for comprehensive insights.</li>
+      <li>Using <strong>financial modelling</strong> for risk quantification.</li>
+    </ul>
+
+    <h3>Creating Actionable Reports</h3>
+    <ul class="content-list">
+      <li>Customising dashboards for different stakeholders (<strong>CISOs, SOCs</strong>, etc.).</li>
+      <li>Automating periodic risk posture updates.</li>
+    </ul>
+
+    <div class="img-display-block">
+      <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--purple-dim);border-radius:8px;color:var(--purple-deep);font-size:12px;margin-bottom:10px;">📷 <strong>1.png</strong> — add this diagram to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show diagram prompt</button>
+      <div class="prompt-content" hidden>Flat purple minimalist illustration of Zscaler Data Fabric for Risk Management as a hub-and-spokes diagram. Centre: a glowing purple "Data Fabric" hub shaped like a woven mesh. Spokes coming in from the left (ingest): ThreatLabz, Tenable, Okta/Entra/PingFederate, Cloud Platforms, Zscaler telemetry. Spokes going out to the right (consume): Risk360 dashboards, UVM workflows, EASM alerts, ITDR signals, Breach Predictor models. Below the hub: two output dashboards labelled "CISO" and "SOC" each with stylised charts. Clean simple shapes, no text labels other than the bracket tags described.</div>
+    </div>
+  </div>
+
+  <!-- STAKEHOLDER -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · STAKEHOLDER ENGAGEMENT</span></div>
+    <p class="socratic-insight">Presenting Findings: data viz + tailoring to technical vs non-technical audiences. Collaborating on Mitigation: aligning recommendations with organisational goals + managing cross-functional teams.</p>
+    <ul class="socratic-questions">
+      <li>The same Risk360 dashboard has to satisfy a CISO (wants strategic summaries), an SOC analyst (wants drill-down evidence), a CFO (wants dollar figures), and an application owner (wants a list to fix). One dashboard, four audiences. How do you actually solve this — same data, different views, or different dashboards entirely?</li>
+    </ul>
+    <div class="answer-area" data-section="stakeholder">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q — MODEL ANSWER</div><div class="model-answer-text">Different views of the same underlying data. CISO gets a one-page exec summary (overall risk score, top 5 risks, trend over quarter). SOC gets the live alert feed with full event detail. CFO gets the financial-modelling view (expected loss, cost of remediation, cost of doing nothing). App owner gets a ticket queue with their team's CVEs and SLA timers. One Data Fabric, four lenses. The consultant's job during stakeholder workshops is to make sure each audience sees their view first, never the wrong one.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-stakeholder">
+    <div class="section-label">LESSON 10 · CONSULTATION AND STAKEHOLDER ENGAGEMENT</div>
+    <h2>Address Risk Priorities Effectively</h2>
+    <p>In this final stage we will learn about Consultation and Stakeholder Engagement to address risk priorities effectively.</p>
+
+    <h3>Presenting Findings Effectively</h3>
+    <ul class="content-list">
+      <li>Using data visualisation tools to communicate risk insights.</li>
+      <li>Tailoring presentations for technical and non-technical audiences.</li>
+    </ul>
+
+    <h3>Collaborating on Risk Mitigation Plans</h3>
+    <ul class="content-list">
+      <li>Aligning recommendations with organisational goals.</li>
+      <li>Managing cross-functional teams for risk resolution.</li>
+    </ul>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Stakeholder engagement is the <em>doctor's consultation room at the end of a full physical</em>. The patient wants a clean diagnosis, the spouse wants reassurance, the insurance company wants codes, the patient's employer wants to know if they can travel for work next month. Same chart, four conversations — none of which work if the doctor reads them all the X-ray. The consultant chooses the right framing per audience: CISO gets strategy, SOC gets evidence, CFO gets dollars, application owner gets a list.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--purple-dim);border-radius:8px;color:var(--purple-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a doctor consulting four different audiences after a patient's full physical as an analogy for stakeholder engagement. Wide composition split into four quadrants — each quadrant a small consulting moment with the same friendly doctor at a desk: (1) the patient (CISO) being shown a one-page summary; (2) the patient's spouse (SOC analyst) being shown a detailed evidence chart; (3) an insurance officer (CFO) being shown a dollar-amount estimate; (4) the patient's employer (application owner) being shown a punch-list of action items. The same large X-ray plate is pinned in the centre between the quadrants. Soft warm clinic lighting, cheerful round-faced characters. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-stakeholder" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('stakeholder','Stakeholder')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-stakeholder" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-stakeholder"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div class="section-block" id="section-recap-final">
+    <div class="section-label">RECAP &amp; RESOURCES</div>
+    <h2>In Summary</h2>
+    <ul class="content-list">
+      <li><strong>Advanced Risk Assessment Strategies</strong> — explored risk evaluation techniques using Risk360, emphasising predictive analytics and data-driven decision-making to prioritise risks. Delivery consultants learned how to assess risks effectively and align mitigation strategies with organisational objectives.</li>
+      <li><strong>Integration with Third-Party Tools</strong> — integration of Zscaler Risk360 with Tenable, and identity management platforms. This lesson provided hands-on strategies for automating workflows and ensuring comprehensive risk visibility across diverse enterprise environments.</li>
+    </ul>
+
+    <h3>From This Course, You Should Now Be Able To:</h3>
+    <ul class="content-list">
+      <li><strong>Develop</strong> strategic risk management frameworks using Zscaler Risk Management suite.</li>
+      <li><strong>Implement</strong> automation and integration strategies for comprehensive risk insights.</li>
+      <li><strong>Provide</strong> actionable risk management plans tailored to organisational needs.</li>
+      <li><strong>Analyze</strong> and report risk posture using advanced visualisation techniques.</li>
+      <li><strong>Collaborate</strong> with stakeholders to address risk priorities effectively.</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">60-SECOND PITCH</div>
+        <div class="mental-note-block-text"><strong>6 products: Risk360 (quantify) · UVM (vulns) · EASM (surface) · Deception (active defence) · ITDR (identity) · Breach Predictor (predict). 3rd-party: Tenable (vulns), Okta/Entra/PingFederate/ZIdentity (identity), cloud platforms. Data Fabric is the spine that lets one telemetry feed four audiences (CISO/SOC/CFO/App-Owner). Collaboration is the final outcome — risk is only managed if the customer's stakeholders act on it.</strong></div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Risk Management Services is the <em>airline's safety operations centre at 3 AM</em>. Maintenance logs (UVM), weather radar (Breach Predictor), public-flight tracker (EASM), passenger manifests (ITDR), undercover marshals (Deception), and the chief safety officer's morning dashboard (Risk360) all feed into one room. Nobody flies a plane from this room — they decide which planes <em>can</em> fly, which crews need rest, which routes need a divert. The consultant is the architect who installed the room, trained the operators, and connected the feeds.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--purple-dim);border-radius:8px;color:var(--purple-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an airline safety operations centre at 3 AM as an analogy for the Risk Management Services course summary. Wide composition with a softly lit operations room. Centre: a large round dashboard table where a chief safety officer studies a glowing overall risk score (Risk360). Around the table, six operators at their stations each label-tagged with a tiny icon: (1) maintenance log clipboard (UVM); (2) weather radar screen (Breach Predictor); (3) public flight tracker on a wall map (EASM); (4) passenger manifest pulled up on a tablet (ITDR); (5) undercover marshal silhouette on a side screen (Deception); (6) a comms operator coordinating with the rest of the airline (Stakeholder Engagement). Soft purple ambient lighting, plants in the corner, cheerful round-faced characters working in calm focus. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap-final" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap-final','Recap')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap-final" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap-final"></span></div></div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-302-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-302 Hub
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleDone(this,0)"><div class="subtopic-check"></div><span>5 learning outcomes (Develop · Implement · Provide · Analyze · Collaborate)</span></li>
+      <li onclick="toggleDone(this,1)"><div class="subtopic-check"></div><span>Foundational principles (Identify · Assess · Mitigate)</span></li>
+      <li onclick="toggleDone(this,2)"><div class="subtopic-check"></div><span>6 products: Risk360 · UVM · EASM · Deception · ITDR · Breach Predictor</span></li>
+      <li onclick="toggleDone(this,3)"><div class="subtopic-check"></div><span>Risk360 = 100+ data factors across 4 attack stages</span></li>
+      <li onclick="toggleDone(this,4)"><div class="subtopic-check"></div><span>UVM powered by Data Fabric for Security</span></li>
+      <li onclick="toggleDone(this,5)"><div class="subtopic-check"></div><span>EASM uses OSINT + ThreatLabz for surface discovery</span></li>
+      <li onclick="toggleDone(this,6)"><div class="subtopic-check"></div><span>Deception = honeypots for stealthy / insider attacks</span></li>
+      <li onclick="toggleDone(this,7)"><div class="subtopic-check"></div><span>ITDR = identity-side detection (credential theft, lateral move)</span></li>
+      <li onclick="toggleDone(this,8)"><div class="subtopic-check"></div><span>Breach Predictor = AI-driven TTPs + real-time insight</span></li>
+      <li onclick="toggleDone(this,9)"><div class="subtopic-check"></div><span>Tenable integration (CVSS · VPR · exploit maturity · threat recency)</span></li>
+      <li onclick="toggleDone(this,10)"><div class="subtopic-check"></div><span>IdP integration: Okta · Entra ID · PingFederate · ZIdentity</span></li>
+      <li onclick="toggleDone(this,11)"><div class="subtopic-check"></div><span>Zscaler Data Fabric aggregates diverse sources</span></li>
+      <li onclick="toggleDone(this,12)"><div class="subtopic-check"></div><span>Reports tailored to stakeholder (CISO / SOC / CFO / app owner)</span></li>
+      <li onclick="toggleDone(this,13)"><div class="subtopic-check"></div><span>Stakeholder engagement is its own outcome</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="quick-ref"><div class="quick-ref-term">Risk360</div><div class="quick-ref-def">Zscaler's risk quantification + visualisation framework. 100+ data factors across 4 attack stages. Drives executive reporting.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">UVM</div><div class="quick-ref-def">Unified Vulnerability Management. Aggregates CVE / pentest / cloud-security / container findings via Data Fabric for Security.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">EASM</div><div class="quick-ref-def">External Attack Surface Management. Discovers and continuously monitors public-facing assets using OSINT + ThreatLabz.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Deception</div><div class="quick-ref-def">Honeypot threat-detection layer in the Zero Trust Exchange. Catches hands-on-keyboard / insider attackers.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">ITDR</div><div class="quick-ref-def">Identity Threat Detection &amp; Response. Detects credential theft + privilege escalation. Identity is the new perimeter.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Breach Predictor</div><div class="quick-ref-def">AI-driven multi-attack TTPs. Real-time insight on affected users; predictive — not just reactive.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">CVSS / VPR</div><div class="quick-ref-def">Common Vulnerability Scoring System / Vulnerability Priority Rating. Tenable inputs to Risk360 quantification.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">ZIdentity</div><div class="quick-ref-def">Zscaler's identity broker. Integrates with Okta / Entra ID / PingFederate for unified user authentication + risk context.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Zscaler Data Fabric</div><div class="quick-ref-def">Aggregation spine for risk telemetry. One data fabric → four stakeholder views (CISO / SOC / CFO / app owner).</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">ThreatLabz</div><div class="quick-ref-def">Zscaler's threat research team. Feeds EASM and Risk360 with real-world breach data.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-302 · <span>Section 9</span></div>
+  <div class="footer-right">Risk Management Services · Section 9 of 11</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu302-risk-management';
+const SECTIONS={overview:'Overview',intro:'Intro to Risk Mgmt',products:'Products &amp; Services','risk-mgmt-overview':'Risk Mgmt Overview',mitigation:'Adv. Mitigation',assessment:'Adv. Assessment',integration:'3rd-Party Integration',implementation:'Strategic Impl.',data:'Data-Driven',stakeholder:'Stakeholder','recap-final':'Recap'};
+
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();initNotes();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
+  document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
+  document.querySelectorAll('.analogy-img img, .img-display-block img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+});
+</script>
+<script src="../../../transitions.js"></script>
+</body>
+</html>
