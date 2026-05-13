@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platform Services — EDU-302</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#fef9ec;--surface:#ffffff;--surface-2:#fffbf0;--border:#fde68a;--border-dim:#fef3c7;
+  --text:#1c1204;--text-soft:#3d2e08;--text-muted:#9a7c30;
+  --amber:#b45309;--amber-glow:rgba(180,83,9,0.07);--amber-dim:#fde68a;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+html.pt-init body{opacity:0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:#1c1204;display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#9a7c30;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#fbbf24;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#3d2e08;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#fbbf24;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#fbbf24;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#fbbf24;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--amber);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--amber);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#1c1204;color:#fbbf24;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 16px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--amber);border-bottom-color:var(--amber);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--amber);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--amber-glow);border:1px solid var(--amber-dim);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--amber);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--amber-glow);border-color:var(--amber-dim);}
+.callout-note .callout-header{color:var(--amber);}
+.callout-note .callout-icon{background:var(--amber-dim);color:var(--amber);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#7a1414;}
+.callout-tip{background:var(--green-light);border-color:var(--green-border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-tip .callout-body{color:#0f4a28;}
+.callout-info{background:var(--blue-light);border-color:var(--blue-border);}
+.callout-info .callout-header{color:var(--blue);}
+.callout-info .callout-icon{background:var(--blue-border);color:var(--blue);}
+.callout-info .callout-body{color:#1a3a5c;}
+
+/* POLICY TYPE CARDS */
+.policy-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.policy-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.policy-card-title{font-size:13px;font-weight:700;color:var(--amber);margin-bottom:6px;}
+.policy-card-body{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+@media(max-width:700px){.policy-grid{grid-template-columns:1fr;}}
+
+/* PHASE STEPS */
+.phase-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:18px;}
+.phase-step{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--amber);border-radius:0 12px 12px 0;padding:14px 16px;}
+.phase-num{width:34px;height:34px;border-radius:50%;background:var(--amber);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.phase-body{flex:1;}
+.phase-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.phase-text{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+
+/* RULE TABLE */
+.rule-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.rule-table th{background:#1c1204;color:#fbbf24;padding:10px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;}
+.rule-table td{padding:10px 12px;border-top:1px solid var(--border);vertical-align:top;color:var(--text-soft);line-height:1.55;}
+.rule-table td:first-child{font-weight:600;color:var(--text);}
+
+/* SIEM SPLIT */
+.siem-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.siem-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.siem-card-title{font-size:13px;font-weight:700;color:var(--amber);margin-bottom:6px;}
+.siem-card-body{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+.siem-card-body ul{list-style:none;padding:0;margin-top:6px;display:flex;flex-direction:column;gap:4px;}
+.siem-card-body ul li{padding-left:12px;position:relative;font-size:12px;}
+.siem-card-body ul li::before{content:'›';position:absolute;left:0;color:var(--amber);font-weight:700;}
+@media(max-width:700px){.siem-grid{grid-template-columns:1fr;}}
+
+/* STORAGE EQUATION */
+.equation-block{background:#1c1204;color:#fbbf24;padding:14px 18px;border-radius:10px;font-family:'JetBrains Mono','Courier New',monospace;font-size:12px;line-height:1.7;margin-bottom:14px;overflow-x:auto;}
+.equation-block strong{color:#fff;}
+
+/* PDF REFERENCE */
+.pdf-ref{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;text-decoration:none;transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;margin-bottom:14px;}
+.pdf-ref:hover{transform:translateY(-3px);border-color:var(--amber);box-shadow:0 8px 18px rgba(180,83,9,0.12);}
+.pdf-ref-icon{display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--amber);text-transform:uppercase;margin-bottom:8px;}
+.pdf-ref-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3;}
+.pdf-ref-body{font-size:12px;color:var(--text-muted);line-height:1.55;}
+.pdf-ref-cta{margin-top:auto;padding-top:8px;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--amber);}
+
+/* SOCRATIC */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--amber);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--amber);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--amber-glow);border:1px solid var(--amber-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--amber);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img .img-missing-msg{display:none !important;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+.img-display-block{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-display-block img.zoomed{max-width:100% !important;cursor:zoom-out;}
+.img-display-block .img-missing-msg{display:none !important;}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--amber);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:#1c1204;color:#fbbf24;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{background:#3d2e08;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--amber);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#1c1204;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
+.mod-nav-hub:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:#1c1204;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#fbbf24;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#c0a060;line-height:1.6;}
+.sidebar-pdf{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-decoration:none;color:var(--text);margin-bottom:8px;transition:border-color 0.15s,background 0.15s;}
+.sidebar-pdf:hover{border-color:var(--amber);background:var(--amber-glow);}
+.sidebar-pdf-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--amber);margin-bottom:2px;}
+.sidebar-pdf-title{font-size:12px;font-weight:600;line-height:1.35;color:var(--text);}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../digital-delivery-consultant-hub.html">Digital Delivery Consultant</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-302-hub.html">EDU-302</a>
+      <span class="breadcrumb-sep">›</span>
+      Platform Services
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Section 5 · EDU-302</div>
+    <h1>Platform <em>Services</em></h1>
+    <p>Policy design, SSL inspection at scale, log streaming + SIEM choice, ZPA timeout policies, specialised policies (Browser Access, Double Encryption, Machine Authentication), and Private Service Edge deployment — the layer that turns Zscaler from "connected" to "behaving exactly as the customer expects".</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Policy is where the platform <em>becomes the customer's</em>.</div>
+  <p class="motivation-sub">Connectivity gets traffic to Zscaler. Identity proves who's behind the traffic. Platform Services is where the customer's actual security intent gets encoded — SSL inspection scope, log retention strategy, timeout tolerances, specialised access for edge cases. Get this layer wrong and the rest of the deployment doesn't matter.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-recap',this)">Recap</button>
+  <button class="nav-tab" onclick="navTo('section-policy-design',this)">Policy Design</button>
+  <button class="nav-tab" onclick="navTo('section-ssl',this)">SSL Inspection</button>
+  <button class="nav-tab" onclick="navTo('section-logging',this)">Logging &amp; SIEM</button>
+  <button class="nav-tab" onclick="navTo('section-timeouts',this)">Timeout Policies</button>
+  <button class="nav-tab" onclick="navTo('section-specialized',this)">Specialised Policies</button>
+  <button class="nav-tab" onclick="navTo('section-pse',this)">Private Service Edge</button>
+  <button class="nav-tab" onclick="navTo('section-recap-final',this)">Recap</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · OVERVIEW</span></div>
+    <p class="socratic-insight">Platform Services covers four distinct topics — Policy Types, SSL Logging &amp; Analytics, Timeout Policies, Specialised Policies — that look unrelated on the surface. Before reading on, think about what connects them: each one encodes a different kind of customer intent into the platform.</p>
+    <ul class="socratic-questions">
+      <li>SSL inspection, log retention, timeout values, and specialised policies all share one property — every customer wants a different answer. Why is "the right answer" so customer-specific in this section compared to, say, identity (where SAML+SCIM is the recommended default for almost everyone)?</li>
+      <li>The course has 8 learning outcomes spread across 18 lessons. Which outcome do you suspect produces the most customer-escalations after deployment, and why?</li>
+      <li>If a customer's compliance team mandates "log everything for 7 years" and their IT team budgets for 90 days of storage, what's the consultant's job in that workshop?</li>
+    </ul>
+    <div class="answer-area" data-section="overview">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Because each customer's <em>risk tolerance</em> and <em>regulatory shape</em> are different. SSL inspection on a financial-services customer is non-negotiable; on a healthcare customer it's deeply constrained by patient data law. Identity has a universal recommendation because the protocol is universally good; policy has no universal recommendation because the business context decides what's right.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Timeout Policies (Authentication and Idle Connection). The default values almost never match what the customer actually wants — users get logged out mid-meeting, or sessions linger too long after a stolen laptop. It's not a security feature most engagements discuss at design time, but it's a user-experience feature every help desk hears about Week 1.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Bring the two teams to the same conversation. Surface the actual numbers (storage cost per day per gigabyte, cost of a breach with missing logs) and let them negotiate against a shared framework. The DC's job isn't to pick — it's to make the trade-off visible enough that the customer can pick well. Suggest hybrid: shorter retention in Zscaler, long-tail archive in customer SIEM via NSS feeds.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-overview">
+    <div class="section-label">COURSE OVERVIEW</div>
+    <h2>Welcome to Platform Services</h2>
+    <p>This course provides a comprehensive understanding of Zscaler Policy Design, focusing on configuring and optimising policies for secure network environments. We'll equip professionals with the skills needed to design and implement policies that enhance security within a Zero Trust framework. The course is divided into <strong>four main sections</strong>:</p>
+
+    <div class="policy-grid">
+      <div class="policy-card">
+        <div class="policy-card-title">1 · Policy Types</div>
+        <div class="policy-card-body">Critical aspects of policy design and implementation in Zscaler, including the types of policies in ZPA, SSL Inspection benefits, and customer-specific scenarios for seamless and secure access control.</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-card-title">2 · SSL Logging &amp; Analytics</div>
+        <div class="policy-card-body">Analyse Zscaler's logging and analytics options — the use of SIEM systems, log streaming methods, and how to calculate storage needs for log data.</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-card-title">3 · Timeout Policies</div>
+        <div class="policy-card-body">Review how timeout policies for Authentication and Idle Connections in ZPA can be customised for different application segments and deployment scenarios.</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-card-title">4 · Specialised Policies</div>
+        <div class="policy-card-body">Advanced configurations for enhancing Zero Trust — Browser Access, Client Forwarding Policy, Double Encryption, and Machine Authentication, with real-world use cases and recommendations.</div>
+      </div>
+    </div>
+
+    <h3>Eight learning outcomes</h3>
+    <ul class="content-list">
+      <li><strong>Design</strong> effective Zscaler policies for diverse organisational needs</li>
+      <li><strong>Implement</strong> SSL Inspection and Global Control Policies for secure deployments</li>
+      <li><strong>Calculate</strong> the storage requirements for logs in a Zscaler environment</li>
+      <li><strong>Evaluate</strong> the differences between on-premise and cloud-based SIEM solutions</li>
+      <li><strong>Define</strong> the considerations for configuring Authentication and Idle Connection Timeout Policies in ZPA</li>
+      <li><strong>Analyse</strong> use case scenarios to configure Timeout Policies for specific applications</li>
+      <li><strong>Recommend</strong> the ZPA policy configurations to address security needs</li>
+      <li><strong>Evaluate</strong> the deployment steps for Zscaler's Private Service Edge</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">4 main sections · 8 learning outcomes · 18 lessons. Verbs to recognise: <strong>Design / Implement / Calculate / Evaluate / Define / Analyse / Recommend</strong>. The verb mix is heavier on judgement (Design, Evaluate, Recommend) than skill (Implement) — this is a section about <em>making decisions</em>, not pushing buttons.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Platform Services is the <em>interior design</em> of a custom-built house. Connectivity laid the pipes, identity hung the locks — but Platform Services decides where the walls go, what's frosted glass vs clear, how long the hallway lights stay on after someone walks through, and which rooms only specific family members can enter. Same blueprint, infinite customer-specific finishes.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an interior designer customising the inside of a built house as an analogy for Platform Services policy design. Wide composition with a cutaway view of a cheerful suburban house — the walls and roof are clearly already built (representing connectivity + identity already done). Inside, a friendly interior designer in casual smart attire stands with a large fabric swatch book and a clipboard, gesturing at different rooms. Each room has a different stage of customisation visible: one room has frosted-glass partitions being installed (SSL inspection), another has a small camera with a time-clock (timeout policy), a third has a keyholder labelling specific keys (specialised policies), and a fourth room has filing cabinets being arranged with little log icons (logging). Outside the front door, a moving van sits waiting with rolled-up rugs and lampshades labelled with tiny policy icons. Warm interior light, cheerful round-faced characters. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div class="section-block" id="section-recap">
+    <div class="section-label">QUICK RECAP</div>
+    <h2>Recap from EDU-200 + EDU-202</h2>
+
+    <h3>From EDU-200 Administrator</h3>
+    <ul class="content-list">
+      <li><strong>Platform Services Overview</strong> — Zscaler's Platform Services, fundamental functionalities, and the capabilities that enable effective policy enforcement and broader Zero Trust deployment</li>
+      <li><strong>Zscaler's Platform Services</strong> — the critical role of devices in enabling effective policy controls, including assessing security measures and components such as <strong>Domain Join</strong> status and the <strong>CrowdStrike ZTA</strong> score</li>
+    </ul>
+
+    <h3>From EDU-202 Engineer</h3>
+    <ul class="content-list">
+      <li><strong>Policy Framework</strong> — implemented the policies accessible within the Zscaler Internet Access, Zscaler Private Access, and Zscaler Digital Experience Administrator portals</li>
+      <li><strong>Zscaler Private Service Edges</strong> — how the two types of ZPA Private Service Edges work, which facilitates secure access to private applications through unique features and best practices for deployment</li>
+      <li><strong>Analytics &amp; Reporting</strong> — the key roles in transaction logging, analytics, ensuring data security, audit policy controls, and Zscaler Digital Experience, which offers organisations control over traffic routing while maintaining security</li>
+      <li><strong>Traffic Forwarding: Source IP Anchoring (SIPA)</strong> — allows administrators to manage their traffic's source IP address while using Zscaler's secure services through Private Service Edges</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">EDU-200 taught platform <em>basics</em> (overview + device-aware policy). EDU-202 went deeper into the policy framework, Private Service Edges (two types), analytics and SIPA. EDU-302 builds on both to produce <strong>customer-specific recommendations under deployment pressure</strong>.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap','Recap')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap"></span></div></div>
+    </div>
+  </div>
+
+  <!-- POLICY DESIGN -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · POLICY DESIGN</span></div>
+    <p class="socratic-insight">Policy design starts with understanding the customer's <em>intent</em> — not their <em>requested configuration</em>. Customers often arrive with "we need to block these 200 sites"; the DC's job is to translate that into the right Zscaler policy structure, often with fewer, smarter rules.</p>
+    <ul class="socratic-questions">
+      <li>Safemarch Corp wants to prevent users from accessing any website except specifically sanctioned sites. The course says this requires <strong>at minimum three policies</strong>. Why three? What does each one do?</li>
+      <li>ZPA has multiple policy types working in tandem. Why split them into multiple types rather than one unified "ZPA Policy" with every option in one place?</li>
+      <li>The course says policy is "an opportunity to help the organisation simplify their policies, possibly lowering the total number of policies by removing those that are unnecessary". Why is fewer-policies usually better, even if more policies seems more granular?</li>
+    </ul>
+    <div class="answer-area" data-section="policy-design">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">(1) An SSL Inspection policy following the recommended baseline — without inspection you can't see the URL inside the HTTPS to make filtering decisions. (2) A URL Filtering policy with all categories selected and a Deny action — the "default deny" backstop. (3) A higher-ranked URL Filtering policy with an Allow action for the specific sanctioned URLs/categories — so the explicit allow-list fires before the deny-all. Order matters: most-specific allow rules above the deny-all.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Separation of concerns. Access Policies decide "who can reach what", Timeout Policies decide "how long the session lives", Client Forwarding Policies decide "how it gets there", Inspection Policies decide "what gets looked at on the way". A single mega-policy would entangle these and make troubleshooting hopeless. Each policy type also runs at a different evaluation point in the request lifecycle — separating them by type makes the order explicit.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Every policy is a permanent operational cost — someone has to remember it exists, test it during change windows, and understand it during incidents. Many small overlapping policies create silent drift; one well-thought-out policy is auditable. Customers often arrive with hundreds of legacy firewall rules; the cleanup opportunity is the consultant's chance to leave them better than they were found.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-policy-design">
+    <div class="section-label">POLICY DESIGN</div>
+    <h2>Why Policy Design matters — and how to approach it</h2>
+    <p>Policy is at the heart of Zscaler and with that, you must make sure to start with configuring and enabling what will be the baseline policies of the Zscaler implementation. These are the general policies that will affect the greatest number of users across the organisation. More granular or fine-tuned policies can be created as a more comprehensive understanding of the business needs becomes clear.</p>
+
+    <div class="key-concept">
+      <strong>Two starting principles:</strong>
+      <br>· If the customer is replacing an existing solution, use this opportunity to help the organisation simplify their policies, possibly lowering the total number of policies by removing the ones that are unnecessary. There will be policies in use that should be in the Zscaler environment.
+      <br>· It's common to find that new use up a policy in the previous solution is not how you would want to do it in Zscaler.
+      <br>· <strong>As an example</strong>, a policy that was previously managed through a URL filtering rule to block a site would be better accomplished by using a Cloud Application Control Policy in Zscaler. Make sure that you understand what the <em>intent</em> of the policy is so that you can create the correct outcome in Zscaler.
+    </div>
+
+    <h3>ZPA Policy types</h3>
+    <p>Policies in ZPA are the glue that binds applications and conditional access to their intended users. They are the bridge that connects users to applications while ensuring the criteria and security posture required by the business are met. There are <strong>four different types of policies in ZPA</strong> that work in tandem to provide seamless, secure, and criteria-based controlled access to applications for targeted users.</p>
+
+    <div class="policy-grid">
+      <div class="policy-card"><div class="policy-card-title">Access Policy</div><div class="policy-card-body">The primary "who gets to reach what" rule set. References identity + posture + application segments.</div></div>
+      <div class="policy-card"><div class="policy-card-title">Timeout Policy</div><div class="policy-card-body">Authentication + Idle Connection — how long a user's session lasts before re-auth or disconnect.</div></div>
+      <div class="policy-card"><div class="policy-card-title">Client Forwarding Policy</div><div class="policy-card-body">Whether ZCC forwards a user's traffic for a given app segment via ZPA or sends it elsewhere.</div></div>
+      <div class="policy-card"><div class="policy-card-title">Specialised Policies</div><div class="policy-card-body">Browser Access, Double Encryption, Machine Authentication — narrower-scope policies for specific scenarios.</div></div>
+    </div>
+
+    <h3>Safemarch Corp scenario — Policy Design walkthrough</h3>
+    <div class="callout callout-info">
+      <div class="callout-header"><div class="callout-icon">i</div>SCENARIO</div>
+      <div class="callout-body"><strong>Safemarch Corp must prevent users from accessing any website except specifically sanctioned sites.</strong> Three policies, in order:
+        <br><strong>1.</strong> Enable SSL inspection following the recommended policy (so the URL is visible inside HTTPS).
+        <br><strong>2.</strong> A URL policy with all categories selected and a <strong>Deny</strong> action (the default-deny backstop).
+        <br><strong>3.</strong> A higher-ranked URL policy with an <strong>Allow</strong> action for the specific sanctioned URLs.
+        <br><em>Alternative:</em> use a Cloud Application Control policy to allow the cloud application and the URL policy to block any remaining applications.
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Policy design starts with <strong>intent, not configuration</strong>. ZPA has 4 policy types: <strong>Access · Timeout · Client Forwarding · Specialised</strong>. The default-deny + targeted-allow pattern is the canonical answer to "block everything except X". Re-platforming = opportunity to <em>reduce</em> policy count, not preserve it.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Policy design is like writing house rules for a new home. The old house had 47 sticky notes on the fridge, half contradictory, none enforced. Moving in is the chance to write five clear rules everyone understands and enforces, instead of copying all 47 sticky notes word-for-word to the new fridge. The job isn't "what rules did the last family have" — it's "what does this family actually need to function safely?"</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of moving into a new house and rewriting the family rules as an analogy for policy design. Wide composition split into two halves. Left half (old house, chaotic): a cluttered refrigerator covered in 47 sticky notes of various colours, all overlapping, some torn, some with crossed-out text, some contradicting each other ("no shoes inside"... "shoes okay in kitchen"). Family members look confused. Right half (new house, fresh start): a clean kitchen with a single neat whiteboard on the wall showing five clean numbered rules in friendly handwriting. The same family is gathered around it nodding. A removalist with a cardboard box in the background is throwing the old sticky notes into a recycling bin labelled with a small infinity loop. Warm domestic lighting, cheerful round-faced characters, plants in the corner. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-policy-design" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('policy-design','Policy Design')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-policy-design" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-policy-design"></span></div></div>
+    </div>
+  </div>
+
+  <!-- SSL INSPECTION -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · SSL INSPECTION</span></div>
+    <p class="socratic-insight">SSL inspection breaks the encryption between user and server so Zscaler can see, classify, and apply policy to traffic — then re-encrypts on the way out. It's the most powerful policy primitive in ZIA, and also the most likely to cause user-visible failures during rollout.</p>
+    <ul class="socratic-questions">
+      <li>Why do most SSL inspection rollouts use a <strong>three-phase</strong> approach (exception list → IT department only → org-wide) rather than just enabling it globally on Day 1?</li>
+      <li>The predefined "Zscaler Recommended Exemptions" rule skips inspection of certain sites. Why does Zscaler ship pre-built exemptions rather than letting the customer build their own from scratch?</li>
+      <li>If a customer asks "should we inspect everything?", what's the consultant's reflexive question back?</li>
+    </ul>
+    <div class="answer-area" data-section="ssl">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Because SSL inspection breaks any application that uses certificate pinning, mutual TLS, or proprietary TLS handshakes — and you can't predict in advance which apps in the customer's environment do this. A staged rollout lets the IT team identify and exempt these apps using their own usage patterns, before exposing the full user base to the risk. Day 1 global enablement means thousands of help-desk tickets simultaneously.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Because Zscaler has telemetry across thousands of customers and knows which categories of sites (banking, government, certificate-pinned mobile apps, healthcare portals) reliably break under inspection — and either are sensitive enough that customers shouldn't be inspecting them anyway. The pre-built exemption list is institutional knowledge encoded as default config. The customer can still override, but starting from "Zscaler's exemptions" saves a year of trial and error.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">"What's your bypass strategy for cert-pinned and regulated traffic?" Because "inspect everything" without an exemption strategy creates broken apps within hours. The reflexive follow-up surfaces the operational plan; if the customer doesn't have one, the recommendation is the Zscaler-recommended baseline + IT review.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-ssl">
+    <div class="section-label">SSL INSPECTION</div>
+    <h2>SSL Inspection at scale</h2>
+    <p>SSL inspection lets Zscaler decrypt, classify, and policy-apply HTTPS traffic — making URL filtering, file-type control, sandboxing, and DLP work at all. <strong>Without inspection, most ZIA policy operates blind.</strong> But inspection is also where pilot deployments most often break, so it gets its own dedicated design discussion.</p>
+
+    <h3>Predefined rules for SSL</h3>
+    <p>Zscaler ships a set of predefined SSL inspection rules out of the box. The table below outlines the rules, their associated policies, default actions, and maintenance information.</p>
+
+    <table class="rule-table">
+      <thead><tr><th>Predefined Rule</th><th>Policy Info</th><th>Default Action</th><th>Maintained By</th></tr></thead>
+      <tbody>
+        <tr><td>Smart Isolation One Click Rule</td><td>Isolate Suspicious Domains</td><td>Isolate</td><td>Maintained by Zscaler but needs supported Isolate license</td></tr>
+        <tr><td>Zscaler Recommended Exemptions</td><td>Skip cert pin and Mobile devices apps</td><td>Do Not Inspect</td><td>Maintained by Zscaler and Default available for SSL Rule</td></tr>
+        <tr><td>UCaaS One Click Rule</td><td>Do not inspect UCaaS Services</td><td>Do Not Inspect</td><td>Zscaler but Opt-in by Admin for Firewall policy</td></tr>
+        <tr><td>Office 365 One Click Rule</td><td>Do not inspect Office 365 Applications</td><td>Do Not Inspect</td><td>Zscaler but Opt-in by Admin for Firewall policy</td></tr>
+        <tr><td>Default SSL Inspection Rule</td><td>This Policy is good after adding inspect policy above it</td><td>Do Not Inspect</td><td>No maintenance needed and default available for SSL Rule</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Three-phase rollout — the canonical approach</h3>
+    <div class="phase-steps">
+      <div class="phase-step">
+        <div class="phase-num">1</div>
+        <div class="phase-body">
+          <div class="phase-title">Phase 1 — Build the exception list</div>
+          <div class="phase-text">Include the technical team members from the project team and set up an exception list of categories that should not be running SSL Inspection on. Use the Zscaler Recommended Exemptions as the starting baseline.</div>
+        </div>
+      </div>
+      <div class="phase-step">
+        <div class="phase-num">2</div>
+        <div class="phase-body">
+          <div class="phase-title">Phase 2 — IT department only</div>
+          <div class="phase-text">Enable inspection scoped to the IT department first. They will hit application-pinning issues earliest and have the technical capability to identify, exempt, and document problem apps before broader rollout.</div>
+        </div>
+      </div>
+      <div class="phase-step">
+        <div class="phase-num">3</div>
+        <div class="phase-body">
+          <div class="phase-title">Phase 3 — Roll out to the rest of the organisation</div>
+          <div class="phase-text">With the exception list refined and IT-verified, enable inspection for the wider user base. Maintain the comms plan + escalation path during the cutover window.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Deployment scenarios — HTTPS Traffic from Known Locations vs Remote Users</h3>
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">i</div>WHERE THE TRAFFIC IS COMING FROM MATTERS</div>
+      <div class="callout-body">When an organisation's traffic is forwarded from a known location (an internet gateway configured in the Admin Portal), the Zscaler service applies <strong>URL Filtering</strong> and <strong>Cloud App Control</strong> policies as described below, depending on whether user authentication is enabled.
+        <br>· <strong>Authentication Enabled:</strong> the service applies location-based policies, granular URL + Cloud App Control rules at the user level.
+        <br>· <strong>Authentication Disabled:</strong> the service applies location-based URL + Cloud App Control policies. It cannot apply per-user policies because user authentication is disabled. Ensure that the appropriate location is specified in the Location setting of the URL and Cloud App Control policies.
+      </div>
+    </div>
+
+    <h3>Reference guide</h3>
+    <a class="pdf-ref" href="zia-ssl-inspection-leading-practices.html">
+      <div class="pdf-ref-icon">📄 PDF Reference</div>
+      <div class="pdf-ref-title">ZIA SSL Inspection Leading Practices Guide</div>
+      <div class="pdf-ref-body">Zscaler's official deep-dive guide on designing and operationalising SSL inspection at scale — exemption lists, cert pinning gotchas, recommended rollout sequencing, and troubleshooting. Use during Configure phase.</div>
+      <div class="pdf-ref-cta">Open reference →</div>
+    </a>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">SSL inspection = 3-phase rollout (exception list → IT only → org-wide). 5 predefined rules ship out of the box; Zscaler maintains the most critical ones. Default action across most predefined rules: <strong>Do Not Inspect</strong>. Authentication on/off changes whether per-user policies apply — known locations matter.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">SSL inspection is airport baggage X-ray. Most bags should be scanned (visibility), but diplomatic pouches (cert-pinned apps), medical samples (healthcare portals), and sealed evidence (banking/legal) get waved through — not because they're trusted, but because opening them creates more problems than it solves. The phased rollout is testing the X-ray on staff luggage first before pointing it at the public — staff complain quickly and quietly; the public complains slowly and loudly.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an airport baggage X-ray scanner with category-based exemptions as an analogy for SSL inspection. Wide composition at a friendly airport security checkpoint. Centre: a glowing X-ray scanner with a conveyor belt full of regular suitcases being scanned and waved through. On the side conveyor, three categories of sealed parcels bypass the scanner via a dedicated "bypass" lane: a small diplomatic pouch with a wax seal, a medical-sample box with a red cross, and a sealed evidence bag with a chain-of-custody tag. A cheerful security officer with a clipboard ticks off each bypass category. Background: a small group of staff badges queued up at a separate scanner being tested first (representing the phase-2 IT-only rollout). Warm bright airport lighting, mood of careful efficiency. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-ssl" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('ssl','SSL Inspection')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-ssl" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-ssl"></span></div></div>
+    </div>
+  </div>
+
+  <!-- LOGGING & SIEM -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · LOGGING &amp; SIEM</span></div>
+    <p class="socratic-insight">Logs are the audit trail of a Zscaler deployment. Storage is finite; logs grow continuously. The customer's choice of on-prem vs cloud SIEM, retention period, and log scope decides whether they can answer "what happened on this date last year" with confidence — or shrug.</p>
+    <ul class="socratic-questions">
+      <li>The course gives a worked example: <strong>500 users transacting at 1,000/hr</strong> for 100 hours per user generates <strong>≈1.2 GB per hour</strong>, or <strong>30 MB per 100 transactions</strong>. Why is storage planning such a load-bearing conversation at design time rather than something IT can "size later"?</li>
+      <li>What separates the right customer for an <strong>on-prem NSS</strong> from the right customer for a <strong>Cloud NSS</strong>?</li>
+      <li>If a customer's compliance requirement is "keep logs for 7 years", what's the realistic Zscaler architecture for that?</li>
+    </ul>
+    <div class="answer-area" data-section="logging">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Because the SIEM choice, the storage tier, and the network egress all need to be sized to match — and changing any of those mid-deployment is operationally invasive. Underestimate by 50% and the customer hits storage walls in Month 3; overestimate by 200% and Procurement asks why they paid for capacity that's empty. Design-time sizing is the difference between a smooth rollout and an emergency capacity-add four months in.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">On-prem NSS fits customers who already run their SIEM on a VM (Splunk, QELM, IBM QRadar, Securonix, ArcSight) and have free capacity for the NSS feed. Cloud NSS fits customers without on-prem SIEM infrastructure who want to subscribe to a Cloud-to-Cloud SIEM (Cloud NSS via APIs). The defining question: "where does your SIEM live today?" — answer that, and the choice picks itself.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Hybrid retention. Keep ~30-90 days hot in Zscaler for fast queries and operational use, stream everything to the customer's SIEM (or a Cloud-to-Cloud archive via NSS), and rely on the customer's existing 7-year archival for compliance. Zscaler isn't a long-term archive; it's a real-time analytics platform with bridge connectors to the customer's archival system.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-logging">
+    <div class="section-label">LOGGING &amp; SIEM</div>
+    <h2>Log storage, NSS feeds, and SIEM choice</h2>
+    <p>Zscaler stores all logs of all transactions to and from the cloud — but Zscaler isn't designed to be the customer's long-term archive. Logs flow out to the customer's SIEM via <strong>Nanolog Streaming Service (NSS)</strong>, which comes in two flavours: on-prem and cloud.</p>
+
+    <h3>On-Premise vs Cloud-Based SIEM</h3>
+    <div class="siem-grid">
+      <div class="siem-card">
+        <div class="siem-card-title">On-Site NSS</div>
+        <div class="siem-card-body">For customers that host their SIEM on site, you will use a virtual machine (VM) as a means to stream the logs to the solution. NSS can be deployed on multiple platforms including vSphere, Amazon Web Services (AWS), or Azure, and requires minimal administration once setup.<br>
+          <strong>Feeds output</strong>:
+          <ul><li>Web traffic = CSV, straight key/value, LogRhythm, Microsoft Cloud App Security, QRadar, RSA Security Analytics, Splunk, Symantec, or Custom</li><li>NSS for Firewall feeds can be formatted to output as CSV, JSON, Name Value Pairs, Tab-Separated, or Custom</li></ul>
+        </div>
+      </div>
+      <div class="siem-card">
+        <div class="siem-card-title">Cloud-Based SIEM</div>
+        <div class="siem-card-body">An organisation can subscribe to use Cloud to Cloud log streaming (Cloud NSS). This means that instead of deploying an on-premises VM, you can configure a feed that will leverage Application Programming Interface (API) calls to push logs from the Zscaler Cloud Platform service into a log collection on the SIEM.
+          <br>You may need to consider the Cloud NSS feeds for each log type: Web, Tunnel, Firewall, and SaaS Security. This is a fast growing method of deployment and more customers are embracing it.
+        </div>
+      </div>
+    </div>
+
+    <h3>Storage calculation — Safemarch worked example</h3>
+    <p>The recommended amount of storage needed for the logs is <strong>30 MB</strong>, but how do you calculate the storage needed?</p>
+
+    <div class="callout callout-info">
+      <div class="callout-header"><div class="callout-icon">i</div>SAFEMARCH ASSUMPTIONS</div>
+      <div class="callout-body">As an example, Safemarch Corp has <strong>500 users</strong>, each user transacts at a rate of <strong>1,000 transactions per hour</strong>, and the user is using the application for approximately <strong>100 hours per user per work day</strong>. The size of a single transaction is approximately <strong>30 MB</strong>, and the number of types of logs is approximately <strong>3</strong>.
+        <br><strong>1,000 users × 100 transactions/hour × 4 Mbps × 5 types of logs</strong> = <strong>1.2 GB per hour for 1000 users at 100 transactions per hour.</strong>
+      </div>
+    </div>
+
+    <div class="equation-block">
+      <strong>Storage Needed = 24 Hours × 365 Days × 10.5 TB (storage needed/year)</strong>
+      <br>· Before we're finished, we have to account for the peaks and add some fudge factors.
+      <br>· Fudge factors are added because the assumptions made are usually conservative, such as 24x7 work patterns at 4 Mbps, which is rare in business.
+      <br>· Also, we are making an assumption of 100 transactions per user per hour, which can also be a varied operation. <strong>30%</strong> seems to be the suitable fudge factor for what comes through.
+    </div>
+
+    <div class="equation-block">
+      <strong>Storage Needed/Year × Capacity for Spikes × Fudge Factor for Block Size Alignment = Storage Needed</strong>
+      <br>10.5 TB × 1.3 (30% more capacity) × 1.3 (20% fudge factor) = <strong>18.9 TB</strong>
+      <br>Round up to 20 TB to be cautious. The calculations bring us to <strong>20 TB of storage for logs for 1,000 users at 100 transactions per user per hour for a year.</strong>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">NSS = Nanolog Streaming Service. Two flavours: <strong>On-Prem NSS</strong> (VM, on-site SIEM) and <strong>Cloud NSS</strong> (API push, Cloud-to-Cloud SIEM). Storage rule of thumb: <strong>~1.2 GB/hr per 1,000 users at 100 tps</strong>. Always add 30% fudge factor + block-alignment buffer = roughly 1.7x raw. Compliance-grade retention belongs in the customer's SIEM, not Zscaler.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Zscaler logs are like CCTV footage in a busy retail store. Every camera records continuously, and the security office (Zscaler) has enough storage for the last 90 days. For year-old footage you go to the off-site archive (the customer's SIEM). NSS is the courier service that moves the footage from the store to the archive — on-prem NSS is a van that drives to a local warehouse, Cloud NSS is a fibre-optic upload to a cloud archive. Same purpose, different vehicle.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a retail store CCTV archive system as an analogy for Zscaler logging and SIEM. Wide composition. Left: the storefront with multiple cameras visible on the ceiling, a friendly security guard at a desk watching live feeds on small monitors (Zscaler's hot 30–90 day storage). Middle: two parallel pickup options for the footage — a local courier van pulling up to a side door with a stack of physical tape boxes (on-prem NSS van labelled with a small VM icon), and a glowing fibre-optic cable rising up to a distant cloud-shaped warehouse in the sky (Cloud NSS). Right: a large off-site warehouse archive room with rows of dated boxes, each labelled with a tiny year tag (long-term SIEM retention). Mood of organised continuity. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-logging" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('logging','Logging &amp; SIEM')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-logging" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-logging"></span></div></div>
+    </div>
+  </div>
+
+  <!-- TIMEOUT POLICIES -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · TIMEOUT POLICIES</span></div>
+    <p class="socratic-insight">ZPA has two timeout policy types: <strong>Authentication Timeout</strong> and <strong>Idle Connection Timeout</strong>. They feel similar but solve different problems. Authentication = "when does the user have to log in again". Idle = "when does the connection get dropped because nothing's happening on it".</p>
+    <ul class="socratic-questions">
+      <li>The Safemarch case study describes users hitting frequent timeout messages on a DFS filesystem, and the workaround being "log out and back into Zscaler Client Connector". What does this tell you about which timeout policy is misconfigured?</li>
+      <li>If a customer's application has a known long idle pattern (e.g. a finance app that polls every 4 hours), what's the correct way to handle it — and what's the wrong way?</li>
+      <li>The recommendations say "Timeout Policies can specify users and Segment Groups that the rule applies to". Why is per-segment-group scoping better than a single org-wide timeout?</li>
+    </ul>
+    <div class="answer-area" data-section="timeouts">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">It's the Idle Connection Timeout that's misconfigured (too aggressive). The DFS filesystem session is going idle between user reads, the platform drops it, and the next read fails. Logging out and back in resets the session — a workaround, not a fix. The fix is a per-application-segment Idle Connection policy that increases the idle window for the DFS segment specifically.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Correct: a Timeout Policy scoped to the Application Segment for that finance app, with an Idle Connection window longer than the polling interval (so a 4-hour idle would need 5-6 hours of headroom). Wrong: raising the org-wide default timeout to 5 hours, which leaves every other application's sessions open far longer than needed and weakens the security posture for everyone.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Different applications have wildly different idle patterns and security profiles. A wildcard FQDN app might need long idles; a sensitive finance app should expire quickly. Per-segment scoping lets you tune each policy to its application's real behaviour. An org-wide timeout forces you to pick a value that's wrong for someone — either too short (UX pain) or too long (security risk).</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-timeouts">
+    <div class="section-label">TIMEOUT POLICIES</div>
+    <h2>Authentication + Idle Connection Timeouts in ZPA</h2>
+    <p>Authentication and Idle Connection Timeouts should be based on the sensitivity of the Application Segment. Apply frequent Authentication and Idle Timeouts on highly sensitive or third-party accessed applications.</p>
+    <p>Some applications will be negatively affected by an Authentication Timeout appearing to be a problem with the application. Use end-user feedback and the ZPA logs to understand if the Timeout Policies should be adjusted to satisfy application requirements.</p>
+
+    <h3>Authentication vs Idle Connection — recommendations &amp; considerations</h3>
+    <div class="policy-grid">
+      <div class="policy-card">
+        <div class="policy-card-title">Authentication Considerations</div>
+        <div class="policy-card-body">
+          <ul style="margin-top:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li>· Timeout Policies can specify users and Segment Groups that the rule applies to. These policies provide flexibility to enforce strict, short-term values for highly sensitive Application Segments or rights when providing long-term connectivity for applications that might need it</li>
+            <li>· When a user re-authenticates in any Application Segment, ZPA will get a new SAML assertion token causing the application timer to reset to start over</li>
+            <li>· If the IdP is defined as an application in a Client Forwarding policy, this means in turn the user will need a way to re-authenticate</li>
+          </ul>
+        </div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-card-title">Idle Connection Considerations</div>
+        <div class="policy-card-body">
+          <ul style="margin-top:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li>· If the IdP domain includes an application discovery policy, you must bypass the IdP to prevent authentication failures</li>
+            <li>· Because re-authentication settings are based on a Segment Group and not on the individual application, when a user is active in an application within that segment, considers that case to be active in all the segment</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3>The Safemarch DFS scenario</h3>
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>USE CASE — IDLE CONNECTION TIMEOUTS</div>
+      <div class="callout-body">After the initial configuration of Wildcard FQDN access to private applications, Safemarch is reporting frequent issues with access to the DFS filesystems that the organisation uses. They are seeing several Timeout Policy messages when reviewing Diagnostics in the ZPA Admin Portal.
+        <br><br>Safemarch reviewed the configuration of the Application Segments and Access Policies to confirm they are correct. Users are reporting that the way that they have been able to work around the issue is to <strong>log out and back into the Zscaler Client Connector</strong>.
+        <br><br>Safemarch is requesting you, as the Deployment Specialist, to fix this issue and for an explanation for what they are observing in the logs. <strong>The fix:</strong> per-segment-group Idle Connection Timeout policy increase, scoped to the DFS application segment.
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">2 timeout types: <strong>Authentication</strong> (when re-login is required) + <strong>Idle Connection</strong> (when an idle session is dropped). Scope per Segment Group, not org-wide. Sensitive apps = short timeouts; long-polling apps = longer Idle Timeouts. "Log out and back in" workaround = your idle timeout is too aggressive for that segment.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Timeout Policies are like the auto-lock on different rooms in a building. The board room (highly sensitive app) locks after 5 minutes of no movement. The break room (general intranet) locks after an hour. The night-cleaner's supply closet (long-polling background app) shouldn't lock at all during their shift. One blanket timer for every door is either annoyingly short for the cleaner or recklessly long for the board room.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of different rooms in an office building each having its own auto-lock timer as an analogy for per-segment timeout policies. Wide composition cutaway view of a multi-room office building. Three distinct rooms visible side by side: a polished boardroom with a glowing 5-minute clock above its door (sensitive app, short timeout), a casual break room with a 1-hour clock (general intranet, medium timeout), and a quiet supply closet with the cleaner inside happily restocking shelves under a clock with no timer at all (long-polling app, no idle timeout). A confused building manager in the corridor compares notes on a clipboard. Warm interior lighting, cheerful round-faced characters, plush carpet. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-timeouts" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('timeouts','Timeout Policies')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-timeouts" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-timeouts"></span></div></div>
+    </div>
+  </div>
+
+  <!-- SPECIALIZED POLICIES -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · SPECIALISED POLICIES</span></div>
+    <p class="socratic-insight">Four specialised policies sit alongside the core Access policy: <strong>Browser Access · Client Forwarding · Double Encryption · Machine Authentication</strong>. Each exists because one customer somewhere had a problem the core policy alone couldn't solve.</p>
+    <ul class="socratic-questions">
+      <li>Client Forwarding Policy has three actions: Forward, Only Forward Allowed Applications, and Bypass. When would a consultant recommend <strong>Bypass</strong> for an application segment — and what's the security tradeoff?</li>
+      <li>Double Encryption is recommended when a customer has "an internal web app that does not use SSL" in a geopolitically sensitive location. Why is wrapping non-SSL in Zscaler's tunnel not sufficient by itself — what extra encryption are we adding?</li>
+      <li>Machine Authentication uses Machine Groups + Machine Provisioning Keys + Machine Tunnels so Windows can connect to ZPA before the user logs in. What customer scenario actually <em>requires</em> pre-login ZPA — and why not just have users log in faster?</li>
+    </ul>
+    <div class="answer-area" data-section="specialized">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">When the application is internet-facing and doesn't benefit from ZPA brokerage — e.g. a public SaaS service the customer wants users to reach directly. The tradeoff is that you lose ZPA's identity-aware enforcement and posture checks for that segment. Use Bypass sparingly and document each instance; it's a permission slip to opt out of zero-trust for a specific app, and every one weakens the overall posture by exactly that amount.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Zscaler's outer tunnel encrypts traffic between the user device and the App Connector. But once inside the customer's data centre, the App Connector talks to the web app — and that hop is plaintext if the web app doesn't use SSL. Double Encryption wraps a second TLS layer that extends end-to-end through the App Connector to the application server (or as close as the app supports). In sensitive locations, plaintext inside the data centre is still a leakage risk.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">Active Directory password changes at the CTRL+ALT+DEL screen — before the user is logged in. The machine needs to talk to a domain controller to validate the new password, but there's no user session yet for ZPA to authenticate. Machine Tunnels let the machine itself authenticate to ZPA pre-login so the AD password-change path works. Without it, customers with strict AD password policies have a permanent help-desk loop.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-specialized">
+    <div class="section-label">SPECIALISED POLICIES</div>
+    <h2>Browser Access · Client Forwarding · Double Encryption · Machine Authentication</h2>
+    <p>The specialised ZPA policies all have their own deployment patterns and use cases. With each deployment, these policies will become more specific to the use case and deployment need but will be <strong>consistent in "how" you should implement each</strong>.</p>
+
+    <h3>Client Forwarding Policy</h3>
+    <div class="callout callout-info">
+      <div class="callout-header"><div class="callout-icon">i</div>OVERVIEW</div>
+      <div class="callout-body">Client Forwarding Policy is commonly used but addresses specific circumstances. As a Deployment Specialist, you need to understand it well in order to use it as a solution. Client Forwarding Policy has 3 possible Actions:
+        <br>· <strong>Forward to ZPA:</strong> by default, Client Forwarding Policy is configured so that the Zscaler Client Connector receives all matched traffic for the Application Segments
+        <br>· <strong>Only Forward Allowed Applications:</strong> if a rule set to "Only Forward Allowed Applications" is applied to the user, the Zscaler Client Connector receives the list of applications that the user is permitted to access. This bypass action sends traffic for unauthenticated applications across the segment that is in the Application Segment
+        <br>· <strong>Bypass ZPA:</strong> the action is the opposite of "Forward to ZPA", allowing specific traffic to bypass ZPA. This bypass action is more flexible compared to configuring bypasses in the Application Segment
+      </div>
+    </div>
+
+    <h3>Double Encryption — Safemarch use case</h3>
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>USE CASE</div>
+      <div class="callout-body">Your customer Safemarch operates offices in various regions in the world. In a specific geolocation (<strong>Eastern Europe</strong>), there is a threat of war breaking out. Safemarch has an internal web application that does not use SSL. In order to ensure that the private application's data remains secure, Safemarch wants to know how they could encrypt the traffic.
+        <br><br><strong>Solution:</strong> This is a classic use case that calls for Double Encryption. Double Encryption will ensure that the web traffic stays within an encrypted tunnel from the user device to the App Connector. Here's how to configure double encryption:
+        <br>1. Follow the process for certification requirements and upload the certificates to the <strong>Administration → Certificates</strong> section of the ZPA Admin Portal
+        <br>2. Ensure that the Zscaler Client Connector and the App Connectors use these certificates
+        <br>3. The Application Segment has the <strong>Double Encryption</strong> option set to "Enabled"
+      </div>
+    </div>
+
+    <h3>Machine Authentication</h3>
+    <div class="callout callout-info">
+      <div class="callout-header"><div class="callout-icon">i</div>OVERVIEW</div>
+      <div class="callout-body">Leveraging the combination of <strong>Machine Groups, Machine Provisioning Keys, and Machine Tunnels</strong>, you can allow a user's Windows device to establish a connection to ZPA before logging into the Zscaler Client Connector, or even before Windows login.
+        <br>· <strong>Machine groups</strong> are a set of internal, local machines that need to connect to a ZPA application, such as Active Directory
+        <br>· <strong>Machine Provisioning Keys</strong> are used as an ID to the machine and enable the ZPA Cloud to verify the machine's authenticity
+        <br>· <strong>Machine Tunnels</strong> are configured from the Zscaler Client Connector
+        <br><br><strong>Recommendation:</strong> Machine Tunnels should be used in environments that use Active Directory joined devices, and users typically change passwords at the CTRL+ALT+DEL screen.
+      </div>
+    </div>
+
+    <h3>Browser Access</h3>
+    <p>Browser Access lets users reach private web applications without installing the Zscaler Client Connector — useful for unmanaged devices, contractors, and BYOD scenarios. Pair with strict MFA at the IdP and per-application access policies to maintain posture without the agent.</p>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">4 specialised ZPA policies: <strong>Browser Access</strong> (clientless access) · <strong>Client Forwarding</strong> (3 actions: Forward / Only Allowed / Bypass) · <strong>Double Encryption</strong> (end-to-end TLS for non-SSL apps in sensitive regions) · <strong>Machine Authentication</strong> (pre-user-login ZPA for AD password resets). Each one exists to unblock a specific customer scenario the core Access policy can't handle alone.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Specialised policies are like the special-case keys on a building manager's keyring. The master key (Access Policy) opens almost every door. But there's also a fire-warden key (Machine Auth — works even when the building's main power is down), a contractor day-pass (Browser Access — temporary, restricted), a tamper-proof envelope (Double Encryption — for documents that can't be read en route), and a routing override card (Client Forwarding Bypass — sends a delivery through a different entrance). You don't use them daily, but when you need them, nothing else works.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A6.png" alt="Analogy illustration A6" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A6.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a building manager's keyring with multiple specialised keys as an analogy for specialised ZPA policies. Wide composition. Centre: a large brass keyring being held up by a cheerful building manager in a smart vest. Four distinct specialised keys dangle from the ring next to a large master key in the middle. Each smaller key has a tiny symbol etched on its head: a fire-warden flame (Machine Authentication), a day-pass card icon (Browser Access), a wax-sealed envelope (Double Encryption), and a routing arrow (Client Forwarding Bypass). Behind the manager, a softly out-of-focus building shows different doors each labelled with one of the matching symbols. Warm interior lighting, cheerful round-faced characters, plush carpet. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-specialized" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('specialized','Specialised Policies')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-specialized" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-specialized"></span></div></div>
+    </div>
+  </div>
+
+  <!-- PRIVATE SERVICE EDGE -->
+  <div class="section-block" id="section-pse">
+    <div class="section-label">PRIVATE SERVICE EDGE</div>
+    <h2>Deploying a ZIA Private Service Edge</h2>
+    <p>Private Service Edges (PSEs) are dedicated ZIA edge nodes deployed inside the customer's environment — for customers who need sovereignty, performance, or latency guarantees the public Zscaler edge can't promise. PSE deployment follows an 8-step process.</p>
+
+    <div class="phase-steps">
+      <div class="phase-step"><div class="phase-num">1</div><div class="phase-body"><div class="phase-title">Engage Zscaler Support and Sizing</div><div class="phase-text">Open a support ticket to engage the Private Service Edge team. Provide expected throughput, location, redundancy targets, and use-case context so Zscaler can size correctly.</div></div></div>
+      <div class="phase-step"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">Site Preparation</div><div class="phase-text">Confirm rack space, power, cooling, network ports, and IP address allocation at the deployment site. Coordinate with the customer's data centre team.</div></div></div>
+      <div class="phase-step"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Install Private Service Edge</div><div class="phase-text">Upon receipt of the Private Service Edges from Zscaler, install them at the prepared site, cable per the topology, and power on.</div></div></div>
+      <div class="phase-step"><div class="phase-num">4</div><div class="phase-body"><div class="phase-title">Initial Configuration</div><div class="phase-text">Configure management IP, DNS, NTP, and SSH access. Validate basic connectivity to the Zscaler control plane.</div></div></div>
+      <div class="phase-step"><div class="phase-num">5</div><div class="phase-body"><div class="phase-title">Cluster Registration</div><div class="phase-text">Register the PSEs with the customer's ZIA cloud tenant via the Admin Portal. Group into a cluster for HA where appropriate.</div></div></div>
+      <div class="phase-step"><div class="phase-num">6</div><div class="phase-body"><div class="phase-title">Policy &amp; Cloud Sync</div><div class="phase-text">Once registered, the PSE pulls policy and configuration from the central ZIA platform. Validate that the synced policy matches the customer's intended scope.</div></div></div>
+      <div class="phase-step"><div class="phase-num">7</div><div class="phase-body"><div class="phase-title">Validate &amp; Cut Over</div><div class="phase-text">Direct a test population of users through the PSE, validate inspection and logging, then expand to broader user base via traffic forwarding rules.</div></div></div>
+      <div class="phase-step"><div class="phase-num">8</div><div class="phase-body"><div class="phase-title">Self-Provisioning of GRE Tunnels (optional)</div><div class="phase-text">If your organisation uses GRE tunnels to forward traffic to the Zscaler service, follow the standard procedure for <strong>Self-Provisioning of GRE Tunnels</strong>. Private Service Edge VIP addresses are available for selection on the GRE Tunnels page in the ZIA Admin Portal.<br><em>Note: Self-provisioning of GRE tunnels towards Private Service Edge clusters is only supported for clusters deployed on public IP space (i.e. a non-NAT environment). If you need to build a GRE tunnel towards a Private Service Edge cluster deployed within a NAT environment, contact Zscaler Support or submit a Zscaler Support ticket.</em></div></div></div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">PSE = customer-hosted ZIA edge for sovereignty / latency / throughput reasons. 8-step deployment: <strong>Support engagement → Site prep → Install → Initial config → Cluster register → Policy sync → Validate &amp; cut over → Optional GRE self-provisioning</strong>. Self-provisioned GRE is <strong>public IP only</strong>; NAT environments need a support ticket.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">A Private Service Edge is a customer-installed franchise branch of Zscaler. The brand, policies, menu, and uniforms (configuration + policies) come from the franchisor (Zscaler) — but the rent, lights, and local staff (rack space, power, cabling) are the franchisee's. The customer gets a Zscaler edge with their own keys; Zscaler gets to keep the policy and update process consistent across every franchise globally.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A7.png" alt="Analogy illustration A7" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A7.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a franchise branch as an analogy for a Private Service Edge. Wide composition. Centre: a brand-new neighbourhood shopfront with a cheerful "now open" banner, a soft Zscaler-style cloud icon on the awning (representing the brand), and a friendly franchisee in matching uniform waving from the door. Side cutaway shows the shop inside is fully fitted out with branded shelves, branded uniforms, and a delivery van from headquarters bringing in policy clipboards and signage. Background: a corporate headquarters building in the distance with a glowing arrow connecting back to the new shopfront (Zscaler central policy). Warm sunny street, plants, bicycle rack. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-pse" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('pse','Private Service Edge')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-pse" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-pse"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div class="section-block" id="section-recap-final">
+    <div class="section-label">RECAP &amp; RESOURCES</div>
+    <h2>In Summary</h2>
+    <p>You learned how to design and operationalise the platform layer of a Zscaler deployment — the place where customer intent becomes platform behaviour. By mastering policy design, SSL inspection rollout, log/SIEM strategy, timeout tuning, specialised policies, and Private Service Edge deployment, you are now equipped to drive the design conversation under real customer pressure.</p>
+
+    <ul class="content-list">
+      <li><strong>Policy Design</strong> — Start with intent, simplify on re-platform, separate concerns across 4 ZPA policy types.</li>
+      <li><strong>SSL Inspection</strong> — 3-phase rollout, Zscaler-maintained predefined rules as the baseline, exemption strategy mandatory.</li>
+      <li><strong>Logging &amp; SIEM</strong> — NSS (on-prem) vs Cloud NSS, storage math (~1.2 GB/hr per 1,000 users at 100 tps), customer SIEM for long-term retention.</li>
+      <li><strong>Timeout Policies</strong> — 2 types (Authentication + Idle Connection), scope per Segment Group, tune to application behaviour.</li>
+      <li><strong>Specialised Policies</strong> — Browser Access, Client Forwarding, Double Encryption, Machine Authentication — narrow tools for specific scenarios.</li>
+      <li><strong>Private Service Edge</strong> — 8-step deployment for customer-hosted ZIA edges; self-provisioned GRE limited to public IP space.</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">The 60-second pitch — <strong>Policy = intent, not config. SSL inspection = phased rollout with exemptions. Logs = Zscaler short-term, SIEM long-term. Timeouts = per-segment scoping. Specialised policies = one tool per edge case. PSE = customer franchise of the Zscaler edge.</strong></div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Platform Services is the <em>conductor's score</em>. Identity tells you who's playing, connectivity gives them the stage and the instruments. Platform Services is the score — every dynamic, every pause, every change in tempo encoded so the orchestra plays the piece the customer hired you to perform. Without the score everyone plays the same notes loudly until someone walks out of the concert.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A8.png" alt="Analogy illustration A8" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;">📷 <strong>A8.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a conductor reading from a detailed musical score as an analogy for the Platform Services course summary. Wide composition with a cheerful orchestra on a warm-lit stage. Centre foreground: a friendly conductor in formal attire on a small podium reading a thick open musical score on a stand. The score has visible tabs labelled with tiny pictograms representing each Platform Services topic: a magnifying glass (SSL inspection), a clock (timeouts), a filing cabinet (logging), a keyring (specialised policies), and a small storefront (PSE). The conductor's baton glows softly, and the orchestra plays in synchronised harmony with sheet music in front of each section. Mood of orchestrated precision. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap-final" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap-final','Recap')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap-final" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap-final"></span></div></div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-302-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-302 Hub
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PDF REFERENCE</div>
+    <a class="sidebar-pdf" href="zia-ssl-inspection-leading-practices.html">
+      <div class="sidebar-pdf-label">📄 PDF</div>
+      <div class="sidebar-pdf-title">ZIA SSL Inspection Leading Practices Guide</div>
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleDone(this,0)"><div class="subtopic-check"></div><span>4 main course sections (Policy Types · SSL Logging &amp; Analytics · Timeout Policies · Specialised)</span></li>
+      <li onclick="toggleDone(this,1)"><div class="subtopic-check"></div><span>8 learning outcomes (Design / Implement / Calculate / Evaluate / Define / Analyse / Recommend / Evaluate PSE)</span></li>
+      <li onclick="toggleDone(this,2)"><div class="subtopic-check"></div><span>ZPA's 4 policy types (Access / Timeout / Client Forwarding / Specialised)</span></li>
+      <li onclick="toggleDone(this,3)"><div class="subtopic-check"></div><span>Safemarch 3-policy pattern (SSL inspect + deny all + targeted allow)</span></li>
+      <li onclick="toggleDone(this,4)"><div class="subtopic-check"></div><span>5 SSL Inspection predefined rules + maintenance owners</span></li>
+      <li onclick="toggleDone(this,5)"><div class="subtopic-check"></div><span>SSL Inspection 3-phase rollout (exception list → IT only → org-wide)</span></li>
+      <li onclick="toggleDone(this,6)"><div class="subtopic-check"></div><span>On-prem NSS vs Cloud NSS</span></li>
+      <li onclick="toggleDone(this,7)"><div class="subtopic-check"></div><span>Storage formula (≈1.2 GB/hr per 1,000 users at 100 tps)</span></li>
+      <li onclick="toggleDone(this,8)"><div class="subtopic-check"></div><span>Authentication vs Idle Connection Timeout</span></li>
+      <li onclick="toggleDone(this,9)"><div class="subtopic-check"></div><span>Per-segment-group timeout scoping (Safemarch DFS scenario)</span></li>
+      <li onclick="toggleDone(this,10)"><div class="subtopic-check"></div><span>4 specialised policies (Browser Access / Client Forwarding / Double Encryption / Machine Authentication)</span></li>
+      <li onclick="toggleDone(this,11)"><div class="subtopic-check"></div><span>Client Forwarding's 3 actions (Forward / Only Allowed / Bypass)</span></li>
+      <li onclick="toggleDone(this,12)"><div class="subtopic-check"></div><span>Machine Authentication = Machine Groups + Machine Provisioning Keys + Machine Tunnels</span></li>
+      <li onclick="toggleDone(this,13)"><div class="subtopic-check"></div><span>PSE 8-step deployment</span></li>
+      <li onclick="toggleDone(this,14)"><div class="subtopic-check"></div><span>Self-provisioned GRE limited to public IP space</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="quick-ref"><div class="quick-ref-term">SSL Inspection</div><div class="quick-ref-def">Decrypt + classify + re-encrypt HTTPS traffic so URL filtering, sandboxing, and DLP can apply.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">NSS</div><div class="quick-ref-def">Nanolog Streaming Service — Zscaler's log streaming feeder for SIEM integration. On-prem (VM) or Cloud (API push).</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Authentication Timeout</div><div class="quick-ref-def">ZPA Timeout Policy that decides when the user must re-authenticate.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Idle Connection Timeout</div><div class="quick-ref-def">ZPA Timeout Policy that decides when an idle session is dropped.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Browser Access</div><div class="quick-ref-def">Clientless ZPA access to private web apps — for unmanaged devices / contractors / BYOD.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Client Forwarding Policy</div><div class="quick-ref-def">Per-segment policy with 3 actions: Forward to ZPA / Only Forward Allowed / Bypass ZPA.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Double Encryption</div><div class="quick-ref-def">End-to-end TLS wrapping for non-SSL private apps in sensitive regions. Configured on the Application Segment.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Machine Authentication</div><div class="quick-ref-def">Machine Groups + Machine Provisioning Keys + Machine Tunnels — pre-user-login ZPA for AD-joined Windows devices.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Private Service Edge</div><div class="quick-ref-def">Customer-hosted ZIA edge node for sovereignty / latency / throughput reasons. 8-step deployment.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-302 · <span>Section 5</span></div>
+  <div class="footer-right">Platform Services · Section 5 of 11</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu302-platform';
+const SECTIONS={overview:'Overview',recap:'Recap','policy-design':'Policy Design',ssl:'SSL Inspection',logging:'Logging &amp; SIEM',timeouts:'Timeout Policies',specialized:'Specialised Policies',pse:'Private Service Edge','recap-final':'Recap'};
+
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();initNotes();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
+  document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
+  document.querySelectorAll('.analogy-img img, .img-display-block img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+});
+</script>
+</body>
+</html>
