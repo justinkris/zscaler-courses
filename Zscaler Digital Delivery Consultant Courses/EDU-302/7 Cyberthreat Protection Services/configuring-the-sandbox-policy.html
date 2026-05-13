@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configuring the Sandbox Policy — EDU-302</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fdf2f2;--surface:#fff;--surface-2:#fdf6f6;--border:#fecaca;
+  --text:#1a0606;--text-soft:#3d0e0e;--text-muted:#883535;
+  --red:#991b1b;
+}
+html.pt-init body{opacity:0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{padding:32px 60px 24px;background:#1a0606;color:#fff;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#883535;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#f87171;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#3d0e0e;}
+.eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);padding:4px 12px;border-radius:20px;font-size:10px;color:#f87171;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;}
+h1{font-family:'Fraunces',serif;font-size:30px;font-weight:700;line-height:1.1;color:#fff;}
+h1 em{font-style:italic;font-weight:400;color:#f87171;}
+header p{font-size:12px;color:rgba(255,255,255,0.55);margin-top:8px;line-height:1.65;max-width:780px;}
+.toolbar{padding:14px 60px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
+.tool-link{display:inline-flex;align-items:center;gap:6px;color:var(--red);text-decoration:none;font-size:12px;font-weight:600;letter-spacing:0.04em;padding:7px 14px;border:1px solid var(--red);border-radius:8px;transition:background 0.15s;}
+.tool-link:hover{background:var(--red);color:#fff;}
+.tool-meta{font-size:11px;color:var(--text-muted);margin-left:auto;}
+main{flex:1;padding:24px 60px 40px;display:flex;flex-direction:column;}
+.pdf-wrap{flex:1;min-height:75vh;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.pdf-wrap iframe{width:100%;height:100%;min-height:75vh;border:none;display:block;}
+.pdf-fallback{padding:30px;text-align:center;color:var(--text-muted);font-size:14px;line-height:1.7;}
+.pdf-fallback a{color:var(--red);}
+footer{padding:14px 60px;border-top:1px solid var(--border);background:var(--surface);font-size:11px;color:var(--text-muted);text-align:center;letter-spacing:0.04em;}
+@media(max-width:640px){header,.toolbar,main,footer{padding-left:20px;padding-right:20px;}h1{font-size:24px;}.tool-meta{margin-left:0;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../../digital-delivery-consultant-hub.html">Digital Delivery Consultant</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../edu-302-hub.html">EDU-302</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="edu-302-cyberthreat.html">Cyberthreat Protection</a>
+    <span class="breadcrumb-sep">›</span>
+    PDF Resource
+  </div>
+  <div class="eyebrow">📄 Reference Document · EDU-302 §7</div>
+  <h1>Configuring the <em>Sandbox Policy</em></h1>
+  <p>Official Zscaler reference for setting up the ZIA Cloud Sandbox policy — enabling inbound and outbound traffic inspection, adding a Sandbox rule, file-type and URL-category scoping, and the Basic vs Advanced Cloud Sandbox subscription differences (Basic deprecated for new customers). Use this during the Global Control phase alongside the Malware policy.</p>
+</header>
+
+<div class="toolbar">
+  <a class="tool-link" href="Configuring_the_Sandbox_Policy.pdf" target="_blank" rel="noopener">↗ Open PDF in new tab</a>
+  <a class="tool-link" href="Configuring_the_Sandbox_Policy.pdf" download>⬇ Download PDF</a>
+  <a class="tool-link" href="edu-302-cyberthreat.html">← Back to Cyberthreat Protection</a>
+  <span class="tool-meta">Source: <code>Configuring_the_Sandbox_Policy.pdf</code></span>
+</div>
+
+<main>
+  <div class="pdf-wrap">
+    <iframe src="Configuring_the_Sandbox_Policy.pdf#view=FitH" title="Configuring the Sandbox Policy PDF">
+      <div class="pdf-fallback">
+        Your browser can't display PDFs inline. <a href="Configuring_the_Sandbox_Policy.pdf">Click here to open the PDF</a> in your default viewer.
+      </div>
+    </iframe>
+  </div>
+</main>
+
+<footer>EDU-302 · Section 7 · Cyberthreat Protection Services — Referenced Resource</footer>
+
+<script src="../../../transitions.js"></script>
+</body>
+</html>

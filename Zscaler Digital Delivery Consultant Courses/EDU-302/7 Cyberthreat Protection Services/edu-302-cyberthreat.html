@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyberthreat Protection Services — EDU-302</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#fdf2f2;--surface:#ffffff;--surface-2:#fdf6f6;--border:#fecaca;--border-dim:#fee2e2;
+  --text:#1a0606;--text-soft:#3d0e0e;--text-muted:#883535;
+  --red:#991b1b;--red-glow:rgba(153,27,27,0.07);--red-dim:#fecaca;--red-deep:#6b1010;--red-light-bg:#fff1f1;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+  --amber:#b45309;--amber-light:#fef3c7;--amber-border:#fde68a;
+}
+html.pt-init body{opacity:0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:#1a0606;display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#883535;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#f87171;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#3d0e0e;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.28);padding:5px 14px;border-radius:20px;font-size:11px;color:#f87171;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#f87171;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#f87171;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--red);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#1a0606;color:#f87171;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
+.q-del:hover{color:var(--red);background:var(--red-glow);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 16px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--red);border-bottom-color:var(--red);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+h4{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;margin-top:16px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--red);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--red-glow);border:1px solid var(--red-dim);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--red);font-weight:600;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--red-glow);border-color:var(--red-dim);}
+.callout-note .callout-header{color:var(--red);}
+.callout-note .callout-icon{background:var(--red-dim);color:var(--red);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-warn{background:#fff7ed;border-color:#fed7aa;}
+.callout-warn .callout-header{color:var(--amber);}
+.callout-warn .callout-icon{background:#fed7aa;color:var(--amber);}
+.callout-warn .callout-body{color:#7a3a0c;}
+.callout-tip{background:var(--green-light);border-color:var(--green-border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-tip .callout-body{color:#0f4a28;}
+.callout-info{background:var(--blue-light);border-color:var(--blue-border);}
+.callout-info .callout-header{color:var(--blue);}
+.callout-info .callout-icon{background:var(--blue-border);color:var(--blue);}
+.callout-info .callout-body{color:#1a3a5c;}
+
+.policy-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.policy-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.policy-card-title{font-size:13px;font-weight:700;color:var(--red);margin-bottom:6px;}
+.policy-card-body{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+@media(max-width:700px){.policy-grid{grid-template-columns:1fr;}}
+
+.phase-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:18px;}
+.phase-step{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:0 12px 12px 0;padding:14px 16px;}
+.phase-num{width:34px;height:34px;border-radius:50%;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.phase-body{flex:1;}
+.phase-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.phase-text{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+
+.scenario{background:var(--red-glow);border:1px solid var(--red-dim);border-radius:12px;padding:16px 18px;margin-bottom:16px;}
+.scenario-h{font-size:10px;font-weight:700;letter-spacing:0.16em;color:var(--red);margin-bottom:6px;}
+.scenario-h.problem{color:#883535;}
+.scenario-h.solution{color:var(--green);}
+.scenario-body{font-size:13px;color:var(--text-soft);line-height:1.7;margin-bottom:10px;}
+.scenario-body:last-child{margin-bottom:0;}
+
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:0;}
+.tab-btn{flex:1;padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:0.12em;color:var(--text-muted);background:var(--surface-2);border:1px solid var(--border);border-bottom:none;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.tab-btn.active{color:var(--red);background:var(--surface);}
+.tab-btn:first-child{border-radius:10px 0 0 0;}
+.tab-btn:last-child{border-radius:0 10px 0 0;}
+.tab-panel{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;padding:16px 18px;font-size:13px;color:var(--text-soft);line-height:1.7;margin-bottom:18px;display:none;}
+.tab-panel.active{display:block;}
+.tab-panel ol{padding-left:20px;}
+.tab-panel ol li{margin-bottom:8px;}
+.tab-panel ul{padding-left:20px;margin-top:4px;}
+.tab-panel ul li{margin-bottom:6px;list-style:disc;}
+.tab-panel strong.lk{color:var(--red);font-weight:600;}
+
+/* 3-PHASE TABLE */
+.phase-table{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px;}
+.phase-col{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 14px;}
+.phase-col-h{font-size:10px;letter-spacing:0.16em;color:#fff;background:var(--red);padding:5px 10px;border-radius:6px;display:inline-block;margin-bottom:8px;font-weight:700;}
+.phase-col h4{font-family:'Fraunces',serif;font-size:14px;color:var(--text);margin-bottom:8px;margin-top:0;}
+.phase-col ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--text-soft);line-height:1.55;}
+.phase-col ul li{padding-left:12px;position:relative;}
+.phase-col ul li::before{content:'›';position:absolute;left:0;color:var(--red);font-weight:700;}
+@media(max-width:800px){.phase-table{grid-template-columns:1fr;}}
+
+/* PDF REFERENCE */
+.pdf-ref{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;text-decoration:none;transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;margin-bottom:14px;}
+.pdf-ref:hover{transform:translateY(-3px);border-color:var(--red);box-shadow:0 8px 18px rgba(153,27,27,0.12);}
+.pdf-ref-icon{display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--red);text-transform:uppercase;margin-bottom:8px;}
+.pdf-ref-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3;}
+.pdf-ref-body{font-size:12px;color:var(--text-muted);line-height:1.55;}
+.pdf-ref-cta{margin-top:auto;padding-top:8px;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--red);}
+.pdf-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:700px){.pdf-grid{grid-template-columns:1fr;}}
+
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--red);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--red);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--red-glow);border:1px solid var(--red-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--red);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:var(--red-light-bg);border:1px solid var(--red-dim);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--red);margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:var(--red-deep);line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img .img-missing-msg{display:none !important;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+.img-display-block{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;border-radius:8px;display:block;margin:0 auto 12px;}
+.img-display-block img.zoomed{max-width:100% !important;cursor:zoom-out;}
+.img-display-block .img-missing-msg{display:none !important;}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
+.btn-see-answer:hover:not(:disabled){background:var(--surface-2);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--red);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:#1a0606;color:#f87171;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{background:#3d0e0e;}
+.save-status{font-size:11px;color:var(--green);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--red);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#1a0606;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
+.mod-nav-hub:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:#1a0606;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#f87171;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#c97070;line-height:1.6;}
+.sidebar-pdf{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-decoration:none;color:var(--text);margin-bottom:8px;transition:border-color 0.15s,background 0.15s;}
+.sidebar-pdf:hover{border-color:var(--red);background:var(--red-glow);}
+.sidebar-pdf-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--red);margin-bottom:2px;}
+.sidebar-pdf-title{font-size:12px;font-weight:600;line-height:1.35;color:var(--text);}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../digital-delivery-consultant-hub.html">Digital Delivery Consultant</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-302-hub.html">EDU-302</a>
+      <span class="breadcrumb-sep">›</span>
+      Cyberthreat Protection
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Section 7 · EDU-302</div>
+    <h1>Cyberthreat Protection <em>Services</em></h1>
+    <p>ZIA policy design for Malware + Sandbox, the 3-phase configuration model (Global / Granular / Advanced), policy recommendations across SSL Inspection, Advanced Threat Protection, URL &amp; Cloud Application Control, Firewall, and Cloud Browser Isolation — plus deployment scenarios for hybrid workforces and executive-level isolation.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Cyberthreat protection is <em>defence in depth</em>, layered through 3 configuration phases.</div>
+  <p class="motivation-sub">Section 6 was about who reaches what; Section 7 is about what they're protected from when they do. The cyberthreat layer sits across SSL inspection, malware, ATP, sandboxing, URL/Cloud App, firewall, and Cloud Browser Isolation — and the consultant's job is to sequence them across Global → Granular → Advanced phases so the customer never gets either over-blocked or under-protected.</p>
+</div>
+
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview',this)">Overview</button>
+  <button class="nav-tab" onclick="navTo('section-recap',this)">Recap</button>
+  <button class="nav-tab" onclick="navTo('section-policy-design',this)">ZIA Policy Design</button>
+  <button class="nav-tab" onclick="navTo('section-phases',this)">Config Phases</button>
+  <button class="nav-tab" onclick="navTo('section-global',this)">Global Control</button>
+  <button class="nav-tab" onclick="navTo('section-granular',this)">Granular Control</button>
+  <button class="nav-tab" onclick="navTo('section-advanced',this)">Advanced Control</button>
+  <button class="nav-tab" onclick="navTo('section-recap-final',this)">Recap</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- OVERVIEW -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · OVERVIEW</span></div>
+    <p class="socratic-insight">Cyberthreat Protection is delivered through three configuration phases — <em>Global</em> (the baseline every customer needs), <em>Granular</em> (tuned to business), <em>Advanced</em> (optional, depending on subscription). Before reading on, think about what those three phases imply.</p>
+    <ul class="socratic-questions">
+      <li>The Granular phase appeared in Section 6 (URL Filter, Cloud App, File Type, Firewall). Why does Section 7 re-cover Granular Control instead of saying "see Section 6"? What's different about granular control when the lens is cyberthreat instead of access?</li>
+      <li>The course outcomes are "Describe / Explain / Apply" — no "Configure." Why is configuration deliberately downplayed at the consultant level?</li>
+      <li>"Advanced" includes Cloud Browser Isolation. Why is CBI considered advanced (not granular), and what is the customer signal that says "we need CBI now"?</li>
+    </ul>
+    <div class="answer-area" data-section="overview">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Section 6 was Granular Control through the lens of <em>"who can reach what"</em>. Section 7 is Granular Control through the lens of <em>"how to spot and stop threats"</em>. URL Filter shows up in both — but Section 7 is interested in <em>blocking phishing categories and recently-registered domains</em>, not "let HR use LinkedIn." Same surface, different verb.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">A consultant who can only configure is replaceable by a script. The consultant's value is choosing <em>which</em> controls, in <em>what order</em>, against <em>which</em> business risk — and being able to defend those choices to a customer. "Describe / Explain / Apply" reflects that the consultant brings the design judgment; the customer's engineer brings the click-through.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q3 — MODEL ANSWER</div><div class="model-answer-text">CBI is "optional" — it's a subscription add-on, not bundled by default. Customer signal: high-value targets (executives, finance, M&amp;A teams) who need to access uncategorised or risky sites without exposing their endpoints. The CBI offer kicks in when "block" is too coarse and "allow with no protection" is too risky.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-overview">
+    <div class="section-label">COURSE OVERVIEW</div>
+    <h2>Welcome to Cyberthreat Protection Services</h2>
+    <p>This course is divided into <strong>two main sections</strong>, each crafted to build your understanding gradually:</p>
+
+    <div class="policy-grid">
+      <div class="policy-card">
+        <div class="policy-card-title">1 · Course Overview</div>
+        <div class="policy-card-body">Build on what you've learned in <strong>EDU-200</strong> (Course 6 of 10) and <strong>EDU-202</strong> (Course 7 of 11) by giving you a quick recap of what you have learned already. We'll cover the common deployment types and a high-level look into the recommended configurations.</div>
+      </div>
+      <div class="policy-card">
+        <div class="policy-card-title">2 · Cyberthreat Protection Policies</div>
+        <div class="policy-card-body">In the second section, we will go through the policies that apply to cyberthreat protection. Learn what recommendations to follow and how to apply them based on scenarios.</div>
+      </div>
+    </div>
+
+    <h3>By the End of This Course, You'll Be Able To:</h3>
+    <ul class="content-list">
+      <li><strong>Describe</strong> the types of policies that apply to cyberthreat protection.</li>
+      <li><strong>Explain</strong> where and when to leverage appropriate cyberthreat protection policy.</li>
+      <li><strong>Apply</strong> appropriate cyberthreat protection policies based on common deployment scenarios.</li>
+    </ul>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">If access control was the <em>dress rehearsal</em>, cyberthreat protection is the <em>building's fire-suppression system</em>. The audience is in their seats, the actors are on stage — and you've quietly installed sprinklers in the ceiling, smoke detectors backstage, a fire warden patrolling the corridors, and a separate vault for the most flammable props. Three concentric layers — sprinklers everywhere (Global), zoned suppression in critical wings (Granular), and a specialised hazmat protocol just for the executive suite (Advanced).</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a theatre's three-layer fire-suppression system as an analogy for cyberthreat protection phases. Wide composition with a cutaway theatre. Ceiling everywhere: a network of friendly sprinkler heads showing tiny droplets ready (Global controls). Middle zone: smoke detectors and zoned suppression in critical backstage wings, with a fire warden in a hard hat patrolling (Granular controls). Right zone (executive suite, with a small "VIP" label): a separate glowing hazmat vault with reinforced walls, a single shield icon glowing softly (Advanced controls / CBI). Soft warm theatre lighting, mood of calm preparedness. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · RECAP</span></div>
+    <p class="socratic-insight">EDU-200 covered Malware, Cloud Sandbox, Cloud App Control, Cloud Browser Isolation, Secure Browsing. EDU-202 added Advanced Threat Protection (ATP), IPS, Zscaler Deception, Private App Protection, more on CBI. EDU-302 is where you sequence them.</p>
+    <ul class="socratic-questions">
+      <li>"Security must be applied in layers" — Zscaler Malware co-exists with CrowdStrike / SentinelOne (EDR). What's the consultant's job when the customer already has EDR and asks "why do we need Zscaler Malware too?"</li>
+      <li>EDU-202 introduced Zscaler Deception (decoy assets that bait attackers). Why is Deception a different category of defence than Malware/IPS — and where would you place it in a typical deployment timeline?</li>
+    </ul>
+    <div class="answer-area" data-section="recap">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">EDR sees what's already on the endpoint; Zscaler Malware sees what's <em>trying to land</em> from the network. Killing the threat in transit is cheaper than cleaning it off 5,000 laptops. The right framing: layered defence, not duplicate spend — Zscaler stops 90% before EDR ever has to look at the file.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Malware/IPS are <em>reactive defenders</em> — they fire when a known threat matches a signature or behaviour. Deception is a <em>proactive trap</em> — it has zero false positives (any touch is malicious by definition) and gives the SOC ground truth about lateral movement. Place it after the basic protections are stable, typically Day 60+ when the customer has appetite for an active-defence story.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-recap">
+    <div class="section-label">RECAP FROM EDU-200 + EDU-202</div>
+    <h2>What You Should Already Know</h2>
+
+    <h3>From Zscaler for Users — Administrator (EDU-200)</h3>
+    <ul class="content-list">
+      <li><strong>Cybersecurity Themes</strong> — securing user, workload, and device communications over any network, anywhere. The Zero Trust Exchange platform helps stop the cyberattacks.</li>
+      <li><strong>Malware</strong> — automatically detects, prevents, and intelligently quarantines unknown threats. Applies cloud-based protection across all clouds and Cloud Sandbox policies.</li>
+      <li><strong>Cloud Application Control</strong> — granular control over cloud apps. Strict policy + monitoring tools to slot apps into "allow" / "deny" with full visibility.</li>
+      <li><strong>Cloud Browser Isolation</strong> — execute risky web content on an isolated remote browser; stream pixels to the user. Containment for high-risk browsing.</li>
+      <li><strong>Secure Browsing</strong> — explored Zscaler Browser Isolation. Layered, role-based access for executives, sensitive groups, and other restricted teams. Two broad use cases of browser isolation: content scanning + isolated business sessions, then explained.</li>
+    </ul>
+
+    <h3>From Zscaler for Users — Engineer (EDU-202)</h3>
+    <ul class="content-list">
+      <li><strong>Advanced Threat Protection (ATP)</strong> — delved into ATP which is one of the key capabilities of Zscaler's Secure Web Gateway portfolio within Zscaler Internet Access (ZIA). After a quick recap of ATP, we explored how ATP capability makes Zscaler the world's largest security cloud and learned the configuration process of ATP within Zscaler Internet Access (ZIA).</li>
+      <li><strong>Cloud Sandbox</strong> — automatically detects, prevents, and intelligently quarantines unknown threats. Applies cloud-based protection across all clouds and Cloud Sandbox policies.</li>
+      <li><strong>Intrusion Prevention System (IPS)</strong> — Zscaler IPS were designed to monitor traffic for unauthorised network activity and an IPS detects bad packets and takes action. We explored how Zscaler IPS capability is better than traditional IPS.</li>
+      <li><strong>Zscaler Deception</strong> — covered Zscaler Deception which is a single, native, and more effective targeted threat detection solution built on the Zscaler Zero Trust architecture. We explored key use cases and benefits of Zscaler Deception. Finally, we learned how does Deception work and how to set up Zscaler Deception Campaign.</li>
+      <li><strong>Private App Protection</strong> — learned about the working of EDR involves the following: Continuous Identity Posture Assessment, Change Detection, Attack Detection and Alerts, Endpoint Credential Exposure Management, Identity Risk Profile, and Response and Adaptive Access Control.</li>
+      <li><strong>Cloud Browser Isolation (CBI)</strong> — explored Zscaler Browser Isolation which protects users from everyday risks, vulnerabilities, ransomware, unauthorised plugins, and other sophisticated threats. Then we learned, two broad use cases of browser isolation — cyberthreat protection and data protection. Next, we explored some important features of Browser Isolation, such as safe document rendering, Content Disarm and Reconstruction (CDR), advertise impression mitigation, etc. Finally, we learned how to configure ZIA and ZPA Isolation Profile.</li>
+    </ul>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap','Recap')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ZIA POLICY DESIGN -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZIA POLICY DESIGN</span></div>
+    <p class="socratic-insight">Two foundational ZIA policies for cyberthreat: <em>Malware Protection</em> and <em>Sandbox</em>. Malware default = inspect FTP. Sandbox = inspects unknown file downloads in a controlled environment, blocks "Basic" categories (Nudity, Pornography, etc.) — Basic Cloud Sandbox subscription no longer offered to new customers.</p>
+    <ul class="socratic-questions">
+      <li>Zscaler recommends "enabling inspection of FTP traffic" in Malware policy. FTP is decades-old; why is FTP inspection still the default-on recommendation in 2026, and what would change in your design if the customer says "we don't use FTP"?</li>
+      <li>The Safe March Corp scenario: a user device gets infected with malware while browsing. The customer wants ZIA to prevent recurrence. Before reading the recommended solution, list <em>your</em> first 3 controls to enable — and order them by which would have prevented this specific event.</li>
+    </ul>
+    <div class="answer-area" data-section="policy-design">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">FTP is still load-bearing for legacy partner workflows, build pipelines, embedded systems, vendor data drops. Even "we don't use FTP" customers usually do — one team uploading firmware to a manufacturer. Leaving it on costs nothing and catches the unexpected; turning it off should require a written attestation from the customer that no FTP exists anywhere.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Order by direct-prevention: <strong>(1) SSL Inspection</strong> (so the next download can be seen), <strong>(2) Malware Protection</strong> (block known signatures), <strong>(3) Sandbox</strong> (catch the unknown variant). URL Filter / Cloud Browser Isolation come later — they reduce the chance of <em>reaching</em> the bad page, but they don't help if the user clicks anyway. Address the failure path first.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-policy-design">
+    <div class="section-label">LESSON 3 · ZIA POLICY DESIGN</div>
+    <h2>Utilise Policies to Set Up Constraints</h2>
+    <p>In the course Access Control Services (EDU-302 Section 6) you went through an overview of policy design and a brief look at the policy design options available (SSL Inspection, URL Filtering &amp; Cloud Application Control, Firewall). In this lesson, we cover the policy design options for <strong>Malware Protection</strong> and <strong>Sandbox</strong>.</p>
+
+    <h3>Malware Policy</h3>
+    <p>Zscaler recommends that the default Malware Protection setting is <strong>enabling inspection of FTP traffic</strong>. This offers:</p>
+    <ol style="margin-left:20px;font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:14px;">
+      <li><strong>Complete online protection</strong> by using malware feeds from reliable partners like Microsoft and Adobe in addition to signature-based detection from a top antivirus provider.</li>
+      <li><strong>Real-time inspection of incoming and outgoing traffic</strong> across several protocols, such as HTTP, HTTPS (with SSL Inspection), FTP over HTTP, and FTP, is made possible by the policy. Threats like trojans, ransomware, spyware, and other harmful applications are blocked, and it checks all files, including ones with up to five levels of recursive compression.</li>
+    </ol>
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">✓</div>BEST PROTECTION</div>
+      <div class="callout-body">For the best protection, Zscaler advises using the default setup, which includes inspecting FTP traffic. However, it also permits exception configuration and traffic capture for forensic investigation.</div>
+    </div>
+
+    <h3>Sandbox Policy</h3>
+    <p>The default Sandbox rule blocks malicious Windows executables and Windows library files that users attempt to download from the following suspicious URL categories:</p>
+    <ul class="content-list">
+      <li>Nudity</li>
+      <li>Pornography</li>
+      <li>Anonymizer</li>
+      <li>FileHost</li>
+      <li>Shareware Download</li>
+      <li>Web Host</li>
+      <li>Miscellaneous or Unknown</li>
+      <li>Other Miscellaneous</li>
+    </ul>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">!</div>SUBSCRIPTION CHANGE</div>
+      <div class="callout-body">Zscaler previously offered two subscriptions of its Sandbox — <strong>Basic Cloud Sandbox</strong> and <strong>Advanced Cloud Sandbox</strong>. <em>The Basic Cloud Sandbox subscription is no longer offered to new customers.</em><br><br><strong>Basic Cloud Sandbox</strong> allows for analysis of Windows Executables, DLL's, and ZIP's with the following restrictions: files must be 2 MB or less in addition to being downloaded from specific suspicious URL categories.<br><strong>Advanced Cloud Sandbox</strong> is recommended to create new policies to include all supported file types and enable the Quarantine process alongside the AI Quarantine capability for specific URL categories as deemed risky by the organisation's policies.</div>
+    </div>
+
+    <h3>To Configure the Sandbox Policy</h3>
+    <div class="phase-steps">
+      <div class="phase-step">
+        <div class="phase-num">1</div>
+        <div class="phase-body"><div class="phase-title">Enable Inbound and Outbound Traffic Inspection</div><div class="phase-text">Inspect both directions through the Sandbox.</div></div>
+      </div>
+      <div class="phase-step">
+        <div class="phase-num">2</div>
+        <div class="phase-body"><div class="phase-title">Add a Sandbox Rule</div><div class="phase-text">Define file types + URL category scope + action.</div></div>
+      </div>
+    </div>
+
+    <h3>Common Deployment Types (Recap)</h3>
+    <p>Same three patterns you covered in Section 6 — they apply here too:</p>
+    <div class="phase-steps">
+      <div class="phase-step">
+        <div class="phase-num">1</div><div class="phase-body"><div class="phase-title">New Deployment with No Existing Solution</div><div class="phase-text">Lean on default policies + Zscaler recommendations.</div></div>
+      </div>
+      <div class="phase-step">
+        <div class="phase-num">2</div><div class="phase-body"><div class="phase-title">Deployment and Migration from a Current Solution</div><div class="phase-text">Capture intent, not rules. Stagger feature introduction.</div></div>
+      </div>
+      <div class="phase-step">
+        <div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Rapid Deployment in Response to an Event</div><div class="phase-text">Ship minimum policy to close the blast radius. Document what was rushed.</div></div>
+      </div>
+    </div>
+    <div class="callout callout-info">
+      <div class="callout-header"><div class="callout-icon">i</div>SAME DECISIONS, DIFFERENT TIMING</div>
+      <div class="callout-body">You'll make many of the same policy decisions in each of the three deployment scenarios — but <strong>the order and timing of implementation will have variations</strong>.</div>
+    </div>
+
+    <h3>Customer Scenario — Safe March Corp Malware Incident</h3>
+    <div class="scenario">
+      <div class="scenario-h">SCENARIO</div>
+      <div class="scenario-body">Safe March Corp recently had a security event after a user's device became infected with malware while browsing an internet site. As lead deployment specialist, you're guiding the project through the phases of policy configuration. They've chosen ZIA to identify and remediate malicious web traffic and prevent future outbreaks. Workforce is US-wide, mostly WFH/remote, every user device forwards via Zscaler Client Connector. A proof-of-value workshop showed Zscaler could apply the needed protections during the evaluation period.</div>
+      <div class="scenario-h problem">DESIGN QUESTION</div>
+      <div class="scenario-body">Which additional policies should be created or enabled to achieve a more secure environment? You also need to plan to migrate policies from the existing solution.</div>
+      <div class="scenario-h solution">RECOMMENDED SOLUTION (7 STEPS)</div>
+      <div class="scenario-body">An organisation wants to protect its consumers from downloading viruses and visiting malicious websites — block known malware, phishing, and other cyberthreats while permitting secure access to corporate resources.</div>
+    </div>
+
+    <div class="phase-steps">
+      <div class="phase-step"><div class="phase-num">1</div><div class="phase-body"><div class="phase-title">Enable SSL Inspection</div><div class="phase-text">To properly implement threat policies, Zscaler may decrypt and examine HTTPS traffic by turning on SSL Inspection.</div></div></div>
+      <div class="phase-step"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">Turn on Features for Advanced Threat Protection</div><div class="phase-text"><strong>Malware Detection:</strong> Set up Zscaler to scan and stop traffic to domains that are known to be dangerous.<br><strong>Phishing Detection:</strong> Block access to websites linked to phishing assaults by utilising Zscaler's ThreatLabZ expertise.</div></div></div>
+      <div class="phase-step"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Establish a Policy on Cyberthreat</div><div class="phase-text">Block types include spyware/adware, malware, phishing, command-and-control (C2). Enable sandboxing for unknown file downloads. Deny access to proxies and anonymisers.</div></div></div>
+      <div class="phase-step"><div class="phase-num">4</div><div class="phase-body"><div class="phase-title">Set Up DNS Security Policy</div><div class="phase-text">Include DNS-based threat blocking to stop domains linked to criminal activity (botnets, cryptojacking) from being resolved.</div></div></div>
+      <div class="phase-step"><div class="phase-num">5</div><div class="phase-body"><div class="phase-title">Establish Business-Critical Resource Exception Policies</div><div class="phase-text">Set up allow policies for crucial domains or IPs that can be mistakenly identified as malicious — preserve business continuity.</div></div></div>
+      <div class="phase-step"><div class="phase-num">6</div><div class="phase-body"><div class="phase-title">Enforce Web Isolation (Optional)</div><div class="phase-text">To ensure secure access without endpoint compromise, reroute uncategorised or high-risk websites to Zscaler Cloud Browser Isolation.</div></div></div>
+      <div class="phase-step"><div class="phase-num">7</div><div class="phase-body"><div class="phase-title">Policy Ordering</div><div class="phase-text">To avoid security lapses, make sure cyberthreat blocking policies are given <strong>precedence over general access rules</strong>.</div></div></div>
+    </div>
+
+    <div class="img-display-block">
+      <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>1.png</strong> — add this diagram to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show diagram prompt</button>
+      <div class="prompt-content" hidden>Flat dark-red minimalist illustration of the 7-step Safe March cyberthreat solution stack as a vertical layered diagram. From bottom to top: (1) "SSL Inspection" base layer drawn as a clear lens; (2) "Malware + Phishing" layer with a shield + a fish-hook icon; (3) "Cyberthreat Policy" layer with crossed-out icons for spyware, ransomware, anonymisers; (4) "DNS Security" layer with a DNS server icon and a red X over a botnet; (5) "Exception Policies" layer with a green "allow" badge for business apps; (6) "Web Isolation (optional)" dotted ring around a browser icon; (7) "Policy Ordering" topmost layer with a thick arrow pointing down showing precedence. All layers stack into a single shield on the right. Clean simple shapes, no text labels other than the bracket tags described.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">ZIA Policy Design for cyberthreat is the <em>kitchen's food-safety stack</em>. SSL Inspection = clean the cutting board (you can't inspect what you can't see). Malware = the fridge's expiry-check (catch the bad before it's plated). Sandbox = the test-taste station for an unknown ingredient. DNS Security = the supplier vetting at the back door. Exception Policies = the chef's allow-list for tomatoes that look weird but are fine. CBI = the separate prep zone for raw chicken. Policy Ordering = the order of operations on the kitchen pass — sanitise <em>before</em> serve.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a professional restaurant kitchen as an analogy for ZIA cyberthreat policy stack. Wide composition with a cutaway commercial kitchen. Left side: a chef wiping down a glowing cutting board (SSL Inspection). Middle station: an open fridge with a label scanner showing green / red ticks (Malware). Side prep area: a small glass-domed taste-test station with a tongs lifting a glowing question-mark ingredient (Sandbox). Back door: a friendly inspector with a clipboard greeting a delivery van (DNS Security). A second chef holds up a "ALLOW" sticker for a tomato that looks weird (Exception Policies). Far-right: a separate sealed prep zone with raw-chicken signs and gloves (CBI). Above the pass: a numbered order-of-operations sign 1-7 (Policy Ordering). Warm kitchen lighting, cheerful round-faced characters, sparkling clean surfaces. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">7-step cyberthreat playbook — <strong>SSL → Malware/Phishing features → Cyberthreat policy → DNS Security → Exceptions → CBI (optional) → Order matters</strong>. Cyberthreat rules <em>always</em> sit above general access rules in the policy table.</div>
+      </div>
+    </div>
+
+    <h3>Reference PDFs</h3>
+    <div class="pdf-grid">
+      <a class="pdf-ref" href="configuring-the-malware-protection-policy.html">
+        <div class="pdf-ref-icon">📄 ZSCALER REFERENCE</div>
+        <div class="pdf-ref-title">Configuring the Malware Protection Policy</div>
+        <div class="pdf-ref-body">Step-by-step configuration of the default Malware policy + FTP inspection + exception handling.</div>
+        <div class="pdf-ref-cta">Open guide →</div>
+      </a>
+      <a class="pdf-ref" href="configuring-the-sandbox-policy.html">
+        <div class="pdf-ref-icon">📄 ZSCALER REFERENCE</div>
+        <div class="pdf-ref-title">Configuring the Sandbox Policy</div>
+        <div class="pdf-ref-body">How to add a Sandbox rule, enable inbound/outbound inspection, and choose the right file-type / category scope.</div>
+        <div class="pdf-ref-cta">Open guide →</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-policy-design" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('policy-design','ZIA Policy Design')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-policy-design" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-policy-design"></span></div></div>
+    </div>
+  </div>
+
+  <!-- CONFIG PHASES -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · CONFIG PHASES</span></div>
+    <p class="socratic-insight">Policy deployment goes through three phases of different configuration: <em>Global Control</em>, <em>Granular Control</em>, <em>Advanced Control</em>. Each phase typically uses through 3 phases of configuration that we'll cover throughout this module.</p>
+    <ul class="socratic-questions">
+      <li>Why does Zscaler frame this as 3 sequential phases instead of just listing all the available policies and letting the customer pick? What's the consultant gain from the phased framing?</li>
+      <li>Granular Control in Section 6 had URL/Cloud App, File Type, Firewall. In Section 7 the table maps Granular to URL/Cloud App + File Type + Firewall + ... the same three. Is this just repetition, or is something genuinely new added through the cyberthreat lens?</li>
+    </ul>
+    <div class="answer-area" data-section="phases">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Phasing protects both sides. Global controls ship without negotiation (every customer needs them); Granular forces a workshop (intent + business rules); Advanced is opt-in (budget + risk appetite). It gives the consultant a defensible structure — "Phase 1 lands without debate, Phase 2 is the workshop, Phase 3 is the conversation about budget." Without the phasing, every conversation starts at the maximum and loses to "do we really need that?"</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">Same controls, new emphases. Section 6 cared about <em>who can reach what</em>; Section 7 cares about <em>which categories carry threats</em> (phishing, recently-registered domains, newly-categorised gambling), <em>which file types carry malware</em> (executables, undetectable), and <em>which firewall rules limit lateral movement post-compromise</em>. Same dials, tuned for a different failure mode.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-phases">
+    <div class="section-label">LESSON 4 · CONFIGURATION PHASES</div>
+    <h2>Configuration Phases and Policy Design</h2>
+    <p>Within each of the 3 phases, there are different policy types that are commonly configured. In this course, we'll focus on the policies highlighted in the table shown below.</p>
+
+    <div class="phase-table">
+      <div class="phase-col">
+        <div class="phase-col-h">PHASE 1</div>
+        <h4>Global Control</h4>
+        <ul>
+          <li>SSL Inspection</li>
+          <li>Malware Protection</li>
+          <li>Advanced Threat Protection</li>
+        </ul>
+      </div>
+      <div class="phase-col">
+        <div class="phase-col-h">PHASE 2</div>
+        <h4>Granular Control</h4>
+        <ul>
+          <li>URL Filtering &amp; Cloud Application Control</li>
+          <li>File Type Control</li>
+          <li>Firewall</li>
+        </ul>
+      </div>
+      <div class="phase-col">
+        <div class="phase-col-h">PHASE 3</div>
+        <h4>Advanced Control</h4>
+        <ul>
+          <li>Cloud Browser Isolation</li>
+          <li>Forwarding Methods and Control</li>
+          <li>Application Tenant Restriction</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-header"><div class="callout-icon">i</div>NOTE</div>
+      <div class="callout-body">Other policies shown in the original table have been covered in <strong>Access Control Services (EDU-302 Course 6 of 11)</strong>.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">The 3 phases are like fitting out a <em>safe-deposit vault</em>. Phase 1 (Global) is the bank's standard kit — vault door, time-lock, sprinklers — that every branch gets. Phase 2 (Granular) is the per-box decisions — who has which key, which boxes belong to which department, who's allowed to enter which corridor. Phase 3 (Advanced) is the special arrangements — the executive box behind a second wall, the white-glove escort service for the CEO, the audit camera that only switches on for VIP access.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a bank vault fit-out in 3 phases as an analogy for cyberthreat configuration. Wide composition with a cutaway bank vault. Phase 1 (left third): a giant round vault door with a time-clock built in, sprinklers in the ceiling, and a friendly bank-officer doing final checks (Global controls). Phase 2 (middle third): rows of safe-deposit boxes labelled with tiny department pictograms; a manager with a clipboard assigning keys to specific tenants (Granular controls). Phase 3 (right third): a secondary inner vault behind a glass wall with a single glowing executive-suite door, an escort in a smart suit, and a discreet ceiling camera with a soft red dot (Advanced controls). Warm marble-and-brass interior, cheerful round-faced characters, plush carpet. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-phases" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('phases','Config Phases')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-phases" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-phases"></span></div></div>
+    </div>
+  </div>
+
+  <!-- GLOBAL CONTROL -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · GLOBAL CONTROL</span></div>
+    <p class="socratic-insight">Global Control = the typical entry point. SSL Inspection, Malware Inspection, Advanced Threat Protection — three controls that should be on for every customer, every deployment. Most settings need little tweaking from default.</p>
+    <ul class="socratic-questions">
+      <li>SSL Inspection covers everything except the explicit exclusion list (banking, healthcare, government, mandated whitelist apps). What's the consultant's job when the customer says "let's just exclude everything for now"?</li>
+      <li>Public Key Pinning (PKP) breaks under SSL Inspection because Zscaler issues a dynamic cert the pinned client won't trust. Why don't apps just stop pinning if it breaks inspection — what's the security argument for keeping PKP?</li>
+    </ul>
+    <div class="answer-area" data-section="global">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">"Exclude everything" defeats the purpose of buying ZIA. The consultant shows the cost of <em>not</em> inspecting in plain language: ransomware comes in over HTTPS, exfiltration leaves over HTTPS. The agreed-down list is "exclude what we legally <em>must</em> (banking/health/legal liability), then defend every other exclusion in writing." The list starts empty, grows by exception, never the other way around.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">PKP defends against man-in-the-middle attacks for customers who don't have a corporate-trusted inspection proxy. The banking app doesn't know whether the MITM cert is "Zscaler doing its job" or "an attacker on a coffee-shop wifi" — both look the same to the client. Apps keep pinning because the failure mode of the alternative (silent MITM on hostile networks) is worse than the failure mode of pinning (works only outside corporate inspection).</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-global">
+    <div class="section-label">PHASE 1 · GLOBAL CONTROL POLICIES</div>
+    <h2>Global Control Policies</h2>
+    <p>Global Control is the typical entry point into a deployment. This phase, its focus and consideration are on the policies requiring only minor configuration and will protect the broadest scope of the user base. <strong>These are the most common elements used in all deployments and, many times, are simply left to the default settings.</strong></p>
+
+    <h3>1 · SSL Inspection</h3>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'ssl-rec')">Recommendations</button>
+      <button class="tab-btn" onclick="switchTab(this,'ssl-add')">Additional Considerations</button>
+    </div>
+    <div class="tab-panel active" id="ssl-rec">
+      <ol>
+        <li><strong class="lk">Decide the URL Categories to Include/Exclude</strong>: there will need to be discussion and a decision on which URL categories will be included or excluded from SSL Inspection. Typical categories not included in SSL Inspection are healthcare, banking, financial services, government websites, sites mandated by corporate policy, and mandated whitelisted websites.</li>
+        <li><strong class="lk">Discuss if Traffic Inspection is NOT Required</strong>: make sure to discuss if there are requirements for traffic NOT to be inspected. Many times, this is determined by the requirements for the financial services category, but not the healthcare category.</li>
+        <li><strong class="lk">Standard Best Practice to Enable SSL Inspection</strong>: when you begin enabling SSL Inspection, the standard best practice is to enable SSL Inspection on a small group of users to understand how it affects the experience. Then, as you test with your pilot users, you can refine the SSL policy to exclude sites or categories based on the user feedback, then extend the inspection list to include other groups and departments, and finally to all users.</li>
+      </ol>
+    </div>
+    <div class="tab-panel" id="ssl-add">
+      <ol>
+        <li><strong class="lk">Public Key Pinning (PKP)</strong>: As you enable SSL for different categories, you will potentially come across sites that use PKP — a process where the application validates a certificate against a list "hardcoded" into the app. PKP helps secure the application against man-in-the-middle (MITM) attacks.</li>
+        <li><strong class="lk">Zscaler Certificate</strong>: During SSL Inspection, Zscaler dynamically issues a certificate signed by either Zscaler's CA or the customer's trusted CA. Because of this, certificate-pinned clients will not be able to match certificates → connection termination.</li>
+        <li><strong class="lk">Exempt Applications</strong>: To prevent applications that use certificate pinning from breaking when using SSL Inspection, you must <strong>exempt them from SSL Inspection</strong>. Select either the Cloud Application or the individual domains.</li>
+      </ol>
+    </div>
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">✓</div>SSL INSPECTION SUMMARY</div>
+      <div class="callout-body">The ability to perform SSL decryption is <strong>critical to ensuring the safety of your customer's traffic</strong>. All customers should perform SSL decryption so that content inspection can occur.</div>
+    </div>
+
+    <h3>2 · Malware Inspection</h3>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'mw-rec')">Recommendations</button>
+      <button class="tab-btn" onclick="switchTab(this,'mw-add')">Additional Considerations</button>
+    </div>
+    <div class="tab-panel active" id="mw-rec">
+      The Zscaler recommendation is to enable <strong class="lk">Inspect FTP</strong> in Malware Protection. You will also want to know if you need to allow or block <strong class="lk">Password Protected Files</strong> and <strong class="lk">Unscannable Files</strong>. These settings live in the <strong>Security Exceptions</strong> tab of Malware Protection.
+      <br><br>
+      Defaults to enable: Inspect Inbound Traffic, Inspect Outbound Traffic, Inspect HTTP, Inspect FTP over HTTP, Inspect FTP. Block actions for: Viruses, Unwanted Applications, Trojans, Worms, Ransomware, Adware, Spyware.
+    </div>
+    <div class="tab-panel" id="mw-add">
+      <strong>Security must be applied in layers.</strong> The Zscaler Malware service is designed to <strong>co-exist with Endpoint Detection or Extended Detection systems</strong>, such as CrowdStrike and SentinelOne. Instead, the Zscaler platform supports integration with several leading providers — never frame Zscaler Malware as a "replacement for EDR."
+    </div>
+
+    <h3>3 · Advanced Threat Protection</h3>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'atp-rec')">Recommendations</button>
+      <button class="tab-btn" onclick="switchTab(this,'atp-add')">Additional Considerations</button>
+    </div>
+    <div class="tab-panel active" id="atp-rec">
+      Zscaler recommends setting the policy similar to the defaults shown in the Advanced Threat Protection page of the Administrator Portal. These are primarily the default and good for most use cases.
+      <br><br>Categories typically defaulted to <em>Block</em>: Command-and-Control Servers, Cryptomining, Botnets, Anonymisers, Tor, Adware, Cookie Stealing, Potentially Malicious Requests, Browser Hijacks, Phishing Pages, Spyware Callback, Web Spam, Suspected Phishing Sites, Known Adware/Spyware Sites.
+    </div>
+    <div class="tab-panel" id="atp-add">
+      If you have <strong>Advanced Threat Protection</strong> and <strong>IPS Control</strong>, any rules you create for Advanced Threat Protection will be <strong>evaluated first</strong>.
+    </div>
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">✓</div>ATP SUMMARY</div>
+      <div class="callout-body"><strong>The Zscaler service can identify various objects and scripts and prevent them from downloading to the end user's browser.</strong> Advanced Threat Protection protects traffic from fraud, unauthorised communication, and other malicious objects and scripts.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Global Control is the <em>airport's universal security checkpoint</em> — every passenger walks through (SSL Inspection), every bag goes through the X-ray (Malware), every face is checked against a watch-list (ATP). The defaults are tuned so the line keeps moving — only the genuinely high-risk passengers get pulled aside. PKP-pinned apps are the diplomatic pouches: untouchable by the standard checkpoint, exempted by treaty, scanned through a different protocol.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of an airport security checkpoint as an analogy for Global Control policies. Wide composition. Foreground: three friendly officers running three parallel stations — (1) a body scanner with a clear lens (SSL Inspection); (2) a glowing X-ray belt scanning luggage with various icons inside (Malware Inspection); (3) a watch-list officer checking faces against a digital board (Advanced Threat Protection). Background, off to one side: a separate small "diplomatic pouches" lane with a wax-sealed parcel being waved through under a different protocol (PKP exemptions). Cheerful round-faced characters, bright warm airport lighting, mood of efficient routine safety. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text"><strong>Global = SSL + Malware + ATP, defaults on for everyone.</strong> Exclude what's legally protected (health/finance/gov), pilot SSL first, exempt PKP apps. ATP rules evaluated <em>before</em> IPS rules if both are in play.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-global" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('global','Global Control')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-global" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-global"></span></div></div>
+    </div>
+  </div>
+
+  <!-- GRANULAR CONTROL -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · GRANULAR CONTROL</span></div>
+    <p class="socratic-insight">Granular Control = implementing more granular settings using common features. Same primitives as Section 6 — URL &amp; Cloud App, File Type, Firewall — through the cyberthreat lens. Three situations for deployment: New, Migration, Event Response.</p>
+    <ul class="socratic-questions">
+      <li>The hybrid-workforce scenario specifies "exact control over file-sharing, online access, and non-HTTP traffic" and recommends Tunnel 2.0 for non-HTTP. Why does cyberthreat suddenly care about non-HTTP when traditionally "web filtering" implied HTTP/HTTPS only?</li>
+      <li>The recommendations list "AI/ML-based content classification" and "AI/ML-based threat detection." Why does AI/ML enter at the Granular phase rather than the Global phase, and what does the customer give up if AI is on by default?</li>
+    </ul>
+    <div class="answer-area" data-section="granular">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Modern threats use whatever's open: SSH tunnels, custom TCP, FTP, DNS-over-HTTPS, even ICMP. Tunnel 2.0 forwards <em>everything</em>, so the firewall can inspect non-HTTP traffic and apply cyberthreat rules to it. Without Tunnel 2.0, a determined attacker just sets up shop on port 5555 and walks out of the corp network unnoticed.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">AI/ML at the Global phase would be off-the-shelf and potentially over-classify; at the Granular phase, the consultant can scope it (which user groups, which categories, which thresholds) and accept the false-positive cost knowingly. What the customer gives up by enabling AI by default is <em>determinism</em> — they trade "I can predict what gets blocked" for "I catch more zero-days." That trade-off is a Granular conversation, not a Global one.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-granular">
+    <div class="section-label">PHASE 2 · GRANULAR CONTROL POLICIES</div>
+    <h2>Granular Control Policies</h2>
+    <p>Granular policies are a very thorough and in-depth method of setting up security measures. By enabling organisations to establish and implement exact policies that are suited to their particular needs, these policies guarantee that protection can both be efficient and effective.</p>
+
+    <h3>Three Examples (Cyberthreat Lens)</h3>
+    <ul class="content-list">
+      <li><strong>URL Filtering &amp; Cloud Application Control</strong> — depending on organisational or security rules, blocking or permitting access to particular websites and apps.</li>
+      <li><strong>Firewall Customisation</strong> — setting up particular firewall rules to protect traffic on various ports and protocols.</li>
+      <li><strong>Situations for Deployment</strong> — <em>New deployment:</em> establishing basic security settings as soon as possible. <em>Migration from existing systems:</em> modifying regulations to keep out outdated systems without interfering with daily operations. <em>Event-driven response:</em> implementing rules quickly to address particular security threats or occurrences.</li>
+    </ul>
+
+    <h3>URL &amp; Cloud Application Control — Recommendations</h3>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'gran-url-over')">Overview</button>
+      <button class="tab-btn" onclick="switchTab(this,'gran-url-rec')">Recommendations</button>
+    </div>
+    <div class="tab-panel active" id="gran-url-over">
+      URL filtering is a critical component of cybersecurity, allowing enterprises to control user access to online resources based on regulations that are in line with business requirements and security standards. Administrators may manage website access, reduce the danger of hazardous material, and boost productivity while preserving a safe environment by using URL filtering.
+    </div>
+    <div class="tab-panel" id="gran-url-rec">
+      <ol>
+        <li><strong class="lk">Policy Optimisation</strong>:
+          <ul>
+            <li>Keep rule evaluation clear; use cascading policies cautiously.</li>
+            <li>Establish fine-grained URL filtering rules according to business needs and organisational risk tolerance.</li>
+          </ul>
+        </li>
+        <li><strong class="lk">Integrating with Other Security Regulations</strong>:
+          <ul>
+            <li>For a multi-layered security solution, combine URL filtering with Sandbox, File Type Control, and Firewall rules.</li>
+            <li>Use URL filtering in conjunction with AI/ML-based content classification to apply enhanced threat detection.</li>
+          </ul>
+        </li>
+        <li><strong class="lk">Best Practices</strong>:
+          <ul>
+            <li>Activate AI classification and SafeSearch for all-encompassing threat control.</li>
+            <li>Avoid restricting a lot of different categories without first analysing how they affect user productivity.</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+    <div class="callout callout-info">
+      <div class="callout-header"><div class="callout-icon">i</div>NOTE</div>
+      <div class="callout-body">Remember, the <strong>Cloud Application Control policy takes precedence over URL Filtering</strong> — same rule as Section 6. To override and have URL Filtering still apply after a Cloud App match, enable <em>Allow Cascading to URL Filtering</em> in Advanced Settings.</div>
+    </div>
+
+    <h3>Firewall — Recommendations</h3>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'gran-fw-over')">Overview</button>
+      <button class="tab-btn" onclick="switchTab(this,'gran-fw-rec')">Recommendations</button>
+    </div>
+    <div class="tab-panel active" id="gran-fw-over">
+      Firewall filtering policies are critical in cybersecurity because they monitor, allow or block specified traffic types between a user's device and internet destinations. By limiting access to potentially harmful or illegal traffic, these policies lower risk and improve corporate security.
+    </div>
+    <div class="tab-panel" id="gran-fw-rec">
+      <ol>
+        <li><strong class="lk">Adopt a Layered Security Approach</strong>: For multi-layered protection, integrate firewall filtering with file type management, sandboxing, and URL filtering.</li>
+        <li><strong class="lk">Leverage AI/ML Tools</strong>: Allow AI/ML-based content classification for real-time danger detection in uncategorised traffic.</li>
+        <li><strong class="lk">Enhance Visibility with Logging</strong>: Full monitoring should be used to provide analytical insight into blocked traffic and user actions.</li>
+      </ol>
+    </div>
+
+    <h3>Approaches to Deployment — Hybrid Workforce Scenario</h3>
+    <div class="scenario">
+      <div class="scenario-h">SCENARIO · SECURE A REMOTE WORKFORCE WITH GRANULAR POLICIES</div>
+      <div class="scenario-body">Employees of a global corporation are switching to a hybrid work style in which they operate from both the office and distant places. They require exact control over file-sharing, online access, and non-HTTP traffic in order to protect their employees, guarantee compliance, and reduce risk.</div>
+      <div class="scenario-h solution">RECOMMENDED SOLUTION (3 LAYERS)</div>
+      <div class="scenario-body"><strong>1 · URL &amp; Cloud Application Control</strong> — Provide access to authorised collaboration tools (Zoom, Microsoft Teams) but prohibit access to high-risk categories (gambling, adult material, recently registered domains). To browse safely, turn on SafeSearch.<br><br><strong>2 · File Type Control</strong> — To stop malware from spreading, restrict the upload of executable and undetectable file types and exercise vigilance while downloading executable files.<br><br><strong>3 · Firewall Policies</strong> — Use <strong>Tunnel 2.0</strong> to impose non-HTTP traffic limitations on distant users, making sure that all traffic conforms with organisational security guidelines.</div>
+      <div class="scenario-h">OUTCOME</div>
+      <div class="scenario-body"><em>Granular control over user behaviour is ensured by this customised implementation, which protects against cyber risks and aligns with corporate objectives.</em></div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Granular Control through the cyberthreat lens is the <em>warehouse's loading-dock protocol after a theft</em>. URL/Cloud App = check the delivery manifest. File Type = inspect the crate (no live ammunition in a furniture shipment). Firewall = the bouncer at the truck bay who decides which trucks back up to which doors. The hybrid workforce twist: now the warehouse has satellite micro-docks at the drivers' homes, so the same protocols have to extend through Tunnel 2.0 — or thieves just use a side door at someone's garage.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a distributed warehouse loading-dock protocol as an analogy for Granular Control. Wide composition with three friendly loading-dock scenes. Main warehouse on the left: a dock manager checking a clipboard manifest as a truck backs up (URL/Cloud App Control); a worker prising open a crate to peek inside while a guard with a "BLOCK EXECUTABLE" stamp watches (File Type Control); a uniformed bouncer at the bay door waving trucks to specific doors (Firewall). On the right: a small satellite home-garage micro-dock with a friendly driver's setup, connected back to the main warehouse via a glowing tunnel labelled with a tiny "2.0" badge (Tunnel 2.0 for hybrid workforce). Soft afternoon warehouse lighting, cheerful round-faced workers, plants by the office. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-granular" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('granular','Granular Control')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-granular" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-granular"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ADVANCED CONTROL -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ADVANCED CONTROL</span></div>
+    <p class="socratic-insight">Advanced Control = optional functionality not all customers will need. CBI is the flagship. Three deployment patterns again: New (test group first), Migration (stagger to limit disruption), Rapid (event-driven — CBI introduced quickly post-compromise).</p>
+    <ul class="socratic-questions">
+      <li>CBI streams rendered pixels to the user's native browser. Why pixels and not just a "remote view" — what attack vectors does pixel-streaming eliminate that other isolation approaches (proxy, browser extension) don't?</li>
+      <li>The CBI limits are: 1 GB file size, 3 MB clipboard, 10 active sessions per user. Why these specific numbers — and what does each number tell you about the use case CBI is engineered for vs the use case it's not?</li>
+    </ul>
+    <div class="answer-area" data-section="advanced">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item"><div class="model-answer-q">Q1 — MODEL ANSWER</div><div class="model-answer-text">Pixel-streaming means no DOM, no JavaScript, no plugin context ever reaches the user's machine — only an image. Browser exploits, drive-by-downloads, malicious extensions, fingerprinting, embedded credential phishing all stop dead at the remote renderer. A "remote view" via a proxy still ships the page's code to the user's browser; pixels ship only the visual result.</div></div>
+        <div class="model-answer-item"><div class="model-answer-q">Q2 — MODEL ANSWER</div><div class="model-answer-text">1 GB file = enough for a download of a research dataset / forensic image, not enough for a hostile actor to exfil a database. 3 MB clipboard = enough to paste a paragraph of notes, not enough to dump a 50-page document. 10 sessions = enough for one user to have several research tabs open in parallel, not a scalable browsing replacement. CBI is engineered for <em>occasional high-risk access</em>, not as a daily-driver browser. The limits are a soft signal to the customer: "use sparingly."</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-advanced">
+    <div class="section-label">PHASE 3 · ADVANCED CONTROL POLICIES</div>
+    <h2>Advanced Control Policies</h2>
+    <p>This phase for an organisation includes implementing functionality that <strong>not all customers will require</strong> or subscribe to, but is still important to understand. These controls may or may not be included in your deployment, regardless of the deployment type. There are nuanced considerations for each deployment type.</p>
+
+    <h3>Deployment Type Considerations</h3>
+    <div class="phase-steps">
+      <div class="phase-step">
+        <div class="phase-num">1</div>
+        <div class="phase-body"><div class="phase-title">New Deployment with No Existing Solution</div><div class="phase-text">Introduce these controls early in the process so as not to cause disruption later on. Focus on <strong>deploying to a test group</strong> before general widespread usage to ensure you clearly understand any impact on user experience.</div></div>
+      </div>
+      <div class="phase-step">
+        <div class="phase-num">2</div>
+        <div class="phase-body"><div class="phase-title">Deployment and Migration from a Current Solution</div><div class="phase-text">In most cases, the migration from a previous solution will not include the features in this phase. The choice on when to introduce these will be up to the customer, but the recommendation would be to <strong>stagger the introduction</strong> to limit disruption in the user experience and assist with troubleshooting, should it be necessary.</div></div>
+      </div>
+      <div class="phase-step">
+        <div class="phase-num">3</div>
+        <div class="phase-body"><div class="phase-title">Rapid Deployment in Response to an Event</div><div class="phase-text">The introduction of these features will vary depending on the event response. In the event of a compromise, <strong>Application Tenants</strong> or <strong>Cloud Browser Isolation</strong> may be quickly introduced. Forwarding Controls are entirely dependent on a use case.</div></div>
+      </div>
+    </div>
+
+    <h3>Cloud Browser Isolation (CBI)</h3>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'cbi-over')">Overview</button>
+      <button class="tab-btn" onclick="switchTab(this,'cbi-rec')">Recommendations</button>
+      <button class="tab-btn" onclick="switchTab(this,'cbi-add')">Additional Considerations</button>
+    </div>
+    <div class="tab-panel active" id="cbi-over">
+      Cloud Browser Isolation (CBI) provides an organisation with the capability to isolate users from potentially harmful content on the internet. CBI does this by <strong>loading the accessed web page on a remote browser in any one of the many Zscaler data centers across the globe and streaming the rendered content as pixels to the user's native browser</strong>.
+      <ul>
+        <li>Fully integrated with ZIA — admin defines which web traffic is isolated and whether policies apply to isolated traffic granularly.</li>
+        <li>Traffic egressing the isolation browser can also be passed through the ZIA Public Service Edges before reaching the internet destination.</li>
+      </ul>
+    </div>
+    <div class="tab-panel" id="cbi-rec">
+      Most organisations will choose to block risky or sensitive URL categories using URL and Cloud Application Control. Still, there are occasional business requirements to access sites that would fall into one of the categories.
+      <ul>
+        <li>CBI allows access to these risky sites — i.e., Miscellaneous, Newly Registered Domains, or any other categories the customer deems potentially dangerous.</li>
+        <li>CBI can be used as a <strong>safety control for high-risk web traffic</strong>, such as a CEO or another top-ranking executive.</li>
+      </ul>
+    </div>
+    <div class="tab-panel" id="cbi-add">
+      Browsing while in Isolation provides advantages not available in a non-remote browser. However, there are some limitations due to its temporary function. <strong>Navigational limits for Isolation:</strong>
+      <ul>
+        <li>File size limit for downloading and uploading files: <strong>1 GB</strong></li>
+        <li>Clipboard size limit (copy/paste images): <strong>3 MB</strong></li>
+        <li>Limit of <strong>10 active sessions per user</strong> at a time.</li>
+      </ul>
+    </div>
+
+    <h3>Approaches to Deployment — Executive Protection Scenario</h3>
+    <div class="scenario">
+      <div class="scenario-h">SCENARIO · PROTECTING EXECUTIVES AGAINST SPECIFIC CYBERTHREATS</div>
+      <div class="scenario-body">The CEO, who frequently uses external resources with sensitive or unconfirmed material, is particularly vulnerable to targeted attacks, which worries a multinational organisation. High-risk categories are blocked by traditional URL and Cloud Application Control restrictions, but sometimes access to potentially dangerous websites is required for business purposes.</div>
+      <div class="scenario-h solution">RECOMMENDED SOLUTION (3 LAYERS)</div>
+      <div class="scenario-body"><strong>1 · Cloud Browser Isolation (CBI)</strong> — By separating potentially risky online material, CBI enables executive users to safely browse sensitive or high-risk websites. While making sure that no hazardous information enters their devices, executives can access the resources they need.<br><br><strong>2 · Granular Traffic Isolation Policy</strong> — While egressing traffic is routed through ZIA Public Service Edges for further monitoring, apply stringent controls to isolated traffic, such as restricting downloads or interactions with embedded links.<br><br><strong>3 · Controlled Rollout</strong> — To reduce user experience disruptions and handle any unanticipated difficulties, test the CBI feature with a <strong>limited number of executives</strong> before wide deployment.</div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">CBI is the <em>library's rare-book reading room</em>. The reader (CEO) sits at a table inside the secure room. The book (risky website) is brought to them — but they don't actually hold the book. The librarian (Zscaler data centre) holds the book on the other side of a glass partition and turns the pages for them; the reader sees the pages projected onto their side of the glass. No fingerprints on the original, no smuggling pages out, no risk of the book being booby-trapped. And the room only fits 10 readers at a time — by design, this is for the small set of people who need rare books, not the whole library.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A6.png" alt="Analogy illustration A6" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A6.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a library's rare-book reading room as an analogy for Cloud Browser Isolation. Wide composition with a cutaway view of the reading room. Centre: a cheerful executive reader (CEO in business attire) sitting at a small reading table, looking at a glowing glass partition that shows a projected page of a thick old book. On the other side of the glass: a friendly librarian carefully turning the pages of the original book with gloved hands, with the book never crossing the partition. Two more empty reading desks visible (echoing the 10-session limit). Soft warm reading-room lighting, a few plants, a small "VIP RESEARCH" sign on the door. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text"><strong>CBI = pixels, not pages.</strong> Limits: 1 GB file, 3 MB clipboard, 10 sessions/user. Engineered for occasional high-risk access (executives, M&amp;A, research) — not as a daily-driver browser. Pilot small. Apply granular policies to isolated traffic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-advanced" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('advanced','Advanced Control')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-advanced" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-advanced"></span></div></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div class="section-block" id="section-recap-final">
+    <div class="section-label">RECAP &amp; RESOURCES</div>
+    <h2>In Summary</h2>
+    <p>In this course, we learned how to apply policies to have a set of cybersecurity services that analyse organisation risk and defend against cyberattacks so that every organisation can rest assured they will not be compromised.</p>
+
+    <ul class="content-list">
+      <li><strong>ZIA Policy Design</strong> — we defined the malware policy and Sandbox policy. We further learned that the common deployment types are: The common deployment types are — New deployment with no existing solution, Deployment and migration from a current solution, and Rapid deployment in response to an event. We concluded by going through a scenario and the recommended solution.</li>
+      <li><strong>Configuration Phases and Policy Design</strong> — Next, we learned that policy deployment typically goes through 3 phases of configuration that we'll cover throughout this module — <strong>Global Control, Granular Control, Advanced Control</strong>.</li>
+      <li><strong>Global Control Policies</strong> — Phase 1 with Global Control, the typical policy point into a deployment. During this phase, the focus and consideration are on the policies requiring only minor configuration and will protect the broadest range of the user base. These are the most common elements used in all deployments and, many times, are simply left to the default settings. The further learned the recommendations, and additional considerations for SSL Inspection, Malware Inspection, and Response and Adaptive Access Control.</li>
+      <li><strong>Granular Control Policies</strong> — Phase 2 is defined by implementing more granular settings using common features, but with policies for business needs. This step is where we "tighten the bolts" on the deployment — going from cyberthreat policy protection to a more customised implementation tuned to the customer's needs and environment. We further learned the recommendations and additional considerations for URL &amp; Cloud Application Control, File Type Control, and Firewall.</li>
+      <li><strong>Advanced Control Policies</strong> — Phase 3 for an organisation includes implementing functionality that not all customers will require or subscribe to, but is still important to understand. These controls may or may not be included in your deployment, regardless of the deployment type we discussed. We further learned the overview and recommendations for Cloud Browser Isolation.</li>
+    </ul>
+
+    <h3>From This Course, You Should Now Be Able To:</h3>
+    <ul class="content-list">
+      <li><strong>Describe</strong> the types of policies that apply to cyberthreat protection.</li>
+      <li><strong>Explain</strong> where and when to leverage appropriate cyberthreat protection policy.</li>
+      <li><strong>Apply</strong> appropriate cyberthreat protection policies based on common deployment scenarios.</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">60-SECOND PITCH</div>
+        <div class="mental-note-block-text"><strong>3 phases of cyberthreat: Global (SSL + Malware + ATP, every customer), Granular (URL + File Type + Firewall, tuned to business), Advanced (CBI + Forwarding + Tenant, optional, executives + post-incident). 7-step playbook for Safe March: SSL → ATP features → Cyberthreat policy → DNS → Exceptions → CBI → Ordering. Cyberthreat rules always sit ABOVE access rules.</strong></div>
+      </div>
+    </div>
+
+    <h3>Reference PDFs</h3>
+    <div class="pdf-grid">
+      <a class="pdf-ref" href="configuring-the-malware-protection-policy.html">
+        <div class="pdf-ref-icon">📄 ZSCALER RESOURCE</div>
+        <div class="pdf-ref-title">Configuring the Malware Protection Policy</div>
+        <div class="pdf-ref-body">Default rule + FTP inspection + Security Exceptions tab walkthrough.</div>
+        <div class="pdf-ref-cta">Open guide →</div>
+      </a>
+      <a class="pdf-ref" href="configuring-the-sandbox-policy.html">
+        <div class="pdf-ref-icon">📄 ZSCALER RESOURCE</div>
+        <div class="pdf-ref-title">Configuring the Sandbox Policy</div>
+        <div class="pdf-ref-body">Inbound/outbound inspection + adding a Sandbox rule.</div>
+        <div class="pdf-ref-cta">Open guide →</div>
+      </a>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">Cyberthreat Protection Services is the <em>customer's home security system, three layers thick</em>. The deadbolts and motion sensors (Global) — everyone installs them. The room-by-room rules and personalised alarm zones (Granular) — set up over a weekend with the homeowner. The panic room with biometric lock for the family safe and the offsite monitoring service (Advanced) — only some homes get them, and only by deliberate choice. The consultant's job isn't to install everything; it's to know which homes need which layers and why.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A7.png" alt="Analogy illustration A7" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A7.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a three-layered home security system as an analogy for Cyberthreat Protection Services course summary. Wide composition with a cheerful suburban home cutaway. Outer layer: front door with a heavy deadbolt, visible motion sensors mounted on every corner of the exterior (Global). Middle layer: cutaway view of three rooms, each with its own alarm-zone keypad and a small clipboard of room-specific rules being reviewed by a friendly homeowner with a consultant (Granular). Inner layer (rightmost): a small panic-room door with a biometric scanner and a discreet "monitored" badge with a glowing camera icon (Advanced). Outside the home, a consultant van labelled with a soft Zscaler-style shield drives away after install. Warm afternoon light, cheerful round-faced characters, plants by the porch. Clean geometric shapes, flat illustration style, bold outlines, simple cartoon characters, no text labels, no UI elements, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap-final" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap-final','Recap')">Add Question</button></div></div>
+      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap-final" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap-final"></span></div></div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-302-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-302 Hub
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PDF REFERENCES</div>
+    <a class="sidebar-pdf" href="configuring-the-malware-protection-policy.html">
+      <div class="sidebar-pdf-label">📄 PDF</div>
+      <div class="sidebar-pdf-title">Configuring the Malware Protection Policy</div>
+    </a>
+    <a class="sidebar-pdf" href="configuring-the-sandbox-policy.html">
+      <div class="sidebar-pdf-label">📄 PDF</div>
+      <div class="sidebar-pdf-title">Configuring the Sandbox Policy</div>
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleDone(this,0)"><div class="subtopic-check"></div><span>3 learning outcomes (Describe · Explain · Apply)</span></li>
+      <li onclick="toggleDone(this,1)"><div class="subtopic-check"></div><span>Recap — Malware, Sandbox, ATP, IPS, Deception, CBI</span></li>
+      <li onclick="toggleDone(this,2)"><div class="subtopic-check"></div><span>Malware Policy default = Inspect FTP enabled</span></li>
+      <li onclick="toggleDone(this,3)"><div class="subtopic-check"></div><span>Sandbox default URL categories (Nudity / Porn / Anonymizer / FileHost / Web Host / Misc / Shareware)</span></li>
+      <li onclick="toggleDone(this,4)"><div class="subtopic-check"></div><span>Basic Cloud Sandbox subscription deprecated for new customers</span></li>
+      <li onclick="toggleDone(this,5)"><div class="subtopic-check"></div><span>Safe March 7-step solution (SSL · ATP feat · Cyberthreat · DNS · Exception · CBI · Order)</span></li>
+      <li onclick="toggleDone(this,6)"><div class="subtopic-check"></div><span>3 phases (Global · Granular · Advanced)</span></li>
+      <li onclick="toggleDone(this,7)"><div class="subtopic-check"></div><span>Global = SSL Inspection · Malware · ATP</span></li>
+      <li onclick="toggleDone(this,8)"><div class="subtopic-check"></div><span>PKP apps must be exempted from SSL Inspection</span></li>
+      <li onclick="toggleDone(this,9)"><div class="subtopic-check"></div><span>ATP rules evaluated before IPS rules</span></li>
+      <li onclick="toggleDone(this,10)"><div class="subtopic-check"></div><span>Malware co-exists with EDR (CrowdStrike / SentinelOne) — layered defence</span></li>
+      <li onclick="toggleDone(this,11)"><div class="subtopic-check"></div><span>Granular = URL/Cloud App · File Type · Firewall (cyberthreat lens)</span></li>
+      <li onclick="toggleDone(this,12)"><div class="subtopic-check"></div><span>Hybrid workforce scenario — Tunnel 2.0 for non-HTTP</span></li>
+      <li onclick="toggleDone(this,13)"><div class="subtopic-check"></div><span>Advanced = CBI · Forwarding · Tenant Restriction</span></li>
+      <li onclick="toggleDone(this,14)"><div class="subtopic-check"></div><span>CBI limits — 1 GB file · 3 MB clipboard · 10 sessions/user</span></li>
+      <li onclick="toggleDone(this,15)"><div class="subtopic-check"></div><span>Executive scenario — CBI + granular isolation policy + controlled rollout</span></li>
+      <li onclick="toggleDone(this,16)"><div class="subtopic-check"></div><span>Cyberthreat policies ALWAYS sit above general access rules</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="quick-ref"><div class="quick-ref-term">Malware Protection</div><div class="quick-ref-def">Default ZIA policy that inspects HTTP/HTTPS/FTP traffic against signature + reputation feeds. Co-exists with EDR.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Cloud Sandbox</div><div class="quick-ref-def">Detonates unknown files in a controlled environment. Basic vs Advanced subscription — Basic deprecated for new customers.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Advanced Threat Protection (ATP)</div><div class="quick-ref-def">Blocks C2, cryptomining, botnets, anonymisers, phishing pages, spyware callbacks. Evaluated <strong>before</strong> IPS rules when both are in play.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">SSL Inspection</div><div class="quick-ref-def">Decrypt HTTPS so content inspection can occur. Exclude legally-protected categories (health, banking, gov). Pilot small first.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Public Key Pinning (PKP)</div><div class="quick-ref-def">Apps that hardcode trusted certificates. Breaks under SSL Inspection — must be exempted (Cloud App or specific domain).</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Global Control</div><div class="quick-ref-def">Phase 1 — defaults for every customer. SSL + Malware + ATP.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Granular Control</div><div class="quick-ref-def">Phase 2 — tuned to business intent. URL + Cloud App + File Type + Firewall.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Advanced Control</div><div class="quick-ref-def">Phase 3 — optional / subscription-driven. CBI + Forwarding + Tenant Restriction.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Cloud Browser Isolation (CBI)</div><div class="quick-ref-def">Renders pages remotely, streams pixels to user browser. 1 GB / 3 MB / 10 sessions limits — engineered for occasional high-risk access.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Policy Ordering</div><div class="quick-ref-def">Cyberthreat blocking policies must sit <strong>above</strong> general access rules in the policy table.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-302 · <span>Section 7</span></div>
+  <div class="footer-right">Cyberthreat Protection · Section 7 of 11</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu302-cyberthreat';
+const SECTIONS={overview:'Overview',recap:'Recap','policy-design':'ZIA Policy Design',phases:'Config Phases',global:'Global Control',granular:'Granular Control',advanced:'Advanced Control','recap-final':'Recap'};
+
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+function switchTab(btn,id){const wrap=btn.parentElement.parentElement;wrap.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');wrap.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));const target=document.getElementById(id);if(target)target.classList.add('active');}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();initNotes();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
+  document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
+  document.querySelectorAll('.analogy-img img, .img-display-block img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+});
+</script>
+<script src="../../../transitions.js"></script>
+</body>
+</html>
