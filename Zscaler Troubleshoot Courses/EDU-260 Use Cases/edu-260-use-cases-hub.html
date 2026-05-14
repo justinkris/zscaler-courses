@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDU-260 · Troubleshooting Use Cases</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#fff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;--blue-deep:#0f3d7a;
+  --amber:#b45309;--green:#1a7c4a;--red:#b91c1c;--purple:#5c35cc;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html.pt-init body{opacity:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* HEADER */
+header{background:#0d1a2e;color:#fff;padding:32px 40px 40px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:#93c5fd;letter-spacing:0.06em;margin-bottom:20px;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;opacity:0.8;}
+.breadcrumb a:hover{opacity:1;text-decoration:underline;}
+.breadcrumb-sep{opacity:0.5;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.eyebrow-chip{background:rgba(147,197,253,0.15);border:1px solid rgba(147,197,253,0.3);color:#93c5fd;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:4px 12px;border-radius:20px;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:#93c5fd;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+h1{font-family:'Fraunces',serif;font-size:46px;font-weight:700;line-height:1.05;color:#fff;margin-bottom:6px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-sub{font-family:'Fraunces',serif;font-size:16px;font-style:italic;color:rgba(255,255,255,0.55);line-height:1.55;margin-top:4px;max-width:640px;}
+
+/* SEARCH BAR */
+.search-bar{padding:20px 40px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.search-input-wrap{flex:1;min-width:240px;position:relative;}
+.search-input{width:100%;padding:11px 14px 11px 38px;font-family:'Epilogue',sans-serif;font-size:13.5px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);outline:none;transition:border-color 0.15s;}
+.search-input:focus{border-color:var(--blue);}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:14px;pointer-events:none;}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);font-size:14px;cursor:pointer;padding:4px 8px;border-radius:6px;display:none;}
+.search-clear:hover{background:var(--surface-2);color:var(--text);}
+.search-clear.visible{display:block;}
+.result-count{font-size:11.5px;color:var(--text-muted);letter-spacing:0.04em;}
+.filter-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.pill{background:var(--surface);border:1px solid var(--border);color:var(--text-muted);font-size:10.5px;font-weight:600;letter-spacing:0.06em;padding:6px 12px;border-radius:20px;cursor:pointer;font-family:'Epilogue',sans-serif;transition:all 0.12s;text-transform:uppercase;}
+.pill:hover{border-color:var(--blue);color:var(--blue);}
+.pill.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+
+/* MAIN */
+main{padding:32px 40px 80px;max-width:1280px;margin:0 auto;}
+.section-label{font-size:10px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:14px;}
+
+/* LESSON GRID */
+.lesson-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;margin-bottom:36px;}
+.lesson-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px 16px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:6px;position:relative;transition:transform 0.22s ease,box-shadow 0.22s ease,border-color 0.22s ease;}
+.lesson-card:hover{transform:translateY(-3px);box-shadow:0 18px 36px rgba(26,109,204,0.14);border-color:var(--blue-dim);}
+.lesson-card.hidden{display:none;}
+.lesson-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px;}
+.lesson-num{font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--blue);}
+.tags{display:flex;gap:5px;flex-wrap:wrap;}
+.tag{font-size:9px;font-weight:700;letter-spacing:0.08em;padding:2px 8px;border-radius:8px;text-transform:uppercase;}
+.tag-zia{background:#fef3c7;color:#92400e;}
+.tag-zpa{background:#dbeafe;color:#1e40af;}
+.tag-zdx{background:#e9d5ff;color:#6b21a8;}
+.tag-zcc{background:#d1fae5;color:#065f46;}
+.tag-nss{background:#fce7f3;color:#9d174d;}
+.tag-vse{background:#cffafe;color:#155e75;}
+.tag-auth{background:#fed7aa;color:#9a3412;}
+.tag-policy{background:#fef9c3;color:#854d0e;}
+.tag-perf{background:#fecaca;color:#991b1b;}
+.tag-dlp{background:#e0f2fe;color:#075985;}
+.tag-meta{background:var(--surface-2);color:var(--text-muted);}
+.lesson-card-name{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);line-height:1.25;margin-top:2px;}
+.lesson-card-desc{font-size:12px;color:var(--text-muted);line-height:1.6;flex:1;}
+.lesson-card-meta{font-size:10.5px;color:var(--text-muted);letter-spacing:0.02em;margin-top:8px;display:flex;align-items:center;gap:6px;}
+.lesson-card-meta .dot{width:4px;height:4px;border-radius:50%;background:var(--text-muted);}
+
+/* NO RESULTS */
+.no-results{text-align:center;padding:60px 20px;color:var(--text-muted);font-size:14px;display:none;}
+.no-results.visible{display:block;}
+
+/* SIDEBAR / TOOLKIT */
+.toolkit{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-top:24px;}
+.toolkit-title{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:var(--text);margin-bottom:14px;}
+.toolkit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;}
+.toolkit-item{font-size:12.5px;color:var(--text-soft);line-height:1.55;}
+.toolkit-item strong{color:var(--text);display:block;margin-bottom:2px;font-size:12px;letter-spacing:0.04em;}
+
+/* FOOTER */
+footer{background:#0d1a2e;color:rgba(255,255,255,0.5);font-size:11px;padding:16px 40px;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.04em;}
+footer span{color:#93c5fd;}
+
+@media(max-width:720px){
+  header{padding:24px 20px;}h1{font-size:34px;}
+  .search-bar{padding:14px 20px;}main{padding:20px 20px 60px;}
+  footer{padding:14px 20px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../troubleshoot-hub.html">Troubleshoot Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    EDU-260 Use Cases
+  </div>
+  <div class="eyebrow">
+    <span class="eyebrow-chip">EDU-260 · USE CASES</span>
+    <span class="header-dot"></span>
+  </div>
+  <h1>Troubleshooting <em>Use Cases</em></h1>
+  <p class="header-sub">14 lessons of real Zscaler troubleshooting workflows — each use case follows the Problem → Locate → Isolate → Diagnose path. Search by symptom, product, or error code below to jump straight to the right page.</p>
+</header>
+
+<div class="search-bar">
+  <div class="search-input-wrap">
+    <span class="search-icon">🔍</span>
+    <input id="searchInput" class="search-input" type="text" placeholder="Search by symptom, error code, product (ZPA, ZDX), or term (SAML, DLP, NSS)..." autocomplete="off">
+    <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+  </div>
+  <div class="filter-pills" id="filterPills">
+    <button class="pill active" data-filter="all">All 14</button>
+    <button class="pill" data-filter="zia">ZIA</button>
+    <button class="pill" data-filter="zpa">ZPA</button>
+    <button class="pill" data-filter="zdx">ZDX</button>
+    <button class="pill" data-filter="zcc">ZCC</button>
+    <button class="pill" data-filter="auth">Auth</button>
+    <button class="pill" data-filter="policy">Policy</button>
+    <button class="pill" data-filter="perf">Performance</button>
+    <button class="pill" data-filter="dlp">DLP</button>
+    <button class="pill" data-filter="nss">Logs/NSS</button>
+    <button class="pill" data-filter="vse">VSE</button>
+  </div>
+  <div class="result-count" id="resultCount">14 lessons</div>
+</div>
+
+<main>
+
+<div class="section-label">LESSONS</div>
+
+<div class="lesson-grid" id="lessonGrid">
+
+  <a class="lesson-card" href="edu-260-uc-01-introduction.html"
+     data-tags="meta intro orientation framework problem locate isolate diagnose"
+     data-keywords="introduction overview course framework methodology problem locate isolate diagnose plid 4 step">
+    <div class="lesson-card-top">
+      <span class="lesson-num">LESSON 1</span>
+      <div class="tags"><span class="tag tag-meta">INTRO</span></div>
+    </div>
+    <div class="lesson-card-name">Introduction</div>
+    <div class="lesson-card-desc">Course orientation — what you'll learn and the Problem → Locate → Isolate → Diagnose framework that drives every use case.</div>
+    <div class="lesson-card-meta"><span>Orientation</span></div>
+  </a>
+
+  <a class="lesson-card" href="edu-260-uc-02-troubleshooting-overview.html"
+     data-tags="meta framework method overview tools"
+     data-keywords="troubleshooting overview localize locate isolate diagnose tools zcc panel where issues occur cycle">
+    <div class="lesson-card-top">
+      <span class="lesson-num">LESSON 2</span>
+      <div class="tags"><span class="tag tag-meta">METHODOLOGY</span></div>
+    </div>
+    <div class="lesson-card-name">Troubleshooting Overview</div>
+    <div class="lesson-card-desc">The full method — where issues occur, how to localize/isolate/diagnose, and the Zscaler troubleshooting tools to reach for first.</div>
+    <div class="lesson-card-meta"><span>Reference</span></div>
+  </a>
+
+  <a class="lesson-card" href="edu-260-uc-03-authentication.html"
+     data-tags="auth zia zpa zcc"
+     data-keywords="authentication saml idp sp identity provider auth token zia zpa zcc 0xA020 internal error noauth bypassurl bypass url BRK_MT_AUTH_SAML_FINGER_PRINT_FAIL cookie sm_au_c ourl login signin redirect">
+    <div class="lesson-card-top">
+      <span class="lesson-num">LESSON 3</span>
+      <div class="tags"><span class="tag tag-auth">AUTH</span><span class="tag tag-zia">ZIA</span><span class="tag tag-zpa">ZPA</span></div>
+    </div>
+    <div class="lesson-card-name">Authentication</div>
+    <div class="lesson-card-desc">SAML flows + 4 use cases: ZIA Internal Error 0xA020 · No-Auth bypassurl$ · ZPA SAML fingerprint failure · Cookie-Based Auth (_sm_au_c).</div>
+    <div class="lesson-card-meta"><span>4 use cases</span></div>
+  </a>
+
+  <a class="lesson-card" href="edu-260-uc-04-traffic-forwarding.html"
+     data-tags="zia zpa zcc perf"
+     data-keywords="traffic forwarding pac pse public service edge slow slowness performance captive portal firewall antivirus fw av netsh 504 google route latency tunnel z-tunnel ztunnel 2.0 gre ipsec">
+    <div class="lesson-card-top">
+      <span class="lesson-num">LESSON 4</span>
+      <div class="tags"><span class="tag tag-zia">ZIA</span><span class="tag tag-zpa">ZPA</span><span class="tag tag-zcc">ZCC</span><span class="tag tag-perf">PERF</span></div>
+    </div>
+    <div class="lesson-card-name">Traffic Forwarding</div>
+    <div class="lesson-card-desc">6 use cases — site fails through ZIA · Wrong PSE selection · ZIA slowness · ZPA app unreachable · ZCC FW/AV errors · Captive Portal blocks. Plus Performance Quick Reference matrix.</div>
+    <div class="lesson-card-meta"><span>6 use cases + quick ref</span></div>
+  </a>
+
+  <a class="lesson-card" href="edu-260-uc-05-policy-settings.html"
+     data-tags="zia zpa policy"
+     data-keywords="policy url filtering cloud app control tenant tenancy restriction gmail ssl inspection zpa SE policy not configured application policy blocked access policy assignment">
+    <div class="lesson-card-top">
+      <span class="lesson-num">LESSON 5</span>
+      <div class="tags"><span class="tag tag-policy">POLICY</span><span class="tag tag-zia">ZIA</span><span class="tag tag-zpa">ZPA</span></div>
+    </div>
+    <div class="lesson-card-name">Policy Settings &amp; Assignments</div>
+    <div class="lesson-card-desc">5 use cases — URL Filtering not enforcing · Cloud App Control / tenant restriction not blocking personal Gmail · SSL Inspection not applying · ZPA "Policy is not configured" · ZPA "App policy blocked access".</div>
+    <div class="lesson-card-meta"><span>5 use cases</span></div>
+  </a>
+
+  <a class="lesson-card" href="edu-260-uc-06-security-services.html"
+     data-tags="zia security"
+     data-keywords="security services bad server certificate ssl ssl-checker untrusted root advanced threat protection atp page risk block malware sandbox">
+    <div class="lesson-card-top">
+      <span class="lesson-num">LESSON 6</span>
+      <div class="tags"><span class="tag tag-zia">ZIA</span><span class="tag tag-policy">SECURITY</span></div>
+    </div>
+    <div class="lesson-card-name">Security Services</div>
+    <div class="lesson-card-desc">2 use cases — "Access denied due to bad server certificate" (cert chain issues) and Advanced Threat Protection / Page Risk blocks. Includes the security-services decision flow.</div>
+    <div class="lesson-card-meta"><span>2 use cases</span></div>
+  </a>
+
+  <a class="lesson-card" href="edu-260-uc-07-data-protection.html"
+     data-tags="zia dlp policy"
+     data-keywords="data protection dlp data loss prevention credit card sensitive data web a web b multi file upload notification dictionary engine">
+    <div class="lesson-card-top">
+      <span class="lesson-num">LESSON 7</span>
+      <div class="tags"><span class="tag tag-dlp">DLP</span><span class="tag tag-zia">ZIA</span></div>
+    </div>
+    <div class="lesson-card-name">Data Protection</div>
+    <div class="lesson-card-desc">3 use cases — DLP not detecting credit card data · sensitive data triggers DLP on Web-B but not Web-A · multi-file upload notifies for only one file.</div>
+    <div class="lesson-card-meta"><span>3 use cases</span></div>
+  </a>
+
+  <a class="lesson-card" href="edu-260-uc-08-digital-experience.html"
+     data-tags="zdx zcc perf"
+     data-keywords="zdx digital experience score zero probes off service status web probe url typo 307 response follow redirect application monitoring">
+    <div class="lesson-card-top">
+      <span class="lesson-num">LESSON 8</span>
+      <div class="tags"><span class="tag tag-zdx">ZDX</span><span class="tag tag-zcc">ZCC</span></div>
+    </div>
+    <div class="lesson-card-name">Digital Experience (ZDX)</div>
+    <div class="lesson-card-desc">3 use cases — ZCC ZDX Service Status Off · probes configured but Score is zero (URL typo) · app available despite 307 (Follow Redirect behaviour).</div>
+    <div class="lesson-card-meta"><span>3 use cases</span></div>
+  </a>
+
+  <a class="lesson-card" href="edu-260-uc-09-nanolog-streaming.html"
+     data-tags="nss zia logs"
+     data-keywords="nanolog streaming service nss siem vm-nss cloud nss feeds feed format log streaming json csv tcp https collector splunk arcsight">
+    <div class="lesson-card-top">
+      <span class="lesson-num">LESSON 9</span>
+      <div class="tags"><span class="tag tag-nss">NSS</span><span class="tag tag-zia">ZIA</span></div>
+    </div>
+    <div class="lesson-card-name">Nanolog Streaming Service</div>
+    <div class="lesson-card-desc">NSS architecture — VM-NSS vs Cloud NSS, log streaming to SIEM, feed formats, and troubleshooting NSS collectors and tunnels.</div>
+    <div class="lesson-card-meta"><span>Architecture + troubleshooting</span></div>
+  </a>
+
+  <a class="lesson-card" href="edu-260-uc-10-virtual-service-edge.html"
+     data-tags="vse zia"
+     data-keywords="virtual service edge vse pse private service edge vip ttl webloghttp disable cluster load balancer geolocal hostname zen tcpdump">
+    <div class="lesson-card-top">
+      <span class="lesson-num">LESSON 10</span>
+      <div class="tags"><span class="tag tag-vse">VSE</span><span class="tag tag-zia">ZIA</span></div>
+    </div>
+    <div class="lesson-card-name">Virtual Service Edge</div>
+    <div class="lesson-card-desc">VSE vs PSE comparison, cluster behaviour, VIP issues (TTL signature), weblog CLI disable, and process-flow troubleshooting on the appliance.</div>
+    <div class="lesson-card-meta"><span>Architecture + troubleshooting</span></div>
+  </a>
+
+  <a class="lesson-card" href="edu-260-uc-11-zpa-dns-connectivity.html"
+     data-tags="zpa zcc perf"
+     data-keywords="zpa dns connectivity wireshark pcap packet capture syn syn-ack retransmit tcp stream ssl handshake encrypted alert rst app connector unreachable demo demonstration end to end">
+    <div class="lesson-card-top">
+      <span class="lesson-num">LESSON 11</span>
+      <div class="tags"><span class="tag tag-zpa">ZPA</span><span class="tag tag-perf">PCAP</span></div>
+    </div>
+    <div class="lesson-card-name">ZPA — DNS &amp; Connectivity</div>
+    <div class="lesson-card-desc">End-to-end troubleshoot demonstration — DNS resolution, App Segment, App Connector, plus Wireshark pcap walkthrough (TCP retransmits, SSL handshake, RST).</div>
+    <div class="lesson-card-meta"><span>Demo walkthrough</span></div>
+  </a>
+
+  <a class="lesson-card" href="edu-260-uc-12-zpa-support-diagnostics.html"
+     data-tags="zpa logs"
+     data-keywords="zpa support diagnostics logs status codes app connector ticket bundle clean log layered model help portal">
+    <div class="lesson-card-top">
+      <span class="lesson-num">LESSON 12</span>
+      <div class="tags"><span class="tag tag-zpa">ZPA</span><span class="tag tag-meta">SUPPORT</span></div>
+    </div>
+    <div class="lesson-card-name">ZPA — Support &amp; Diagnostics</div>
+    <div class="lesson-card-desc">When to escalate to Zscaler Support — diagnostic log paths, status codes, clean log bundling, and the layered mental model for ZPA tickets.</div>
+    <div class="lesson-card-meta"><span>Support workflow</span></div>
+  </a>
+
+  <a class="lesson-card" href="edu-260-uc-13-zcc-exporting-logs.html"
+     data-tags="zcc logs perf"
+     data-keywords="zcc zscaler client connector exporting logs packet capture pcap wireshark tcp ttl udp stream throughput task manager appendix firewall local network block performance tips">
+    <div class="lesson-card-top">
+      <span class="lesson-num">LESSON 13</span>
+      <div class="tags"><span class="tag tag-zcc">ZCC</span><span class="tag tag-perf">PCAP</span></div>
+    </div>
+    <div class="lesson-card-name">ZCC — Exporting Logs &amp; Useful Tips</div>
+    <div class="lesson-card-desc">ZCC log export workflow plus the 7 troubleshooting Appendices — Wireshark TCP/TTL filters, UDP stream follow, throughput checks, firewall block detection in PCAPs.</div>
+    <div class="lesson-card-meta"><span>Logs + 7 appendices</span></div>
+  </a>
+
+  <a class="lesson-card" href="edu-260-uc-14-recap.html"
+     data-tags="meta recap"
+     data-keywords="recap summary review course completion thank you objectives toolbox layered model">
+    <div class="lesson-card-top">
+      <span class="lesson-num">LESSON 14</span>
+      <div class="tags"><span class="tag tag-meta">RECAP</span></div>
+    </div>
+    <div class="lesson-card-name">Recap</div>
+    <div class="lesson-card-desc">What you should now be able to do — the 8 issue areas covered, the troubleshooting toolbox, and learning objectives review.</div>
+    <div class="lesson-card-meta"><span>Course summary</span></div>
+  </a>
+
+</div>
+
+<div class="no-results" id="noResults">
+  <div style="font-size:32px;margin-bottom:10px;">🔍</div>
+  <div>No lessons match your search. Try a different term or click <strong>All 14</strong> to reset.</div>
+</div>
+
+<div class="toolkit">
+  <div class="toolkit-title">Quick reference — go-to log paths &amp; tools</div>
+  <div class="toolkit-grid">
+    <div class="toolkit-item"><strong>ZCC Logs</strong>Help → Export Logs in the ZCC tray icon. Bundle includes ZSA logs, packet captures, system info.</div>
+    <div class="toolkit-item"><strong>ZIA Web Insights</strong>Analytics → Web Insights → Logs filter by user, URL, transaction ID for live policy verification.</div>
+    <div class="toolkit-item"><strong>ZPA Diagnostic Logs</strong>Admin Portal → Diagnostics → Logs. Internal Status Codes documented at help.zscaler.com.</div>
+    <div class="toolkit-item"><strong>ZDX Score Drilldown</strong>ZDX Admin → Applications → Score Trend. Pivot by Department / Location / Region.</div>
+    <div class="toolkit-item"><strong>NSS Health</strong>Admin → Nanolog Streaming Service → Feed status. Check connectivity to Cloud NSS or SIEM collector.</div>
+    <div class="toolkit-item"><strong>Wireshark Filters</strong><code>dns contains "..."</code> · <code>tcp.analysis.retransmission</code> · <code>ip.ttl == 62</code> · <code>ssl.handshake</code></div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div>EDU-260 · <span>Use Cases</span></div>
+  <div>Zscaler Troubleshoot Courses — 14 lessons</div>
+</footer>
+
+<script>
+const cards = Array.from(document.querySelectorAll('.lesson-card'));
+const searchInput = document.getElementById('searchInput');
+const searchClear = document.getElementById('searchClear');
+const resultCount = document.getElementById('resultCount');
+const noResults = document.getElementById('noResults');
+const grid = document.getElementById('lessonGrid');
+const pills = document.querySelectorAll('.pill');
+
+let activeFilter = 'all';
+let activeSearch = '';
+
+function applyFilters(){
+  const q = activeSearch.toLowerCase().trim();
+  let visible = 0;
+  cards.forEach(card => {
+    const tags = card.dataset.tags || '';
+    const keywords = card.dataset.keywords || '';
+    const name = card.querySelector('.lesson-card-name').textContent.toLowerCase();
+    const desc = card.querySelector('.lesson-card-desc').textContent.toLowerCase();
+    const matchesFilter = activeFilter === 'all' || tags.includes(activeFilter);
+    const matchesSearch = !q || tags.includes(q) || keywords.includes(q) || name.includes(q) || desc.includes(q);
+    if(matchesFilter && matchesSearch){
+      card.classList.remove('hidden');
+      visible++;
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+  resultCount.textContent = visible === 14 ? '14 lessons' : `${visible} of 14`;
+  noResults.classList.toggle('visible', visible === 0);
+  searchClear.classList.toggle('visible', activeSearch.length > 0);
+}
+
+searchInput.addEventListener('input', e => {
+  activeSearch = e.target.value;
+  applyFilters();
+});
+
+function clearSearch(){
+  activeSearch = '';
+  searchInput.value = '';
+  searchInput.focus();
+  applyFilters();
+}
+
+pills.forEach(p => {
+  p.addEventListener('click', () => {
+    pills.forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    activeFilter = p.dataset.filter;
+    applyFilters();
+  });
+});
+
+document.addEventListener('keydown', e => {
+  if(e.key === '/' && document.activeElement !== searchInput){
+    e.preventDefault();
+    searchInput.focus();
+  }
+  if(e.key === 'Escape' && document.activeElement === searchInput){
+    clearSearch();
+    searchInput.blur();
+  }
+});
+
+// Page transition
+setTimeout(() => { document.body.style.opacity = '1'; document.body.style.transition = 'opacity 0.35s ease'; }, 10);
+document.querySelectorAll('a[href]').forEach(a => {
+  a.addEventListener('click', () => { if(a.hostname === location.hostname) sessionStorage.setItem('pt', '1'); });
+});
+</script>
+
+</body>
+</html>

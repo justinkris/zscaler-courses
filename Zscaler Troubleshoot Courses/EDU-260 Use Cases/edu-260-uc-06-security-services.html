@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security Services — EDU-260 Use Cases</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#fff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;--blue-deep:#0f3d7a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html.pt-init body{opacity:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{background:#0d1a2e;color:#fff;padding:28px 40px 32px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:#93c5fd;letter-spacing:0.06em;margin-bottom:20px;flex-wrap:wrap;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;opacity:0.8;}
+.breadcrumb a:hover{opacity:1;text-decoration:underline;}
+.breadcrumb-sep{opacity:0.5;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.eyebrow-chip{background:rgba(147,197,253,0.15);border:1px solid rgba(147,197,253,0.3);color:#93c5fd;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:4px 12px;border-radius:20px;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:#93c5fd;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+h1{font-family:'Fraunces',serif;font-size:42px;font-weight:700;line-height:1.1;color:#fff;margin-bottom:4px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-top:6px;letter-spacing:0.03em;}
+.motivation-banner{background:#1e3a5c;border-bottom:1px solid rgba(147,197,253,0.15);padding:14px 40px;}
+.motivation-text{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.6;}
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.qpanel{background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 24px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 24px 22px;}
+.qpanel-body.open{display:block;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+.no-questions{font-size:12px;color:var(--text-muted);padding:10px 0;}
+.q-group{margin-bottom:14px;}
+.q-group-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:8px;}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-num{font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0;margin-top:2px;}
+.q-text{font-size:13px;color:var(--text-soft);flex:1;line-height:1.5;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 4px;flex-shrink:0;}
+.q-del:hover{color:var(--red);}
+.section-nav{display:flex;gap:2px;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:10;}
+.nav-tab{background:none;border:1px solid transparent;border-radius:8px;padding:6px 14px;font-family:'Epilogue',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.nav-tab:hover{background:var(--surface-2);color:var(--text);}
+.nav-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;flex:1;}
+.main-content{padding:32px 40px;min-width:0;}
+aside{padding:28px 24px;border-left:1px solid var(--border);position:sticky;top:45px;height:calc(100vh - 45px);overflow-y:auto;background:var(--surface);}
+.section-block{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border-dim);}
+.section-block:last-child{border-bottom:none;}
+.section-tag{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--blue);margin-bottom:8px;}
+h2{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:16px;}
+h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 10px;}
+p{font-size:14px;line-height:1.75;color:var(--text-soft);margin-bottom:12px;}
+ul,ol{padding-left:20px;margin-bottom:12px;}
+li{font-size:13.5px;line-height:1.7;color:var(--text-soft);margin-bottom:4px;}
+code{background:var(--surface-2);border:1px solid var(--border-dim);border-radius:4px;padding:1px 6px;font-size:12px;color:var(--blue-deep);font-family:'SF Mono','Menlo',monospace;}
+.phase-steps{display:grid;grid-template-columns:1fr;gap:10px;margin:18px 0;}
+.phase-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:10px;padding:12px 16px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;}
+.phase-num{background:var(--blue);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.phase-body{min-width:0;}
+.phase-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--blue);margin-bottom:4px;}
+.phase-text{font-size:13px;color:var(--text-soft);line-height:1.65;}
+.phase-text ul{margin:6px 0 0;padding-left:18px;}
+.phase-text li{font-size:12.5px;margin-bottom:2px;}
+.callout{border-radius:10px;padding:14px 16px;margin:16px 0;border-left:3px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.14em;margin-bottom:6px;}
+.callout-body{font-size:13px;line-height:1.65;color:var(--text-soft);}
+.callout-tip{background:var(--blue-glow);border-color:var(--blue);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-amber{background:var(--amber-light);border-color:var(--amber);}
+.callout-amber .callout-header{color:var(--amber);}
+.callout-amber .callout-body{color:#78350f;}
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;transform:scale(1.5);transform-origin:top left;transition:transform 0.2s ease;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:24px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.tool-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:72px;outline:none;line-height:1.6;}
+.tool-textarea:focus{border-color:var(--blue);}
+.tool-row{margin-top:8px;text-align:right;}
+.btn-add-q{background:#0d1a2e;color:#93c5fd;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:24px;}
+.sidebar-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:10px;}
+.hub-back{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:10px 16px;border-radius:10px;transition:opacity 0.15s;margin-bottom:20px;}
+.hub-back:hover{opacity:0.88;}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.check-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-soft);padding:6px 10px;border-radius:8px;cursor:pointer;transition:background 0.12s;}
+.check-item:hover{background:var(--surface-2);}
+.check-item input{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.check-item.done{color:var(--text-muted);text-decoration:line-through;}
+.sidebar-divider{height:1px;background:var(--border);margin:18px 0;}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:16px;}
+.quick-ref-title{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#93c5fd;margin-bottom:12px;}
+.qr-term{margin-bottom:10px;}
+.qr-label{font-size:10px;font-weight:700;color:#93c5fd;letter-spacing:0.08em;}
+.qr-def{font-size:11.5px;color:rgba(255,255,255,0.65);line-height:1.55;margin-top:2px;}
+footer{background:#0d1a2e;color:rgba(255,255,255,0.45);font-size:11px;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.04em;}
+footer span{color:#93c5fd;}
+@media(max-width:900px){main{grid-template-columns:1fr;}aside{display:none;}.main-content{padding:24px 20px;}header,footer{padding:24px 20px;}.motivation-banner{padding:12px 20px;}.section-nav{padding:8px 16px;}.lesson-tools-grid{grid-template-columns:1fr;}.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../troubleshoot-hub.html">Zscaler Troubleshoot Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="edu-260-use-cases-hub.html">EDU-260 Use Cases</a>
+    <span class="breadcrumb-sep">›</span>
+    Security Services
+  </div>
+  <div class="eyebrow">
+    <span class="eyebrow-chip">EDU-260 · LESSON 6</span>
+    <span class="header-dot"></span>
+  </div>
+  <h1>Security <em>Services</em></h1>
+  <div class="header-sub">Bad certificates, sandbox quirks, and the Page Risk index — security blocks that aren't quite blocks</div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">"Most security blocks are working as designed — the trick is reading the Web Insights record well enough to know whether to trust it or fix it."</div>
+</div>
+
+<div class="top-panels">
+  <div class="qpanel" id="qpanel">
+    <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+      <span class="qpanel-title">MY QUESTIONS</span>
+      <span class="qpanel-count" id="qpanel-count">0</span>
+      <span class="qpanel-hint">— click to expand</span>
+      <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+    </button>
+    <div class="qpanel-body" id="qpanel-body"></div>
+  </div>
+  <div class="notes-panel" id="notes-panel">
+    <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+      <span class="notes-panel-title">MY NOTES</span>
+      <span class="notes-panel-count" id="notes-panel-count">0</span>
+      <span class="notes-panel-hint">— click to expand</span>
+      <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+    </button>
+    <div class="notes-panel-body" id="notes-panel-body"></div>
+  </div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-flow')">0 · Flow Map</button>
+  <button class="nav-tab" onclick="navTo('section-bad-cert')">1 · Bad Server Cert</button>
+  <button class="nav-tab" onclick="navTo('section-atp')">2 · Advanced Threat / Page Risk</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- SECTION 0 — Flow -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · WHY EVERY SECURITY BLOCK STARTS THE SAME WAY</span>
+  </div>
+  <p class="socratic-insight">Security Services — SSL policy, security exceptions, IPS, malware, ATP, sandbox, P2P — sit in a long evaluation chain. Most "this should be allowed" tickets are not a misfire — they're a true positive triggered by one piece of the chain. Treating the symptom requires identifying which link.</p>
+  <ul class="socratic-questions">
+    <li>If a file under 20MB is sandboxed but a 50MB file is not, what does that imply about how sandboxing is configured?</li>
+    <li>Why does "the site is blocked but it's legitimate" almost always point you to Web Insights first?</li>
+  </ul>
+  <div class="answer-area" data-section="flow">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Sandbox has an upload-size limit (20MB by default) and an allowed file-type list. Anything larger or outside the type list is dropped off the sandbox path and sent on. That's why the same "infected-file test" passes through one route and not the other — the gating happens before the sandbox even sees the content.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Web Insights records exactly which security feature blocked the transaction — Policy Action, URL Category, URL Class, Block Policy Type, Suspicious Content score. That single row collapses "which of seven security services blocked me?" into a deterministic answer, which then maps directly to where to navigate in the Admin UI.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-flow">
+  <div class="section-tag">SECTION 0</div>
+  <h2>The Security Services Troubleshooting Flow</h2>
+  <p>Security services protect against four pillars of cyberthreat: <strong>Minimize the Attack Surface, Prevent Compromise, Eliminate Lateral Movement, Prevent Data Loss</strong>. ZIA's security chain — SSL policy, security exception, malicious-URL list, browser control, IPS, suspicious content (Page Risk), malware protection, P2P / ATP — evaluates each transaction sequentially. Every block lands in Web Insights with the policy and reason attached.</p>
+
+  <div class="screenshot-embed">
+    <img src="security-services-flow.png" alt="Security services flow showing SSL policy, security exception, malicious URL, browser, IPS, page risk, malware, P2P checks">
+    <div class="screenshot-caption">Security Services decision tree: SSL inspection → security exception → known malicious URL → browser control → IPS → suspicious content (Page Risk) → malware → P2P / advanced threat protection. Each box maps to a column in Web Insights.</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><span>💡</span><span>FILE SIZE &amp; FILE TYPE GATING</span></div>
+    <div class="callout-body">Sandbox has a 20MB upload limit and a configured file-type list. A file over 20MB or of an unsupported type is downloaded successfully and sent for analysis only if it matches the sandbox policy — otherwise it's not sandboxed at all.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Four cyberthreat protection areas: Minimize Attack Surface · Prevent Compromise · Eliminate Lateral Movement · Prevent Data Loss. Security-services chain order (memorise): SSL → Security Exception → Browser Control → IPS → Page Risk → Malware → ATP/P2P. Sandbox gating: 20MB cap + file-type allowlist.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-flow" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('flow','Section 0 — Flow Map')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-flow" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('flow')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 1 — Bad cert -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · ACCESS DENIED DUE TO BAD SERVER CERTIFICATE</span>
+  </div>
+  <p class="socratic-insight">User says "I should be able to reach this site." Zscaler says "the certificate is untrusted." Both can be right — the question is whether the user is willing to accept the risk, or whether the webmaster needs to fix the cert.</p>
+  <ul class="socratic-questions">
+    <li>Why is a third-party SSL checker a better diagnostic than the user's browser screenshot?</li>
+    <li>"Set SSL Inspection to Not Inspect" and "set Untrusted Server Certificate action to Allow" both unblock the user. What's the difference in risk?</li>
+  </ul>
+  <div class="answer-area" data-section="bad-cert">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Third-party SSL checkers (Digicert, SSL Labs) walk the certificate chain on the server side and show exactly which link is broken: untrusted root CA, missing intermediate, expired cert, name mismatch. The user's browser only shows the final verdict. A checker tells you whether to fix the cert (webmaster issue) or accept the risk (Zscaler policy change).</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">"Not Inspect" stops Zscaler from looking at the traffic at all — DLP, ATP, CAC all go dark for that destination. "Allow Untrusted Server Certificate" still inspects the traffic but stops short of blocking on cert validity. The second is much less damaging — you keep all downstream security except certificate-chain verification.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-bad-cert">
+  <div class="section-tag">USE CASE 1 · ZIA</div>
+  <h2>"Access Denied Due to Bad Server Certificate"</h2>
+  <p><strong>Symptom:</strong> User is accessing a website that should be allowed per their consideration, but they see a Zscaler block page: <em>"Access denied due to bad server certificate."</em></p>
+
+  <div class="screenshot-embed">
+    <img src="bad-server-certificate-block.png" alt="Zscaler block page reading Access denied due to bad server certificate">
+    <div class="screenshot-caption">User-facing block page: "We found a security threat. Website blocked. Access denied due to bad server certificate." Includes a link to the Zscaler internet use policy.</div>
+  </div>
+
+  <div class="phase-steps">
+    <div class="phase-card"><div class="phase-num">1</div><div class="phase-body"><div class="phase-label">PROBLEM</div><div class="phase-text">User cannot reach the URL; Zscaler returns the "bad server certificate" block page.</div></div></div>
+    <div class="phase-card"><div class="phase-num">2</div><div class="phase-body"><div class="phase-label">LOCATE</div><div class="phase-text">Web Insights items to check:<ul><li><strong>SSL Policy Reason</strong> — what SSL rule is involved.</li><li>Compare criteria (URL category, user, location) against the SSL Inspection rule.</li></ul></div></div></div>
+    <div class="phase-card"><div class="phase-num">3</div><div class="phase-body"><div class="phase-label">ISOLATE</div><div class="phase-text">Check the server certificate chain at a 3rd-party SSL checker (e.g. Digicert SSL Check, SSL Labs). Look for:<ul><li>Untrusted Root Certificate Authority.</li><li>Chain issues / missing intermediate / "Contains anchor in trust store"/"Not in trust store".</li><li>Trusted: No on Mozilla / Apple / Android / Java / Windows.</li></ul></div></div></div>
+    <div class="phase-card"><div class="phase-num">4</div><div class="phase-body"><div class="phase-label">DIAGNOSE</div><div class="phase-text">If the user must access the site, two options (in increasing security cost):<ul><li>Set the action for <strong>Untrusted Server Certificate</strong> to <strong>Allow</strong> — keeps inspection, drops cert-validation block.</li><li>Set the relevant SSL Inspection rule to <strong>Not Inspect</strong> — drops all downstream inspection too.</li></ul>Otherwise, contact the webmaster to fix the bad certificate.</div></div></div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="ssl-checker-untrusted-root.png" alt="3rd party SSL certificate checker showing untrusted root certificate authority">
+    <div class="screenshot-caption">Third-party SSL checker output: Server Key &amp; Certificate #1 shows "Untrusted Root Certificate Authority" and "Trusted: NOT TRUSTED" on Mozilla/Apple/Android/Java/Windows — confirming the cert chain, not Zscaler, is at fault.</div>
+  </div>
+
+  <div class="callout callout-amber">
+    <div class="callout-header"><span>⚠</span><span>PREFER "ALLOW UNTRUSTED" OVER "NOT INSPECT"</span></div>
+    <div class="callout-body">"Not Inspect" disables all downstream security (DLP, CAC, ATP) for the destination. "Allow Untrusted Server Certificate" keeps inspection alive but tolerates the bad cert. Always pick the narrower change.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">"Bad server certificate" block → confirm fault with a 3rd-party SSL checker (Digicert/SSL Labs). Fix options: (1) Untrusted Server Certificate action = Allow (preferred), (2) SSL Inspection rule = Not Inspect (drops all security), (3) contact webmaster to renew/fix cert.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-bad-cert" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('bad-cert','Use Case 1 — Bad Server Cert')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-bad-cert" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('bad-cert')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 — ATP -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · ADVANCED THREAT PROTECTION &amp; PAGE RISK</span>
+  </div>
+  <p class="socratic-insight">"PageRisk block inbound response: page is unsafe" tells you something useful — Zscaler scored the page content as too risky. The danger isn't the block; it's the temptation to lower the score threshold to make the ticket go away.</p>
+  <ul class="socratic-questions">
+    <li>Why is lowering the Suspicious Content Page Risk threshold a strictly worse fix than adding a security exception for the specific URL?</li>
+    <li>If the same page is blocked one day and allowed the next, what changed?</li>
+  </ul>
+  <div class="answer-area" data-section="atp">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Lowering the threshold globally allows every risky page that scores just above the old line — most of which you didn't intend to allow. A security exception is surgical: it permits exactly the URL you care about and leaves the threshold protecting the rest of the internet. Always prefer the narrow, listed exception.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">The page content itself probably changed — Page Risk is computed from inbound content (scripts, redirects, embeds) and updates per-request. A page that was clean yesterday may have been compromised, or simply had a risky third-party widget added. Re-scan and treat each event as an independent score, not a stable verdict.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-atp">
+  <div class="section-tag">USE CASE 2 · ZIA</div>
+  <h2>Advanced Threat Protection — "Page is Unsafe"</h2>
+  <p><strong>Symptom:</strong> The user is trying to access a legitimate website but is getting a blocked page. Web Insights policy action: <em>"PageRisk block inbound response: page is unsafe."</em></p>
+
+  <div class="phase-steps">
+    <div class="phase-card"><div class="phase-num">1</div><div class="phase-body"><div class="phase-label">PROBLEM</div><div class="phase-text">User reaches a legitimate-looking site; Zscaler returns a Page Risk block.</div></div></div>
+    <div class="phase-card"><div class="phase-num">2</div><div class="phase-body"><div class="phase-label">LOCATE</div><div class="phase-text">Open Web Insights, filter by the URL in question, find the matching transaction.</div></div></div>
+    <div class="phase-card"><div class="phase-num">3</div><div class="phase-body"><div class="phase-label">ISOLATE</div><div class="phase-text">From Web Insights, capture:<ul><li><strong>Policy Action</strong></li><li><strong>URL Category</strong></li><li><strong>URL Class</strong></li><li><strong>Block Policy Type</strong></li><li><strong>Suspicious Content</strong> score</li></ul>If those columns aren't visible, add them via the three-dot menu.</div></div></div>
+    <div class="phase-card"><div class="phase-num">4</div><div class="phase-body"><div class="phase-label">DIAGNOSE</div><div class="phase-text">The policy action <em>"PageRisk block inbound response: page is unsafe"</em> indicates the page content score exceeded the Page Risk index threshold set by the Advanced Threat Suspicious Content Protection policy. Two options:<ul><li><strong>Lower the score threshold</strong> in <code>Policy → Adv. Threat Protection → Adv. Threat Policy</code> — <em>not recommended</em>, this allows other risky sites too.</li><li><strong>Add the URL to Security Exceptions</strong> in <code>Policy → Adv. Threat Protection → Security Exceptions</code> — the surgical fix.</li></ul></div></div></div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="atp-page-risk-config.png" alt="Advanced Threat Protection config with Suspicious Content Page Risk slider and Security Exceptions tab">
+    <div class="screenshot-caption">Advanced Threat Protection policy editor. Tabs: <strong>Advanced Threats Policy</strong> (with the Suspicious Content Page Risk slider — Low Risk · Moderate Risk · High Risk) and <strong>Security Exceptions</strong> (URL allowlist). Prefer the Exceptions tab for surgical fixes.</div>
+  </div>
+
+  <div class="callout callout-amber">
+    <div class="callout-header"><span>⚠</span><span>DO NOT LOWER THE THRESHOLD</span></div>
+    <div class="callout-body">Lowering the Suspicious Content threshold may allow users to visit websites that are actually malicious. Always prefer adding a Security Exception for the specific URL.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">"PageRisk block inbound response: page is unsafe" → Page Risk index score exceeded the Adv Threat Suspicious Content threshold. Resolve via <code>Policy → Adv Threat Protection → Security Exceptions</code> (add URL). Never lower the score threshold — that opens the door to every other risky site at the same score.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-atp" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('atp','Use Case 2 — ATP / Page Risk')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-atp" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('atp')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end main-content -->
+
+<aside>
+  <a class="hub-back" href="edu-260-use-cases-hub.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    EDU-260 Use Cases Hub
+  </a>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS</div>
+    <ul class="checklist">
+      <li class="check-item" onclick="toggleDone(this,'check-0')"><input type="checkbox" id="check-0" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">Security Services Flow</li>
+      <li class="check-item" onclick="toggleDone(this,'check-1')"><input type="checkbox" id="check-1" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">Bad Server Certificate</li>
+      <li class="check-item" onclick="toggleDone(this,'check-2')"><input type="checkbox" id="check-2" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">ATP — Page Risk</li>
+    </ul>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="quick-ref">
+    <div class="quick-ref-title">KEY TERMS</div>
+    <div class="qr-term"><div class="qr-label">PAGE RISK INDEX</div><div class="qr-def">Per-transaction score of inbound content. Above the threshold = blocked as suspicious.</div></div>
+    <div class="qr-term"><div class="qr-label">SECURITY EXCEPTIONS</div><div class="qr-def">Surgical URL allowlist under <code>Adv Threat Protection</code>. Preferred over lowering thresholds.</div></div>
+    <div class="qr-term"><div class="qr-label">UNTRUSTED ROOT CA</div><div class="qr-def">Cert signed by an authority not in Mozilla/Apple/Android/Java/Windows trust stores.</div></div>
+    <div class="qr-term"><div class="qr-label">SSL CHECKER</div><div class="qr-def">Digicert, SSL Labs, etc. — confirms whether the cert chain is the actual fault before blaming Zscaler.</div></div>
+    <div class="qr-term"><div class="qr-label">SANDBOX LIMITS</div><div class="qr-def">~20 MB upload cap + configured file-type allowlist. Larger / off-list files bypass the sandbox.</div></div>
+    <div class="qr-term"><div class="qr-label">4 THREAT PILLARS</div><div class="qr-def">Minimize Attack Surface · Prevent Compromise · Eliminate Lateral Movement · Prevent Data Loss.</div></div>
+    <div class="qr-term"><div class="qr-label">NOT INSPECT vs ALLOW</div><div class="qr-def">"Not Inspect" disables all security for the destination; "Allow Untrusted Cert" only tolerates the cert.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div>EDU-260 · <span>Use Cases</span></div>
+  <div>Lesson 6 — Security Services</div>
+</footer>
+
+<script>
+const PAGE_KEY = 'edu-260-uc-06-security-services';
+const SECTIONS = {
+  'flow':     'Section 0 — Flow Map',
+  'bad-cert': 'Use Case 1 — Bad Server Cert',
+  'atp':      'Use Case 2 — ATP / Page Risk'
+};
+
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();ns.push({id:Date.now(),section:key,sectionName:SECTIONS[key]||key,text});saveNotesArr(ns);ta.value='';renderNotesPanel();if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+
+function getQArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQArr(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const qs=getQArr();qs.push({id:Date.now(),section:key,sectionName:name,text});saveQArr(qs);ta.value='';renderQPanel();if(!document.getElementById('qpanel-body').classList.contains('open'))toggleQPanel();}
+function deleteQ(id){saveQArr(getQArr().filter(q=>q.id!==id));renderQPanel();}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function renderQPanel(){const qs=getQArr();const count=document.getElementById('qpanel-count');if(count){count.textContent=qs.length;count.style.display=qs.length?'inline':'none';}const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!body)return;if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));qs.forEach(q=>{if(groups[q.section])groups[q.section].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQ(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=PAGE_KEY+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+
+function navTo(id){const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}const ids=['section-flow','section-bad-cert','section-atp'];document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));}
+
+function toggleDone(li,id){const cb=li.querySelector('input[type="checkbox"]');const checked=!cb.checked;cb.checked=checked;li.classList.toggle('done',checked);localStorage.setItem(PAGE_KEY+'-check-'+id,checked);}
+function initChecks(){document.querySelectorAll('.check-item').forEach(function(li){const cb=li.querySelector('input[type="checkbox"]');if(!cb)return;if(localStorage.getItem(PAGE_KEY+'-check-'+cb.id)==='true'){cb.checked=true;li.classList.add('done');}});}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();renderNotesPanel();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){
+    const key=PAGE_KEY+'-socans-'+area.dataset.section;
+    try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;area.querySelector('.btn-add-answer').textContent='✓ Answer saved';area.querySelector('.btn-add-answer').disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}
+  });
+  document.querySelectorAll('.screenshot-embed img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  setTimeout(function(){document.body.style.opacity='1';document.body.style.transition='opacity 0.35s ease';},10);
+  document.querySelectorAll('a[href]').forEach(function(a){a.addEventListener('click',function(){if(a.hostname===location.hostname)sessionStorage.setItem('pt','1');});});
+});
+</script>
+</body>
+</html>

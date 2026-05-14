@@ -391,3 +391,39 @@ FUNDAMENTALS-101 · DATA PROTECTION FUNDAMENTALS
 A1.png — Two-panel cartoon infographic: Left panel labelled "Real-time CASB — Inline" shows a friendly security guard at a club entrance checking a bag, a glowing red blocked badge on one item being turned away, small label "Blocks data in motion"; Right panel labelled "Scanning CASB — API" shows a hotel manager with a clipboard doing a thorough room inspection inside an already-occupied room, checking drawers and surfaces, small label "Finds data at rest"; both panels in clean cartoon style with warm colours, cheerful round-faced characters, minimal text labels only where needed, educational infographic feel, modern tech-analogy aesthetic
 
 Note: Diagram prompts are no longer generated. Diagrams come from embedded course screenshots.
+
+
+===============================================
+EDU-260 Use Cases — Lessons 12 / 13 / 14
+===============================================
+
+--- Lesson 12: ZPA Support & Diagnostics (edu-260-uc-12-zpa-support-diagnostics.html) ---
+A1.png — Two-panel cartoon infographic. Left panel labelled "MUDDY TICKET" shows a frazzled detective standing over a giant overflowing cardboard box labelled "unsorted week of photos" with crumpled prints spilling out, big magnifying glass useless, sad expression, small label "no timestamp, no scope". Right panel labelled "CLEAN BUNDLE" shows a tidy crime-scene photo on an evidence board: a single clear photo with a timestamp tag, a forensic ruler in frame, three small labelled exhibit cards beside it ("ZCC log", "PCAP", "session code"), a smiling detective giving a thumbs-up. Both panels in clean cartoon style with warm colours, minimal text labels only where needed, educational infographic feel, modern tech-analogy aesthetic.
+
+--- Lesson 13: ZCC Exporting Logs (edu-260-uc-13-zcc-exporting-logs.html) ---
+A1.png — Cartoon infographic of a three-segment water pipe running left to right with three labelled pressure gauges. Segment 1 labelled "Client to Service Edge" with a green gauge ("OK"). Segment 2 labelled "Service Edge to Connector" with a green gauge ("OK"). Segment 3 labelled "Connector to App Server" with a red gauge ("Slow") and a small drip at the end at a kitchen tap labelled "App". A friendly cartoon plumber stands beside segment 3 with a wrench, smiling. Bright clean cartoon style, minimal text labels only where needed, educational infographic feel, modern tech-analogy aesthetic.
+
+--- Lesson 14: Recap (edu-260-uc-14-recap.html) ---
+(no analogy image — recap page intentionally light)
+
+
+============================================
+EDU-260 · TROUBLESHOOTING USE CASES
+============================================
+
+--- Lesson 9: Nanolog Streaming Service (edu-260-uc-09-nanolog-streaming.html) ---
+A1.png — Two-panel cartoon: Left panel labelled "VM-NSS" shows a busy sorting building with conveyor belts feeding labelled mail bins, a small RAM buffer drum spinning, and a "TCP raw" tube exiting toward a SIEM dish; Right panel labelled "Cloud NSS" shows a cheerful courier on a bicycle carrying an "HTTPS POST" bag of packets directly to a SIEM collector cloud; both panels in clean cartoon style with bold outlines, small labels for "Logs in", "Buffer", "SIEM out", minimal text labels only where needed, educational infographic feel, modern tech-analogy aesthetic
+
+--- Lesson 10: Virtual Service Edge (edu-260-uc-10-virtual-service-edge.html) ---
+A1.png — Three-panel cartoon: Two co-pilots in separate cockpits flying in formation as VSE cluster nodes. Panel 1 labelled "Healthy Cluster" shows both pilots in green helmets talking over a clear radio channel; Panel 2 labelled "Firewall Blocking Radio (TTL 62)" shows a small firewall wall between the cockpits with one pilot frustrated as static fills the radio, with a TTL=62 hop counter speech bubble; Panel 3 labelled "Old Build Static" shows one pilot wearing an outdated helmet labelled "v3.1" while the other shows "v4.0" — radio is breaking up. Bold cartoon outlines, friendly aviator characters, minimal text labels only where needed, educational infographic feel, modern tech-analogy aesthetic
+
+--- Lesson 11: ZPA — DNS & Connectivity (edu-260-uc-11-zpa-dns-connectivity.html) ---
+A1.png — Three-panel cartoon of a telephone call analogy mapping to packet capture signs. Panel 1 labelled "Healthy Connection (SYN / SYN-ACK)" shows two telephone handsets connected with a clear dial-tone wave between them, both characters smiling; Panel 2 labelled "No SYN-ACK = Cut Line" shows one character holding a phone with the cord visibly snipped, scissors hovering, the other end empty; Panel 3 labelled "Encrypted Alert + RST = Wrong Certificate" shows one character receiving a sealed envelope stamped "REJECTED" while the other hangs up the phone with a red exclamation. Cheerful cartoon style with bold outlines, minimal text labels only where needed, educational infographic feel, modern tech-analogy aesthetic
+
+--- Lesson 12: ZPA — Support & Diagnostics (edu-260-uc-12-zpa-support-diagnostics.html) ---
+A1.png — Two-panel detective cartoon: Left panel labelled "Muddy Ticket" shows a frustrated detective at a desk piled with disorganised papers, coffee stains, fragmented post-it notes, and a magnifying glass that can't focus on anything — small labels "Vague symptom", "No timestamp", "No user ID"; Right panel labelled "Clean Bundle" shows the same detective at a tidy desk with a labelled evidence binder (ZCC log, packet capture, status code, timestamp), clear glasses on, a confident pose. Bold cartoon outlines, friendly characters, minimal text labels only where needed, educational infographic feel, modern tech-analogy aesthetic
+
+--- Lesson 13: ZCC — Exporting Logs & Useful Tips (edu-260-uc-13-zcc-exporting-logs.html) ---
+A1.png — Three-segment pipe diagram cartoon with pressure gauges: A water pipe split into three segments — Segment 1 labelled "Local Network" shows a healthy pipe with a green gauge needle in the middle; Segment 2 labelled "ZIA Tunnel" shows a slightly narrower section with an amber gauge needle drifting toward "high"; Segment 3 labelled "ZPA App" shows a pipe with a partial blockage and a red gauge needle pinned. A cheerful plumber-engineer character in overalls reads each gauge with a small clipboard, identifying where the pressure drops. Clean cartoon style, bold outlines, minimal text labels only where needed, educational infographic feel, modern tech-analogy aesthetic
+
+Note: Diagram prompts are no longer generated. Diagrams come from embedded course screenshots.

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Policy Settings & Assignments — EDU-260 Use Cases</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#fff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;--blue-deep:#0f3d7a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html.pt-init body{opacity:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{background:#0d1a2e;color:#fff;padding:28px 40px 32px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:#93c5fd;letter-spacing:0.06em;margin-bottom:20px;flex-wrap:wrap;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;opacity:0.8;}
+.breadcrumb a:hover{opacity:1;text-decoration:underline;}
+.breadcrumb-sep{opacity:0.5;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.eyebrow-chip{background:rgba(147,197,253,0.15);border:1px solid rgba(147,197,253,0.3);color:#93c5fd;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:4px 12px;border-radius:20px;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:#93c5fd;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+h1{font-family:'Fraunces',serif;font-size:42px;font-weight:700;line-height:1.1;color:#fff;margin-bottom:4px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-top:6px;letter-spacing:0.03em;}
+.motivation-banner{background:#1e3a5c;border-bottom:1px solid rgba(147,197,253,0.15);padding:14px 40px;}
+.motivation-text{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.6;}
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.qpanel{background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 24px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 24px 22px;}
+.qpanel-body.open{display:block;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+.no-questions{font-size:12px;color:var(--text-muted);padding:10px 0;}
+.q-group{margin-bottom:14px;}
+.q-group-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:8px;}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-num{font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0;margin-top:2px;}
+.q-text{font-size:13px;color:var(--text-soft);flex:1;line-height:1.5;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 4px;flex-shrink:0;}
+.q-del:hover{color:var(--red);}
+.section-nav{display:flex;gap:2px;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:10;}
+.nav-tab{background:none;border:1px solid transparent;border-radius:8px;padding:6px 14px;font-family:'Epilogue',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.nav-tab:hover{background:var(--surface-2);color:var(--text);}
+.nav-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;flex:1;}
+.main-content{padding:32px 40px;min-width:0;}
+aside{padding:28px 24px;border-left:1px solid var(--border);position:sticky;top:45px;height:calc(100vh - 45px);overflow-y:auto;background:var(--surface);}
+.section-block{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border-dim);}
+.section-block:last-child{border-bottom:none;}
+.section-tag{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--blue);margin-bottom:8px;}
+h2{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:16px;}
+h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 10px;}
+p{font-size:14px;line-height:1.75;color:var(--text-soft);margin-bottom:12px;}
+ul,ol{padding-left:20px;margin-bottom:12px;}
+li{font-size:13.5px;line-height:1.7;color:var(--text-soft);margin-bottom:4px;}
+code{background:var(--surface-2);border:1px solid var(--border-dim);border-radius:4px;padding:1px 6px;font-size:12px;color:var(--blue-deep);font-family:'SF Mono','Menlo',monospace;}
+/* PHASE STEPS — Problem/Locate/Isolate/Diagnose card flow */
+.phase-steps{display:grid;grid-template-columns:1fr;gap:10px;margin:18px 0;}
+.phase-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:10px;padding:12px 16px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;}
+.phase-num{background:var(--blue);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.phase-body{min-width:0;}
+.phase-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--blue);margin-bottom:4px;}
+.phase-text{font-size:13px;color:var(--text-soft);line-height:1.65;}
+.phase-text ul{margin:6px 0 0;padding-left:18px;}
+.phase-text li{font-size:12.5px;margin-bottom:2px;}
+/* CALLOUTS */
+.callout{border-radius:10px;padding:14px 16px;margin:16px 0;border-left:3px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.14em;margin-bottom:6px;}
+.callout-body{font-size:13px;line-height:1.65;color:var(--text-soft);}
+.callout-tip{background:var(--blue-glow);border-color:var(--blue);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-amber{background:var(--amber-light);border-color:var(--amber);}
+.callout-amber .callout-header{color:var(--amber);}
+.callout-amber .callout-body{color:#78350f;}
+/* SCREENSHOT EMBED */
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;transform:scale(1.5);transform-origin:top left;transition:transform 0.2s ease;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
+/* SOCRATIC */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+/* MENTAL NOTE */
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+/* ANSWER */
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+/* LESSON TOOLS */
+.lesson-tools{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:24px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.tool-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:72px;outline:none;line-height:1.6;}
+.tool-textarea:focus{border-color:var(--blue);}
+.tool-row{margin-top:8px;text-align:right;}
+.btn-add-q{background:#0d1a2e;color:#93c5fd;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{opacity:0.85;}
+/* SIDEBAR */
+.sidebar-section{margin-bottom:24px;}
+.sidebar-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:10px;}
+.hub-back{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:10px 16px;border-radius:10px;transition:opacity 0.15s;margin-bottom:20px;}
+.hub-back:hover{opacity:0.88;}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.check-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-soft);padding:6px 10px;border-radius:8px;cursor:pointer;transition:background 0.12s;}
+.check-item:hover{background:var(--surface-2);}
+.check-item input{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.check-item.done{color:var(--text-muted);text-decoration:line-through;}
+.sidebar-divider{height:1px;background:var(--border);margin:18px 0;}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:16px;}
+.quick-ref-title{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#93c5fd;margin-bottom:12px;}
+.qr-term{margin-bottom:10px;}
+.qr-label{font-size:10px;font-weight:700;color:#93c5fd;letter-spacing:0.08em;}
+.qr-def{font-size:11.5px;color:rgba(255,255,255,0.65);line-height:1.55;margin-top:2px;}
+footer{background:#0d1a2e;color:rgba(255,255,255,0.45);font-size:11px;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.04em;}
+footer span{color:#93c5fd;}
+@media(max-width:900px){main{grid-template-columns:1fr;}aside{display:none;}.main-content{padding:24px 20px;}header,footer{padding:24px 20px;}.motivation-banner{padding:12px 20px;}.section-nav{padding:8px 16px;}.lesson-tools-grid{grid-template-columns:1fr;}.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../troubleshoot-hub.html">Zscaler Troubleshoot Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="edu-260-use-cases-hub.html">EDU-260 Use Cases</a>
+    <span class="breadcrumb-sep">›</span>
+    Policy Settings & Assignments
+  </div>
+  <div class="eyebrow">
+    <span class="eyebrow-chip">EDU-260 · LESSON 5</span>
+    <span class="header-dot"></span>
+  </div>
+  <h1>Policy Settings <em>&amp;</em> Assignments</h1>
+  <div class="header-sub">Five common policy-misconfiguration tickets — and how to localise, isolate, diagnose</div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">"All roads lead to Web Insights and Diagnostic logs — master the filters, and you can resolve almost any policy ticket."</div>
+</div>
+
+<div class="top-panels">
+  <div class="qpanel" id="qpanel">
+    <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+      <span class="qpanel-title">MY QUESTIONS</span>
+      <span class="qpanel-count" id="qpanel-count">0</span>
+      <span class="qpanel-hint">— click to expand</span>
+      <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+    </button>
+    <div class="qpanel-body" id="qpanel-body"></div>
+  </div>
+  <div class="notes-panel" id="notes-panel">
+    <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+      <span class="notes-panel-title">MY NOTES</span>
+      <span class="notes-panel-count" id="notes-panel-count">0</span>
+      <span class="notes-panel-hint">— click to expand</span>
+      <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+    </button>
+    <div class="notes-panel-body" id="notes-panel-body"></div>
+  </div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-flow')">0 · Flow Map</button>
+  <button class="nav-tab" onclick="navTo('section-url')">1 · URL Filter</button>
+  <button class="nav-tab" onclick="navTo('section-cac')">2 · Cloud App Control</button>
+  <button class="nav-tab" onclick="navTo('section-ssl')">3 · SSL Inspection</button>
+  <button class="nav-tab" onclick="navTo('section-zpa-noconfig')">4 · ZPA No-Config</button>
+  <button class="nav-tab" onclick="navTo('section-zpa-blocked')">5 · ZPA App Blocked</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- SECTION 0 — Flow Map -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · ONE FLOW, MANY POLICIES</span>
+  </div>
+  <p class="socratic-insight">Internet, ZPA, and Branch traffic all enter the Zero Trust Exchange — but each follows a different chain of policy checks (Cloud App Control, URL Filtering, SSL Inspection, Access Policy). Before any ticket, ask: which arm of the flow chart is this traffic on?</p>
+  <ul class="socratic-questions">
+    <li>When a website is blocked, what does the order of policy evaluation tell you about where to start looking?</li>
+    <li>Why does the same Web Insights log answer 80% of policy tickets across all five scenarios?</li>
+  </ul>
+  <div class="answer-area" data-section="flow">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Traffic hits Cloud App Control first, then URL Filtering, then optional URL cascading. So a "site blocked" symptom could be CAC blocking the application, URL Filtering blocking the category, or SSL Inspection preventing the full URL from being seen. Starting at the first checkpoint and walking forward maps the symptom to the right policy quickly.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Web Insights records the user, location, URL category, action, Block Policy Name and Block Policy Type for every transaction. Once you filter on the URL or user, that single record tells you exactly which policy fired and against which criteria — collapsing five "where do I look?" questions into one lookup.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-flow">
+  <div class="section-tag">SECTION 0</div>
+  <h2>The Policy Troubleshooting Flow</h2>
+  <p>Every Zscaler policy ticket — from a URL block to a ZPA access failure — fits onto one decision tree. ZIA traffic flows through Cloud App Control, URL Filtering and SSL Inspection. ZPA traffic flows through posture, access policy and app-segment checks. Branch Access uses ZCC posture as well. Once you know which path the traffic took, the diagnostic question reduces to "which policy on that path matched, and why?"</p>
+
+  <div class="screenshot-embed">
+    <img src="policy-troubleshooting-flow.png" alt="Policy troubleshooting decision flow showing ZIA, ZPA, and Branch Access branches">
+    <div class="screenshot-caption">The course-canonical policy decision tree. ZIA goes through Connection-to-Public-SE → Cloud App Policy → URL Filtering. ZPA goes through ZCC posture → Forwarding/Access policy. Every diagnostic ends with "review Web Insights / Diagnostic logs."</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><span>💡</span><span>UNIVERSAL FIRST STEP</span></div>
+    <div class="callout-body">For any ZIA ticket, open <strong>Web Insights</strong>, filter by URL or user, then add columns for <strong>Username, Location, URL Category, Block Policy Name, Block Policy Type</strong>. For ZPA, open <strong>Diagnostic</strong> logs and capture <strong>Username, SAML/SCIM attributes, Posture Profile, Trusted Network, Client Type, App Segment</strong>.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Five core policy scenarios in this lesson: URL Filtering, Cloud App Control, SSL Inspection, ZPA "SE: Policy not configured for access", ZPA "SE: Application policy blocked access". All five resolve via Web Insights (ZIA) or Diagnostic logs (ZPA).</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-flow" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('flow','Section 0 — Flow Map')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-flow" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('flow')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 1 — URL Filter -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · URL FILTERING POLICY NOT WORKING</span>
+  </div>
+  <p class="socratic-insight">User reports "my allow rule isn't working." That phrasing is misleading — what actually happened is that *some* rule fired and blocked the traffic. Your job is to find which rule, and why.</p>
+  <ul class="socratic-questions">
+    <li>Why is Block Policy <em>Type</em> more useful than Block Policy <em>Name</em> for picking your next click?</li>
+    <li>How can a URL Filtering allow rule be created correctly and still be overridden?</li>
+  </ul>
+  <div class="answer-area" data-section="url">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Block Policy Type tells you which feature blocked the traffic (URL Filtering vs Cloud App Control vs Advanced Threat) — which is the entire navigation hint you need to pick the right policy section in the Admin UI. Block Policy Name is only useful once you're inside the right policy editor.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Policy rules are evaluated top-down by criteria match. A more specific rule earlier in the list — a department-level block, a category-level deny — can match before the user-specific allow rule and shadow it. Always check criteria order and overlap when an "obviously correct" allow rule isn't taking effect.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-url">
+  <div class="section-tag">USE CASE 1 · ZIA</div>
+  <h2>URL Filtering Policy Not Working</h2>
+  <p><strong>Symptom:</strong> A URL Filtering policy is configured to allow a website, but while accessing that URL it is blocked.</p>
+
+  <div class="phase-steps">
+    <div class="phase-card"><div class="phase-num">1</div><div class="phase-body"><div class="phase-label">PROBLEM</div><div class="phase-text">URL Filtering policy allows site X, but the user gets a Zscaler block page when visiting X.</div></div></div>
+    <div class="phase-card"><div class="phase-num">2</div><div class="phase-body"><div class="phase-label">LOCATE</div><div class="phase-text">Open <strong>Admin UI → Web Insights logs</strong>. Apply a URL filter that matches the URL in question. Select the right timeframe to narrow the log set.</div></div></div>
+    <div class="phase-card"><div class="phase-num">3</div><div class="phase-body"><div class="phase-label">ISOLATE</div><div class="phase-text">For the matching transaction, capture:<ul><li><strong>Username</strong></li><li><strong>Location</strong></li><li><strong>URL Category</strong></li><li><strong>Block Policy Name</strong></li><li><strong>Block Policy Type</strong></li></ul>If those columns are not visible, click the three-dot menu at the far right of the Web Insights table and add them.</div></div></div>
+    <div class="phase-card"><div class="phase-num">4</div><div class="phase-body"><div class="phase-label">DIAGNOSE</div><div class="phase-text"><strong>Block Policy Type</strong> tells you whether the block came from URL Filtering or Cloud App Control — navigate to that section in the Admin UI. <strong>Block Policy Name</strong> identifies the exact rule. Compare the User / Location / URL Category against the rule's criteria. Adjust the rule (or the criteria it overlaps with) to allow the desired traffic.</div></div></div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">URL block troubleshooting columns (memorise): Username · Location · URL Category · Block Policy Name · Block Policy Type. Block Policy Type → which feature; Block Policy Name → which rule. If columns missing, add via the three-dot menu in Web Insights.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-url" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('url','Use Case 1 — URL Filtering')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-url" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('url')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 — Cloud App Control -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · CLOUD APP CONTROL ALLOWING BLOCKED SAAS</span>
+  </div>
+  <p class="socratic-insight">A CAC policy is supposed to restrict personal Gmail but isn't working. The classic instinct is "the policy didn't fire." The classic reality is "tenancy restrictions aren't being inspected — because the traffic isn't being decrypted."</p>
+  <ul class="socratic-questions">
+    <li>Why does tenancy restriction require SSL inspection to be enabled for the traffic in question?</li>
+    <li>"Allow Consumer Access = Yes" on the tenant profile feels innocuous. Why is it the most common silent misconfiguration?</li>
+  </ul>
+  <div class="answer-area" data-section="cac">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Tenancy restriction works by injecting HTTP headers identifying the allowed corporate tenant. Those headers can only be added to HTTPS traffic that Zscaler is decrypting; without SSL inspection, the request is opaque and there is nothing to inspect or modify. The CAC rule will appear to do nothing.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">"Allow Consumer Access = Yes" leaves the door open to personal accounts — which is exactly the thing the policy was meant to block. The tenant profile and the CAC rule both look "configured", but the tenant profile silently permits the personal-Gmail use case the customer wanted blocked.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-cac">
+  <div class="section-tag">USE CASE 2 · ZIA</div>
+  <h2>Cloud App Control — Personal Gmail Restriction Not Enforced</h2>
+  <p><strong>Symptom:</strong> A Cloud App Control policy is configured to restrict personal Gmail use, but consumer Gmail is still accessible.</p>
+
+  <div class="phase-steps">
+    <div class="phase-card"><div class="phase-num">1</div><div class="phase-body"><div class="phase-label">PROBLEM</div><div class="phase-text">CAC policy restricting personal Gmail use is not working — users can still sign in to consumer accounts.</div></div></div>
+    <div class="phase-card"><div class="phase-num">2</div><div class="phase-body"><div class="phase-label">LOCATE</div><div class="phase-text">The Help portal documents that Zscaler's <strong>tenancy restriction</strong> feature is two parts: a <strong>Tenant Profile</strong> + an <strong>association in the CAC rule</strong>. Start by reviewing the tenant profile config; if that's fine, inspect the CAC policy.</div></div></div>
+    <div class="phase-card"><div class="phase-num">3</div><div class="phase-body"><div class="phase-label">ISOLATE</div><div class="phase-text"><strong>Tenant Profile checklist:</strong><ul><li>Note the profile name — you'll need it for the CAC rule.</li><li>Verify the correct domain(s) are added (no typos).</li><li>Verify <strong>Allow Consumer Access = No</strong>.</li></ul><strong>Cloud App Control policy checklist:</strong><ul><li>Review Web Insights for user / location / criteria.</li><li>Compare against the CAC rule's criteria.</li><li>Verify the correct Tenant Profile is selected on the rule.</li><li>Ensure the rule's action is set to Allow (allow-the-corporate-tenant, block-everything-else is the model).</li></ul></div></div></div>
+    <div class="phase-card"><div class="phase-num">4</div><div class="phase-body"><div class="phase-label">DIAGNOSE</div><div class="phase-text">If the Tenant Profile and CAC Policy both look correct, check Web Insights for the <strong>SSL Inspected</strong> column on the relevant traffic. Tenancy restriction requires SSL inspection — if traffic is not inspected, the policy cannot enforce.</div></div></div>
+  </div>
+
+  <div class="callout callout-amber">
+    <div class="callout-header"><span>⚠</span><span>SILENT FAILURE</span></div>
+    <div class="callout-body">The single most common cause: SSL inspection is not enabled on Gmail traffic. The CAC rule and Tenant Profile look configured, but the traffic is opaque and the rule has nothing to act on.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Tenancy restriction = Tenant Profile + CAC rule association. Tenant Profile must have Allow Consumer Access = No + correct domain(s). Traffic <strong>must be SSL-inspected</strong> or tenancy restriction is silently bypassed.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-cac" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('cac','Use Case 2 — Cloud App Control')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-cac" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('cac')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 — SSL -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · SSL INSPECTION POLICY NOT WORKING</span>
+  </div>
+  <p class="socratic-insight">SSL inspection is the gateway for every downstream policy — DLP, CAC tenancy, ATP content scoring all depend on it. When inspection itself isn't happening, the trail starts with two columns in Web Insights: <strong>SSL Inspected</strong> and <strong>SSL Policy Reason</strong>.</p>
+  <ul class="socratic-questions">
+    <li>If SSL Policy Reason names a rule but the traffic isn't inspected, what's the most likely cause higher up in the rule list?</li>
+    <li>Why are TLS version and supported cipher suites worth checking before opening a support case?</li>
+  </ul>
+  <div class="answer-area" data-section="ssl">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">A rule higher up that matches the same traffic and is set to "Do Not Inspect" wins. SSL Inspection is evaluated top-down; once any rule matches, the others below are ignored. Always check that no upstream rule short-circuits the traffic before debugging the rule you expect to match.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">If the client or server negotiates a TLS version below the rule's minimum, or uses a cipher suite Zscaler doesn't support, the handshake bypasses inspection. These look like "the rule isn't working" but are actually protocol mismatches — the Help portal's Supported Cipher Suites list is the authoritative source.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-ssl">
+  <div class="section-tag">USE CASE 3 · ZIA</div>
+  <h2>SSL Inspection Policy Not Working</h2>
+  <p><strong>Symptom:</strong> You want traffic to be SSL inspected but it's not — and downstream policies that depend on inspection are misbehaving.</p>
+
+  <div class="phase-steps">
+    <div class="phase-card"><div class="phase-num">1</div><div class="phase-body"><div class="phase-label">PROBLEM</div><div class="phase-text">SSL Inspection policy is configured but traffic is not being decrypted.</div></div></div>
+    <div class="phase-card"><div class="phase-num">2</div><div class="phase-body"><div class="phase-label">LOCATE</div><div class="phase-text">Two confirmation paths:<ul><li>Web Insights → add the <strong>SSL Inspection</strong> column. It shows Yes/No per transaction.</li><li>In the user's browser, inspect the cert — is it a Zscaler intermediate CA, or the origin cert?</li></ul></div></div></div>
+    <div class="phase-card"><div class="phase-num">3</div><div class="phase-body"><div class="phase-label">ISOLATE</div><div class="phase-text">Web Insights items to verify against the SSL Inspection rule:<ul><li><strong>SSL Policy Reason</strong> — explains why inspection didn't happen.</li><li>URL category, user, location vs the rule's criteria.</li><li>Client &amp; Server TLS version meet rule minimum.</li><li>Client &amp; Server cipher suites are in the <em>Supported Cipher Suites in SSL Inspection</em> Help-portal page.</li></ul>Also confirm no higher rule matches the same traffic with action = Do Not Inspect.</div></div></div>
+    <div class="phase-card"><div class="phase-num">4</div><div class="phase-body"><div class="phase-label">DIAGNOSE</div><div class="phase-text">Take the action that matches the isolation finding: reorder rules, widen criteria, raise/lower minimum TLS, accept the cipher mismatch and document the exception, or contact the webmaster.</div></div></div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Two columns answer 90% of SSL inspection tickets: <strong>SSL Inspection</strong> (Yes/No) and <strong>SSL Policy Reason</strong>. Rule evaluation is top-down — an upstream "Do Not Inspect" rule wins. Verify TLS version and cipher against the Help-portal Supported Cipher Suites list.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-ssl" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('ssl','Use Case 3 — SSL Inspection')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-ssl" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('ssl')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4 — ZPA No-Config -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · ZPA "SE: POLICY NOT CONFIGURED FOR ACCESS"</span>
+  </div>
+  <p class="socratic-insight">ZPA has its own diagnostic vocabulary. Two error codes look almost identical: <code>SE: Policy is not configured for access</code> and <code>SE: Application policy blocked access</code>. They sound similar; they require different fixes.</p>
+  <ul class="socratic-questions">
+    <li>What is the precise difference between "policy not configured" and "policy blocked"?</li>
+    <li>If the App Segment exists but is disabled, what error does the user actually see?</li>
+  </ul>
+  <div class="answer-area" data-section="zpa-noconfig">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">"Policy not configured" means ZPA could not find any access policy matching the user's identity and the requested application — the rule literally doesn't exist (or doesn't match). "Policy blocked" means the rule was found, matched, and its action is Deny. The first needs a new rule (or fixed criteria); the second needs the existing rule reviewed.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">The same "SE: Policy is not configured for access" error. A disabled App Segment or App Group Segment hides the application from the policy engine entirely, indistinguishable from a missing rule. Always verify the segment is Enabled before adding new policy rules.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-zpa-noconfig">
+  <div class="section-tag">USE CASE 4 · ZPA</div>
+  <h2>ZPA — "SE: Policy is not configured for access"</h2>
+  <p><strong>Symptom:</strong> Users are unable to access a ZPA application with the error <code>SE: Policy is not configured for access</code>. Internal status code: <code>BRK_MT_SETUP_FAIL_NO_POLICY_FOUND</code>.</p>
+
+  <div class="screenshot-embed">
+    <img src="zpa-se-policy-not-configured.png" alt="ZPA Diagnostic log showing SE: Policy is not configured for access status">
+    <div class="screenshot-caption">Diagnostic log: STATUS CODE = "SE: Policy is not configured for access", INTERNAL STATUS CODE = BRK_MT_SETUP_FAIL_NO_POLICY_FOUND, STATUS = Closed Connection.</div>
+  </div>
+
+  <div class="phase-steps">
+    <div class="phase-card"><div class="phase-num">1</div><div class="phase-body"><div class="phase-label">PROBLEM</div><div class="phase-text">User tries to reach a private app; ZPA returns "Policy is not configured for access".</div></div></div>
+    <div class="phase-card"><div class="phase-num">2</div><div class="phase-body"><div class="phase-label">LOCATE</div><div class="phase-text">Look the status code up in the Help portal: "The ZPA service blocked the application request because a policy isn't configured for the requested application." Same error also fires when the <strong>App Segment</strong> or <strong>App Group Segment</strong> is disabled.</div></div></div>
+    <div class="phase-card"><div class="phase-num">3</div><div class="phase-body"><div class="phase-label">ISOLATE</div><div class="phase-text">From <strong>ZPA Portal → Diagnostic</strong> logs, capture:<ul><li>Username</li><li>SAML / SCIM attributes</li><li>Posture profile</li><li>Trusted network criteria</li><li>Client type</li></ul>Then verify the <strong>App Segment</strong> / App Group Segment status (Enabled vs Disabled).</div></div></div>
+    <div class="phase-card"><div class="phase-num">4</div><div class="phase-body"><div class="phase-label">DIAGNOSE</div><div class="phase-text">In <strong>ZPA Portal → Administration → Access-policy</strong>, verify:<ul><li>An access-policy rule exists for this app.</li><li>The user belongs to the SAML/SCIM group the rule is based on.</li><li>User is passing the posture profile (cross-check ZPA Portal → Diagnostic → username → user metadata).</li><li>User is on the right trusted network.</li><li>Client Type is correct.</li></ul>Confirm App Segment / App Group Segment = <strong>Enabled</strong>.</div></div></div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">"Policy is not configured" → internal code <code>BRK_MT_SETUP_FAIL_NO_POLICY_FOUND</code>. Means: no rule matched <em>OR</em> the App Segment / App Group Segment is Disabled. Always verify segment status before assuming a missing rule.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-zpa-noconfig" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zpa-noconfig','Use Case 4 — ZPA No-Config')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-zpa-noconfig" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('zpa-noconfig')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5 — ZPA Blocked -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · ZPA "SE: APPLICATION POLICY BLOCKED ACCESS"</span>
+  </div>
+  <p class="socratic-insight">A rule was found, matched, and denied. Now the question is: which rule, and why was it the deny rule rather than the allow rule you expected?</p>
+  <ul class="socratic-questions">
+    <li>If two access-policy rules cover the same destination but one allows a /8 subnet and the other denies a specific /32, which wins — and why?</li>
+    <li>How do you turn the Diagnostic log's "Access Policy Name" into your next clicks?</li>
+  </ul>
+  <div class="answer-area" data-section="zpa-blocked">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">The deny on the /32 wins. By design, ZPA picks the access policy that matches the <strong>most specific application segment</strong>, regardless of order in the list. So a permissive /8 allow does not override a specific /32 deny — you have to reshape the segments or rewrite the deny rule.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Access Policy Name in the Diagnostic log is the literal rule identifier. Open ZPA Portal → Administration → Access-policy and locate that rule by name; then walk its criteria (SAML/SCIM groups, posture profile, trusted network, client type) against the captured Diagnostic attributes for the user. Most blocks resolve at the criteria mismatch step.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-zpa-blocked">
+  <div class="section-tag">USE CASE 5 · ZPA</div>
+  <h2>ZPA — "SE: Application Policy Blocked Access"</h2>
+  <p><strong>Symptom:</strong> Users are unable to access a ZPA application with the error <code>SE: Application policy blocked access</code>. The Diagnostic log surfaces an <strong>Access Policy Name</strong> and <strong>Block Rule</strong>, with action = Deny.</p>
+
+  <div class="screenshot-embed">
+    <img src="zpa-se-app-policy-blocked.png" alt="ZPA Diagnostic showing Access Policy Name and Block Rule with action Deny">
+    <div class="screenshot-caption">Diagnostic log: STATUS CODE = "SE: Application policy blocked access", ACCESS POLICY NAME = Block Rule, ACTION = Deny. Unlike "not configured", here a specific rule has been identified.</div>
+  </div>
+
+  <div class="phase-steps">
+    <div class="phase-card"><div class="phase-num">1</div><div class="phase-body"><div class="phase-label">PROBLEM</div><div class="phase-text">"SE: Application policy blocked access" — a real rule fired and denied the request.</div></div></div>
+    <div class="phase-card"><div class="phase-num">2</div><div class="phase-body"><div class="phase-label">LOCATE</div><div class="phase-text">Help-portal lookup confirms: ZPA blocked because the user isn't allowed to access the requested application.</div></div></div>
+    <div class="phase-card"><div class="phase-num">3</div><div class="phase-body"><div class="phase-label">ISOLATE</div><div class="phase-text">Capture from Diagnostic logs:<ul><li>Username</li><li>SAML / SCIM attributes</li><li>Access Policy Name (the rule that blocked)</li><li>Posture profile</li><li>Trusted network criteria</li><li>Client type</li></ul></div></div></div>
+    <div class="phase-card"><div class="phase-num">4</div><div class="phase-body"><div class="phase-label">DIAGNOSE</div><div class="phase-text">In <strong>ZPA Portal → Administration → Access-policy</strong>, find the rule by name and verify:<ul><li>Access-policy is created and not overlapping with a deny earlier in evaluation.</li><li>If 2 rules cover the same destination — e.g. allow on 10.0.0.0/8 and deny on a /32 — <strong>ZPA picks the most specific app segment</strong>, so the /32 deny wins regardless of order.</li><li>User is in the right SAML / SCIM group.</li><li>User is passing the posture profile (ZPA Portal → Diagnostic → username → metadata).</li><li>User is on the right trusted network.</li><li>Client Type is correct.</li></ul></div></div></div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><span>💡</span><span>OVERLAPPING SUBNETS</span></div>
+    <div class="callout-body">For overlapping app-segment subnets, ZPA evaluates by <strong>specificity, not rule order</strong>. A specific deny on a /32 will trump a permissive allow on a /8. Reshape the segments rather than reordering rules.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">"Application policy blocked access" → a real rule fired. Diagnostic log names it (Access Policy Name). For overlapping app segments, the <strong>most specific</strong> segment wins, not the highest in the list. Verify SAML/SCIM group, posture, trusted network, client type against the rule.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-zpa-blocked" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zpa-blocked','Use Case 5 — ZPA App Blocked')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-zpa-blocked" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('zpa-blocked')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .main-content -->
+
+<aside>
+  <a class="hub-back" href="edu-260-use-cases-hub.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    EDU-260 Use Cases Hub
+  </a>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS</div>
+    <ul class="checklist">
+      <li class="check-item" onclick="toggleDone(this,'check-0')"><input type="checkbox" id="check-0" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">Flow Map</li>
+      <li class="check-item" onclick="toggleDone(this,'check-1')"><input type="checkbox" id="check-1" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">URL Filtering Not Working</li>
+      <li class="check-item" onclick="toggleDone(this,'check-2')"><input type="checkbox" id="check-2" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">Cloud App Control / Tenancy</li>
+      <li class="check-item" onclick="toggleDone(this,'check-3')"><input type="checkbox" id="check-3" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">SSL Inspection Policy</li>
+      <li class="check-item" onclick="toggleDone(this,'check-4')"><input type="checkbox" id="check-4" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">ZPA — Policy Not Configured</li>
+      <li class="check-item" onclick="toggleDone(this,'check-5')"><input type="checkbox" id="check-5" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">ZPA — Application Policy Blocked</li>
+    </ul>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="quick-ref">
+    <div class="quick-ref-title">KEY TERMS</div>
+    <div class="qr-term"><div class="qr-label">WEB INSIGHTS</div><div class="qr-def">ZIA's log of every web transaction. Filter by URL, add Block Policy Name / Type / SSL Inspected columns.</div></div>
+    <div class="qr-term"><div class="qr-label">DIAGNOSTIC LOG</div><div class="qr-def">ZPA's per-session record. Always check Status Code, Access Policy Name, Posture, SAML/SCIM, Client Type.</div></div>
+    <div class="qr-term"><div class="qr-label">TENANT PROFILE</div><div class="qr-def">CAC artifact restricting allowed domains for a SaaS app. Must have Allow Consumer Access = No.</div></div>
+    <div class="qr-term"><div class="qr-label">BLOCK POLICY TYPE</div><div class="qr-def">Identifies <em>which feature</em> (URL Filtering / CAC / ATP) blocked a transaction.</div></div>
+    <div class="qr-term"><div class="qr-label">SE: POLICY NOT CONFIGURED</div><div class="qr-def">ZPA error → no rule matched, OR App Segment disabled. Internal: <code>BRK_MT_SETUP_FAIL_NO_POLICY_FOUND</code>.</div></div>
+    <div class="qr-term"><div class="qr-label">SE: APP POLICY BLOCKED</div><div class="qr-def">ZPA error → a Deny rule fired. Access Policy Name names it. Most specific app segment wins.</div></div>
+    <div class="qr-term"><div class="qr-label">APP SEGMENT</div><div class="qr-def">ZPA construct grouping private IPs/FQDNs. If disabled, all access fails as "policy not configured".</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div>EDU-260 · <span>Use Cases</span></div>
+  <div>Lesson 5 — Policy Settings &amp; Assignments</div>
+</footer>
+
+<script>
+const PAGE_KEY = 'edu-260-uc-05-policy-settings';
+const SECTIONS = {
+  'flow':         'Section 0 — Flow Map',
+  'url':          'Use Case 1 — URL Filtering',
+  'cac':          'Use Case 2 — Cloud App Control',
+  'ssl':          'Use Case 3 — SSL Inspection',
+  'zpa-noconfig': 'Use Case 4 — ZPA No-Config',
+  'zpa-blocked':  'Use Case 5 — ZPA App Blocked'
+};
+
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();ns.push({id:Date.now(),section:key,sectionName:SECTIONS[key]||key,text});saveNotesArr(ns);ta.value='';renderNotesPanel();if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+
+function getQArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQArr(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const qs=getQArr();qs.push({id:Date.now(),section:key,sectionName:name,text});saveQArr(qs);ta.value='';renderQPanel();if(!document.getElementById('qpanel-body').classList.contains('open'))toggleQPanel();}
+function deleteQ(id){saveQArr(getQArr().filter(q=>q.id!==id));renderQPanel();}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function renderQPanel(){const qs=getQArr();const count=document.getElementById('qpanel-count');if(count){count.textContent=qs.length;count.style.display=qs.length?'inline':'none';}const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!body)return;if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));qs.forEach(q=>{if(groups[q.section])groups[q.section].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQ(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=PAGE_KEY+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+
+function navTo(id){const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}const ids=['section-flow','section-url','section-cac','section-ssl','section-zpa-noconfig','section-zpa-blocked'];document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));}
+
+function toggleDone(li,id){const cb=li.querySelector('input[type="checkbox"]');const checked=!cb.checked;cb.checked=checked;li.classList.toggle('done',checked);localStorage.setItem(PAGE_KEY+'-check-'+id,checked);}
+function initChecks(){document.querySelectorAll('.check-item').forEach(function(li){const cb=li.querySelector('input[type="checkbox"]');if(!cb)return;if(localStorage.getItem(PAGE_KEY+'-check-'+cb.id)==='true'){cb.checked=true;li.classList.add('done');}});}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();renderNotesPanel();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){
+    const key=PAGE_KEY+'-socans-'+area.dataset.section;
+    try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;area.querySelector('.btn-add-answer').textContent='✓ Answer saved';area.querySelector('.btn-add-answer').disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}
+  });
+  document.querySelectorAll('.screenshot-embed img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  setTimeout(function(){document.body.style.opacity='1';document.body.style.transition='opacity 0.35s ease';},10);
+  document.querySelectorAll('a[href]').forEach(function(a){a.addEventListener('click',function(){if(a.hostname===location.hostname)sessionStorage.setItem('pt','1');});});
+});
+</script>
+</body>
+</html>

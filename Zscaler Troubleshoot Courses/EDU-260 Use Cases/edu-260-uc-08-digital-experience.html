@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Experience — EDU-260 Use Cases</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#fff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;--blue-deep:#0f3d7a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html.pt-init body{opacity:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{background:#0d1a2e;color:#fff;padding:28px 40px 32px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:#93c5fd;letter-spacing:0.06em;margin-bottom:20px;flex-wrap:wrap;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;opacity:0.8;}
+.breadcrumb a:hover{opacity:1;text-decoration:underline;}
+.breadcrumb-sep{opacity:0.5;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.eyebrow-chip{background:rgba(147,197,253,0.15);border:1px solid rgba(147,197,253,0.3);color:#93c5fd;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:4px 12px;border-radius:20px;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:#93c5fd;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+h1{font-family:'Fraunces',serif;font-size:42px;font-weight:700;line-height:1.1;color:#fff;margin-bottom:4px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-top:6px;letter-spacing:0.03em;}
+.motivation-banner{background:#1e3a5c;border-bottom:1px solid rgba(147,197,253,0.15);padding:14px 40px;}
+.motivation-text{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.6;}
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.qpanel{background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 24px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 24px 22px;}
+.qpanel-body.open{display:block;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+.no-questions{font-size:12px;color:var(--text-muted);padding:10px 0;}
+.q-group{margin-bottom:14px;}
+.q-group-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:8px;}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-num{font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0;margin-top:2px;}
+.q-text{font-size:13px;color:var(--text-soft);flex:1;line-height:1.5;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 4px;flex-shrink:0;}
+.q-del:hover{color:var(--red);}
+.section-nav{display:flex;gap:2px;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:10;}
+.nav-tab{background:none;border:1px solid transparent;border-radius:8px;padding:6px 14px;font-family:'Epilogue',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.nav-tab:hover{background:var(--surface-2);color:var(--text);}
+.nav-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;flex:1;}
+.main-content{padding:32px 40px;min-width:0;}
+aside{padding:28px 24px;border-left:1px solid var(--border);position:sticky;top:45px;height:calc(100vh - 45px);overflow-y:auto;background:var(--surface);}
+.section-block{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border-dim);}
+.section-block:last-child{border-bottom:none;}
+.section-tag{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--blue);margin-bottom:8px;}
+h2{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:16px;}
+h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 10px;}
+p{font-size:14px;line-height:1.75;color:var(--text-soft);margin-bottom:12px;}
+ul,ol{padding-left:20px;margin-bottom:12px;}
+li{font-size:13.5px;line-height:1.7;color:var(--text-soft);margin-bottom:4px;}
+code{background:var(--surface-2);border:1px solid var(--border-dim);border-radius:4px;padding:1px 6px;font-size:12px;color:var(--blue-deep);font-family:'SF Mono','Menlo',monospace;}
+.phase-steps{display:grid;grid-template-columns:1fr;gap:10px;margin:18px 0;}
+.phase-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:10px;padding:12px 16px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;}
+.phase-num{background:var(--blue);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.phase-body{min-width:0;}
+.phase-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--blue);margin-bottom:4px;}
+.phase-text{font-size:13px;color:var(--text-soft);line-height:1.65;}
+.phase-text ul{margin:6px 0 0;padding-left:18px;}
+.phase-text li{font-size:12.5px;margin-bottom:2px;}
+.callout{border-radius:10px;padding:14px 16px;margin:16px 0;border-left:3px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.14em;margin-bottom:6px;}
+.callout-body{font-size:13px;line-height:1.65;color:var(--text-soft);}
+.callout-tip{background:var(--blue-glow);border-color:var(--blue);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-amber{background:var(--amber-light);border-color:var(--amber);}
+.callout-amber .callout-header{color:var(--amber);}
+.callout-amber .callout-body{color:#78350f;}
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;transform:scale(1.5);transform-origin:top left;transition:transform 0.2s ease;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:24px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.tool-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:72px;outline:none;line-height:1.6;}
+.tool-textarea:focus{border-color:var(--blue);}
+.tool-row{margin-top:8px;text-align:right;}
+.btn-add-q{background:#0d1a2e;color:#93c5fd;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:24px;}
+.sidebar-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:10px;}
+.hub-back{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:10px 16px;border-radius:10px;transition:opacity 0.15s;margin-bottom:20px;}
+.hub-back:hover{opacity:0.88;}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.check-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-soft);padding:6px 10px;border-radius:8px;cursor:pointer;transition:background 0.12s;}
+.check-item:hover{background:var(--surface-2);}
+.check-item input{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.check-item.done{color:var(--text-muted);text-decoration:line-through;}
+.sidebar-divider{height:1px;background:var(--border);margin:18px 0;}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:16px;}
+.quick-ref-title{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#93c5fd;margin-bottom:12px;}
+.qr-term{margin-bottom:10px;}
+.qr-label{font-size:10px;font-weight:700;color:#93c5fd;letter-spacing:0.08em;}
+.qr-def{font-size:11.5px;color:rgba(255,255,255,0.65);line-height:1.55;margin-top:2px;}
+footer{background:#0d1a2e;color:rgba(255,255,255,0.45);font-size:11px;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.04em;}
+footer span{color:#93c5fd;}
+@media(max-width:900px){main{grid-template-columns:1fr;}aside{display:none;}.main-content{padding:24px 20px;}header,footer{padding:24px 20px;}.motivation-banner{padding:12px 20px;}.section-nav{padding:8px 16px;}.lesson-tools-grid{grid-template-columns:1fr;}.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../troubleshoot-hub.html">Zscaler Troubleshoot Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="edu-260-use-cases-hub.html">EDU-260 Use Cases</a>
+    <span class="breadcrumb-sep">›</span>
+    Digital Experience
+  </div>
+  <div class="eyebrow">
+    <span class="eyebrow-chip">EDU-260 · LESSON 8</span>
+    <span class="header-dot"></span>
+  </div>
+  <h1>Digital <em>Experience</em></h1>
+  <div class="header-sub">ZDX probes, scores of zero, and the Follow-Redirect curiosity</div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">"ZDX scores are only as accurate as your probes — and probes are only as reachable as the URL you typed."</div>
+</div>
+
+<div class="top-panels">
+  <div class="qpanel" id="qpanel">
+    <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+      <span class="qpanel-title">MY QUESTIONS</span>
+      <span class="qpanel-count" id="qpanel-count">0</span>
+      <span class="qpanel-hint">— click to expand</span>
+      <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+    </button>
+    <div class="qpanel-body" id="qpanel-body"></div>
+  </div>
+  <div class="notes-panel" id="notes-panel">
+    <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+      <span class="notes-panel-title">MY NOTES</span>
+      <span class="notes-panel-count" id="notes-panel-count">0</span>
+      <span class="notes-panel-hint">— click to expand</span>
+      <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+    </button>
+    <div class="notes-panel-body" id="notes-panel-body"></div>
+  </div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-flow')">0 · Flow &amp; Logs</button>
+  <button class="nav-tab" onclick="navTo('section-zcc-off')">1 · ZCC ZDX Off</button>
+  <button class="nav-tab" onclick="navTo('section-score-zero')">2 · Score = 0</button>
+  <button class="nav-tab" onclick="navTo('section-307')">3 · Response Code Mismatch</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- SECTION 0 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · ZDX IS ZCC'S COUSIN</span>
+  </div>
+  <p class="socratic-insight">ZDX runs as a module inside Zscaler Client Connector — same install pipeline, same firewall/AV exceptions, plus its own log files. When the user sees "Service Off", the troubleshoot starts in ZCC tray logs, not ZDX dashboards.</p>
+  <ul class="socratic-questions">
+    <li>If the ZDX tab is visible in ZCC but Service Status is Red, what does that narrow the cause down to?</li>
+    <li>Why does each ZDX module have its own log file (Webload, Traceroute, Device Stats) rather than one combined log?</li>
+  </ul>
+  <div class="answer-area" data-section="flow">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">The ZDX tab appearing proves ZDX is licensed and enabled for the user in the Mobile Admin UI — so the Admin-side config is correct. The issue is client-side: either the install/upgrade of the ZDX module (ZSAUpm) failed, or the user explicitly turned the service off in the tray. That narrows the next click to ZSATray/ZSAUpm logs and Task Manager.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Each plugin has different sampling rates, error modes, and verbosity. Splitting logs by module keeps each file scannable and lets support engineers reach for the right one (e.g. Webload for application probes, Traceroute for path probes, DeviceStats for end-device performance) without sifting through unrelated noise.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-flow">
+  <div class="section-tag">SECTION 0</div>
+  <h2>ZDX Troubleshooting Flow &amp; Client Logs</h2>
+  <p>ZDX (Zscaler Digital Experience) is delivered as a lightweight module inside ZCC. The troubleshoot flow walks: ZCC Digital Experience Service Status → Authentication → Application/Probe configured → Data being shown on Dashboard → Alerts working. Each branch points at a specific log file or a probe-config screen.</p>
+
+  <div class="screenshot-embed">
+    <img src="zdx-troubleshooting-flow.png" alt="ZDX troubleshooting flow showing Service Status, Authentication, App/Probe config, Dashboard data, Alerts">
+    <div class="screenshot-caption">The ZDX troubleshooting decision tree. Five evaluation gates: Service Status (FW/AV/Help-page exceptions) · Authentication (Follow ZCC auth flow) · App/Probe Configured (web probe definition) · Data on Dashboard (probe reachability) · Alerts (filters, thresholds, throttling).</div>
+  </div>
+
+  <h3>ZDX Client Logs (inside the ZCC log bundle)</h3>
+  <p>The standard ZCC log bundle includes ZSATray, ZSAUpm (the ZDX core), ZSAUpdater, ZSATunnel, and ZSAService. ZDX adds these per-module files:</p>
+
+  <div class="screenshot-embed">
+    <img src="zdx-log-files-table.png" alt="Table of ZDX log files: ZDX Main, ZDX Webload plugin, ZDX Traceroute plugin, ZDX Device stats plugin">
+    <div class="screenshot-caption">ZDX log files (timestamped). <code>ZSAUpm_{timestamp}.log</code> is the ZDX Main log (UPM = internal name for ZDX). Plug-in logs: <code>ZSAUpm_ZWebload_*.log</code>, <code>ZSAUpm_ZTraceroute_*.log</code>, <code>ZSAUpm_DeviceStats_*.log</code>.</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><span>💡</span><span>UPM = ZDX</span></div>
+    <div class="callout-body">"UPM" is the internal Zscaler name for ZDX. Anywhere you see <code>ZSAUpm</code> in logs, file names, or tray messages, treat it as ZDX. The tray-log line <em>"UI: User clicked turn off UPM service"</em> means the user disabled ZDX.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">ZDX core log: <code>ZSAUpm_{timestamp}.log</code>. Plugin logs: ZWebload (app probes), ZTraceroute (path probes), DeviceStats (end-device perf). "UPM" in any log/message = ZDX. ZCC tray message <em>"User clicked turn off UPM service"</em> = user disabled ZDX.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-flow" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('flow','Section 0 — Flow &amp; Logs')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-flow" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('flow')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · ZDX SERVICE STATUS IS RED</span>
+  </div>
+  <p class="socratic-insight">ZDX tab shows up in ZCC, but its Service Status indicator is Red. The user expected probes to be running; nothing is happening. Three independent failure modes look identical.</p>
+  <ul class="socratic-questions">
+    <li>Which Task Manager service should be running when ZDX is healthy, and what is it called?</li>
+    <li>If <code>ZSAUpm.exe</code> exists in <code>Program Files\Zscaler\ZSAUpm</code> but isn't running, what does that suggest vs. when it doesn't exist at all?</li>
+  </ul>
+  <div class="answer-area" data-section="zcc-off">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text"><code>ZSAUpm</code> in Task Manager → Services. If it's Stopped, ZDX is off. If it's not listed at all, the ZDX module isn't installed. Both surface as a red Service Status indicator.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Exists-but-not-running usually means the user turned it off — confirm with tray logs <em>"User clicked turn off UPM service"</em> or <em>"UPM is already installed, but turned off by user"</em>. Doesn't-exist-at-all means the install/upgrade failed — escalate via Restart ZDX, then exit ZCC and re-launch (which forces an update + re-install attempt).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-zcc-off">
+  <div class="section-tag">USE CASE 1 · ZCC</div>
+  <h2>Installation Issue — ZCC ZDX Service Status is Off</h2>
+  <p><strong>Symptom:</strong> In the ZDX tab (Digital Experience) of Zscaler Client Connector, the Service status indicator is <strong>Red (Off)</strong>.</p>
+
+  <div class="phase-steps">
+    <div class="phase-card"><div class="phase-num">1</div><div class="phase-body"><div class="phase-label">PROBLEM</div><div class="phase-text">ZDX is enabled for the user, but the local service is reporting Off.</div></div></div>
+    <div class="phase-card"><div class="phase-num">2</div><div class="phase-body"><div class="phase-label">LOCATE</div><div class="phase-text">Quick sanity: Digital Experience is enabled in the Mobile Admin UI (confirmed by the ZDX tab being present in ZCC). So the problem is client-side — investigate ZCC install and service state.</div></div></div>
+    <div class="phase-card"><div class="phase-num">3</div><div class="phase-body"><div class="phase-label">ISOLATE</div><div class="phase-text">Two probes:<ul><li>Review <strong>ZSATray</strong> and <strong>ZSAUpm</strong> logs for errors related to UPM (the ZDX core).</li><li>Inspect <code>{Program Files}\Zscaler\ZSAUpm</code> — is <code>ZSAUPM.exe</code> present? Open Task Manager → Services and check if <code>ZSAUpm</code> is Running or Stopped.</li></ul>If the user previously turned ZDX off, the tray log will contain:<ul><li><em>"UI: User clicked turn off UPM service"</em></li><li><em>"UPM is already installed, but turned off by user"</em></li></ul></div></div></div>
+    <div class="phase-card"><div class="phase-num">4</div><div class="phase-body"><div class="phase-label">DIAGNOSE</div><div class="phase-text">Three remedies in escalating order:<ol><li>If user-disabled → turn ZDX back on via the button in the ZDX tab.</li><li>If it doesn't come back, click <strong>Restart ZDX</strong>; logout and login.</li><li>If still failing → exit ZCC and re-launch (forces an update / re-install attempt of the ZDX module). If still failing, open a Support case and attach the ZCC log bundle.</li></ol></div></div></div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">ZDX off → check <code>{Program Files}\Zscaler\ZSAUpm</code> for <code>ZSAUPM.exe</code> + check <code>ZSAUpm</code> in Task Manager → Services. Tray log <em>"User clicked turn off UPM service"</em> = user disabled it. Fix order: tray toggle → Restart ZDX → logout/login → exit + relaunch ZCC → support case with full log bundle.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-zcc-off" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zcc-off','Use Case 1 — ZCC ZDX Off')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-zcc-off" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('zcc-off')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · PROBES CONFIGURED, SCORE = 0</span>
+  </div>
+  <p class="socratic-insight">ZDX is running. Probes are configured. The Score Trend chart is flat at zero. The probe machine works in principle — what's the most common ZDX probe-misconfig that produces a zero rather than an error?</p>
+  <ul class="socratic-questions">
+    <li>If Web probes drive the ZDX score and Cloud Path probes drive the path data, what does a permanent zero score tell you about which probe broke?</li>
+    <li>How would <code>https://teeams.microsoft.com</code> (typo) and <code>https://teams.microsoft.com</code> look different on the score chart over time?</li>
+  </ul>
+  <div class="answer-area" data-section="score-zero">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">It's a Web Probe problem, not a Cloud Path problem. The ZDX Score is computed from Web Probe response data (availability, latency, performance). A consistently zero score means the Web Probe never reached its destination — whereas a Cloud Path problem would still show a numeric score with missing path detail.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">The typo URL is unreachable, so the probe always fails — the score is permanently zero (a flat line at the bottom). The correct URL produces a high score that fluctuates with real network conditions. The "is the chart literally pinned at zero" question is itself diagnostic.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-score-zero">
+  <div class="section-tag">USE CASE 2 · ZDX</div>
+  <h2>ZDX Probes Configured but Score Is Zero</h2>
+  <p><strong>Symptom:</strong> ZDX probes are configured for an application, but its ZDX Score is zero.</p>
+
+  <div class="phase-steps">
+    <div class="phase-card"><div class="phase-num">1</div><div class="phase-body"><div class="phase-label">PROBLEM</div><div class="phase-text">Probes exist for the application. The application's ZDX Score is 0.</div></div></div>
+    <div class="phase-card"><div class="phase-num">2</div><div class="phase-body"><div class="phase-label">LOCATE</div><div class="phase-text">Web probes drive the ZDX score; Cloud Path probes drive the path data. Zero score → web-probe issue, most often a config issue. Review the score over time — has it been zero since probe creation, or did it recently change?</div></div></div>
+    <div class="phase-card"><div class="phase-num">3</div><div class="phase-body"><div class="phase-label">ISOLATE</div><div class="phase-text">In the ZDX admin console:<ul><li>Navigate to <strong>Applications Menu</strong>, find the affected app.</li><li>Open <strong>Configurations → Probes</strong> and select the relevant Web Probe.</li><li>Click <strong>Edit Web Probe</strong> and inspect the <strong>Destination URL</strong>.</li></ul>Typos and copy-paste errors are common — e.g. <code>https://teeams.microsoft.com</code> instead of <code>https://teams.microsoft.com</code>.</div></div></div>
+    <div class="phase-card"><div class="phase-num">4</div><div class="phase-body"><div class="phase-label">DIAGNOSE</div><div class="phase-text">If the Destination URL is wrong, the probe can never reach the actual application — hence zero score. Correct the URL; the score will populate on the next probe cycle. For custom applications, always confirm the URL of the real service (especially when creating the probe from a template).</div></div></div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="zdx-score-trend-zero.png" alt="ZDX Score Over Time chart showing a flat zero line">
+    <div class="screenshot-caption">ZDX Score Over Time chart showing the score has been zero for an extended period — a tell-tale signature of an unreachable probe destination (vs. a fluctuating score, which indicates a real-world performance issue).</div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="zdx-applications-overview.png" alt="ZDX Applications Overview UI showing per-app score and Most Impacted Location">
+    <div class="screenshot-caption">ZDX Applications Overview. Use this to confirm the affected app (e.g. Microsoft Teams Web App) and jump from there to Configurations → Probes for that app.</div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="zdx-web-probe-edit-url.png" alt="Edit Web Probe screen with Destination URL field highlighted">
+    <div class="screenshot-caption">Edit Web Probe → <strong>Destination URL</strong>. The example shows <code>https://teeams.microsoft.com</code> — a typo of "teams". The probe never reaches the real Teams endpoint, so ZDX score stays at zero.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Permanent ZDX score = 0 → Web Probe (not Cloud Path) is broken. First click: ZDX → Configurations → Probes → Edit Web Probe → <strong>Destination URL</strong>. Typos are the #1 cause in custom probes. Real performance issues show a fluctuating score, not a flat zero.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-score-zero" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('score-zero','Use Case 2 — Score = 0')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-score-zero" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('score-zero')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · APP AVAILABLE, BUT SERVER SENT 307</span>
+  </div>
+  <p class="socratic-insight">Probe is configured to accept 200–299 and 304. Server is returning 307. Probe shows the application as available anyway. That's not a bug — it's a feature called Follow Redirect, and it can confuse anyone who's looking under the hood.</p>
+  <ul class="socratic-questions">
+    <li>What is the practical reason ZDX has a Follow Redirect option for web probes?</li>
+    <li>If the user reports the dashboard is "wrong" because the response code doesn't match config, when is that actually worth investigating?</li>
+  </ul>
+  <div class="answer-area" data-section="307">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Real-world SaaS endpoints commonly redirect — <code>safemarch.com</code> → <code>www.safemarch.com</code>, login.microsoftonline.com → tenant URL, etc. Without Follow Redirect, every probe of a redirecting host would fail and report the app as down. Follow Redirect lets the probe chase the redirect and evaluate the final response against the configured status codes — which is the user's real experience.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Almost never. If the dashboard shows the app as available but the user is functionally fine, the probe and Follow Redirect are doing their job. The only time it matters is if Follow Redirect is enabled but you actually want to detect the redirect itself as a failure mode — then disable Follow Redirect for that probe.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-307">
+  <div class="section-tag">USE CASE 3 · ZDX</div>
+  <h2>App Available; Server Response Code Doesn't Match Probe Config</h2>
+  <p><strong>Symptom:</strong> The application dashboard does not show any issue even though the server is sending a <strong>307</strong> response code, which is not in the probe's configured accepted-codes list.</p>
+
+  <div class="phase-steps">
+    <div class="phase-card"><div class="phase-num">1</div><div class="phase-body"><div class="phase-label">PROBLEM</div><div class="phase-text">Probe rule says accept 200–299 and 304. Server returns 307. App is shown as Available. Why?</div></div></div>
+    <div class="phase-card"><div class="phase-num">2</div><div class="phase-body"><div class="phase-label">LOCATE</div><div class="phase-text">Review the relevant application's score on the dashboard. Note: webload metrics should not be available if the response code didn't match the probe's config — yet the score is fine.</div></div></div>
+    <div class="phase-card"><div class="phase-num">3</div><div class="phase-body"><div class="phase-label">ISOLATE</div><div class="phase-text"><ol><li>Confirm the configured response codes on the probe (200–299, 304 in this example). The web application is only considered available if these codes are returned.</li><li>Capture an HTTP header trace for the probe. Confirm the server is returning 307 — but also see what comes next (the redirected response).</li></ol></div></div></div>
+    <div class="phase-card"><div class="phase-num">4</div><div class="phase-body"><div class="phase-label">DIAGNOSE</div><div class="phase-text">301, 302, and 307 are redirect codes. Review the <strong>Follow Redirect</strong> toggle in the probe's additional parameters. When enabled, Zscaler Client Connector follows the URL in the redirect response — the <em>next</em> response code is matched against the configured list to determine availability.<br><br>Example: probe configured for <code>https://safemarch.com</code> → server returns 301 → ZCC follows to <code>https://www.safemarch.com</code> → if that returns 200, the app is marked Available. This is by design. To detect the redirect itself, disable Follow Redirect for that probe.</div></div></div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><span>💡</span><span>"NOT A BUG" CHECKLIST</span></div>
+    <div class="callout-body">This is one of the few ZDX scenarios where the right answer is often "no action needed" — Follow Redirect is doing exactly what's documented. Only intervene if the redirect itself is what you want to alert on; then disable Follow Redirect on the probe.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Server returns 301/302/307 + probe still shows Available → <strong>Follow Redirect</strong> is enabled. ZCC follows the redirect, then evaluates the next response code against the configured list. Disable Follow Redirect if you want the redirect itself to flag the app as down.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-307" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('307','Use Case 3 — Response Code Mismatch')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-307" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('307')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end main-content -->
+
+<aside>
+  <a class="hub-back" href="edu-260-use-cases-hub.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    EDU-260 Use Cases Hub
+  </a>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS</div>
+    <ul class="checklist">
+      <li class="check-item" onclick="toggleDone(this,'check-0')"><input type="checkbox" id="check-0" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">ZDX Flow &amp; Logs</li>
+      <li class="check-item" onclick="toggleDone(this,'check-1')"><input type="checkbox" id="check-1" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">ZCC ZDX Service Off</li>
+      <li class="check-item" onclick="toggleDone(this,'check-2')"><input type="checkbox" id="check-2" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">Probes Configured but Score=0</li>
+      <li class="check-item" onclick="toggleDone(this,'check-3')"><input type="checkbox" id="check-3" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">Response Code Mismatch / Follow Redirect</li>
+    </ul>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="quick-ref">
+    <div class="quick-ref-title">KEY TERMS</div>
+    <div class="qr-term"><div class="qr-label">ZDX</div><div class="qr-def">Zscaler Digital Experience — cloud-delivered UX monitoring. Module inside ZCC; internal name UPM.</div></div>
+    <div class="qr-term"><div class="qr-label">ZSAUpm</div><div class="qr-def">The ZDX core process / service. Check in Task Manager → Services.</div></div>
+    <div class="qr-term"><div class="qr-label">WEB PROBE</div><div class="qr-def">Synthetic HTTP probe to a destination URL. Drives the ZDX Score.</div></div>
+    <div class="qr-term"><div class="qr-label">CLOUD PATH PROBE</div><div class="qr-def">Traceroute-style probe. Drives the path / hop-by-hop visualisation.</div></div>
+    <div class="qr-term"><div class="qr-label">ZDX SCORE</div><div class="qr-def">0–100 health score per app per user. Permanent 0 → unreachable Web Probe.</div></div>
+    <div class="qr-term"><div class="qr-label">FOLLOW REDIRECT</div><div class="qr-def">Web Probe option. When ON, ZCC chases 301/302/307 and evaluates the next response against the codes list.</div></div>
+    <div class="qr-term"><div class="qr-label">UPDATE POLICY</div><div class="qr-def">ZCC button forcing the latest probe policy to the client. Use when "no data" is the symptom.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div>EDU-260 · <span>Use Cases</span></div>
+  <div>Lesson 8 — Digital Experience</div>
+</footer>
+
+<script>
+const PAGE_KEY = 'edu-260-uc-08-digital-experience';
+const SECTIONS = {
+  'flow':       'Section 0 — Flow &amp; Logs',
+  'zcc-off':    'Use Case 1 — ZCC ZDX Off',
+  'score-zero': 'Use Case 2 — Score = 0',
+  '307':        'Use Case 3 — Response Code Mismatch'
+};
+
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();ns.push({id:Date.now(),section:key,sectionName:SECTIONS[key]||key,text});saveNotesArr(ns);ta.value='';renderNotesPanel();if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+
+function getQArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQArr(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const qs=getQArr();qs.push({id:Date.now(),section:key,sectionName:name,text});saveQArr(qs);ta.value='';renderQPanel();if(!document.getElementById('qpanel-body').classList.contains('open'))toggleQPanel();}
+function deleteQ(id){saveQArr(getQArr().filter(q=>q.id!==id));renderQPanel();}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function renderQPanel(){const qs=getQArr();const count=document.getElementById('qpanel-count');if(count){count.textContent=qs.length;count.style.display=qs.length?'inline':'none';}const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!body)return;if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));qs.forEach(q=>{if(groups[q.section])groups[q.section].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQ(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=PAGE_KEY+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+
+function navTo(id){const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}const ids=['section-flow','section-zcc-off','section-score-zero','section-307'];document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));}
+
+function toggleDone(li,id){const cb=li.querySelector('input[type="checkbox"]');const checked=!cb.checked;cb.checked=checked;li.classList.toggle('done',checked);localStorage.setItem(PAGE_KEY+'-check-'+id,checked);}
+function initChecks(){document.querySelectorAll('.check-item').forEach(function(li){const cb=li.querySelector('input[type="checkbox"]');if(!cb)return;if(localStorage.getItem(PAGE_KEY+'-check-'+cb.id)==='true'){cb.checked=true;li.classList.add('done');}});}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();renderNotesPanel();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){
+    const key=PAGE_KEY+'-socans-'+area.dataset.section;
+    try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;area.querySelector('.btn-add-answer').textContent='✓ Answer saved';area.querySelector('.btn-add-answer').disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}
+  });
+  document.querySelectorAll('.screenshot-embed img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  setTimeout(function(){document.body.style.opacity='1';document.body.style.transition='opacity 0.35s ease';},10);
+  document.querySelectorAll('a[href]').forEach(function(a){a.addEventListener('click',function(){if(a.hostname===location.hostname)sessionStorage.setItem('pt','1');});});
+});
+</script>
+</body>
+</html>

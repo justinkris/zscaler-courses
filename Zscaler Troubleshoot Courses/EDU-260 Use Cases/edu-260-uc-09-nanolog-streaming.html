@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nanolog Streaming Services · EDU-260 Lesson 9 — Zscaler Troubleshoot</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#fff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;--blue-deep:#0f3d7a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html.pt-init body{opacity:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{background:#0d1a2e;color:#fff;padding:28px 40px 32px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:#93c5fd;letter-spacing:0.06em;margin-bottom:20px;flex-wrap:wrap;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;opacity:0.8;}
+.breadcrumb a:hover{opacity:1;text-decoration:underline;}
+.breadcrumb-sep{opacity:0.5;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.eyebrow-chip{background:rgba(147,197,253,0.15);border:1px solid rgba(147,197,253,0.3);color:#93c5fd;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:4px 12px;border-radius:20px;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:#93c5fd;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+h1{font-family:'Fraunces',serif;font-size:42px;font-weight:700;line-height:1.1;color:#fff;margin-bottom:4px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-top:6px;letter-spacing:0.03em;}
+.motivation-banner{background:#1e3a5c;border-bottom:1px solid rgba(147,197,253,0.15);padding:14px 40px;}
+.motivation-text{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.6;}
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.qpanel{background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 24px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 24px 22px;}
+.qpanel-body.open{display:block;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+.no-questions{font-size:12px;color:var(--text-muted);padding:10px 0;}
+.q-group{margin-bottom:14px;}
+.q-group-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:8px;}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-num{font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0;margin-top:2px;}
+.q-text{font-size:13px;color:var(--text-soft);flex:1;line-height:1.5;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 4px;flex-shrink:0;}
+.q-del:hover{color:var(--red);}
+.section-nav{display:flex;gap:2px;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:10;}
+.nav-tab{background:none;border:1px solid transparent;border-radius:8px;padding:6px 14px;font-family:'Epilogue',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.nav-tab:hover{background:var(--surface-2);color:var(--text);}
+.nav-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;flex:1;}
+.main-content{padding:32px 40px;min-width:0;}
+aside{padding:28px 24px;border-left:1px solid var(--border);position:sticky;top:45px;height:calc(100vh - 45px);overflow-y:auto;background:var(--surface);}
+.section-block{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border-dim);}
+.section-block:last-child{border-bottom:none;}
+.section-tag{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--blue);margin-bottom:8px;}
+h2{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:16px;}
+h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 10px;}
+p{font-size:14px;line-height:1.75;color:var(--text-soft);margin-bottom:12px;}
+ul,ol{padding-left:20px;margin-bottom:12px;}
+li{font-size:13.5px;line-height:1.7;color:var(--text-soft);margin-bottom:4px;}
+.info-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:16px 0;}
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.info-card-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:6px;}
+.info-card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.info-card-desc{font-size:12px;color:var(--text-muted);line-height:1.6;}
+.callout{border-radius:10px;padding:14px 16px;margin:16px 0;border-left:3px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.14em;margin-bottom:6px;}
+.callout-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.65;color:var(--text-soft);}
+.callout-tip{background:var(--blue-glow);border-color:var(--blue);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-tip .callout-icon{background:rgba(26,109,204,0.15);color:var(--blue);}
+.callout-warn{background:var(--amber-light);border-color:var(--amber);}
+.callout-warn .callout-header{color:var(--amber);}
+.callout-warn .callout-icon{background:rgba(180,83,9,0.15);color:var(--amber);}
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;transform:scale(1.5);transform-origin:top left;transition:transform 0.2s ease;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
+.phase-steps{display:grid;gap:10px;margin:16px 0;}
+.phase-step{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:8px;padding:12px 16px;display:flex;gap:14px;align-items:flex-start;}
+.phase-step-num{background:var(--blue);color:#fff;font-weight:700;font-size:13px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.phase-step-body{flex:1;}
+.phase-step-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.phase-step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.phase-step-text{font-size:12.5px;color:var(--text-soft);line-height:1.6;}
+.phase-step-text code{background:var(--surface-2);padding:1px 5px;border-radius:4px;font-size:11.5px;color:var(--blue-deep);}
+.cli-block{background:#0d1a2e;color:#93c5fd;border-radius:8px;padding:12px 14px;font-family:'SF Mono','Monaco',monospace;font-size:12px;line-height:1.55;margin:12px 0;overflow-x:auto;white-space:pre;}
+.cli-block .cmt{color:#5a7a9a;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img .img-missing-msg{display:none !important;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+.img-missing-msg{padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:24px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.tool-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:72px;outline:none;line-height:1.6;}
+.tool-textarea:focus{border-color:var(--blue);}
+.tool-row{margin-top:8px;text-align:right;}
+.btn-add-q{background:#0d1a2e;color:#93c5fd;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:24px;}
+.sidebar-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:10px;}
+.hub-back{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:10px 16px;border-radius:10px;transition:opacity 0.15s;margin-bottom:20px;}
+.hub-back:hover{opacity:0.88;}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.check-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-soft);padding:6px 10px;border-radius:8px;cursor:pointer;transition:background 0.12s;}
+.check-item:hover{background:var(--surface-2);}
+.check-item input{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.check-item.done{color:var(--text-muted);text-decoration:line-through;}
+.sidebar-divider{height:1px;background:var(--border);margin:18px 0;}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:16px;}
+.quick-ref-title{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#93c5fd;margin-bottom:12px;}
+.qr-term{margin-bottom:10px;}
+.qr-label{font-size:10px;font-weight:700;color:#93c5fd;letter-spacing:0.08em;}
+.qr-def{font-size:11.5px;color:rgba(255,255,255,0.65);line-height:1.55;margin-top:2px;}
+footer{background:#0d1a2e;color:rgba(255,255,255,0.45);font-size:11px;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.04em;}
+footer span{color:#93c5fd;}
+@media(max-width:900px){main{grid-template-columns:1fr;}aside{display:none;}.main-content{padding:24px 20px;}header,footer{padding:24px 20px;}.motivation-banner{padding:12px 20px;}.section-nav{padding:8px 16px;}.lesson-tools-grid{grid-template-columns:1fr;}.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../index.html">Zscaler Troubleshoot Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="edu-260-use-cases-hub.html">EDU-260 Use Cases</a>
+    <span class="breadcrumb-sep">›</span>
+    Nanolog Streaming Services
+  </div>
+  <div class="eyebrow">
+    <span class="eyebrow-chip">EDU-260 · LESSON 9</span>
+    <span class="header-dot"></span>
+  </div>
+  <h1>Nanolog <em>Streaming</em> Services</h1>
+  <div class="header-sub">How Zscaler streams ZIA logs to your SIEM — and how to troubleshoot when they stop arriving</div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">"If logs never reach the SIEM, the analytics, alerting, and forensics that depend on them are blind — NSS is the bridge that keeps that data flowing."</div>
+</div>
+
+<div class="top-panels">
+  <div class="qpanel" id="qpanel">
+    <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+      <span class="qpanel-title">MY QUESTIONS</span>
+      <span class="qpanel-count" id="qpanel-count">0</span>
+      <span class="qpanel-hint">— click to expand</span>
+      <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+    </button>
+    <div class="qpanel-body" id="qpanel-body"></div>
+  </div>
+  <div class="notes-panel" id="notes-panel">
+    <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+      <span class="notes-panel-title">MY NOTES</span>
+      <span class="notes-panel-count" id="notes-panel-count">0</span>
+      <span class="notes-panel-hint">— click to expand</span>
+      <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+    </button>
+    <div class="notes-panel-body" id="notes-panel-body"></div>
+  </div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview')">1 · NSS Overview</button>
+  <button class="nav-tab" onclick="navTo('section-vm-nss')">2 · VM-based NSS</button>
+  <button class="nav-tab" onclick="navTo('section-cloud-nss')">3 · Cloud NSS</button>
+  <button class="nav-tab" onclick="navTo('section-resilience')">4 · Resilience &amp; Down-time</button>
+  <button class="nav-tab" onclick="navTo('section-troubleshoot')">5 · Troubleshoot Log Drop</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- SECTION 1 — OVERVIEW -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · WHY NSS EXISTS</span>
+  </div>
+  <p class="socratic-insight">ZIA already stores every transaction in the Nanolog inside the Zscaler cloud. So why does an organisation need to stream a copy out to their SIEM at all — couldn't analysts just log into the ZIA portal?</p>
+  <ul class="socratic-questions">
+    <li>What does the SIEM give you that the ZIA portal cannot — and why is real-time streaming, not nightly export, the right answer?</li>
+    <li>Logs are streamed in a "highly compressed" tokenised format. What problem is Zscaler solving by compressing on the wire, and what does NSS have to do before SIEMs can use the data?</li>
+  </ul>
+  <div class="answer-area" data-section="overview">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">A SIEM correlates Zscaler events with logs from firewalls, EDR, identity, and email — that cross-source view is where most real attacks are discovered. Nightly export is too slow for alerting, and a SOC analyst can't pivot from a Splunk detection into the ZIA portal in real time. NSS exists so the SIEM sees ZIA events within seconds and can fire correlation rules against them.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">ZIA transactions are huge in number, so Zscaler tokenises and compresses them on the Nanolog to reduce egress bandwidth out of its cloud. The NSS VM (or Cloud NSS service) is the piece that decompresses and detokenises that stream, applies the configured feed filter, and then re-formats the logs in JSON / CEF / LEEF / Splunk-friendly key-value pairs so the SIEM can actually parse them.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-overview">
+  <div class="section-tag">SECTION 1</div>
+  <h2>What NSS is and why it exists</h2>
+  <p>Nanolog Streaming Service (NSS) is the family of products that lets the Zscaler cloud communicate with third-party security tools — most commonly a SIEM — by forwarding ZIA event logs out of the Zscaler Nanolog. NSS enables three customer outcomes: <strong>real-time alerting</strong>, <strong>cross-device log correlation</strong>, and <strong>long-term local archival</strong> of your traffic data.</p>
+
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="info-card-label">NSS FOR WEB</div>
+      <div class="info-card-title">Web &amp; mobile traffic logs</div>
+      <div class="info-card-desc">Streams ZIA web-proxy transaction logs (URLs, user, action, threat verdict) and mobile traffic.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">NSS FOR FIREWALL</div>
+      <div class="info-card-title">Zscaler Firewall logs</div>
+      <div class="info-card-desc">Streams Cloud Firewall session logs (5-tuple, action, rule). Separate NSS instance per log type.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">NSS COLLECTOR</div>
+      <div class="info-card-title">Third-party log ingest</div>
+      <div class="info-card-desc">Reverse direction — pulls syslog/TCP logs from your firewalls and web proxies into Zscaler for Shadow IT discovery.</div>
+    </div>
+  </div>
+
+  <h3>Two delivery mechanisms</h3>
+  <p>NSS comes in two flavours that solve the same problem differently:</p>
+  <ul>
+    <li><strong>VM-based NSS</strong> — a virtual appliance you deploy in your data centre (vSphere) or cloud (AWS EC2, Azure VM). The VM opens a secure tunnel to the Nanolog and streams logs to your SIEM over raw TCP / syslog. Up to <strong>16 feeds per server</strong> (8 Web + 8 Firewall).</li>
+    <li><strong>Cloud NSS</strong> — Zscaler-hosted; no VM in your network. Logs are pushed directly from the Zscaler cloud to your SIEM's <strong>HTTPS POST endpoint</strong> (e.g. Splunk HEC, Azure Sentinel API). Requires a separate concurrent subscription. <strong>One feed per ZIA log type per instance.</strong></li>
+  </ul>
+
+  <div class="screenshot-embed">
+    <img src="nss-to-siem-flow.png" alt="NSS instance forwarding to SIEM">
+    <div class="screenshot-caption">NSS sits between the Nanolog and your SIEM — it decompresses, detokenises, filters, and formats every log before forwarding.</div>
+  </div>
+
+  <h3>What an NSS instance actually does to each log</h3>
+  <div class="phase-steps">
+    <div class="phase-step">
+      <div class="phase-step-num">1</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">RECEIVE</div>
+        <div class="phase-step-title">Pull compressed, tokenised logs from the Nanolog</div>
+        <div class="phase-step-text">Each NSS opens a secure tunnel; the Nanolog streams copies in a highly compressed format to keep bandwidth low. <strong>Originals are retained on the Nanolog</strong>, so the NSS can ask for replay if it disconnects.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">2</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">PROCESS</div>
+        <div class="phase-step-title">Decompress, detokenise, filter</div>
+        <div class="phase-step-text">NSS decompresses the stream, swaps tokens back to readable values, and drops anything that fails the configured NSS Feed filter (e.g. exclude internal traffic).</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">3</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">FORMAT</div>
+        <div class="phase-step-title">Reformat to SIEM-friendly output</div>
+        <div class="phase-step-text">Feed format is fully customisable — JSON, CEF, LEEF, key-value, or a Splunk-friendly layout. <strong>Zscaler recommends JSON</strong> for Cloud NSS.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">4</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">STREAM</div>
+        <div class="phase-step-title">Deliver to SIEM</div>
+        <div class="phase-step-text">VM-NSS sends over raw TCP / syslog to the SIEM's listener; Cloud NSS POSTs over HTTPS to the SIEM's API ingestion endpoint (e.g. Splunk HEC).</div>
+      </div>
+    </div>
+  </div>
+
+  <p>NSS supports integration with all the major SIEMs — <strong>IBM QRadar</strong>, <strong>Microsoft Azure Sentinel</strong>, <strong>Splunk</strong>, and any other SIEM that can ingest TCP / syslog or accept HTTPS POST.</p>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">NSS = the on-ramp from Nanolog → SIEM. Three uses: real-time alerting, correlation, archival. Two flavours: VM-NSS (your network, raw TCP, 16 feeds/server max — 8 Web + 8 FW) and Cloud NSS (Zscaler-hosted, HTTPS POST, 1 feed per ZIA log type). NSS always decompresses + detokenises + filters + reformats before sending.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Section 1 — NSS Overview')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-overview" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('overview')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 2 — VM-based NSS -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · WHY DEPLOY A VM IN 2026?</span>
+  </div>
+  <p class="socratic-insight">A VM-based NSS still requires VMware ESXi, AWS EC2, or Azure — infrastructure the customer has to size, patch, and monitor. Cloud NSS removes that work entirely. So why do most enterprises still pick VM-based?</p>
+  <ul class="socratic-questions">
+    <li>Beyond "we already have a SIEM that takes syslog," what concrete benefits does a customer get from VM-NSS that Cloud NSS can't match?</li>
+  </ul>
+  <div class="answer-area" data-section="vm-nss">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">VM-NSS supports many more feeds per instance (up to 16, vs one feed per log type for Cloud NSS), which matters when an organisation needs separate per-business-unit feeds or many filtered slices of the same log type. It also lets you send to on-prem SIEMs that don't expose an HTTPS API, and it buffers logs in VM memory for resiliency against transient network hiccups between the NSS and the SIEM. Cloud NSS wins on operational simplicity; VM-NSS wins on feed flexibility and compatibility with legacy SIEM listeners.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-vm-nss">
+  <div class="section-tag">SECTION 2</div>
+  <h2>VM-based NSS</h2>
+  <p>The VM-based NSS uses a virtual machine inside your network to stream logs to your SIEM over a raw TCP connection. The VM can be deployed via <strong>vSphere (ESX/ESXi)</strong>, <strong>AWS EC2</strong>, or <strong>Microsoft Azure</strong>. Each NSS opens a secure tunnel back to the Nanolog in the Zscaler cloud.</p>
+
+  <div class="screenshot-embed">
+    <img src="vm-nss-architecture.png" alt="VM-based NSS architecture diagram">
+    <div class="screenshot-caption">Web and Firewall logs are stored in the Nanolog inside the Zscaler cloud. Deploying separate NSS VMs (NSS for Web / NSS for FW) opens parallel secure tunnels — each receives the raw compressed feed and forwards filtered logs over syslog/TCP to the SIEM.</div>
+  </div>
+
+  <h3>Buffering and resilience — why this matters</h3>
+  <p>NSS buffers logs in <strong>VM memory</strong> rather than on disk, which increases delivery resiliency against transient network issues between the SIEM and NSS. The buffer size <strong>increases proportionally to RAM allocated to the NSS VM</strong> — under-provisioning RAM directly shrinks the resiliency window. Memory required for buffering is already factored into Zscaler's recommended VM spec for your traffic volume.</p>
+
+  <h3>NSS Server vs NSS Feed</h3>
+  <ul>
+    <li><strong>NSS Server</strong> — the VM appliance instance (one per log type per cluster). One server can host up to <strong>16 feeds</strong> total. Web and Firewall logs are each capped at <strong>8 feeds per server</strong> for optimal performance.</li>
+    <li><strong>NSS Feed</strong> — a filtered, formatted output. You choose the SIEM destination, the filter (e.g. "only blocked transactions"), and the output format. A single server can fan out many feeds to many SIEMs.</li>
+  </ul>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">i</div>BEFORE YOU DEPLOY</div>
+    <div class="callout-body">Before adding an NSS Server in the ZIA Admin Portal (<strong>Administration → Nanolog Streaming Service</strong>), refer to the NSS Deployment guide for the platform you're using (vSphere, AWS, Azure) — the platform-specific OVA/AMI and pre-sizing checklist live there. Entering accurate traffic and user information lets the Zscaler service compute the correct VM resources.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">VM-NSS limits: <strong>16 feeds per server</strong>, <strong>8 feeds per log type</strong> for performance. Platforms: vSphere · AWS · Azure. Buffer = RAM-backed, sized by Zscaler's VM-spec recommendation. Configure in ZIA Admin Portal → Administration → Nanolog Streaming Service (NSS Servers tab → Add NSS Server; NSS Feeds tab → Add Feed).</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-vm-nss" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('vm-nss','Section 2 — VM-based NSS')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-vm-nss" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('vm-nss')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 3 — CLOUD NSS -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · CLOUD-TO-CLOUD STREAMING</span>
+  </div>
+  <p class="socratic-insight">Cloud NSS replaces the VM with a Zscaler-hosted HTTPS API feed pushed straight to your SIEM. There's no appliance, no patching, no buffer to size — but Zscaler caps you at one feed per ZIA log type per instance. Why that limit, and what does it cost you?</p>
+  <ul class="socratic-questions">
+    <li>Cloud NSS supports a "stateless log ingestion API" and "POSTs batches" — what does <em>stateless</em> let Zscaler do at SIEM scale that a stateful TCP tunnel from a VM cannot?</li>
+    <li>If you need to split the same Firewall log into three feeds (one for the SOC, one for compliance, one to archive), can Cloud NSS do it? What's the workaround?</li>
+  </ul>
+  <div class="answer-area" data-section="cloud-nss">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">A stateless ingestion API means any Zscaler cloud node can POST any batch to the SIEM — there's no sticky session that ties a customer's stream to a single VM. That makes the service horizontally scalable: traffic spikes are absorbed by spreading POSTs across many cloud workers. A stateful TCP tunnel from one VM would be a single throughput choke point.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Cloud NSS gives you one feed per ZIA log type per instance, so you can't natively fan out three Firewall feeds from a single Cloud NSS subscription. Workarounds: purchase multiple Cloud NSS instances, or have the SIEM do the routing after ingest (Splunk index → multiple sourcetypes; Sentinel workspace → multiple workbooks). Otherwise, customers that need many filtered slices typically stay on VM-NSS.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-cloud-nss">
+  <div class="section-tag">SECTION 3</div>
+  <h2>Cloud NSS</h2>
+  <p>Cloud NSS is an optional subscription that enables <strong>direct cloud-to-cloud log streaming</strong> for all ZIA log types into a compatible cloud-based SIEM — <strong>without any on-premises connectors</strong>. It's offered for both Web and Firewall logs.</p>
+
+  <p>Instead of deploying, managing, and monitoring NSS VMs, you configure an <strong>HTTPS API feed</strong> to push logs from the Zscaler cloud into an HTTPS API-based log collector on the SIEM. As a result, you focus on meaningful log analysis (detection, hunting, investigation, alerting) rather than VM administration.</p>
+
+  <div class="screenshot-embed">
+    <img src="cloud-nss-architecture.png" alt="Cloud NSS architecture diagram">
+    <div class="screenshot-caption">Cloud NSS — no customer VM. Logs go from the Nanolog straight to your cloud-based SIEM over HTTPS POST. The Zscaler cloud handles batching, retry, and TLS.</div>
+  </div>
+
+  <h3>How it works under the hood</h3>
+  <ul>
+    <li>Cloud NSS supports a <strong>customisable HTTPS outbound connector</strong> for interoperability with most private and public cloud-based SIEMs that support a <strong>stateless log ingestion API</strong>.</li>
+    <li>It POSTs batches of logs (e.g. <strong>Splunk HTTP Event Collector</strong> / HEC) so a publicly-routable SIEM endpoint can ingest them. HTTPS is the more reliable and preferred approach for log delivery over the internet.</li>
+    <li>You can customise the feed format — <strong>JSON is Zscaler-recommended</strong>.</li>
+    <li>Includes <strong>Zscaler CloudOps 24/7 monitoring and alerting</strong> on the feed itself.</li>
+  </ul>
+
+  <h3>VM-based NSS vs Cloud NSS — the exam table</h3>
+  <div class="screenshot-embed">
+    <img src="vm-vs-cloud-nss-table.png" alt="VM-based NSS vs Cloud NSS comparison table">
+    <div class="screenshot-caption">The benefits, limitations, and requirements table you should know cold. VM-NSS buffers in VM memory, supports 16 feeds, polls Zscaler for updates and auto-installs them. Cloud NSS has no VM, supports JSON-recommended feeds, has CloudOps 24/7 monitoring, but caps at one feed per ZIA log type per instance.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Cloud NSS = HTTPS POST · 1 feed per ZIA log type per instance · JSON recommended · CloudOps 24/7. VM-NSS = TCP/syslog · 16 feeds per server (8 Web + 8 FW) · RAM buffer · customer admin. Pick Cloud NSS when SIEM has an HTTPS ingest API and you don't need many feeds; pick VM-NSS for legacy SIEMs, many feeds, or strict on-prem requirements.</div>
+    </div>
+  </div>
+
+  <div class="analogy-box">
+    <div class="analogy-label">Analogy</div>
+    <div class="analogy-text">VM-NSS is like running your own post office on company property — you sort the mail, you decide how many counters to staff, you keep packages in a back room when the delivery truck is late. Cloud NSS is like contracting a courier service: the Zscaler cloud picks up the mail directly from the Nanolog and drops it on your SIEM's loading dock over HTTPS — no building, no staff, no back room, but the courier only delivers one bag per address per contract.</div>
+    <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+      <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+      <div class="prompt-content" hidden>Two-panel cartoon infographic, side by side. Left panel labelled "VM-NSS — On-prem Post Office": a small post office building inside a fenced corporate yard with mail sorters at multiple counters labelled "Web Feed", "Firewall Feed" and stacked bags in a back room labelled "RAM Buffer"; a truck waits at the dock labelled "Syslog/TCP → SIEM". Right panel labelled "Cloud NSS — Courier Service": no building; a friendly courier on a delivery bike with a single bag labelled "HTTPS POST" pulls directly from a Zscaler cloud icon and drops it at a loading dock labelled "SIEM HEC"; small note: "1 bag per log-type per contract". Both scenes drawn in clean modern cartoon style, soft colours, minimal text labels only where needed, educational infographic feel, modern tech-analogy aesthetic</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-cloud-nss" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('cloud-nss','Section 3 — Cloud NSS')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-cloud-nss" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('cloud-nss')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 4 — RESILIENCE -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · WHAT HAPPENS IF NSS GOES DOWN?</span>
+  </div>
+  <p class="socratic-insight">If the link between the Nanolog and the NSS breaks, the Zscaler cloud retransmits — but only up to <strong>one hour</strong>. Anything older than that is gone forever from the NSS's perspective.</p>
+  <ul class="socratic-questions">
+    <li>Why one hour and not 24 — what does that limit say about how Zscaler thinks about NSS as a data pipeline vs a system of record?</li>
+  </ul>
+  <div class="answer-area" data-section="resilience">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">The Nanolog itself is the system of record — every transaction is retained there, and customers can still query / export via the ZIA portal even if NSS fails for a week. The one-hour replay window is just enough to ride out transient outages (network blip, SIEM restart, certificate rotation) without overwhelming the Nanolog's replay buffer. If NSS is down longer than an hour, the operational answer is to take a SIEM-side gap report against the ZIA portal — not to expect the cloud to replay yesterday's traffic.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-resilience">
+  <div class="section-tag">SECTION 4</div>
+  <h2>Log collection, resilience &amp; what happens if NSS goes down</h2>
+
+  <h3>Log Collection — third-party logs into Zscaler</h3>
+  <p>NSS also runs in the <em>opposite</em> direction. The <strong>NSS Collector</strong> sits inside your network perimeter and collects near real-time logs from third-party firewalls and web-proxy devices, then streams them to the Zscaler cloud over HTTPS. The log data is integrated with Zscaler's unified console to produce a comprehensive <strong>Shadow IT Report</strong> for cloud-app discovery and analysis.</p>
+
+  <div class="screenshot-embed">
+    <img src="nss-collector-third-party.png" alt="NSS Collector third-party log diagram">
+    <div class="screenshot-caption">NSS Collector — reverse-direction flow. Third-party firewalls / web proxies syslog to a local NSS Collector, which POSTs over HTTPS to the Zscaler cloud for Shadow IT analysis.</div>
+  </div>
+
+  <h3>What happens if NSS goes down</h3>
+  <div class="callout callout-warn">
+    <div class="callout-header"><div class="callout-icon">!</div>THE ONE-HOUR RULE</div>
+    <div class="callout-body">In the event of a connection loss between the NSS server and the cloud Nanolog, <strong>the cloud retransmits logs to the NSS up to a maximum of one hour</strong>. If the NSS is down for more than an hour, the logs falling outside the one-hour window <strong>aren't retrieved by the NSS</strong>. The originals remain on the Nanolog and are still available in the ZIA portal — but the SIEM feed has a gap.</div>
+  </div>
+
+  <p>Cloud NSS uses the same one-hour recovery, provided by a separate Zscaler capability that lets the Nanolog replay logs up to one hour back. After deployment, you also have continuous monitoring and alerting via Zscaler CloudOps.</p>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Maximum replay window from the Nanolog when NSS reconnects: <strong>1 hour</strong>. Longer outage = permanent gap on the SIEM side (originals still on Nanolog, reachable via ZIA portal). NSS Collector = the reverse direction — pulls third-party logs INTO Zscaler for Shadow IT discovery via HTTPS.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-resilience" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('resilience','Section 4 — Resilience &amp; Down-time')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-resilience" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('resilience')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 5 — TROUBLESHOOT -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · WHEN LOGS STOP ARRIVING</span>
+  </div>
+  <p class="socratic-insight">A customer opens a ticket: "We're missing logs on Splunk." Before you touch a single <code>smstat</code> command, what's the first split you have to make — and why does it determine which CLI you reach for?</p>
+  <ul class="socratic-questions">
+    <li>You need to find out whether the gap is <em>before</em> NSS (Nanolog → NSS) or <em>after</em> NSS (NSS → SIEM). Why is that the most important first split — and which side of the split do <code>smstat</code> metrics actually live on?</li>
+    <li>An admin sees <strong>State: Unhealthy</strong> on the NSS Server row in the ZIA portal but logs are still arriving at the SIEM. What's the most likely cause, and is this an emergency?</li>
+  </ul>
+  <div class="answer-area" data-section="troubleshoot">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Cloud-side (Nanolog → NSS) issues are out of your hands; you confirm them by checking Nanolog → NSS rates and opening a Zscaler ticket. Customer-side (NSS → SIEM) issues are yours to fix — firewall blocking the SIEM port, SIEM listener down, certificate mismatch, web-lag growing because the SIEM is slow to ack. The <code>smstat</code> metrics live on the NSS VM and answer both halves: <em>received</em> counters confirm cloud-side delivery; <em>flushed</em> + <em>web-lag</em> counters confirm SIEM-side egress. Always confirm both sides before changing anything.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">"Unhealthy" usually means the SSL certificate the NSS uses to call back into the Zscaler cloud is expiring, missing, or that the NSS hasn't recently polled. It's almost never a log-loss emergency on its own — logs may still be flowing. Action: download a fresh SSL certificate from the NSS Servers tab, redeploy/restart the NSS service, and confirm state returns to Healthy. Don't conflate "Unhealthy" with "logs stopped" — verify with smstat counters before escalating.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-troubleshoot">
+  <div class="section-tag">SECTION 5</div>
+  <h2>Troubleshooting NSS log drops — five investigation scenarios</h2>
+  <p>If the NSS service is running fine but logs aren't received on the SIEM, or if there's partial log drop, the <code>smstat</code> CLI on the NSS VM is the workhorse. Always validate the SIEM side too — event volumes on the SIEM need to match expected counters from NSS. Always start with the official article for basic NSS commands and known-issue checks.</p>
+
+  <h3>Locate · Isolate · Diagnose</h3>
+  <div class="phase-steps">
+    <div class="phase-step">
+      <div class="phase-step-num">1</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">LOCATE</div>
+        <div class="phase-step-title">Which half of the pipeline is broken?</div>
+        <div class="phase-step-text">Check ZIA portal: <strong>Administration → Nanolog Streaming Service → NSS Servers</strong>. State should be <em>Healthy</em>. If <em>Unhealthy</em>, suspect the NSS↔Zscaler-cloud half (SSL cert, polling). Then check SIEM side: are events still indexing, just behind? Are <em>any</em> NSS events landing? That tells you the split.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">2</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">ISOLATE</div>
+        <div class="phase-step-title">Run smstat to compare received vs flushed</div>
+        <div class="phase-step-text">SSH to the NSS VM and run the five smstat scenarios below. If <em>received</em> is healthy but <em>flushed</em> is lower, the SIEM-side hop is the bottleneck. If <em>received</em> is low, the Nanolog→NSS side is the issue. Web-lag growing = NSS is buffering because the SIEM can't keep up.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">3</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">DIAGNOSE</div>
+        <div class="phase-step-title">Pick the corrective action</div>
+        <div class="phase-step-text">NSS↔Cloud side: refresh SSL cert (Download in the NSS Servers tab) + restart NSS. NSS↔SIEM side: confirm firewall allows the SIEM port, that the SIEM listener is up, and that the feed output format matches what the SIEM parser expects. For long outages: accept the 1-hour replay window — gaps beyond that need a portal-side reconciliation report.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">4</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">ESCALATE</div>
+        <div class="phase-step-title">Bundle smstat output for Zscaler Support</div>
+        <div class="phase-step-text">Collect outputs of all five scenarios across the suspect time window, attach NSS Server state + feed config screenshots, and open a ticket. Quoting concrete smstat counters gets you to a TSE far faster than "logs are missing."</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>The five smstat scenarios — exam ammo</h3>
+
+  <p><strong>Scenario 1 — Total logs received on NSS for a time frame</strong></p>
+  <div class="cli-block">/sc/bin/smstat -s stime=&lt;start time&gt; -s etime=&lt;end time&gt; -s interval=60 -g \
+  smsmclt_cur_transactions_count -j log -d diff</div>
+
+  <p><strong>Scenario 2 — Total logs sent from NSS to SIEM for a time frame</strong></p>
+  <div class="cli-block">/sc/bin/smstat -s stime=&lt;start time&gt; -s etime=&lt;end time&gt; -s interval=60 -k \
+  smsmclt_tot_events_flushed -j &lt;feed_name&gt; -d diff</div>
+
+  <p><strong>Scenario 3 — Bytes of data received on NSS</strong></p>
+  <div class="cli-block">/sc/bin/smstat -s stime=&lt;start time&gt; -s etime=&lt;end time&gt; -s interval=60 -g \
+  smsmclt_tot_databytes_rcvd -j log -d diff</div>
+
+  <p><strong>Scenario 4 — Bytes of data sent from NSS to SIEM</strong></p>
+  <div class="cli-block">/sc/bin/smstat -s stime=&lt;start time&gt; -s etime=&lt;end time&gt; -s interval=60 -g \
+  smsmclt_tot_databytes_sent -j log -d diff</div>
+
+  <p><strong>Scenario 5 — Web lag on NSS (how far behind real time it is)</strong></p>
+  <div class="cli-block">/sc/bin/smstat -s stime=&lt;start time&gt; -s etime=&lt;end time&gt; -s interval=60 -k \
+  smsmclt_cur_datatimestamp -j &lt;feed_name&gt; -d diff</div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">i</div>WHY THIS COMBINATION WORKS</div>
+    <div class="callout-body">Scenarios 1+3 show what came IN from the Nanolog. Scenarios 2+4 show what went OUT to the SIEM. If 1≈2 the NSS isn't the problem — go check the SIEM. If 2 lags 1, the NSS is buffering because the SIEM is slow or unreachable. Scenario 5 quantifies how stale the feed is so you can prove SLA impact.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Troubleshoot tool = <code>/sc/bin/smstat</code> on the NSS VM. Five counters: <em>cur_transactions_count</em> (received), <em>tot_events_flushed</em> (sent), <em>tot_databytes_rcvd</em>, <em>tot_databytes_sent</em>, <em>cur_datatimestamp</em> (web lag). Use received vs flushed to split cloud-side vs SIEM-side issues. State "Unhealthy" in ZIA portal usually = SSL cert refresh needed, not log loss.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-troubleshoot" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('troubleshoot','Section 5 — Troubleshoot Log Drop')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-troubleshoot" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('troubleshoot')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .main-content -->
+
+<aside>
+  <a class="hub-back" href="edu-260-use-cases-hub.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    EDU-260 Use Cases Hub
+  </a>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS</div>
+    <ul class="checklist">
+      <li class="check-item" onclick="toggleDone(this,'check-1')"><input type="checkbox" id="check-1" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> NSS Overview</li>
+      <li class="check-item" onclick="toggleDone(this,'check-2')"><input type="checkbox" id="check-2" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> VM-based NSS</li>
+      <li class="check-item" onclick="toggleDone(this,'check-3')"><input type="checkbox" id="check-3" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> Cloud NSS</li>
+      <li class="check-item" onclick="toggleDone(this,'check-4')"><input type="checkbox" id="check-4" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> Resilience &amp; Down-time</li>
+      <li class="check-item" onclick="toggleDone(this,'check-5')"><input type="checkbox" id="check-5" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> Troubleshoot Log Drop</li>
+    </ul>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="quick-ref">
+    <div class="quick-ref-title">KEY TERMS</div>
+    <div class="qr-term"><div class="qr-label">NSS</div><div class="qr-def">Nanolog Streaming Service — forwards Zscaler logs to your SIEM.</div></div>
+    <div class="qr-term"><div class="qr-label">Nanolog</div><div class="qr-def">Zscaler's cloud-side compressed log store — system of record for ZIA transactions.</div></div>
+    <div class="qr-term"><div class="qr-label">NSS Server</div><div class="qr-def">The VM appliance; up to 16 feeds (8 Web + 8 FW per server).</div></div>
+    <div class="qr-term"><div class="qr-label">NSS Feed</div><div class="qr-def">A filtered, formatted output stream — choose SIEM, filter, format (JSON / CEF / LEEF).</div></div>
+    <div class="qr-term"><div class="qr-label">Cloud NSS</div><div class="qr-def">Zscaler-hosted HTTPS POST feed; one feed per ZIA log type per instance.</div></div>
+    <div class="qr-term"><div class="qr-label">smstat</div><div class="qr-def">NSS-side CLI for received / flushed / web-lag counters. Run from <code>/sc/bin/smstat</code>.</div></div>
+    <div class="qr-term"><div class="qr-label">1-hour replay</div><div class="qr-def">If NSS disconnects, the Nanolog replays up to 1 hour; beyond that, gap is permanent on the SIEM.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div>EDU-260 · <span>Use Cases</span></div>
+  <div>Lesson 9 — Nanolog Streaming Services</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu-260-uc-09-nanolog-streaming';
+const SECTIONS={
+  'overview':'Section 1 — NSS Overview',
+  'vm-nss':'Section 2 — VM-based NSS',
+  'cloud-nss':'Section 3 — Cloud NSS',
+  'resilience':'Section 4 — Resilience & Down-time',
+  'troubleshoot':'Section 5 — Troubleshoot Log Drop'
+};
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();ns.push({id:Date.now(),section:key,sectionName:SECTIONS[key]||key,text});saveNotesArr(ns);ta.value='';renderNotesPanel();if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function getQArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQArr(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const qs=getQArr();qs.push({id:Date.now(),section:key,sectionName:name,text});saveQArr(qs);ta.value='';renderQPanel();if(!document.getElementById('qpanel-body').classList.contains('open'))toggleQPanel();}
+function deleteQ(id){saveQArr(getQArr().filter(q=>q.id!==id));renderQPanel();}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function renderQPanel(){const qs=getQArr();const count=document.getElementById('qpanel-count');if(count){count.textContent=qs.length;count.style.display=qs.length?'inline':'none';}const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!body)return;if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));qs.forEach(q=>{if(groups[q.section])groups[q.section].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQ(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=PAGE_KEY+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+function navTo(id){const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}const ids=['section-overview','section-vm-nss','section-cloud-nss','section-resilience','section-troubleshoot'];document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));}
+function toggleDone(li,id){const cb=li.querySelector('input[type="checkbox"]');const checked=!cb.checked;cb.checked=checked;li.classList.toggle('done',checked);localStorage.setItem(PAGE_KEY+'-check-'+id,checked);}
+function initChecks(){document.querySelectorAll('.check-item').forEach(function(li){const cb=li.querySelector('input[type="checkbox"]');if(!cb)return;if(localStorage.getItem(PAGE_KEY+'-check-'+cb.id)==='true'){cb.checked=true;li.classList.add('done');}});}
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();renderNotesPanel();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){const key=PAGE_KEY+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;area.querySelector('.btn-add-answer').textContent='✓ Answer saved';area.querySelector('.btn-add-answer').disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
+  document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
+  document.querySelectorAll('.analogy-img img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  document.querySelectorAll('.screenshot-embed img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  setTimeout(function(){document.body.style.opacity='1';document.body.style.transition='opacity 0.35s ease';},10);
+  document.querySelectorAll('a[href]').forEach(function(a){a.addEventListener('click',function(){if(a.hostname===location.hostname)sessionStorage.setItem('pt','1');});});
+});
+</script>
+</body>
+</html>

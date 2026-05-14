@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZPA DNS &amp; Connectivity — Troubleshoot Demo · EDU-260 Lesson 11</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#fff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;--blue-deep:#0f3d7a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html.pt-init body{opacity:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{background:#0d1a2e;color:#fff;padding:28px 40px 32px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:#93c5fd;letter-spacing:0.06em;margin-bottom:20px;flex-wrap:wrap;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;opacity:0.8;}
+.breadcrumb a:hover{opacity:1;text-decoration:underline;}
+.breadcrumb-sep{opacity:0.5;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.eyebrow-chip{background:rgba(147,197,253,0.15);border:1px solid rgba(147,197,253,0.3);color:#93c5fd;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:4px 12px;border-radius:20px;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:#93c5fd;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+h1{font-family:'Fraunces',serif;font-size:42px;font-weight:700;line-height:1.1;color:#fff;margin-bottom:4px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-top:6px;letter-spacing:0.03em;}
+.motivation-banner{background:#1e3a5c;border-bottom:1px solid rgba(147,197,253,0.15);padding:14px 40px;}
+.motivation-text{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.6;}
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.qpanel{background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 24px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 24px 22px;}
+.qpanel-body.open{display:block;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+.no-questions{font-size:12px;color:var(--text-muted);padding:10px 0;}
+.q-group{margin-bottom:14px;}
+.q-group-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:8px;}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-num{font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0;margin-top:2px;}
+.q-text{font-size:13px;color:var(--text-soft);flex:1;line-height:1.5;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 4px;flex-shrink:0;}
+.q-del:hover{color:var(--red);}
+.section-nav{display:flex;gap:2px;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:10;}
+.nav-tab{background:none;border:1px solid transparent;border-radius:8px;padding:6px 14px;font-family:'Epilogue',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.nav-tab:hover{background:var(--surface-2);color:var(--text);}
+.nav-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;flex:1;}
+.main-content{padding:32px 40px;min-width:0;}
+aside{padding:28px 24px;border-left:1px solid var(--border);position:sticky;top:45px;height:calc(100vh - 45px);overflow-y:auto;background:var(--surface);}
+.section-block{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border-dim);}
+.section-block:last-child{border-bottom:none;}
+.section-tag{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--blue);margin-bottom:8px;}
+h2{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:16px;}
+h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 10px;}
+p{font-size:14px;line-height:1.75;color:var(--text-soft);margin-bottom:12px;}
+ul,ol{padding-left:20px;margin-bottom:12px;}
+li{font-size:13.5px;line-height:1.7;color:var(--text-soft);margin-bottom:4px;}
+.info-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:16px 0;}
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.info-card-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:6px;}
+.info-card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.info-card-desc{font-size:12px;color:var(--text-muted);line-height:1.6;}
+.callout{border-radius:10px;padding:14px 16px;margin:16px 0;border-left:3px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.14em;margin-bottom:6px;}
+.callout-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.65;color:var(--text-soft);}
+.callout-tip{background:var(--blue-glow);border-color:var(--blue);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-tip .callout-icon{background:rgba(26,109,204,0.15);color:var(--blue);}
+.callout-warn{background:var(--amber-light);border-color:var(--amber);}
+.callout-warn .callout-header{color:var(--amber);}
+.callout-warn .callout-icon{background:rgba(180,83,9,0.15);color:var(--amber);}
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;transform:scale(1.5);transform-origin:top left;transition:transform 0.2s ease;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
+.phase-steps{display:grid;gap:10px;margin:16px 0;}
+.phase-step{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:8px;padding:12px 16px;display:flex;gap:14px;align-items:flex-start;}
+.phase-step-num{background:var(--blue);color:#fff;font-weight:700;font-size:13px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.phase-step-body{flex:1;}
+.phase-step-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.phase-step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.phase-step-text{font-size:12.5px;color:var(--text-soft);line-height:1.6;}
+.phase-step-text code{background:var(--surface-2);padding:1px 5px;border-radius:4px;font-size:11.5px;color:var(--blue-deep);}
+.cli-block{background:#0d1a2e;color:#93c5fd;border-radius:8px;padding:12px 14px;font-family:'SF Mono','Monaco',monospace;font-size:12px;line-height:1.55;margin:12px 0;overflow-x:auto;white-space:pre;}
+.cli-block .cmt{color:#5a7a9a;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img .img-missing-msg{display:none !important;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+.img-missing-msg{padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:24px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.tool-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:72px;outline:none;line-height:1.6;}
+.tool-textarea:focus{border-color:var(--blue);}
+.tool-row{margin-top:8px;text-align:right;}
+.btn-add-q{background:#0d1a2e;color:#93c5fd;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:24px;}
+.sidebar-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:10px;}
+.hub-back{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:10px 16px;border-radius:10px;transition:opacity 0.15s;margin-bottom:20px;}
+.hub-back:hover{opacity:0.88;}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.check-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-soft);padding:6px 10px;border-radius:8px;cursor:pointer;transition:background 0.12s;}
+.check-item:hover{background:var(--surface-2);}
+.check-item input{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.check-item.done{color:var(--text-muted);text-decoration:line-through;}
+.sidebar-divider{height:1px;background:var(--border);margin:18px 0;}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:16px;}
+.quick-ref-title{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#93c5fd;margin-bottom:12px;}
+.qr-term{margin-bottom:10px;}
+.qr-label{font-size:10px;font-weight:700;color:#93c5fd;letter-spacing:0.08em;}
+.qr-def{font-size:11.5px;color:rgba(255,255,255,0.65);line-height:1.55;margin-top:2px;}
+footer{background:#0d1a2e;color:rgba(255,255,255,0.45);font-size:11px;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.04em;}
+footer span{color:#93c5fd;}
+@media(max-width:900px){main{grid-template-columns:1fr;}aside{display:none;}.main-content{padding:24px 20px;}header,footer{padding:24px 20px;}.motivation-banner{padding:12px 20px;}.section-nav{padding:8px 16px;}.lesson-tools-grid{grid-template-columns:1fr;}.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../index.html">Zscaler Troubleshoot Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="edu-260-use-cases-hub.html">EDU-260 Use Cases</a>
+    <span class="breadcrumb-sep">›</span>
+    ZPA DNS &amp; Connectivity
+  </div>
+  <div class="eyebrow">
+    <span class="eyebrow-chip">EDU-260 · LESSON 11</span>
+    <span class="header-dot"></span>
+  </div>
+  <h1>ZPA <em>DNS &amp;</em> Connectivity</h1>
+  <div class="header-sub">The ZPA + ZIA portion of the end-to-end troubleshooting demonstration — DNS, app segments, support logs, and packet-capture techniques</div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">"For ZPA, the right answer almost always depends on getting DNS right — and the wrong answer hides inside a packet capture the operator never opened."</div>
+</div>
+
+<div class="top-panels">
+  <div class="qpanel" id="qpanel">
+    <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+      <span class="qpanel-title">MY QUESTIONS</span>
+      <span class="qpanel-count" id="qpanel-count">0</span>
+      <span class="qpanel-hint">— click to expand</span>
+      <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+    </button>
+    <div class="qpanel-body" id="qpanel-body"></div>
+  </div>
+  <div class="notes-panel" id="notes-panel">
+    <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+      <span class="notes-panel-title">MY NOTES</span>
+      <span class="notes-panel-count" id="notes-panel-count">0</span>
+      <span class="notes-panel-hint">— click to expand</span>
+      <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+    </button>
+    <div class="notes-panel-body" id="notes-panel-body"></div>
+  </div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-process')">1 · Troubleshoot Process</button>
+  <button class="nav-tab" onclick="navTo('section-zpa-dns')">2 · ZPA DNS &amp; Connectivity</button>
+  <button class="nav-tab" onclick="navTo('section-ad-dns')">3 · ZPA &amp; AD DNS</button>
+  <button class="nav-tab" onclick="navTo('section-support-logs')">4 · Support &amp; Diagnostic Logs</button>
+  <button class="nav-tab" onclick="navTo('section-zcc-pcap')">5 · ZCC Logs &amp; Wireshark</button>
+  <button class="nav-tab" onclick="navTo('section-appendices')">6 · Wireshark Appendices</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- SECTION 1 — PROCESS -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · LOCALIZE → ISOLATE → DIAGNOSE</span>
+  </div>
+  <p class="socratic-insight">Zscaler's troubleshooting process has three named phases and they're the same regardless of which product you're chasing. The whole framework hinges on resisting the urge to start "diagnosing" before you know <em>where</em> the problem lives.</p>
+  <ul class="socratic-questions">
+    <li>Why are six possible failure domains (device, local network, corporate firewall, ZTE, identity provider, between Zscaler and the destination) listed in <em>Localize</em> rather than diagnosed in a single sweep?</li>
+    <li>If users complain about a ZPA app failing intermittently, which phase fails most often in practice — Localize, Isolate, or Diagnose — and why?</li>
+  </ul>
+  <div class="answer-area" data-section="process">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">A "sweep" across six domains is how engineers end up chasing red herrings — they fix something that isn't the issue and the symptom persists. By treating Localize as a deliberate funnel (test each domain in order until you find where the failure is), you constrain the change you'll make in Isolate and save Diagnose for the actual root cause. Each domain has different tools (ping/MTR for device + network, ZPA app status for ZTE, IdP test SAML for identity), so listing them keeps the operator from skipping to a guess.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Localize. Engineers under pressure jump straight to "the IdP is broken" or "DNS is broken" without proving where the failure is, then make changes that don't fix the symptom. ZPA failures specifically are intermittent because they often depend on whether the right App Connector responded, whether the client's local DNS returned the synthetic IP, and whether the user's session token is still valid — three independent variables. Stay disciplined in Localize, document each test, and only move on once you can name the failing domain.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-process">
+  <div class="section-tag">SECTION 1</div>
+  <h2>The Zscaler troubleshooting process applied to ZPA + ZIA</h2>
+  <p>Before drilling into the ZPA-specific use cases, the demonstration anchors on the universal three-phase process. With an Internet access connection through Zscaler, an issue can occur in any of the following areas — Localize asks <strong>where</strong>; Isolate asks <strong>which logical process</strong>; Diagnose asks <strong>what specifically</strong> and produces the fix.</p>
+
+  <div class="screenshot-embed">
+    <img src="zscaler-troubleshoot-process.png" alt="Zscaler troubleshooting process diagram">
+    <div class="screenshot-caption">The reference framework. Localize the failing domain (end-user device, local network, corporate firewall, ZTE, identity provider, or ZTE→destination). Isolate the failing logical process (connectivity vs config). Diagnose with the right tool and remediate.</div>
+  </div>
+
+  <div class="phase-steps">
+    <div class="phase-step">
+      <div class="phase-step-num">1</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">LOCALIZE</div>
+        <div class="phase-step-title">Identify which of six domains is failing</div>
+        <div class="phase-step-text">End-user device · local network (home / corporate LAN / café) · corporate firewall · end-user ↔ Zscaler · end-user ↔ identity provider (auth) · Zscaler ↔ destination (third-party site or service).</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">2</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">ISOLATE</div>
+        <div class="phase-step-title">Which logical process is failing</div>
+        <div class="phase-step-text">Is there a network connectivity problem? Is there a connection issue between specific infrastructure entities? Is there a misconfiguration in either the network or a Zscaler policy?</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">3</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">DIAGNOSE</div>
+        <div class="phase-step-title">Ascertain what the problem is and plan remediation</div>
+        <div class="phase-step-text">Use the gathered evidence (status pages, packet captures, ZCC + ZIA + ZPA logs, IdP test SAML, traceroute) to pin the root cause and execute a remediation plan.</div>
+      </div>
+    </div>
+  </div>
+
+  <p>The end-to-end demonstration walks this process through the full stack — Test Connectivity to ZTE → Deploy ZCC → SAML Auth → ZCC Auth → View ZCC Logs → SSL Certs → ZIA Connectivity → <strong>ZPA DNS &amp; Connectivity</strong> → ZPA AD DNS → ZPA Support &amp; Diagnostic logs → ZCC Logs + Wireshark. This page focuses on the ZPA and packet-capture portions.</p>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Three phases — never skip Localize. Six domains to check in Localize: device · local network · corporate firewall · end-user↔Zscaler · end-user↔IdP · Zscaler↔destination. Isolate filters connectivity vs config. Diagnose produces the fix and the remediation plan. Same process for ZIA <em>and</em> ZPA.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-process" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('process','Section 1 — Troubleshoot Process')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-process" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('process')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 2 — ZPA DNS -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · WHY DNS IS THE FIRST PROOF POINT FOR ZPA</span>
+  </div>
+  <p class="socratic-insight">ZPA depends on DNS to do something unusual — when a client queries the FQDN of an internal app, the ZCC intercepts and answers with a <em>synthetic</em> IP from a private range, which is then routed through ZPA. If that lookup doesn't happen, ZPA never enters the path at all.</p>
+  <ul class="socratic-questions">
+    <li>You see a Wireshark capture filtered by <code>dns contains "proxy"</code> showing the client doing a Standard query for an internal hostname and getting back a Standard query response with an A record. Why does the very existence of those two packets prove ZPA is healthy <em>up to that point</em>, and what does it NOT prove?</li>
+    <li>What's the difference between application segment misconfiguration and DNS failure when both produce the same end-user symptom ("app doesn't load")?</li>
+  </ul>
+  <div class="answer-area" data-section="zpa-dns">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Those two packets prove the ZCC's DNS interception is working, the client side of ZPA agreed the FQDN matched an app segment, and a synthetic A record was returned for routing. That means ZCC is up, the user is authenticated, and the app segment is configured with the FQDN. What it does NOT prove is whether the corresponding App Connector actually reaches the back-end server, whether the server is up, whether the TLS cert is right, or whether the user has the access policy. DNS is necessary but not sufficient.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">App segment misconfig = DNS query gets <em>no</em> synthetic answer because the FQDN doesn't match any segment; the client falls through to its real DNS and sees a public/RFC1918 answer or NXDOMAIN. DNS failure = the client never makes the query reach a resolver at all (network/DNS server down). Tell them apart by looking at the capture: missing query = network/DNS; query with no response or wrong response IP = segment / routing mistake.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-zpa-dns">
+  <div class="section-tag">SECTION 2</div>
+  <h2>ZPA DNS &amp; Connectivity</h2>
+  <p>The demonstration's ZPA section starts by confirming that when the user accesses an internal application by FQDN, the ZCC intercepts the DNS lookup and answers with a synthetic IP from ZPA's private range — proving the ZPA data path begins correctly. The investigation tool is Wireshark on the client.</p>
+
+  <h3>The DNS evidence — what to look for</h3>
+  <p>Apply the display filter <code>dns contains "proxy"</code> (or whatever internal FQDN the user is hitting) and you should see paired <em>Standard query</em> and <em>Standard query response</em> packets. The response should resolve to a ZPA synthetic IP (in the private space ZPA owns, e.g. <code>172.x</code>), not a public IP.</p>
+
+  <div class="screenshot-embed">
+    <img src="wireshark-dns-filter.png" alt="Wireshark DNS filter showing query / response for internal hostname">
+    <div class="screenshot-caption">Wireshark filter <code>dns contains "proxy"</code> revealing paired Standard query + Standard query response for <code>proxy.tcs.com</code>. The response returns an A record from the ZPA synthetic range — proof DNS interception is working.</div>
+  </div>
+
+  <div class="phase-steps">
+    <div class="phase-step">
+      <div class="phase-step-num">1</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">LOCATE</div>
+        <div class="phase-step-title">User can't reach an internal ZPA app</div>
+        <div class="phase-step-text">Confirm via ZCC tray icon that ZIA + ZPA show authenticated and connected. If both green but app fails, focus on ZPA-specific path: DNS → app segment → App Connector → server.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">2</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">ISOLATE</div>
+        <div class="phase-step-title">Open Wireshark, filter <code>dns contains "&lt;fqdn&gt;"</code></div>
+        <div class="phase-step-text">Reproduce the failure while capturing. Look for query + response pair. A synthetic IP in the response = ZPA routed the request; a public/RFC1918 IP or NXDOMAIN = app segment doesn't match, or ZCC isn't intercepting.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">3</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">DIAGNOSE</div>
+        <div class="phase-step-title">Match symptom to cause</div>
+        <div class="phase-step-text">No query at all → ZCC service down or DNS pinned to a non-ZCC resolver. Query but no synthetic IP → FQDN not covered by an app segment, fix the segment in the ZPA portal. Synthetic IP returned but app still fails → connectivity issue at the App Connector or server — proceed to support &amp; diagnostic logs.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="wireshark-dns-a-response.png" alt="Wireshark DNS A record response detail">
+    <div class="screenshot-caption">Expanded DNS response — Type A, class IN, addr <code>172.17.0.16</code>. Confirming the response truly contains an A record in ZPA's synthetic range. The TTL (here 17 seconds) is short on purpose so ZPA can rotate App Connectors quickly.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">ZPA needs a working DNS interception by the ZCC — the ZCC returns a synthetic A record from ZPA's private range when the FQDN matches an app segment. Wireshark filter: <code>dns contains "&lt;fqdn&gt;"</code> or simply <code>dns</code>. Symptoms map: no query = client-side, public IP returned = no app segment match, synthetic IP returned + still failing = App Connector / server.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zpa-dns" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zpa-dns','Section 2 — ZPA DNS &amp; Connectivity')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-zpa-dns" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('zpa-dns')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 3 — AD DNS -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · AD DNS THROUGH ZPA</span>
+  </div>
+  <p class="socratic-insight">Active Directory uses SRV records and dynamic registration; if the client can't reach a DC over ZPA, single sign-on, GPO updates, and Kerberos token issuance all silently break. Why is this its own troubleshooting section?</p>
+  <ul class="socratic-questions">
+    <li>If your ZPA app segment covers <code>*.corp.local</code> but the client still can't reach the DC, what's the most likely root cause that has nothing to do with ZPA itself?</li>
+  </ul>
+  <div class="answer-area" data-section="ad-dns">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">The most common cause is that the client's primary DNS server is set to a public resolver (Google 8.8.8.8 / Cloudflare 1.1.1.1) or to an ISP resolver from a previous connection — so AD's SRV queries never reach an internal DNS server, and ZPA's DNS interception only activates for the specific app FQDNs in the segment, not the AD service-discovery namespace. The fix is to ensure either the DNS Search Order has an internal DNS server reachable via ZPA, or the AD discovery FQDNs are explicitly covered by the app segment.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-ad-dns">
+  <div class="section-tag">SECTION 3</div>
+  <h2>ZPA — Active Directory DNS</h2>
+  <p>Once basic ZPA DNS interception is confirmed, the demo drills further into Active Directory DNS — because AD's discovery queries (SRV records for <code>_ldap._tcp</code>, <code>_kerberos._udp</code>, etc.) follow different patterns than the simple A-record lookups for an internal web app.</p>
+
+  <div class="phase-steps">
+    <div class="phase-step">
+      <div class="phase-step-num">1</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">LOCATE</div>
+        <div class="phase-step-title">SSO / Kerberos / GPO failing while ZPA shows healthy</div>
+        <div class="phase-step-text">Classic symptoms: <code>klist</code> shows expired Kerberos tickets; <code>nltest /sc_query</code> fails; GPO updates time out. ZPA tray says connected.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">2</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">ISOLATE</div>
+        <div class="phase-step-title">Compare DNS query types in Wireshark</div>
+        <div class="phase-step-text">Filter for both A records and SRV records. If SRV queries don't see a synthetic-IP response from ZPA, AD discovery is bypassing ZPA — usually because the app segment doesn't cover the AD service-discovery FQDNs, or DNS Search Order is wrong.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">3</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">DIAGNOSE</div>
+        <div class="phase-step-title">Two fix paths</div>
+        <div class="phase-step-text">(a) Add the AD discovery FQDNs (e.g. <code>*.corp.local</code>, the AD domain, <code>_msdcs.&lt;domain&gt;</code>) to a ZPA app segment so ZCC intercepts them. (b) Ensure the client's primary DNS resolver points to an internal DNS reachable through ZPA, not a public resolver. Re-run <code>klist</code> and <code>gpupdate /force</code> to confirm.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">i</div>WHY THE NEXT SECTION EXISTS</div>
+    <div class="callout-body">Once you've identified that things are <em>working fine</em> for AD DNS but a deeper problem remains, the demonstration moves to Support &amp; Diagnostic logs — because the next step is to instrument and capture, not guess. That's also when you're most likely to need Zscaler Support, so you collect the bundle deliberately.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">AD DNS over ZPA breaks when app segments don't cover service-discovery FQDNs OR when the client's primary resolver is public/ISP. Diagnostic tools: <code>klist</code> (Kerberos tickets), <code>nltest /sc_query</code> (secure channel), <code>gpupdate /force</code>. Always check both A and SRV records in a Wireshark capture.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-ad-dns" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('ad-dns','Section 3 — ZPA AD DNS')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-ad-dns" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('ad-dns')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 4 — SUPPORT LOGS -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · CLEAN STATE → REPRODUCE → CAPTURE</span>
+  </div>
+  <p class="socratic-insight">The demo's support-log workflow is opinionated: clear the logs, restart the network adapter, reproduce the issue, export everything, then attach to the ticket. Why specifically that order?</p>
+  <ul class="socratic-questions">
+    <li>Why does the instructor insist on restarting the network adapter before reproducing — what does that flush, and what would happen if you didn't?</li>
+  </ul>
+  <div class="answer-area" data-section="support-logs">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Restarting the adapter flushes the OS DNS cache, the MUP cache, and any stale system settings — guaranteeing the captured logs reflect a clean re-resolution and re-authentication path rather than cached lookups. Without it, the bundle would include hours of unrelated traffic and probably no actual DNS query for the failing FQDN, leaving Support without the evidence they need.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-support-logs">
+  <div class="section-tag">SECTION 4</div>
+  <h2>ZPA Support &amp; Diagnostic logs — the bundle Support wants</h2>
+  <p>When you can't diagnose locally and need Zscaler Support, the demonstration recommends a deliberate capture flow: clean state, reproduce, export, attach.</p>
+
+  <div class="phase-steps">
+    <div class="phase-step">
+      <div class="phase-step-num">1</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">CLEAN STATE</div>
+        <div class="phase-step-title">Clear logs &amp; restart the network adapter</div>
+        <div class="phase-step-text">Inside ZCC → clear logs. On the OS, disable/enable the network adapter to clear the DNS cache and MUP cache, then ensure ZCC reconnects cleanly. Now you have a known starting point.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">2</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">REPRODUCE</div>
+        <div class="phase-step-title">Trigger the failure</div>
+        <div class="phase-step-text">While Wireshark is capturing, hit the failing ZPA app the same way the user does. Capture continues until the failure is reproduced and ZCC writes its journal.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">3</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">EXPORT</div>
+        <div class="phase-step-title">ZCC Export Logs → bundle</div>
+        <div class="phase-step-text">Click ZCC → Export Logs. The export packages ZCC journal logs, app-connector handshake state, and current configuration into a zip placed in <code>https://tools.zscaler.com/cclogs</code> (password: <code>[Password: ZSPSNCVxqLuFLd]</code> per the demo). Includes a <code>journal_logs.txt</code> from <code>/var/log/messages</code>.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">4</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">PCAP + DIAGNOSTICS</div>
+        <div class="phase-step-title">Add a packet capture + ZPA Diagnostics tab</div>
+        <div class="phase-step-text">Save Wireshark as <code>.pcap</code> alongside the export bundle. Right-click → Conversation → Filter on TCP for the failing flow. Then go to <strong>ZPA → Diagnostics</strong> → expand the tree to capture the App Connector + ZPA-side state at the failure time. Submit all four to the case: ZCC export, OS journal, Wireshark, ZPA diagnostics.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Useful ZPA diagnostic references — bookmark these</h3>
+  <ul>
+    <li><a href="https://help.zscaler.com/zpa/about-zpa-session-status-codes" target="_blank" rel="noopener">https://help.zscaler.com/zpa/about-zpa-session-status-codes</a></li>
+    <li><a href="https://help.zscaler.com/zpa/about-connector-diagnostics" target="_blank" rel="noopener">https://help.zscaler.com/zpa/about-connector-diagnostics</a></li>
+    <li><a href="https://help.zscaler.com/zpa/troubleshooting-app-connectors" target="_blank" rel="noopener">https://help.zscaler.com/zpa/troubleshooting-app-connectors</a></li>
+  </ul>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Bundle for ZPA Support = ZCC Export Logs (uploads to <code>tools.zscaler.com/cclogs</code>) + OS journal logs + Wireshark pcap + ZPA Diagnostics tab snapshot. Always clear state and restart the network adapter <strong>before</strong> reproducing — otherwise the bundle is full of stale cache hits and no real DNS query for the failing FQDN.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-support-logs" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('support-logs','Section 4 — Support &amp; Diagnostic Logs')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-support-logs" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('support-logs')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 5 — ZCC PCAP -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · TCP RETRANSMITS &amp; SSL HANDSHAKE</span>
+  </div>
+  <p class="socratic-insight">In a healthy session you expect SYN → SYN-ACK → ACK → Client Hello → Server Hello → ... → ACK → application data. When the SYN-ACK never arrives or you see five back-to-back retransmissions, that's a specific story about <em>where</em> the path failed.</p>
+  <ul class="socratic-questions">
+    <li>The pcap in the demo shows multiple TCP retransmissions to the same destination with no SYN-ACK. Why is that pattern almost always a firewall or routing problem and almost never an application-layer issue?</li>
+    <li>If the SSL handshake makes it as far as <em>Server Hello Done</em> but then immediately closes with an Encrypted Alert + RST, what's the first place you look?</li>
+  </ul>
+  <div class="answer-area" data-section="zcc-pcap">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">No SYN-ACK means TCP layer 4 never completed handshake — the application stack on the destination never even saw the request. By definition that's a network-level block: a firewall dropping SYN, a routing black hole, or the destination IP simply not listening on the port. Application-layer issues (auth, content, certificates) cannot manifest before SYN-ACK is back. So retransmits-with-no-SYN-ACK = pull a network engineer in, not a developer.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">An Encrypted Alert + RST after a successful TLS handshake almost always means certificate validation failure — the client received the cert chain in Server Hello but didn't trust it, or hostname mismatch, or the cert expired. First place to look is the certificate chain in the Server Hello packet (and the CN/SAN on the leaf), then confirm the client trust store contains the issuing CA. For Zscaler, this is usually the Zscaler root CA missing from the client's trust store.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-zcc-pcap">
+  <div class="section-tag">SECTION 5</div>
+  <h2>ZCC logs, Wireshark, and packet-level diagnosis</h2>
+  <p>The final ZPA section of the demo walks through reading Wireshark output for the two most common failure patterns: TCP retransmissions (network failure) and SSL handshake failures (certificate / trust failure).</p>
+
+  <h3>Pattern 1 — TCP retransmissions, no SYN-ACK</h3>
+  <div class="screenshot-embed">
+    <img src="wireshark-tcp-retransmit.png" alt="Wireshark TCP retransmissions">
+    <div class="screenshot-caption">A series of TCP retransmissions of the same SYN to the same destination. No SYN-ACK is ever seen back. Layer 4 handshake never completes — the destination port isn't listening or a firewall is dropping the SYN. Application-layer can be ruled out instantly.</div>
+  </div>
+
+  <ul>
+    <li>Filter: <code>tcp.analysis.retransmission</code> isolates the retransmits.</li>
+    <li>Apply <code>ip.addr == &lt;destination&gt;</code> to narrow to the failing flow.</li>
+    <li>Check RST TTL: a TTL ~62 indicates an intermediate firewall injecting the reset (~64 default - 2 hops). A TTL of ~64 indicates the destination itself reset.</li>
+  </ul>
+
+  <h3>Pattern 2 — Full TLS handshake then immediate close</h3>
+  <div class="screenshot-embed">
+    <img src="wireshark-ssl-handshake.png" alt="Wireshark SSL/TLS handshake with Encrypted Alert and RST">
+    <div class="screenshot-caption">Client Hello → Server Hello → Certificate → Server Hello Done, then suddenly Encrypted Alert + FIN/RST. The handshake completed mechanically but the client rejected something during validation — certificate not trusted, hostname mismatch, or expired.</div>
+  </div>
+
+  <ul>
+    <li>Filter: <code>tls.handshake</code> and follow the TCP stream (right-click → Follow → TCP Stream).</li>
+    <li>Expand the Certificate packet → check Subject CN, SAN, NotAfter, and the issuing CA chain.</li>
+    <li>For Zscaler-inspected traffic, ensure the Zscaler root CA is in the client's trust store; otherwise every inspected TLS will fail this way.</li>
+  </ul>
+
+  <h3>Following the TCP stream</h3>
+  <div class="screenshot-embed">
+    <img src="wireshark-tcp-stream.png" alt="Wireshark Follow TCP Stream menu">
+    <div class="screenshot-caption">Right-click → Follow → TCP Stream pulls the entire conversation into a single window in chronological order. Indispensable for HTTP / TLS troubleshooting because you can see request/response pairs without scanning thousands of packets.</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">i</div>THREE FILTERS EVERY ZSCALER OPERATOR SHOULD MEMORISE</div>
+    <div class="callout-body"><code>http.request.method</code> · <code>tls.handshake.type eq 1</code> (Client Hello only) · <code>ip.addr eq x.x.x.x</code>. Add the <em>Host</em> column for HTTP and the <em>Server Name</em> (SNI) column for TLS so you can scan for the failing FQDN without expanding each packet.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">SYN retransmits + no SYN-ACK = layer-4 network block (firewall/routing). Full TLS handshake + Encrypted Alert + RST = certificate trust failure (often missing Zscaler root CA). Key filters: <code>http.request.method</code> · <code>tls.handshake.type eq 1</code> · <code>ip.addr eq x.x.x.x</code> · <code>tcp.analysis.retransmission</code>. Add Host + SNI columns. Always Follow TCP Stream for HTTP/TLS investigations.</div>
+    </div>
+  </div>
+
+  <div class="analogy-box">
+    <div class="analogy-label">Analogy</div>
+    <div class="analogy-text">Reading a Wireshark TCP/TLS capture is like inspecting a phone call recording. SYN + SYN-ACK + ACK is the dial tone and "hello." Client Hello → Server Hello → Certificate is each side showing ID before the real conversation. SYN with no SYN-ACK is the line dead before anyone picks up — that's a phone-system fault, not a conversation fault. Server Hello Done followed by an angry click is "I don't trust your ID, goodbye" — somebody handed the wrong card and the listener hung up.</div>
+    <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+      <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+      <div class="prompt-content" hidden>Three-panel cartoon infographic styled like a phone-call inspection diagram. Panel 1 labelled "Healthy Call": two friendly characters on classic telephones with a clean connecting line, speech bubble showing "SYN · SYN-ACK · ACK · Client Hello · Server Hello · Certificate · Hi!". Panel 2 labelled "No SYN-ACK = Dead Line": left character speaks into a phone but the wire is cut by a grumpy firewall character holding scissors; bubble "SYN, SYN, SYN..." then silence; small caption "TTL ~62 = intermediate". Panel 3 labelled "Cert Rejected = Hung Up": both characters on phones, right one is examining an ID card with a frown and slamming the phone, speech bubble "Encrypted Alert + RST"; small caption "Missing Zscaler root CA". Friendly modern cartoon style, minimal text labels only where needed, educational infographic feel, modern tech-analogy aesthetic</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zcc-pcap" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zcc-pcap','Section 5 — ZCC Logs &amp; Wireshark')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-zcc-pcap" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('zcc-pcap')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 6 — APPENDICES -->
+<div class="section-block" id="section-appendices">
+  <div class="section-tag">SECTION 6</div>
+  <h2>Wireshark recipe book — the seven appendices</h2>
+  <p>The lesson closes with seven short Wireshark / packet-capture recipes that appear repeatedly in real ZPA + ZIA cases. Memorise the filter strings and the answers fall out of the capture quickly.</p>
+
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="info-card-label">APPENDIX 1</div>
+      <div class="info-card-title">Connections to a specific site / IP</div>
+      <div class="info-card-desc">HTTP: <code>http.request.method</code>. HTTPS: <code>tls.handshake.type eq 1</code>. By IP: <code>ip.addr eq x.x.x.x</code>. Add Host + SNI columns. Right-click → Follow → TCP Stream.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">APPENDIX 2</div>
+      <div class="info-card-title">Firewall / local-network blocks</div>
+      <div class="info-card-desc">Check for SYN packets sent to a specific IP with no SYN-ACK back. Retransmits to the same destination = layer-4 block. RST with TTL ~62 = intermediate firewall.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">APPENDIX 3</div>
+      <div class="info-card-title">Follow UDP stream (DNS)</div>
+      <div class="info-card-desc">Filter <code>dns contains "&lt;fqdn&gt;"</code>, right-click on the query packet → Follow → UDP Stream. Useful for AD SRV record troubleshooting.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">APPENDIX 4</div>
+      <div class="info-card-title">SSL issues in pcap</div>
+      <div class="info-card-desc">Filter <code>tls.handshake.type eq 1</code> + <code>frame contains "xyz.com"</code>. Follow TCP stream; look for cert errors or Encrypted Alert immediately after handshake; connection closed with RST or FIN-ACK right after SSL handshake = trust failure.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">APPENDIX 5</div>
+      <div class="info-card-title">Download / page load time</div>
+      <div class="info-card-desc">Apply Appendix 1 filter for the failing page or a 100 MB test download. Follow TCP stream. Statistics → Capture File Properties → Statistics → Displayed: observe time taken and average bits/s with vs without Zscaler.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">APPENDIX 6</div>
+      <div class="info-card-title">Client performance via Task Manager</div>
+      <div class="info-card-desc">Task Manager → Performance tab. Download a 100 MB file (azurespeed.com/Azure/Download). Monitor throughput, CPU, Memory, Disk with vs without Zscaler.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">APPENDIX 7</div>
+      <div class="info-card-title">Page load time via browser DevTools</div>
+      <div class="info-card-desc">Ctrl+Shift+I → Network tab → start trace, open the impacted site. Click a request → Timings tab. Record DNS lookup time, SSL time, response time. Compare with/without Zscaler.</div>
+    </div>
+  </div>
+
+  <h3>Performance-issue triage tree (when users say "it's slow")</h3>
+  <p>The lesson lays out a triage checklist before reaching for a pcap. Walk these in order:</p>
+  <ul>
+    <li>Is this a new issue or an existing one?</li>
+    <li>Are other users affected?</li>
+    <li>What's the common pattern among them?</li>
+    <li>What kind of internet link is the user connected to — ethernet or Wi-Fi?</li>
+    <li>Is the user accessing from a single location, or moving between locations (home / office / hotel)?</li>
+    <li>Is the problem present regardless of location, or specific to a single location?</li>
+    <li>Is the problem specific to a single application, single connector group, or present everywhere over ZPA?</li>
+    <li>Does the problem persist when ZPA is not connected (rule ZPA in or out)?</li>
+    <li>Is there a different method of accessing the same application that shows similar symptoms?</li>
+    <li>Are there more than one internet link present on the site?</li>
+    <li>Is the problem present if the user is connecting over an alternate internet link?</li>
+  </ul>
+
+  <h3>Performance path-isolation troubleshooting tips</h3>
+  <p>If the issue still isn't pinned, walk these three paths with the indicated tools:</p>
+  <div class="phase-steps">
+    <div class="phase-step">
+      <div class="phase-step-num">1</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">PATH 1</div>
+        <div class="phase-step-title">Client to ZPA Service Edge</div>
+        <div class="phase-step-text">Run a ping test · run an ICMP MTR · test internet throughput by running a speed test from a server in the vicinity of the Service Edge's geographic location · collect a packet capture from the ZCC while accessing the app.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">2</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">PATH 2</div>
+        <div class="phase-step-title">App Connector to ZPA Service Edge</div>
+        <div class="phase-step-text">Run a ping test · run an ICMP MTR from the App Connector toward the ZPA Service Edge.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">3</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">PATH 3</div>
+        <div class="phase-step-title">App Connector to server delivering the application</div>
+        <div class="phase-step-text">Run a ping test · run an ICMP MTR · collect a packet capture from the App Connector while accessing the application. Compare round-trip times across the three paths to localize.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Seven appendices = seven Wireshark recipes for ZPA + ZIA cases. Performance path triage = three independent paths (Client → SE, AC → SE, AC → Server) each tested with ping + MTR + pcap. Always answer the "new vs existing", "single vs many users", "one location vs many" questions before reaching for the capture tool.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-appendices" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('appendices','Section 6 — Wireshark Appendices')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-appendices" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('appendices')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .main-content -->
+
+<aside>
+  <a class="hub-back" href="edu-260-use-cases-hub.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    EDU-260 Use Cases Hub
+  </a>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS</div>
+    <ul class="checklist">
+      <li class="check-item" onclick="toggleDone(this,'check-1')"><input type="checkbox" id="check-1" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> Troubleshoot Process</li>
+      <li class="check-item" onclick="toggleDone(this,'check-2')"><input type="checkbox" id="check-2" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> ZPA DNS &amp; Connectivity</li>
+      <li class="check-item" onclick="toggleDone(this,'check-3')"><input type="checkbox" id="check-3" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> ZPA &amp; AD DNS</li>
+      <li class="check-item" onclick="toggleDone(this,'check-4')"><input type="checkbox" id="check-4" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> Support &amp; Diagnostic Logs</li>
+      <li class="check-item" onclick="toggleDone(this,'check-5')"><input type="checkbox" id="check-5" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> ZCC Logs &amp; Wireshark</li>
+      <li class="check-item" onclick="toggleDone(this,'check-6')"><input type="checkbox" id="check-6" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> Wireshark Appendices</li>
+    </ul>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="quick-ref">
+    <div class="quick-ref-title">KEY TERMS</div>
+    <div class="qr-term"><div class="qr-label">ZPA DNS interception</div><div class="qr-def">ZCC answers FQDN queries that match an app segment with a synthetic IP from ZPA's private range.</div></div>
+    <div class="qr-term"><div class="qr-label">App Segment</div><div class="qr-def">FQDN list + ports + connector group; defines what ZPA intercepts and routes.</div></div>
+    <div class="qr-term"><div class="qr-label">Synthetic IP</div><div class="qr-def">ZPA-private-range address returned by ZCC to route traffic through ZPA, not to a real host.</div></div>
+    <div class="qr-term"><div class="qr-label">cclogs URL</div><div class="qr-def"><code>https://tools.zscaler.com/cclogs</code> — destination for ZCC Export Logs uploads to Support.</div></div>
+    <div class="qr-term"><div class="qr-label">tls.handshake.type eq 1</div><div class="qr-def">Wireshark filter for TLS Client Hello — locates SNI for the failing HTTPS flow.</div></div>
+    <div class="qr-term"><div class="qr-label">RST TTL ~62</div><div class="qr-def">Indicates an intermediate firewall injected the reset rather than the destination.</div></div>
+    <div class="qr-term"><div class="qr-label">ZPA help URLs</div><div class="qr-def">/about-zpa-session-status-codes · /about-connector-diagnostics · /troubleshooting-app-connectors</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div>EDU-260 · <span>Use Cases</span></div>
+  <div>Lesson 11 — Troubleshooting Common Issues Demonstration (ZPA &amp; pcap)</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu-260-uc-11-zpa-dns-connectivity';
+const SECTIONS={
+  'process':'Section 1 — Troubleshoot Process',
+  'zpa-dns':'Section 2 — ZPA DNS & Connectivity',
+  'ad-dns':'Section 3 — ZPA AD DNS',
+  'support-logs':'Section 4 — Support & Diagnostic Logs',
+  'zcc-pcap':'Section 5 — ZCC Logs & Wireshark',
+  'appendices':'Section 6 — Wireshark Appendices'
+};
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();ns.push({id:Date.now(),section:key,sectionName:SECTIONS[key]||key,text});saveNotesArr(ns);ta.value='';renderNotesPanel();if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function getQArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQArr(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const qs=getQArr();qs.push({id:Date.now(),section:key,sectionName:name,text});saveQArr(qs);ta.value='';renderQPanel();if(!document.getElementById('qpanel-body').classList.contains('open'))toggleQPanel();}
+function deleteQ(id){saveQArr(getQArr().filter(q=>q.id!==id));renderQPanel();}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function renderQPanel(){const qs=getQArr();const count=document.getElementById('qpanel-count');if(count){count.textContent=qs.length;count.style.display=qs.length?'inline':'none';}const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!body)return;if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));qs.forEach(q=>{if(groups[q.section])groups[q.section].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQ(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=PAGE_KEY+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+function navTo(id){const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}const ids=['section-process','section-zpa-dns','section-ad-dns','section-support-logs','section-zcc-pcap','section-appendices'];document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));}
+function toggleDone(li,id){const cb=li.querySelector('input[type="checkbox"]');const checked=!cb.checked;cb.checked=checked;li.classList.toggle('done',checked);localStorage.setItem(PAGE_KEY+'-check-'+id,checked);}
+function initChecks(){document.querySelectorAll('.check-item').forEach(function(li){const cb=li.querySelector('input[type="checkbox"]');if(!cb)return;if(localStorage.getItem(PAGE_KEY+'-check-'+cb.id)==='true'){cb.checked=true;li.classList.add('done');}});}
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();renderNotesPanel();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){const key=PAGE_KEY+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;area.querySelector('.btn-add-answer').textContent='✓ Answer saved';area.querySelector('.btn-add-answer').disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
+  document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
+  document.querySelectorAll('.analogy-img img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  document.querySelectorAll('.screenshot-embed img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  setTimeout(function(){document.body.style.opacity='1';document.body.style.transition='opacity 0.35s ease';},10);
+  document.querySelectorAll('a[href]').forEach(function(a){a.addEventListener('click',function(){if(a.hostname===location.hostname)sessionStorage.setItem('pt','1');});});
+});
+</script>
+</body>
+</html>

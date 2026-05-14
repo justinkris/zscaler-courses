@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Traffic Forwarding · EDU-260 Use Cases — Zscaler Troubleshoot</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef4ff;--surface:#fff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;--text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;--blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;--blue-deep:#0f3d7a;--green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;--red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;--amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html.pt-init body{opacity:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{background:#0d1a2e;color:#fff;padding:28px 40px 32px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:#93c5fd;letter-spacing:0.06em;margin-bottom:20px;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;opacity:0.8;}
+.breadcrumb a:hover{opacity:1;text-decoration:underline;}
+.breadcrumb-sep{opacity:0.5;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.eyebrow-chip{background:rgba(147,197,253,0.15);border:1px solid rgba(147,197,253,0.3);color:#93c5fd;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:4px 12px;border-radius:20px;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:#93c5fd;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+h1{font-family:'Fraunces',serif;font-size:42px;font-weight:700;line-height:1.1;color:#fff;margin-bottom:4px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-top:6px;letter-spacing:0.03em;}
+.motivation-banner{background:#1e3a5c;border-bottom:1px solid rgba(147,197,253,0.15);padding:14px 40px;}
+.motivation-text{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.6;}
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.qpanel{background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 24px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 24px 22px;}
+.qpanel-body.open{display:block;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+.no-questions{font-size:12px;color:var(--text-muted);padding:10px 0;}
+.q-group{margin-bottom:14px;}
+.q-group-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:8px;}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-num{font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0;margin-top:2px;}
+.q-text{font-size:13px;color:var(--text-soft);flex:1;line-height:1.5;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 4px;flex-shrink:0;}
+.q-del:hover{color:var(--red);}
+.section-nav{display:flex;gap:2px;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:10;}
+.nav-tab{background:none;border:1px solid transparent;border-radius:8px;padding:6px 14px;font-family:'Epilogue',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.nav-tab:hover{background:var(--surface-2);color:var(--text);}
+.nav-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;flex:1;}
+.main-content{padding:32px 40px;min-width:0;}
+aside{padding:28px 24px;border-left:1px solid var(--border);position:sticky;top:45px;height:calc(100vh - 45px);overflow-y:auto;background:var(--surface);}
+.section-block{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border-dim);}
+.section-block:last-child{border-bottom:none;}
+.section-tag{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--blue);margin-bottom:8px;}
+h2{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:16px;}
+h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 10px;}
+p{font-size:14px;line-height:1.75;color:var(--text-soft);margin-bottom:12px;}
+ul,ol{padding-left:20px;margin-bottom:12px;}
+li{font-size:13.5px;line-height:1.7;color:var(--text-soft);margin-bottom:4px;}
+code{font-family:'SF Mono',Menlo,monospace;font-size:12px;background:var(--surface-2);padding:1px 6px;border-radius:4px;color:var(--blue-deep);}
+.pli-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0;}
+.pli-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;border-left:3px solid var(--blue);}
+.pli-card-num{display:inline-block;background:var(--blue);color:#fff;font-size:9px;font-weight:700;letter-spacing:0.16em;padding:2px 8px;border-radius:10px;margin-bottom:6px;}
+.pli-card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.pli-card-desc{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+.pli-card-desc code{font-size:11.5px;}
+.callout{border-radius:10px;padding:14px 16px;margin:16px 0;border-left:3px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.14em;margin-bottom:6px;}
+.callout-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.65;color:var(--text-soft);}
+.callout-tip{background:var(--blue-glow);border-color:var(--blue);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-tip .callout-icon{background:rgba(26,109,204,0.15);color:var(--blue);}
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;transform:scale(1.5);transform-origin:top left;transition:transform 0.2s ease;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:24px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.tool-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:72px;outline:none;line-height:1.6;}
+.tool-textarea:focus{border-color:var(--blue);}
+.tool-row{margin-top:8px;text-align:right;}
+.btn-add-q{background:#0d1a2e;color:#93c5fd;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:24px;}
+.sidebar-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:10px;}
+.hub-back{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:10px 16px;border-radius:10px;transition:opacity 0.15s;margin-bottom:20px;}
+.hub-back:hover{opacity:0.88;}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.check-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-soft);padding:6px 10px;border-radius:8px;cursor:pointer;transition:background 0.12s;}
+.check-item:hover{background:var(--surface-2);}
+.check-item input{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.check-item.done{color:var(--text-muted);text-decoration:line-through;}
+.sidebar-divider{height:1px;background:var(--border);margin:18px 0;}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:16px;}
+.quick-ref-title{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#93c5fd;margin-bottom:12px;}
+.qr-term{margin-bottom:10px;}
+.qr-label{font-size:10px;font-weight:700;color:#93c5fd;letter-spacing:0.08em;}
+.qr-def{font-size:11.5px;color:rgba(255,255,255,0.65);line-height:1.55;margin-top:2px;}
+footer{background:#0d1a2e;color:rgba(255,255,255,0.45);font-size:11px;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.04em;}
+footer span{color:#93c5fd;}
+@media(max-width:900px){main{grid-template-columns:1fr;}aside{display:none;}.main-content{padding:24px 20px;}header,footer{padding:24px 20px;}.motivation-banner{padding:12px 20px;}.section-nav{padding:8px 16px;}.lesson-tools-grid{grid-template-columns:1fr;}.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../troubleshoot-hub.html">Zscaler Troubleshoot Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="edu-260-use-cases-hub.html">EDU-260 Use Cases</a>
+    <span class="breadcrumb-sep">›</span>
+    Traffic Forwarding
+  </div>
+  <div class="eyebrow">
+    <span class="eyebrow-chip">EDU-260 · LESSON 4</span>
+    <span class="header-dot"></span>
+  </div>
+  <h1>Traffic <em>Forwarding</em></h1>
+  <div class="header-sub">Six common ZIA/ZPA/ZCC traffic forwarding failures — and the diagnostic path through each</div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">"Auth lets the user in. Traffic forwarding gets the packet to where it's supposed to go — and that's where most outages live."</div>
+</div>
+
+<div class="top-panels">
+  <div class="qpanel" id="qpanel">
+    <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+      <span class="qpanel-title">MY QUESTIONS</span>
+      <span class="qpanel-count" id="qpanel-count">0</span>
+      <span class="qpanel-hint">— click to expand</span>
+      <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+    </button>
+    <div class="qpanel-body" id="qpanel-body"></div>
+  </div>
+  <div class="notes-panel" id="notes-panel">
+    <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+      <span class="notes-panel-title">MY NOTES</span>
+      <span class="notes-panel-count" id="notes-panel-count">0</span>
+      <span class="notes-panel-hint">— click to expand</span>
+      <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+    </button>
+    <div class="notes-panel-body" id="notes-panel-body"></div>
+  </div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-flow')">1 · TF Flow</button>
+  <button class="nav-tab" onclick="navTo('section-uc1')">2 · UC1 · ZIA Site Fails</button>
+  <button class="nav-tab" onclick="navTo('section-uc2')">3 · UC2 · Wrong PSE</button>
+  <button class="nav-tab" onclick="navTo('section-uc3')">4 · UC3 · ZIA Slowness</button>
+  <button class="nav-tab" onclick="navTo('section-uc4')">5 · UC4 · ZPA App Unreachable</button>
+  <button class="nav-tab" onclick="navTo('section-uc5')">6 · UC5 · ZCC FW/AV</button>
+  <button class="nav-tab" onclick="navTo('section-uc6')">7 · UC6 · Captive Portal</button>
+  <button class="nav-tab" onclick="navTo('section-perf')">8 · Perf · Quick Ref</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- SECTION 1 — TF Flow -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · WHICH FORWARDING METHOD</span>
+  </div>
+  <p class="socratic-insight">A Zscaler-bound packet can take one of several paths to the cloud: Tunnel 2.0 (DTLS/TLS), Tunnel 1.0, Tunnel-with-local-proxy, Enforce Proxy via PAC, or — if ZCC isn't installed — direct PAC/GRE/IPSec. The choice changes how you isolate every failure that follows.</p>
+  <ul class="socratic-questions">
+    <li>Why does ZIA Tunnel 2.0 require UDP 443 (DTLS) to be allowed on the local network, and what's the safe fallback?</li>
+    <li>If a user reports "everything is broken", what's the single question that disambiguates ZCC vs PAC vs GRE/IPSec fastest?</li>
+  </ul>
+  <div class="answer-area" data-section="flow">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Tunnel 2.0 prefers DTLS for performance — it avoids TCP-over-TCP head-of-line blocking. Many corporate firewalls block UDP 443 by default. If DTLS can't establish, ZCC must fall back to TLS Tunnel 2.0; if that also fails, traffic forwarding breaks. The fix is either allowing UDP 443 outbound or pinning the app profile to TLS only.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">"What does the ZCC status panel say?" If ZCC reports Connected, it's a ZCC-mode user — work down the Tunnel/Enforce-Proxy branch. If ZCC isn't installed, it's PAC/GRE/IPSec — work down the PAC-URL/return-statement branch. One question collapses half the flowchart.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-flow">
+  <div class="section-tag">SECTION 1</div>
+  <h2>Traffic Forwarding Flow</h2>
+  <p>Once the requestor is authenticated, ZIA or ZPA need a way to receive the traffic. Zscaler recommends one of four mechanisms: <strong>tunnelling</strong>, <strong>PAC files</strong>, <strong>Zscaler Cloud Connector</strong>, or the <strong>Zscaler Client Connector</strong>. Each Service Edge is the point of delivery; ZCC is the primary mechanism for road-warrior and managed-device traffic.</p>
+
+  <div class="screenshot-embed">
+    <img src="l4-traffic-forwarding-flow.png" alt="Traffic forwarding troubleshooting flowchart starting at Connection to Service Edge, branching on ZIA/ZPA, Client Connector mode (BA / ZCC / Enforce Proxy), Tunnel 2.0 / Tunnel / Tunnel 1.0 selection, DTLS/TLS for ZIA, ZPA path to any.broker.prod.zpath.net, and corrective steps for each branch">
+    <div class="screenshot-caption">The master Traffic Forwarding flowchart. Branches on ZIA vs ZPA; then ZCC vs BA (browser-only PAC); then tunnel mode (Tunnel 2.0 DTLS/TLS, Tunnel 1.0, Tunnel-with-local-proxy, Enforce Proxy).</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">i</div>QUICK CHECKS BY METHOD</div>
+    <div class="callout-body">
+      <strong>Tunnel 2.0:</strong> verify UDP 443 (DTLS) allowed; check return statement &amp; reachability to Service Edge.<br>
+      <strong>Tunnel with local proxy:</strong> verify <code>${ZAPP_LOCAL_PROXY}</code> macro in PAC return statement.<br>
+      <strong>ZPA:</strong> check reachability to <code>any.broker.prod.zpath.net</code>.<br>
+      <strong>Enforce Proxy / PAC:</strong> check PAC URL + contents; verify the proxy line.
+    </div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Four forwarding mechanisms: tunnelling, PAC, Zscaler Cloud Connector, Zscaler Client Connector. Tunnel 2.0 needs UDP 443 (DTLS) — falls back to TLS if blocked. ZPA broker test endpoint = <code>any.broker.prod.zpath.net</code>. Tunnel-with-local-proxy uses the <code>${ZAPP_LOCAL_PROXY}</code> macro inside the PAC return statement.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-flow" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('flow','Section 1 — TF Flow')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-flow" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('flow')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 — UC1 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · UC1 SITE UNREACHABLE</span>
+  </div>
+  <p class="socratic-insight">"Website unreachable through Zscaler" splits into two very different causes once you check the error: <strong>DNS</strong> (gateway timeout, NXDOMAIN) versus <strong>web server blacklisting</strong> (a 504 from a single DC). The same symptom; the fix depends entirely on which.</p>
+  <ul class="socratic-questions">
+    <li>Why does a 504 from only one Zscaler DC suggest blacklisting rather than a Zscaler outage?</li>
+  </ul>
+  <div class="answer-area" data-section="uc1">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">If Zscaler infrastructure were broken globally, every DC would fail — not one. A single DC failing while the site is reachable via direct internet access and via secondary Zscaler DCs strongly suggests the destination is rejecting traffic originating from that specific Zscaler IP range. Third-party paid services sometimes blacklist cloud egress IPs to deter scraping. The fix is to route around the blacklisted node via PAC or contact the third party directly.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-uc1">
+  <div class="section-tag">USE CASE 1 · ZIA TRAFFIC FORWARDING</div>
+  <h2>ZIA Traffic Forwarding — Website Fails to Load</h2>
+
+  <div class="pli-cards">
+    <div class="pli-card">
+      <span class="pli-card-num">01 · PROBLEM</span>
+      <div class="pli-card-title">Connected to Zscaler but the site is unreachable</div>
+      <div class="pli-card-desc">User is connected to the Zscaler service but the website doesn't load. Could be a gateway timeout or a DNS error.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">02 · LOCATE</span>
+      <div class="pli-card-title">Inspect the actual error</div>
+      <div class="pli-card-desc">Gateway timeout points to forwarding/path; DNS error points to resolution. Localize accordingly.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">03 · ISOLATE</span>
+      <div class="pli-card-title">Four narrowing steps</div>
+      <div class="pli-card-desc">
+        <strong>1.</strong> Review provisioned domains (Admin Portal → Administration → Company Profile) and at the IdP verify UPN/Domain suffix.<br>
+        <strong>2.</strong> If domain not provisioned, raise a provisioning ticket.<br>
+        <strong>3.</strong> Validate other users can reach the website — narrows it to a specific Service Edge / DC.<br>
+        <strong>4.</strong> Try a secondary Zscaler DC by editing the app-profile PAC file in ZCC.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">04 · DIAGNOSE</span>
+      <div class="pli-card-title">Likely web server blacklisting</div>
+      <div class="pli-card-desc">If DNS appears correct, the site is reachable via direct internet, but only a few Public Service Edges or a specific DC fail → likely web-server blacklisting of Zscaler IPs. Contact the third party. <strong>Workaround:</strong> route traffic away from the impacted Zscaler node or DC via the PAC file.</div>
+    </div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="l4-uc1-google-504-error.png" alt="Diagnose step showing a Google search result page returning a 504 server error That's an error: The server encountered a temporary error and could not complete your request">
+    <div class="screenshot-caption">When a 504 appears for only specific DCs while other DCs work, the destination — not Zscaler — is rejecting the traffic source. Route around via PAC.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Two paths from "site unreachable": DNS error (resolution) vs gateway timeout (forwarding). Sequence: verify provisioning → multi-user reproduce → switch to secondary DC. A 504 from only one DC = likely web-server blacklisting; workaround is PAC-route around the impacted node.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-uc1" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('uc1','UC1 — ZIA Site Fails')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-uc1" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('uc1')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 — UC2 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · WRONG PUBLIC SERVICE EDGE</span>
+  </div>
+  <p class="socratic-insight">"Why am I being sent to LAX1 when I'm in Atlanta?" sounds like a Zscaler routing bug. Almost always it's the PAC return statement (hardcoded IP, typo), a stale GeoIP entry in MaxMind, or a sub-cloud that doesn't include the geographically nearest PSE.</p>
+  <ul class="socratic-questions">
+    <li>Why is a hardcoded service IP in the PAC return statement the worst kind of misconfig?</li>
+  </ul>
+  <div class="answer-area" data-section="uc2">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">A hardcoded IP bypasses Zscaler's GeoIP-based routing entirely. Users in any location will all be forced to the same DC regardless of latency. It also breaks when Zscaler decommissions or moves that IP. The correct return statement uses <code>${GATEWAY}</code> (or <code>gateway.&lt;cloudname&gt;.net</code>), which lets Zscaler pick the geographically nearest PSE dynamically.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-uc2">
+  <div class="section-tag">USE CASE 2 · ZIA TRAFFIC FORWARDING</div>
+  <h2>ZIA Traffic Forwarding — Routing to Incorrect Public Service Edge</h2>
+
+  <div class="pli-cards">
+    <div class="pli-card">
+      <span class="pli-card-num">01 · PROBLEM</span>
+      <div class="pli-card-title">Users land at an unexpected Zscaler DC</div>
+      <div class="pli-card-desc">"Why do I get sent to LAX1 when I'm in Atlanta?" Users connect to a DC much further away than expected.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">02 · LOCATE</span>
+      <div class="pli-card-title">Pull the PAC file from ZSATunnel logs</div>
+      <div class="pli-card-desc">
+        <strong>1.</strong> Locate the PAC URL in ZSATunnel logs (line containing <code>DBG App profile pac type</code> with a path like <code>http://pac.zscalertwo.net/sjDFkosfS/PACFileName</code>).<br>
+        <strong>2.</strong> Find the PAC contents in the log via <code>FindProxyForURL</code> or download directly.<br>
+        <strong>3.</strong> Review the return statement to see which SE you're sent to.<br>
+        <strong>4.</strong> Determine your public IP. Check sub-cloud config at <strong>Administration → Sub-cloud</strong>.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">03 · ISOLATE</span>
+      <div class="pli-card-title">Five-step isolation</div>
+      <div class="pli-card-desc">
+        <strong>1.</strong> In Admin UI, verify the PAC doesn't have a service IP hardcoded.<br>
+        <strong>2.</strong> Verify your public IP geolocates correctly: <code>maxmind.com/en/geoip2-precision-demo?ip_address=</code>.<br>
+        <strong>3.</strong> Inspect the return statement for typos.<br>
+        <strong>4.</strong> Review sub-cloud to ensure it contains the nearest PSE.<br>
+        <strong>5.</strong> Review <code>trust.zscaler.com</code> for issues impacting your nearest DC.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">04 · DIAGNOSE</span>
+      <div class="pli-card-title">Fix the PAC / IP / sub-cloud</div>
+      <div class="pli-card-desc">
+        <strong>Step 1:</strong> if PAC has a hardcoded IP, replace with <code>${GATEWAY}</code>.<br>
+        <strong>Step 2:</strong> if DNS server IP is in a different region or PAC uses <code>gateway.&lt;cloudname&gt;</code>, switch to <code>${GATEWAY}</code>. Verify MaxMind coords; if incorrect, contact MaxMind.<br>
+        <strong>Step 3:</strong> inspect PAC URL in Mobile Admin UI for typos.<br>
+        <strong>Step 3b:</strong> if there's a port typo on a service edge return statement, ZCC may default to 443.<br>
+        <strong>Step 4:</strong> review sub-cloud — GeoIP resolution only happens within the target sub-cloud, so the standard sub-cloud (<code>gateway.&lt;cloudname&gt;.net / ${GATEWAY}</code>) is the "Public Cloud".<br>
+        <strong>Step 5:</strong> check <code>trust.zscaler.com</code> for ongoing primary-DC issues.</div>
+    </div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Wrong PSE → PAC return statement is the #1 cause. Replace hardcoded IPs with <code>${GATEWAY}</code>. Verify MaxMind coords for your egress IP. Sub-cloud must include the nearest PSE. PAC URL pattern: <code>pac.&lt;cloudname&gt;.net/&lt;hash&gt;/&lt;PACFileName&gt;</code>. <code>gateway.&lt;cloudname&gt;.net</code> = Public Cloud sub-cloud.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-uc2" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('uc2','UC2 — Wrong PSE')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-uc2" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('uc2')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4 — UC3 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · SLOWNESS</span>
+  </div>
+  <p class="socratic-insight">"Slow" is the most ambiguous symptom in the catalogue. Pick one user + one site so you have a stable baseline; then isolate via four narrowing tests before reaching for the heavy diagnostics (MTR, PCAP, MSS/MTU).</p>
+  <ul class="socratic-questions">
+    <li>Why does MTU/MSS matter for performance on Tunnel 2.0, and what's a good first attempt to test fragmentation?</li>
+  </ul>
+  <div class="answer-area" data-section="uc3">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Tunnel 2.0 encapsulates traffic, so encrypted payload + IP/UDP headers can exceed path MTU. When fragmentation happens or PMTUD is blocked by an intermediate firewall, you get heavy retransmissions and visible slowness. A clean test is to move the user to TLS Tunnel 2.0 (TCP fragments more gracefully) or reduce MTU to 1360. If slowness clears, fragmentation was the cause.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-uc3">
+  <div class="section-tag">USE CASE 3 · ZIA TRAFFIC FORWARDING</div>
+  <h2>ZIA Traffic Forwarding — Slowness Accessing Websites</h2>
+
+  <div class="pli-cards">
+    <div class="pli-card">
+      <span class="pli-card-num">01 · PROBLEM</span>
+      <div class="pli-card-title">Loading is slow through Zscaler</div>
+      <div class="pli-card-desc">User is connected to the Zscaler service but the website is loading slowly through Zscaler.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">02 · LOCATE</span>
+      <div class="pli-card-title">Pick one user + one site as a baseline</div>
+      <div class="pli-card-desc">There are many contributing factors. A logical isolation needs a stable test target — one user, one website — before any data collection.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">03 · ISOLATE</span>
+      <div class="pli-card-title">Four narrowing tests</div>
+      <div class="pli-card-desc">
+        <strong>1.</strong> Identify how many users are affected.<br>
+        <strong>2.</strong> Identify if multiple websites are slow.<br>
+        <strong>3.</strong> Does the site work without Zscaler or with a different SE?<br>
+        <strong>4.</strong> Review web-insights to see Proxy Latency.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">04 · DIAGNOSE</span>
+      <div class="pli-card-title">DC health · path · packet · support</div>
+      <div class="pli-card-desc">
+        <strong>Step 1:</strong> check Zscaler DC health at <code>trust.zscaler.com</code> (Cloud Status).<br>
+        <strong>Step 2:</strong> check path or switch over to secondary DC — forward MTR via Z-analyzer to a Zscaler node (IP from <code>ip.zscaler.com</code>), or use <code>speedtest.zscaler.com</code> for reverse MTR. Browse to <code>http://127.0.0.1:9000/test?q=username@domain.com</code> for DNS/UDP reachability, traceroute, throttling, fragmentation, file download direct/ZCC, upload/download bandwidth with/without Zscaler. If clean up to Zscaler, switch to secondary DC.<br>
+        <strong>Step 3:</strong> PCAPs + MTU/MSS — take a client PCAP, check for retransmissions; check MTU/MSS on the tunnel interface; on Tunnel 2.0 move user to TLS or reduce MTU to 1360.<br>
+        <strong>Step 4:</strong> contact Zscaler Support with all gathered data.</div>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">i</div>FAST DIAGNOSTIC URLs</div>
+    <div class="callout-body">
+      <code>http://127.0.0.1:9000/test?q=user@domain.com</code> — ZCC Network Test bundle.<br>
+      <code>ip.zscaler.com</code> — your egress Zscaler node IP.<br>
+      <code>speedtest.zscaler.com</code> — reverse MTR + throughput.<br>
+      <code>trust.zscaler.com</code> — Cloud Status.
+    </div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Slowness flow: 1 user + 1 site baseline → trust.zscaler.com → MTR via Z-analyzer → ZCC Network Test (<code>127.0.0.1:9000/test?q=user@domain</code>) → PCAP + MTU. On Tunnel 2.0 fix fragmentation by switching to TLS or reducing MTU to 1360. Don't open a Support case before you've collected this data.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-uc3" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('uc3','UC3 — ZIA Slowness')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-uc3" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('uc3')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5 — UC4 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · ZPA APP CONNECTOR ERRORS</span>
+  </div>
+  <p class="socratic-insight">A ZPA app-not-reachable error often reads as a Zscaler problem ("Cannot open connection to server") but the connection that's failing is App-Connector-to-app, not user-to-Zscaler. The diagnostic tools live inside the ZPA Admin UI under Diagnostic → Support Information.</p>
+  <ul class="socratic-questions">
+    <li>Why is the App Connector the right place to run DNS/Ping/TCP tests, rather than the user's machine?</li>
+  </ul>
+  <div class="answer-area" data-section="uc4">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Because the App Connector lives inside the customer's private network alongside the app — that's the segment the connection is actually failing on. The user's machine sits outside the private network; pings from there would test a different path entirely. Running DNS/Ping/TCP from the App Connector reproduces the exact path the failing data session traverses.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-uc4">
+  <div class="section-tag">USE CASE 4 · ZPA TRAFFIC FORWARDING</div>
+  <h2>ZPA Traffic Forwarding — Application not Reachable</h2>
+
+  <div class="pli-cards">
+    <div class="pli-card">
+      <span class="pli-card-num">01 · PROBLEM</span>
+      <div class="pli-card-title"><code>AC: Cannot open connection to server</code></div>
+      <div class="pli-card-desc">Unable to reach Private Access application. ZPA Diagnostic logs show status code "AC: Cannot open connection to server"; internal status code: <code>AST_MT_SETUP_ERR_OPEN_S…</code>; status: Closed Connection.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">02 · LOCATE</span>
+      <div class="pli-card-title">Read the ZPA Internal Status Code</div>
+      <div class="pli-card-desc">ZPA Diagnostic logs expose the Internal Status Code. The Help portal lists every ZPA status code and description — match the code first.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">03 · ISOLATE</span>
+      <div class="pli-card-title">"App Connector → app" connectivity failure</div>
+      <div class="pli-card-desc">Per the Help "About ZPA Session Status Codes" article, this code means: "The App Connector encountered an error when setting up a data connection to the server." Connection between App Connector and app is the failure surface. Use the built-in diagnostics tools in the ZPA Admin UI.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">04 · DIAGNOSE</span>
+      <div class="pli-card-title">Run DNS / ICMP / TCP / PCAP from the App Connector</div>
+      <div class="pli-card-desc">
+        <strong>Step 1:</strong> DNSLOOKUP of destination server from App Connector via <strong>Diagnostic → Support Information</strong>.<br>
+        <strong>Step 2:</strong> ICMP Ping the destination from the App Connector.<br>
+        <strong>Step 3:</strong> TCP Ping the destination from the App Connector.<br>
+        <strong>Step 4:</strong> PCAP from the App Connector.<br>
+        Each test runs <em>from the App Connector</em>, which is exactly where the failing connection originates.</div>
+    </div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">ZPA error <code>AC: Cannot open connection to server</code> + internal code <code>AST_MT_SETUP_ERR_OPEN_*</code> = App-Connector-to-app failure. Diagnose path: <strong>ZPA Admin UI → Diagnostic → Support Information</strong> → DNSLOOKUP → ICMP Ping → TCP Ping → PCAP — all run from the App Connector.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-uc4" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('uc4','UC4 — ZPA App Unreachable')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-uc4" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('uc4')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6 — UC5 FW/AV -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · FW/AV ERROR</span>
+  </div>
+  <p class="socratic-insight">"Endpoint FW/AV Error" looks like an antivirus problem but ZCC actually reports it whenever its health-check probe to <code>100.64.0.6</code> fails. That probe can fail because of a missing route, a Windows Firewall block, or a third-party AV interfering with the ZCC process list.</p>
+  <ul class="socratic-questions">
+    <li>What's the role of the <code>100.64.0.6</code> probe, and why does ZCC need a default-route to send it through?</li>
+  </ul>
+  <div class="answer-area" data-section="uc5">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">ZCC probes 100.64.0.6 to confirm the local firewall and AV aren't blocking ZCC processes. The probe must traverse the user's actual NIC (Wi-Fi or Ethernet), not a VPN or other virtual adapter. If a more-specific route sends it elsewhere, the probe response never comes back and ZCC declares FW/AV Error even though nothing is actually blocking traffic. Adding a specific route for 100.64.0.6 to the default interface forces the probe through the correct path.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-uc5">
+  <div class="section-tag">USE CASE 5 · ZCC TRAFFIC FORWARDING</div>
+  <h2>ZCC Traffic Forwarding — Endpoint FW/AV Error</h2>
+
+  <div class="pli-cards">
+    <div class="pli-card">
+      <span class="pli-card-num">01 · PROBLEM</span>
+      <div class="pli-card-title">ZCC status: "Endpoint FW/AV Error"</div>
+      <div class="pli-card-desc">Zscaler Client Connector Connectivity status shows "Endpoint FW/AV Error" + "Off-Trusted Network".</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">02 · LOCATE</span>
+      <div class="pli-card-title">ZCC sends probes to <code>100.64.0.6</code></div>
+      <div class="pli-card-desc">KB article: ZCC sends FW/AV probes on the default NIC to <code>100.64.0.6</code>. If the probe response doesn't come back, ZCC displays "Endpoint FW/AV Error". The KB also requires that ZCC processes be whitelisted on the local machine.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">03 · ISOLATE</span>
+      <div class="pli-card-title">Route + Windows Firewall + AV</div>
+      <div class="pli-card-desc">
+        <strong>Route:</strong> ensure health-check traffic uses the default route, not another interface. Test with PowerShell: <code>Find-NetRoute -RemoteIPAddress 100.64.0.6</code> and check the <code>InterfaceAlias</code>.<br>
+        <strong>Windows Firewall:</strong> ZCC auto-adds a "Zscaler App Rule" allowing all ports/protocols for Domain/Private/Public. Verify with: <code>netsh advfirewall firewall show rule name = "Zscaler App Rule"</code>.<br>
+        <strong>AV interference:</strong> Zscaler has whitelisting agreements with some vendors (Trend Micro, Kaspersky). For other endpoint security products, allowlist ZCC processes per the Help portal.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">04 · DIAGNOSE</span>
+      <div class="pli-card-title">Add route · verify rule · allowlist processes</div>
+      <div class="pli-card-desc">
+        <strong>Route:</strong> <code>c:\&gt; route -p add destination_network MASK subnet_mask gateway_ip metric cost</code><br>
+        <strong>Windows Firewall:</strong> ensure ZCC processes from <code>help.zscaler.com/client-connector/zscaler-client-connector-processes-allowlist</code> are bypassed.<br>
+        <strong>AV:</strong> allow the same process list at the endpoint security application.</div>
+    </div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="l4-uc5-fwav-netsh-output.png" alt="PowerShell terminal showing netsh advfirewall firewall show rule name = Zscaler App Rule output with Enabled Yes, Direction In, Profiles Domain Private Public, Grouping Localized Rule Group, LocalIP Any, RemoteIP Any, Protocol Any, Action Allow">
+    <div class="screenshot-caption">The expected <code>Zscaler App Rule</code> output. If this rule is missing or modified, ZCC probes can be blocked by Windows Firewall.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">"Endpoint FW/AV Error" = failed probe to <code>100.64.0.6</code>. Three causes: wrong route, Windows Firewall blocking, third-party AV blocking. Commands: <code>Find-NetRoute -RemoteIPAddress 100.64.0.6</code>, <code>netsh advfirewall firewall show rule name = "Zscaler App Rule"</code>. Allowlist source: help.zscaler.com/client-connector/zscaler-client-connector-processes-allowlist.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-uc5" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('uc5','UC5 — ZCC FW/AV Error')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-uc5" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('uc5')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 7 — UC6 Captive Portal -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · CAPTIVE PORTAL DETECTION</span>
+  </div>
+  <p class="socratic-insight">ZCC detects captive portals with two probes: a <code>generate_204</code> request expecting HTTP 204, and a PAC-file download from <code>pac.&lt;cloudname&gt;.net</code>. If either returns anything other than what's expected, ZCC declares "Captive Portal Detected". False positives happen when those endpoints are unreachable for a non-captive reason.</p>
+  <ul class="socratic-questions">
+    <li>Why does the generate_204 trick reliably detect captive portals?</li>
+  </ul>
+  <div class="answer-area" data-section="uc6">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">A "204 No Content" response has no body, so the only thing it carries is its status code. A captive portal can't fake a 204 — by definition it has to redirect (302/307) to its sign-in page or serve a different response. So if ZCC asks for a 204 and gets anything else, that's almost always proof of an intercepting middlebox between ZCC and the internet.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-uc6">
+  <div class="section-tag">USE CASE 6 · ZCC TRAFFIC FORWARDING</div>
+  <h2>ZCC Traffic Forwarding — Captive Portal Error</h2>
+
+  <div class="screenshot-embed">
+    <img src="l4-uc6-captive-portal-ui.png" alt="Zscaler Client Connector Connectivity panel showing Status Captive Portal Detected in red with a RETRY button">
+    <div class="screenshot-caption">ZCC's "Captive Portal Detected" status. True or false positive — the ZSATunnel logs tell you which.</div>
+  </div>
+
+  <div class="pli-cards">
+    <div class="pli-card">
+      <span class="pli-card-num">01 · PROBLEM</span>
+      <div class="pli-card-title">ZCC shows "Captive Portal Detected"</div>
+      <div class="pli-card-desc">User on a network (e.g. airport Wi-Fi, hotel, coffee shop) — but sometimes on the corporate network — sees the captive-portal warning in ZCC.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">02 · LOCATE</span>
+      <div class="pli-card-title">Two detection mechanisms</div>
+      <div class="pli-card-desc">
+        <strong>Probe 1:</strong> ZCC reaches out to <code>http://gateway.&lt;cloudname&gt;.net/generate_204</code> expecting HTTP 204. Anything else triggers a captive portal flag.<br>
+        <strong>Probe 2:</strong> ZCC downloads the default PAC file from <code>http://pac.&lt;cloudname&gt;.net/&lt;cloudname&gt;.net/proxy.pac</code>. Download failure triggers a captive portal flag.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">03 · ISOLATE</span>
+      <div class="pli-card-title">Review ZSATunnel logs · search <code>ZCPM</code></div>
+      <div class="pli-card-desc">Export ZCC logs and search for <strong>ZCPM</strong> (Zscaler Captive Portal Manager) entries. Sample failing log:<br><code>DBG ZCPM detectCaptive: Connecting to url: http://gateway...</code><br><code>DBG ZCPM detectCaptive: Response Status 302 Length…</code><br>302 instead of 204 means a middlebox is intercepting — captive portal detection is correct.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">04 · DIAGNOSE</span>
+      <div class="pli-card-title">Restart · validate Gateway/PAC URLs reachable</div>
+      <div class="pli-card-desc">
+        <strong>1.</strong> Restart ZCC to confirm if the issue clears.<br>
+        <strong>2.</strong> Check where the user is — if it's a public Wi-Fi the captive portal is real; the user just needs to sign in.<br>
+        <strong>3.</strong> Ensure <code>http://gateway.&lt;cloudname&gt;.net/generate_204</code> and <code>http://pac.&lt;cloudname&gt;.net/&lt;cloudname&gt;.net/proxy.pac</code> are reachable from the user's machine with the expected HTTP response codes (204 and 200 respectively).</div>
+    </div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="l4-uc6-captive-portal-logs.png" alt="ZSATunnel log file output highlighted in red showing ZCPM detectCaptive Connecting to url http and Response Status 302 Length entries">
+    <div class="screenshot-caption">ZSATunnel logs with the ZCPM probe receiving a 302 instead of 204 — confirms an intercepting captive portal.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Captive Portal Detected = 1 of 2 probes failed: <code>gateway.&lt;cloudname&gt;.net/generate_204</code> (expects 204) or PAC download from <code>pac.&lt;cloudname&gt;.net</code> (expects 200). Search <strong>ZCPM</strong> in ZSATunnel logs. Restart ZCC, verify probe reachability from the user's network. Real captive portals on hotel/airport Wi-Fi just need user sign-in.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-uc6" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('uc6','UC6 — Captive Portal')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-uc6" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('uc6')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 8 — PERF QUICK REFERENCE -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · PERFORMANCE QUICK REFERENCE</span>
+  </div>
+  <p class="socratic-insight">For performance complaints, the course-provided Performance Issues quick-reference table splits diagnostics across four axes: Through Zscaler, Specific to DC, Specific to Location/Network, and Specific to User/Group. The matrix is the fastest "what do I check next?" lookup for performance tickets.</p>
+  <ul class="socratic-questions">
+    <li>Why is "test the site without Zscaler" always the first row in every column of this matrix?</li>
+  </ul>
+  <div class="answer-area" data-section="perf">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Because if the site is also slow without Zscaler in the path, the issue can't be Zscaler. That single test eliminates Zscaler from the suspect list and saves you from instrumenting tunnels, sub-clouds, and proxy latency for a destination problem. It's the cheapest, fastest first-pass test in performance triage.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-perf">
+  <div class="section-tag">SECTION 8 · QUICK REFERENCE</div>
+  <h2>Performance Issues — Quick Reference</h2>
+  <p>Two course-provided matrices map performance issues across the major scope dimensions. Use these as a "next check" lookup when triaging speed complaints.</p>
+
+  <h3>ZIA Performance Issues</h3>
+  <div class="screenshot-embed">
+    <img src="l4-perf-issues-zia-table.png" alt="ZIA Performance Issues table with columns Through Zscaler, Specific to DC, Specific to Location or Network, Specific to User or Group, and rows Primary checks, Data to Capture, Information to Capture, Basic Analysis, Common Problems, Possible Workarounds">
+    <div class="screenshot-caption">ZIA Performance Issues matrix. Each column is a scope dimension; each row is a phase of the troubleshooting flow.</div>
+  </div>
+
+  <h3>ZPA Performance Issues</h3>
+  <div class="screenshot-embed">
+    <img src="l4-perf-issues-zpa-table.png" alt="ZPA Performance Issues table with columns Specific Website/Application, Specific to Location or Network, Single User, and rows Primary checks and Analysis, Information to Capture, Common Problems, Possible Workarounds">
+    <div class="screenshot-caption">ZPA Performance Issues matrix. ZPA is generally diagnosed per-app rather than per-DC, so columns differ from ZIA.</div>
+  </div>
+
+  <h3>Things to remember</h3>
+  <div class="screenshot-embed">
+    <img src="l4-things-to-remember.png" alt="Performance Issues — Things to Remember numbered list covering speed test accuracy with proxy, measuring with sample 100MB download, slowness from browser issues, PAC files and dnsResolve, IPSec PFS overhead, GRE/IPSec and location-based encapsulation overhead">
+    <div class="screenshot-caption">Six common gotchas for performance troubleshooting — speedtest accuracy with proxy, PAC <code>dnsResolve</code>, IPSec PFS overhead, GRE/IPSec encapsulation overhead.</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">i</div>SIX GOTCHAS TO INTERNALISE</div>
+    <div class="callout-body">
+      <strong>1.</strong> Generic network speed tools may not be accurate when tested through a proxy.<br>
+      <strong>2.</strong> A reliable way to measure speed is to download a sample 100MB file and measure speed using Task Manager or Wireshark.<br>
+      <strong>3.</strong> Slowness can also be due to browser issues — clear cache, exceptions, advanced settings, addons/plugins, frequent 403s.<br>
+      <strong>4.</strong> In PAC files, use Best Practices for internal DNS resolution (<code>dnsResolve()</code>). Also applies to App-profile + Forwarding profile PAC.<br>
+      <strong>5.</strong> IPSec tunnels with PFS add overhead and can cause performance issues. Disable PFS where possible.<br>
+      <strong>6.</strong> Location-based performance issues with supported throughput on GRE/IPSec traffic — encapsulation/decapsulation often spikes resource utilisation.
+    </div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Two performance matrices: ZIA (columns: Through Zscaler / DC / Location / User) and ZPA (columns: Website-App / Location / Single User). Six gotchas: speedtest through proxy, 100MB sample test, browser-side slowness (cache, 403s), PAC <code>dnsResolve()</code> best practices, IPSec PFS overhead, GRE/IPSec encapsulation overhead.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-perf" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('perf','Section 8 — Performance Quick Reference')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-perf" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('perf')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .main-content -->
+
+<aside>
+  <a class="hub-back" href="edu-260-use-cases-hub.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    EDU-260 Use Cases Hub
+  </a>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS</div>
+    <ul class="checklist">
+      <li class="check-item" onclick="toggleDone(this,'check-1')"><input type="checkbox" id="check-1" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">TF Flow</li>
+      <li class="check-item" onclick="toggleDone(this,'check-2')"><input type="checkbox" id="check-2" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">UC1 · ZIA Site Fails</li>
+      <li class="check-item" onclick="toggleDone(this,'check-3')"><input type="checkbox" id="check-3" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">UC2 · Wrong PSE</li>
+      <li class="check-item" onclick="toggleDone(this,'check-4')"><input type="checkbox" id="check-4" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">UC3 · ZIA Slowness</li>
+      <li class="check-item" onclick="toggleDone(this,'check-5')"><input type="checkbox" id="check-5" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">UC4 · ZPA App Unreachable</li>
+      <li class="check-item" onclick="toggleDone(this,'check-6')"><input type="checkbox" id="check-6" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">UC5 · ZCC FW/AV</li>
+      <li class="check-item" onclick="toggleDone(this,'check-7')"><input type="checkbox" id="check-7" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">UC6 · Captive Portal</li>
+      <li class="check-item" onclick="toggleDone(this,'check-8')"><input type="checkbox" id="check-8" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">Perf Quick Reference</li>
+    </ul>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="quick-ref">
+    <div class="quick-ref-title">KEY TF TERMS</div>
+    <div class="qr-term"><div class="qr-label">TUNNEL 2.0</div><div class="qr-def">ZCC tunnel — DTLS over UDP 443, falls back to TLS.</div></div>
+    <div class="qr-term"><div class="qr-label">PAC</div><div class="qr-def">Proxy Auto-Config — JS file with FindProxyForURL return statement.</div></div>
+    <div class="qr-term"><div class="qr-label">${GATEWAY}</div><div class="qr-def">PAC macro that resolves to the nearest Zscaler PSE via GeoIP.</div></div>
+    <div class="qr-term"><div class="qr-label">100.64.0.6</div><div class="qr-def">ZCC's FW/AV health-check probe destination.</div></div>
+    <div class="qr-term"><div class="qr-label">ZCPM</div><div class="qr-def">Zscaler Captive Portal Manager — log keyword for captive-portal probes.</div></div>
+    <div class="qr-term"><div class="qr-label">ZSATunnel logs</div><div class="qr-def">ZCC log file containing PAC URL, ZCPM, app-profile entries.</div></div>
+    <div class="qr-term"><div class="qr-label">ANY.BROKER.PROD.ZPATH.NET</div><div class="qr-def">ZPA reachability test target for the Public Service Edge.</div></div>
+    <div class="qr-term"><div class="qr-label">SAMLSP.PRIVATE.ZSCALER.COM</div><div class="qr-def">ZPA SAML login + diagnostic URL.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div>EDU-260 · <span>Use Cases</span></div>
+  <div>Lesson 4 — Traffic Forwarding</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu-260-uc-04-traffic-forwarding';
+const SECTIONS={'flow':'Section 1 — TF Flow','uc1':'UC1 — ZIA Site Fails','uc2':'UC2 — Wrong PSE','uc3':'UC3 — ZIA Slowness','uc4':'UC4 — ZPA App Unreachable','uc5':'UC5 — ZCC FW/AV','uc6':'UC6 — Captive Portal','perf':'Section 8 — Performance Quick Reference'};
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();ns.push({id:Date.now(),section:key,sectionName:SECTIONS[key]||key,text});saveNotesArr(ns);ta.value='';renderNotesPanel();if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function getQArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQArr(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const qs=getQArr();qs.push({id:Date.now(),section:key,sectionName:name,text});saveQArr(qs);ta.value='';renderQPanel();if(!document.getElementById('qpanel-body').classList.contains('open'))toggleQPanel();}
+function deleteQ(id){saveQArr(getQArr().filter(q=>q.id!==id));renderQPanel();}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function renderQPanel(){const qs=getQArr();const count=document.getElementById('qpanel-count');if(count){count.textContent=qs.length;count.style.display=qs.length?'inline':'none';}const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!body)return;if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));qs.forEach(q=>{if(groups[q.section])groups[q.section].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQ(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=PAGE_KEY+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function navTo(id){const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}const ids=['section-flow','section-uc1','section-uc2','section-uc3','section-uc4','section-uc5','section-uc6','section-perf'];document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));}
+function toggleDone(li,id){const cb=li.querySelector('input[type="checkbox"]');const checked=!cb.checked;cb.checked=checked;li.classList.toggle('done',checked);localStorage.setItem(PAGE_KEY+'-check-'+id,checked);}
+function initChecks(){document.querySelectorAll('.check-item').forEach(function(li){const cb=li.querySelector('input[type="checkbox"]');if(!cb)return;if(localStorage.getItem(PAGE_KEY+'-check-'+cb.id)==='true'){cb.checked=true;li.classList.add('done');}});}
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();renderNotesPanel();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){
+    const key=PAGE_KEY+'-socans-'+area.dataset.section;
+    try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;area.querySelector('.btn-add-answer').textContent='✓ Answer saved';area.querySelector('.btn-add-answer').disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}
+  });
+  document.querySelectorAll('.screenshot-embed img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  setTimeout(function(){document.body.style.opacity='1';document.body.style.transition='opacity 0.35s ease';},10);
+  document.querySelectorAll('a[href]').forEach(function(a){a.addEventListener('click',function(){if(a.hostname===location.hostname)sessionStorage.setItem('pt','1');});});
+});
+</script>
+</body>
+</html>

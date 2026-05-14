@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Troubleshooting Overview · EDU-260 Use Cases — Zscaler Troubleshoot</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef4ff;--surface:#fff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;--text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;--blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;--blue-deep:#0f3d7a;--green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;--red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;--amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html.pt-init body{opacity:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{background:#0d1a2e;color:#fff;padding:28px 40px 32px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:#93c5fd;letter-spacing:0.06em;margin-bottom:20px;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;opacity:0.8;}
+.breadcrumb a:hover{opacity:1;text-decoration:underline;}
+.breadcrumb-sep{opacity:0.5;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.eyebrow-chip{background:rgba(147,197,253,0.15);border:1px solid rgba(147,197,253,0.3);color:#93c5fd;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:4px 12px;border-radius:20px;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:#93c5fd;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+h1{font-family:'Fraunces',serif;font-size:42px;font-weight:700;line-height:1.1;color:#fff;margin-bottom:4px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-top:6px;letter-spacing:0.03em;}
+.motivation-banner{background:#1e3a5c;border-bottom:1px solid rgba(147,197,253,0.15);padding:14px 40px;}
+.motivation-text{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.6;}
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.qpanel{background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 24px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 24px 22px;}
+.qpanel-body.open{display:block;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+.no-questions{font-size:12px;color:var(--text-muted);padding:10px 0;}
+.q-group{margin-bottom:14px;}
+.q-group-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:8px;}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-num{font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0;margin-top:2px;}
+.q-text{font-size:13px;color:var(--text-soft);flex:1;line-height:1.5;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 4px;flex-shrink:0;}
+.q-del:hover{color:var(--red);}
+.section-nav{display:flex;gap:2px;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:10;}
+.nav-tab{background:none;border:1px solid transparent;border-radius:8px;padding:6px 14px;font-family:'Epilogue',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.nav-tab:hover{background:var(--surface-2);color:var(--text);}
+.nav-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;flex:1;}
+.main-content{padding:32px 40px;min-width:0;}
+aside{padding:28px 24px;border-left:1px solid var(--border);position:sticky;top:45px;height:calc(100vh - 45px);overflow-y:auto;background:var(--surface);}
+.section-block{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border-dim);}
+.section-block:last-child{border-bottom:none;}
+.section-tag{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--blue);margin-bottom:8px;}
+h2{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:16px;}
+h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 10px;}
+p{font-size:14px;line-height:1.75;color:var(--text-soft);margin-bottom:12px;}
+ul,ol{padding-left:20px;margin-bottom:12px;}
+li{font-size:13.5px;line-height:1.7;color:var(--text-soft);margin-bottom:4px;}
+.phase-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:18px 0;}
+.phase-step{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;border-top:3px solid var(--blue);}
+.phase-step-num{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:4px;}
+.phase-step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.phase-step-desc{font-size:12px;color:var(--text-muted);line-height:1.6;}
+.info-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0;}
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.info-card-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:6px;}
+.info-card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.info-card-desc{font-size:12px;color:var(--text-muted);line-height:1.6;}
+.callout{border-radius:10px;padding:14px 16px;margin:16px 0;border-left:3px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.14em;margin-bottom:6px;}
+.callout-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.65;color:var(--text-soft);}
+.callout-tip{background:var(--blue-glow);border-color:var(--blue);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-tip .callout-icon{background:rgba(26,109,204,0.15);color:var(--blue);}
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;transform:scale(1.5);transform-origin:top left;transition:transform 0.2s ease;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:24px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.tool-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:72px;outline:none;line-height:1.6;}
+.tool-textarea:focus{border-color:var(--blue);}
+.tool-row{margin-top:8px;text-align:right;}
+.btn-add-q{background:#0d1a2e;color:#93c5fd;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:24px;}
+.sidebar-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:10px;}
+.hub-back{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:10px 16px;border-radius:10px;transition:opacity 0.15s;margin-bottom:20px;}
+.hub-back:hover{opacity:0.88;}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.check-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-soft);padding:6px 10px;border-radius:8px;cursor:pointer;transition:background 0.12s;}
+.check-item:hover{background:var(--surface-2);}
+.check-item input{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.check-item.done{color:var(--text-muted);text-decoration:line-through;}
+.sidebar-divider{height:1px;background:var(--border);margin:18px 0;}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:16px;}
+.quick-ref-title{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#93c5fd;margin-bottom:12px;}
+.qr-term{margin-bottom:10px;}
+.qr-label{font-size:10px;font-weight:700;color:#93c5fd;letter-spacing:0.08em;}
+.qr-def{font-size:11.5px;color:rgba(255,255,255,0.65);line-height:1.55;margin-top:2px;}
+footer{background:#0d1a2e;color:rgba(255,255,255,0.45);font-size:11px;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.04em;}
+footer span{color:#93c5fd;}
+@media(max-width:900px){main{grid-template-columns:1fr;}aside{display:none;}.main-content{padding:24px 20px;}header,footer{padding:24px 20px;}.motivation-banner{padding:12px 20px;}.section-nav{padding:8px 16px;}.lesson-tools-grid{grid-template-columns:1fr;}.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../troubleshoot-hub.html">Zscaler Troubleshoot Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="edu-260-use-cases-hub.html">EDU-260 Use Cases</a>
+    <span class="breadcrumb-sep">›</span>
+    Troubleshooting Overview
+  </div>
+  <div class="eyebrow">
+    <span class="eyebrow-chip">EDU-260 · LESSON 2</span>
+    <span class="header-dot"></span>
+  </div>
+  <h1>Troubleshooting <em>Overview</em></h1>
+  <div class="header-sub">The flow, the failure regions, and the tools that support each phase</div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">"Tools find symptoms. A process finds causes — and the process is always Locate, Isolate, Diagnose."</div>
+</div>
+
+<div class="top-panels">
+  <div class="qpanel" id="qpanel">
+    <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+      <span class="qpanel-title">MY QUESTIONS</span>
+      <span class="qpanel-count" id="qpanel-count">0</span>
+      <span class="qpanel-hint">— click to expand</span>
+      <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+    </button>
+    <div class="qpanel-body" id="qpanel-body"></div>
+  </div>
+  <div class="notes-panel" id="notes-panel">
+    <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+      <span class="notes-panel-title">MY NOTES</span>
+      <span class="notes-panel-count" id="notes-panel-count">0</span>
+      <span class="notes-panel-hint">— click to expand</span>
+      <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+    </button>
+    <div class="notes-panel-body" id="notes-panel-body"></div>
+  </div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-process')">1 · The Process</button>
+  <button class="nav-tab" onclick="navTo('section-localize')">2 · Localize</button>
+  <button class="nav-tab" onclick="navTo('section-isolate')">3 · Isolate</button>
+  <button class="nav-tab" onclick="navTo('section-diagnose')">4 · Diagnose</button>
+  <button class="nav-tab" onclick="navTo('section-tools')">5 · Tools</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- SECTION 1 — PROCESS -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · WHERE PROBLEMS LIVE</span>
+  </div>
+  <p class="socratic-insight">A Zscaler request passes through up to seven distinct regions — the user's device, the local network, the firewall, the IdP, the user-to-Zscaler link, the Zscaler service itself, and the destination. Most tickets fail on the wrong assumption that the issue is "in Zscaler" when it's actually one hop earlier.</p>
+  <ul class="socratic-questions">
+    <li>Why does the troubleshooting flow start with "where" before "why"?</li>
+    <li>What's the cost of trying to diagnose a problem you haven't yet localized?</li>
+  </ul>
+  <div class="answer-area" data-section="process">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Because "why" depends on "where". The same symptom — a hung page load — can be caused by a local firewall blocking 443, a SAML failure at the IdP, or a blacklisted destination IP. Each cause lives in a different region, and each region has different diagnostic tools. Localize narrows the search space before you spend time on root-cause theories.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">You waste time on the wrong tools, and worse, you can mask the real fault with a "fix" that just changes the symptom. A reboot that clears the issue temporarily isn't a diagnosis — it's noise. Without localize and isolate, you can't tell whether your fix actually addressed the cause or just papered over it.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-process">
+  <div class="section-tag">SECTION 1</div>
+  <h2>The Troubleshooting Process</h2>
+  <p>Zscaler's troubleshooting methodology is a three-phase loop — <strong>Localize → Isolate → Diagnose</strong> — that applies uniformly to every Internet Access (ZIA) and Private Access (ZPA) issue. Each phase has a specific question to answer, and the answer is the entry condition for the next phase.</p>
+
+  <div class="phase-steps">
+    <div class="phase-step">
+      <div class="phase-step-num">PHASE 1</div>
+      <div class="phase-step-title">Localize</div>
+      <div class="phase-step-desc">Identify where in the path the fault occurred and who is affected.</div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">PHASE 2</div>
+      <div class="phase-step-title">Isolate</div>
+      <div class="phase-step-desc">Narrow precisely which logical process is failing inside that region.</div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">PHASE 3</div>
+      <div class="phase-step-title">Diagnose</div>
+      <div class="phase-step-desc">Form a theory, test it, iterate. Confirm the fix or refine the theory.</div>
+    </div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="l2-where-issues-occur2.png" alt="Map of all the regions where Zscaler Internet Access issues can occur: between Directory Server and Zscaler, between Zscaler and Internet, with the destination service, with the Zscaler service, between Firewall and Zscaler, between user and Zscaler, between user and IdP, on the local network, on the end user's device">
+    <div class="screenshot-caption">Every Internet Access request traverses up to seven distinct regions. The Localize phase decides which region owns the fault before any deep diagnostics begin.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Three phases, in order: Localize (where + who), Isolate (which process), Diagnose (theory + test). Seven possible fault regions for ZIA: device, local network, firewall, user-to-Zscaler, user-to-IdP, IdP-to-Zscaler, Zscaler-to-Internet/destination. Phase order is non-negotiable — you cannot diagnose what you have not isolated.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-process" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('process','Section 1 — The Process')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-process" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('process')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 — LOCALIZE -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · LOCALIZE</span>
+  </div>
+  <p class="socratic-insight">"Who is affected?" sounds obvious but is the highest-signal question in troubleshooting. One user means client; one location means network; all users means a service-side or DC issue.</p>
+  <ul class="socratic-questions">
+    <li>If only road-warrior users hit the issue, which fault regions remain plausible and which can you eliminate?</li>
+  </ul>
+  <div class="answer-area" data-section="localize">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Road-warriors don't traverse the corporate firewall or company LAN, so those regions are eliminated. The remaining candidates are: the user's device (ZCC version, OS firewall, AV), the user-to-Zscaler link (the user's home/coffee-shop network), the IdP from the road-warrior's location, and the Zscaler service itself. If the issue is also reproducible from a company laptop in-office, you can further eliminate the device and network from the suspect list.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-localize">
+  <div class="section-tag">SECTION 2</div>
+  <h2>Localize — Where and Who</h2>
+  <p>Localize answers two questions: <strong>who is affected?</strong> and <strong>capture maximum data from those users</strong>. The "who" defines the scope; the data defines the working set for the next phase.</p>
+
+  <h3>Who is affected?</h3>
+  <ul>
+    <li>Single user / single computer</li>
+    <li>Multiple users / multiple computers</li>
+    <li>Road-warrior users (off-network only)</li>
+    <li>Users at one or more specific company locations</li>
+  </ul>
+
+  <h3>What data do you capture?</h3>
+  <ul>
+    <li>Exact error string, screenshot, timestamp, and user/host details</li>
+    <li>Scope of the problem (one site? one app? one user-group?)</li>
+    <li>Recent changes — PAC file, policy, ZCC version, IdP config</li>
+  </ul>
+
+  <div class="screenshot-embed">
+    <img src="l2-localize-questions.png" alt="Two hexagons labelled Localize: left asks Who is affected with options single user, multiple users, road warrior, users at company locations; right says Get data from affected users — capture maximum data and identify scope">
+    <div class="screenshot-caption">Localize is two parallel asks: scope ("who") and evidence ("what data"). Together they shrink the candidate fault regions before Isolate begins.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Localize asks two things — Who (single user, multi-user, road-warrior, location-specific) and What data (error text, scope, recent changes). The "who" alone often eliminates 4–5 of the 7 possible ZIA fault regions before Isolate begins.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-localize" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('localize','Section 2 — Localize')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-localize" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('localize')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 — ISOLATE -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · ISOLATE</span>
+  </div>
+  <p class="socratic-insight">Isolate is the bridge between "where" and "why". You've named the region; now you have to choose between three classes of failure: connectivity, infrastructure-to-infrastructure communication, or misconfiguration.</p>
+  <ul class="socratic-questions">
+    <li>Why does the same evidence (a TCP RST) belong to different fault classes depending on which side issued it?</li>
+    <li>How would you tell a "general network connectivity" issue apart from a "misconfigured Zscaler policy" if both block traffic to one website?</li>
+  </ul>
+  <div class="answer-area" data-section="isolate">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">A TCP RST from the client is usually an OS-level firewall or application aborting; from a middlebox it's a transparent proxy refusing the flow; from the server it's an application-layer rejection. Same packet, three different fault classes. Reading the source tells you which side owns the failure.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Test the site from off-Zscaler. If it loads without Zscaler in the path but fails through Zscaler, the network connectivity is fine and the fault is a Zscaler policy match (URL filtering, DLP, sandbox). If it fails everywhere, network or destination is the cause. Reproducing with and without Zscaler is the single fastest isolation step.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-isolate">
+  <div class="section-tag">SECTION 3</div>
+  <h2>Isolate — Which Process Is Failing</h2>
+  <p>Once you've localized the fault to a region, Isolate narrows further by answering three diagnostic questions:</p>
+  <ol>
+    <li>Are there <strong>network connectivity problems</strong> in general (RST, timeouts, DNS)?</li>
+    <li>Is there a <strong>connection issue between specific infrastructure entities</strong> (ZCC to gateway, IdP to Zscaler)?</li>
+    <li>Is there a <strong>misconfiguration</strong> — of network connections or of a Zscaler policy?</li>
+  </ol>
+
+  <div class="screenshot-embed">
+    <img src="l2-isolate-questions.png" alt="Two hexagons labelled Isolate: left asks Where does the problem occur — local network, connecting to the internet, between infrastructure components, on the Zscaler cloud; right says Use available tools to identify proxy connectivity and use basic networking tools to narrow down the failure domain">
+    <div class="screenshot-caption">Isolate splits the question "where" into two perspectives: failure domain (network vs Zscaler vs destination) and tool selection (Zscaler proxy tests vs basic ping/traceroute).</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">i</div>FAST ISOLATION TIP</div>
+    <div class="callout-body">If the symptom reproduces only through Zscaler but not direct-to-internet, the issue is Zscaler-side (policy, edge, IdP). If it reproduces both ways, the network or destination is in play. This single test eliminates half of the suspect space.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Isolate splits failures into three classes — general network connectivity, infrastructure-to-infrastructure connection, misconfiguration. Use Zscaler proxy tests for proxy connectivity and ping/traceroute/MTR/PCAP for basic network. Through-Zscaler vs without-Zscaler reproduction is the fastest isolation test.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-isolate" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('isolate','Section 3 — Isolate')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-isolate" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('isolate')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4 — DIAGNOSE -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · DIAGNOSE</span>
+  </div>
+  <p class="socratic-insight">Diagnose is a five-step iteration: form theory, design test, run test, decide, loop. The discipline is in step 4 — being honest about whether the test confirmed the theory or disproved it.</p>
+  <ul class="socratic-questions">
+    <li>Why is "reverse any changes" part of the diagnose cycle?</li>
+  </ul>
+  <div class="answer-area" data-section="diagnose">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Because partial changes accumulate state that confuses the next test. If you change a policy and the issue persists, leaving that change in place means the next theory is being tested in a non-baseline environment — you can no longer tell which change had which effect. Reverse failed changes before testing the next theory.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-diagnose">
+  <div class="section-tag">SECTION 4</div>
+  <h2>Diagnose — Theory, Test, Iterate</h2>
+  <p>Diagnose is a constructive cycle that leverages knowledge and experience to form a theory, then tests it cleanly:</p>
+
+  <div class="phase-steps">
+    <div class="phase-step">
+      <div class="phase-step-num">STEP 1</div>
+      <div class="phase-step-title">Form a theory</div>
+      <div class="phase-step-desc">Use the Localize and Isolate evidence to hypothesise the cause.</div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">STEP 2</div>
+      <div class="phase-step-title">Design the test</div>
+      <div class="phase-step-desc">Decide what change would fix the issue if the theory is right.</div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">STEP 3</div>
+      <div class="phase-step-title">Test</div>
+      <div class="phase-step-desc">Apply the change in a controlled way. Reproduce the symptom.</div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">STEP 4</div>
+      <div class="phase-step-title">If correct → done</div>
+      <div class="phase-step-desc">Document the fix and step out of the loop.</div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">STEP 5</div>
+      <div class="phase-step-title">If wrong → reverse and re-theorize</div>
+      <div class="phase-step-desc">Undo the change, learn from the result, form a new theory.</div>
+    </div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="l2-diagnose-cycle.png" alt="The five-step Diagnose troubleshooting cycle: form a theory, design how to test the theory, test the theory, if correct step out, if wrong go back to step 1">
+    <div class="screenshot-caption">The Diagnose cycle. Each iteration must either confirm and exit, or revert and re-theorize — leaving partial changes in place compounds noise into the next loop.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Diagnose = 5 steps: theory → design test → test → correct (exit) → wrong (revert + back to step 1). Always reverse changes that didn't work — partial changes pollute the baseline and break the next test.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-diagnose" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('diagnose','Section 4 — Diagnose')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-diagnose" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('diagnose')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5 — TOOLS -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · CHOOSING THE RIGHT TOOL</span>
+  </div>
+  <p class="socratic-insight">Zscaler offers a small set of purpose-built tools — Proxy Test, Performance Test, Admin UI logs, ZCC Packet Capture, ZCC Network Test, Zscaler Analyzer, Zscaler Trust. The trick isn't knowing they exist; it's matching each one to the phase it actually helps with.</p>
+  <ul class="socratic-questions">
+    <li>Why is Zscaler Trust (trust.zscaler.com) the first stop, not the last, when "everything is broken"?</li>
+    <li>When would you use ZCC Network Test instead of a packet capture, and vice versa?</li>
+  </ul>
+  <div class="answer-area" data-section="tools">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Trust gives you the cloud-wide status of the Zscaler service before you waste time chasing a client-side ghost. If there's a known incident on your cloud or your DC, half the user-reported symptoms are already explained. Check Trust first when scope is broad; check it last when scope is one user.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">ZCC Network Test is fast, structured and good for first-pass evidence — it pings DNS/UDP reachability, throughput, fragmentation, latency to a fixed Zscaler endpoint. A packet capture is heavier but mandatory when you need to see actual headers, response codes, retransmissions, MTU behaviour, or who issued the RST. Network Test first; PCAP when Network Test isn't specific enough.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-tools">
+  <div class="section-tag">SECTION 5</div>
+  <h2>Troubleshooting Tools</h2>
+  <p>To pinpoint root cause, leverage Zscaler's purpose-built tools. They split into web-based (Admin UI), client-based (ZCC), and external (Trust, Analyzer).</p>
+
+  <div class="screenshot-embed">
+    <img src="l2-troubleshooting-tools-table.png" alt="Table of Zscaler troubleshooting tools — Proxy Testing, Performance Testing, Admin UI Logs, Zscaler Analyzer Output, Zscaler Client Connector Packet Capture, Zscaler Client Connector Network Test, Zscaler Trust — with usage and access information">
+    <div class="screenshot-caption">The full tool list. Proxy/Performance Test live in the Admin UI; packet capture and network test live in ZCC; Analyzer is downloadable; Trust is a public web portal.</div>
+  </div>
+
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="info-card-label">PROXY TEST</div>
+      <div class="info-card-title">Proxy Testing</div>
+      <div class="info-card-desc">Verifies you are connecting through the Zscaler service. Run from Admin UI.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">PERF TEST</div>
+      <div class="info-card-title">Performance Testing</div>
+      <div class="info-card-desc">Performance telemetry to/from the Zscaler service.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">ADMIN UI LOGS</div>
+      <div class="info-card-title">Admin UI Logs</div>
+      <div class="info-card-desc">Web Insights, firewall, DNS — searchable view of recent traffic and policy decisions.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">ZS ANALYZER</div>
+      <div class="info-card-title">Zscaler Analyzer Output</div>
+      <div class="info-card-desc">Page-load and latency analysis without Zscaler in the path. Download from zscaler.com.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">ZCC PCAP</div>
+      <div class="info-card-title">ZCC Packet Capture</div>
+      <div class="info-card-desc">In-product PCAP from the Zscaler Client Connector. Started from the Troubleshoot panel.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">ZCC NET TEST</div>
+      <div class="info-card-title">ZCC Network Test</div>
+      <div class="info-card-desc">DNS/UDP reachability, traceroute, throttling, fragmentation, direct DCC, bandwidth checks. URL: <code>127.0.0.1:9000/test?q=username@domain.com</code>.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">ZS TRUST</div>
+      <div class="info-card-title">Zscaler Trust</div>
+      <div class="info-card-desc">Public status portal — service health, recent incidents, maintenance windows. URL: trust.zscaler.com.</div>
+    </div>
+  </div>
+
+  <h3>Enabling the ZCC Troubleshoot panel</h3>
+  <p>ZCC ships with the Troubleshoot panel under the <strong>More</strong> tab, exposing Start Packet Capture, Report an Issue, Export Logs, Restart Service, Repair App, Clear Logs, and Log Mode. Admins enable or disable these per-user from the Client Connector Portal: <strong>Administration → Client Connector Support → App Supportability</strong>.</p>
+
+  <div class="screenshot-embed">
+    <img src="l2-zcc-troubleshoot-panel.png" alt="Zscaler Client Connector UI with the Troubleshoot panel expanded showing Start Packet Capture, Report an Issue, Export Logs, Restart Service, Repair App, Clear Logs, and Log Mode set to Debug">
+    <div class="screenshot-caption">The ZCC Troubleshoot panel — every tool a user can invoke locally. Admins enable/disable each from App Supportability in the ZCC portal.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">7 core tools: Proxy Test, Performance Test, Admin UI Logs, Zscaler Analyzer (zscaler.com), ZCC Packet Capture, ZCC Network Test (<code>127.0.0.1:9000/test?q=user@domain</code>), Zscaler Trust (<code>trust.zscaler.com</code>). ZCC tool visibility is controlled from <strong>Administration → Client Connector Support → App Supportability</strong>.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-tools" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('tools','Section 5 — Tools')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-tools" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('tools')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .main-content -->
+
+<aside>
+  <a class="hub-back" href="edu-260-use-cases-hub.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    EDU-260 Use Cases Hub
+  </a>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS</div>
+    <ul class="checklist">
+      <li class="check-item" onclick="toggleDone(this,'check-1')"><input type="checkbox" id="check-1" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">The Process</li>
+      <li class="check-item" onclick="toggleDone(this,'check-2')"><input type="checkbox" id="check-2" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">Localize</li>
+      <li class="check-item" onclick="toggleDone(this,'check-3')"><input type="checkbox" id="check-3" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">Isolate</li>
+      <li class="check-item" onclick="toggleDone(this,'check-4')"><input type="checkbox" id="check-4" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">Diagnose</li>
+      <li class="check-item" onclick="toggleDone(this,'check-5')"><input type="checkbox" id="check-5" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">Tools</li>
+    </ul>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="quick-ref">
+    <div class="quick-ref-title">KEY TERMS</div>
+    <div class="qr-term"><div class="qr-label">LOCALIZE</div><div class="qr-def">Identify where the fault is and who is affected.</div></div>
+    <div class="qr-term"><div class="qr-label">ISOLATE</div><div class="qr-def">Narrow to the specific failing logical process.</div></div>
+    <div class="qr-term"><div class="qr-label">DIAGNOSE</div><div class="qr-def">Theory → test → confirm or revert + re-theorize.</div></div>
+    <div class="qr-term"><div class="qr-label">ZCC NETWORK TEST</div><div class="qr-def">127.0.0.1:9000/test?q=user@domain — fast first-pass diagnostics.</div></div>
+    <div class="qr-term"><div class="qr-label">ZS TRUST</div><div class="qr-def">trust.zscaler.com — global service status portal.</div></div>
+    <div class="qr-term"><div class="qr-label">PROXY TEST</div><div class="qr-def">Admin UI verification you're actually traversing Zscaler.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div>EDU-260 · <span>Use Cases</span></div>
+  <div>Lesson 2 — Troubleshooting Overview</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu-260-uc-02-troubleshooting-overview';
+const SECTIONS={'process':'Section 1 — The Process','localize':'Section 2 — Localize','isolate':'Section 3 — Isolate','diagnose':'Section 4 — Diagnose','tools':'Section 5 — Tools'};
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();ns.push({id:Date.now(),section:key,sectionName:SECTIONS[key]||key,text});saveNotesArr(ns);ta.value='';renderNotesPanel();if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function getQArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQArr(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const qs=getQArr();qs.push({id:Date.now(),section:key,sectionName:name,text});saveQArr(qs);ta.value='';renderQPanel();if(!document.getElementById('qpanel-body').classList.contains('open'))toggleQPanel();}
+function deleteQ(id){saveQArr(getQArr().filter(q=>q.id!==id));renderQPanel();}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function renderQPanel(){const qs=getQArr();const count=document.getElementById('qpanel-count');if(count){count.textContent=qs.length;count.style.display=qs.length?'inline':'none';}const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!body)return;if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));qs.forEach(q=>{if(groups[q.section])groups[q.section].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQ(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=PAGE_KEY+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function navTo(id){const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}const ids=['section-process','section-localize','section-isolate','section-diagnose','section-tools'];document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));}
+function toggleDone(li,id){const cb=li.querySelector('input[type="checkbox"]');const checked=!cb.checked;cb.checked=checked;li.classList.toggle('done',checked);localStorage.setItem(PAGE_KEY+'-check-'+id,checked);}
+function initChecks(){document.querySelectorAll('.check-item').forEach(function(li){const cb=li.querySelector('input[type="checkbox"]');if(!cb)return;if(localStorage.getItem(PAGE_KEY+'-check-'+cb.id)==='true'){cb.checked=true;li.classList.add('done');}});}
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();renderNotesPanel();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){
+    const key=PAGE_KEY+'-socans-'+area.dataset.section;
+    try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;area.querySelector('.btn-add-answer').textContent='✓ Answer saved';area.querySelector('.btn-add-answer').disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}
+  });
+  document.querySelectorAll('.screenshot-embed img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  setTimeout(function(){document.body.style.opacity='1';document.body.style.transition='opacity 0.35s ease';},10);
+  document.querySelectorAll('a[href]').forEach(function(a){a.addEventListener('click',function(){if(a.hostname===location.hostname)sessionStorage.setItem('pt','1');});});
+});
+</script>
+</body>
+</html>

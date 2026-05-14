@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual Service Edge · EDU-260 Lesson 10 — Zscaler Troubleshoot</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#fff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;--blue-deep:#0f3d7a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html.pt-init body{opacity:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{background:#0d1a2e;color:#fff;padding:28px 40px 32px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:#93c5fd;letter-spacing:0.06em;margin-bottom:20px;flex-wrap:wrap;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;opacity:0.8;}
+.breadcrumb a:hover{opacity:1;text-decoration:underline;}
+.breadcrumb-sep{opacity:0.5;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.eyebrow-chip{background:rgba(147,197,253,0.15);border:1px solid rgba(147,197,253,0.3);color:#93c5fd;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:4px 12px;border-radius:20px;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:#93c5fd;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+h1{font-family:'Fraunces',serif;font-size:42px;font-weight:700;line-height:1.1;color:#fff;margin-bottom:4px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-top:6px;letter-spacing:0.03em;}
+.motivation-banner{background:#1e3a5c;border-bottom:1px solid rgba(147,197,253,0.15);padding:14px 40px;}
+.motivation-text{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.6;}
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.qpanel{background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 24px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 24px 22px;}
+.qpanel-body.open{display:block;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+.no-questions{font-size:12px;color:var(--text-muted);padding:10px 0;}
+.q-group{margin-bottom:14px;}
+.q-group-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:8px;}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-num{font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0;margin-top:2px;}
+.q-text{font-size:13px;color:var(--text-soft);flex:1;line-height:1.5;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 4px;flex-shrink:0;}
+.q-del:hover{color:var(--red);}
+.section-nav{display:flex;gap:2px;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:10;}
+.nav-tab{background:none;border:1px solid transparent;border-radius:8px;padding:6px 14px;font-family:'Epilogue',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.nav-tab:hover{background:var(--surface-2);color:var(--text);}
+.nav-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;flex:1;}
+.main-content{padding:32px 40px;min-width:0;}
+aside{padding:28px 24px;border-left:1px solid var(--border);position:sticky;top:45px;height:calc(100vh - 45px);overflow-y:auto;background:var(--surface);}
+.section-block{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border-dim);}
+.section-block:last-child{border-bottom:none;}
+.section-tag{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--blue);margin-bottom:8px;}
+h2{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:16px;}
+h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 10px;}
+p{font-size:14px;line-height:1.75;color:var(--text-soft);margin-bottom:12px;}
+ul,ol{padding-left:20px;margin-bottom:12px;}
+li{font-size:13.5px;line-height:1.7;color:var(--text-soft);margin-bottom:4px;}
+.info-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:16px 0;}
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.info-card-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:6px;}
+.info-card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.info-card-desc{font-size:12px;color:var(--text-muted);line-height:1.6;}
+.callout{border-radius:10px;padding:14px 16px;margin:16px 0;border-left:3px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.14em;margin-bottom:6px;}
+.callout-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.65;color:var(--text-soft);}
+.callout-tip{background:var(--blue-glow);border-color:var(--blue);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-tip .callout-icon{background:rgba(26,109,204,0.15);color:var(--blue);}
+.callout-warn{background:var(--amber-light);border-color:var(--amber);}
+.callout-warn .callout-header{color:var(--amber);}
+.callout-warn .callout-icon{background:rgba(180,83,9,0.15);color:var(--amber);}
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;transform:scale(1.5);transform-origin:top left;transition:transform 0.2s ease;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
+.phase-steps{display:grid;gap:10px;margin:16px 0;}
+.phase-step{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:8px;padding:12px 16px;display:flex;gap:14px;align-items:flex-start;}
+.phase-step-num{background:var(--blue);color:#fff;font-weight:700;font-size:13px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.phase-step-body{flex:1;}
+.phase-step-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.phase-step-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.phase-step-text{font-size:12.5px;color:var(--text-soft);line-height:1.6;}
+.phase-step-text code{background:var(--surface-2);padding:1px 5px;border-radius:4px;font-size:11.5px;color:var(--blue-deep);}
+.cli-block{background:#0d1a2e;color:#93c5fd;border-radius:8px;padding:12px 14px;font-family:'SF Mono','Monaco',monospace;font-size:12px;line-height:1.55;margin:12px 0;overflow-x:auto;white-space:pre;}
+.cli-block .cmt{color:#5a7a9a;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img .img-missing-msg{display:none !important;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+.img-missing-msg{padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:24px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.tool-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:72px;outline:none;line-height:1.6;}
+.tool-textarea:focus{border-color:var(--blue);}
+.tool-row{margin-top:8px;text-align:right;}
+.btn-add-q{background:#0d1a2e;color:#93c5fd;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:24px;}
+.sidebar-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:10px;}
+.hub-back{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:10px 16px;border-radius:10px;transition:opacity 0.15s;margin-bottom:20px;}
+.hub-back:hover{opacity:0.88;}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.check-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-soft);padding:6px 10px;border-radius:8px;cursor:pointer;transition:background 0.12s;}
+.check-item:hover{background:var(--surface-2);}
+.check-item input{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.check-item.done{color:var(--text-muted);text-decoration:line-through;}
+.sidebar-divider{height:1px;background:var(--border);margin:18px 0;}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:16px;}
+.quick-ref-title{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#93c5fd;margin-bottom:12px;}
+.qr-term{margin-bottom:10px;}
+.qr-label{font-size:10px;font-weight:700;color:#93c5fd;letter-spacing:0.08em;}
+.qr-def{font-size:11.5px;color:rgba(255,255,255,0.65);line-height:1.55;margin-top:2px;}
+footer{background:#0d1a2e;color:rgba(255,255,255,0.45);font-size:11px;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.04em;}
+footer span{color:#93c5fd;}
+@media(max-width:900px){main{grid-template-columns:1fr;}aside{display:none;}.main-content{padding:24px 20px;}header,footer{padding:24px 20px;}.motivation-banner{padding:12px 20px;}.section-nav{padding:8px 16px;}.lesson-tools-grid{grid-template-columns:1fr;}.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../index.html">Zscaler Troubleshoot Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="edu-260-use-cases-hub.html">EDU-260 Use Cases</a>
+    <span class="breadcrumb-sep">›</span>
+    Virtual Service Edge
+  </div>
+  <div class="eyebrow">
+    <span class="eyebrow-chip">EDU-260 · LESSON 10</span>
+    <span class="header-dot"></span>
+  </div>
+  <h1>Virtual <em>Service</em> Edge</h1>
+  <div class="header-sub">A customer-deployed VM that runs the full Zscaler Public Service Edge — and the issues that come with it</div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">"VSE puts a full ZIA cloud node inside your data centre — same policies, same inspection, same logging — for organisations that need source IP, geolocality, or low latency to nearby SaaS."</div>
+</div>
+
+<div class="top-panels">
+  <div class="qpanel" id="qpanel">
+    <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+      <span class="qpanel-title">MY QUESTIONS</span>
+      <span class="qpanel-count" id="qpanel-count">0</span>
+      <span class="qpanel-hint">— click to expand</span>
+      <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+    </button>
+    <div class="qpanel-body" id="qpanel-body"></div>
+  </div>
+  <div class="notes-panel" id="notes-panel">
+    <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+      <span class="notes-panel-title">MY NOTES</span>
+      <span class="notes-panel-count" id="notes-panel-count">0</span>
+      <span class="notes-panel-hint">— click to expand</span>
+      <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+    </button>
+    <div class="notes-panel-body" id="notes-panel-body"></div>
+  </div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview')">1 · VSE Overview</button>
+  <button class="nav-tab" onclick="navTo('section-pse-vs-vse')">2 · PSE vs VSE</button>
+  <button class="nav-tab" onclick="navTo('section-deploy')">3 · Deploy &amp; Cluster</button>
+  <button class="nav-tab" onclick="navTo('section-uc-policy')">4 · UC · Policies Not Applied</button>
+  <button class="nav-tab" onclick="navTo('section-uc-weblog')">5 · UC · Logs Missing</button>
+  <button class="nav-tab" onclick="navTo('section-uc-vip')">6 · UC · Internet via VIP Down</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- SECTION 1 — OVERVIEW -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · WHY DEPLOY VSE AT ALL?</span>
+  </div>
+  <p class="socratic-insight">A Public Service Edge handles the same inspection in dozens of cloud locations worldwide — automatically scaled, automatically patched. Yet some customers pay extra to run a VSE inside their own data centre. What is so important to those customers that the operational overhead is worth it?</p>
+  <ul class="socratic-questions">
+    <li>What four customer requirements force the choice of a VSE over a Public Service Edge — and which of them <em>cannot</em> be satisfied by source-IP anchoring instead?</li>
+    <li>Zscaler doesn't require access to a customer's Virtual Service Edge. Why is that an important policy from a trust and operational-model perspective?</li>
+  </ul>
+  <div class="answer-area" data-section="overview">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">The four requirements: (1) <em>geopolitical / regulatory</em> — traffic must stay in-country; (2) <em>high latency</em> from users to the nearest Public Service Edge; (3) <em>applications expecting a forwarded IP</em> as the source IP — typically legacy SaaS that geo-fences on IP; (4) <em>localized content</em> the user must appear local to. Source-IP Anchoring solves (3) and partially (4) by sticking a known egress IP onto traffic — but it can't move the inspection engine closer to the user, so it doesn't solve (1) or (2). Note: <strong>Source-IP Anchoring is NOT supported with Virtual Service Edges</strong>, so if you deploy VSE you're committing to its inspection path for that use case.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Zscaler explicitly does not require management access to a customer-deployed VSE — your org has full access for monitoring and configuration, but Zscaler stays out. That preserves the security boundary: a compromise on the Zscaler side cannot pivot into your data centre. It also fits the operational model — VSE is a customer-managed extension of the Zscaler cloud running your policies that Zscaler distributes via the ZIA Admin Portal, with Zscaler Cloud Operations performing automated, non-intrusive software upgrades and security updates.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-overview">
+  <div class="section-tag">SECTION 1</div>
+  <h2>What VSE is and when it's the right answer</h2>
+  <p>A <strong>Virtual Service Edge (VSE)</strong> is a customer-deployed VM that functions as a <strong>full-featured ZIA Public Service Edge</strong> dedicated to your traffic. VSEs are part of the Zscaler cloud — they pull policy updates, send logs to the Nanolog, and authenticate users through the ZIA Admin Portal, exactly like Public Service Edges. <strong>You define policy once</strong> in the ZIA Admin Portal; after users authenticate, the Zscaler service applies their policies whether they connect to an on-prem VSE or to a Public Service Edge anywhere in the world.</p>
+
+  <div class="screenshot-embed">
+    <img src="virtual-service-edge-architecture.png" alt="Virtual Service Edge architecture">
+    <div class="screenshot-caption">VSE sits inside the customer's internal network: internet traffic is forwarded to the VSE, which inspects against the customer's ZIA policy, then egresses via the local firewall/edge router to SaaS or the open internet. A separate management plane keeps the VSE in sync with the Zscaler cloud.</div>
+  </div>
+
+  <h3>When organisations choose VSE</h3>
+  <p>Zscaler may approve extending its patented cloud architecture to a VSE when one of these specific requirements applies:</p>
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="info-card-label">REQUIREMENT 1</div>
+      <div class="info-card-title">Geopolitical / regulatory</div>
+      <div class="info-card-desc">Traffic must be inspected inside a specific jurisdiction.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">REQUIREMENT 2</div>
+      <div class="info-card-title">Latency to PSE too high</div>
+      <div class="info-card-desc">User location has high latency to the nearest Public Service Edge.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">REQUIREMENT 3</div>
+      <div class="info-card-title">Source-IP-dependent app</div>
+      <div class="info-card-desc">An application requires the organisation's own IP as the source IP.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">REQUIREMENT 4</div>
+      <div class="info-card-title">Geolocal content</div>
+      <div class="info-card-desc">Users need to access location-specific content.</div>
+    </div>
+  </div>
+
+  <h3>What VSE gives you operationally</h3>
+  <ul>
+    <li>Retains your organisation's <strong>source IP</strong> when accessing SaaS / Internet apps that require it.</li>
+    <li>Lets users access <strong>geolocal content</strong>.</li>
+    <li>Fully managed by <strong>Zscaler Cloud Operations</strong> — automated, non-intrusive, periodic software upgrades and security updates.</li>
+    <li>All transactions are still logged in the Nanolog and viewable via the ZIA portal + analytics.</li>
+  </ul>
+
+  <div class="callout callout-warn">
+    <div class="callout-header"><div class="callout-icon">!</div>UNSUPPORTED ON VSE</div>
+    <div class="callout-body">The <strong>Source-IP Anchoring</strong> feature is NOT supported with Virtual Service Edges. If a customer chooses VSE, traffic for source-IP-sensitive apps must use the VSE's egress IP, not an anchored egress IP. Plan deployments around this — it shows up on the exam and in real engagements.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">VSE = customer-deployed VM running a full Public Service Edge. Four reasons to choose it: geopolitical / latency / source-IP / geolocal. <strong>Source-IP Anchoring is NOT supported with VSE.</strong> Zscaler does not require access to customer VSEs — fully managed by Cloud Ops via auto-upgrades. Policy is defined once in ZIA Admin Portal and applied identically on Public Service Edges and VSEs.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Section 1 — VSE Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-overview" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('overview')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 2 — PSE vs VSE -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · PRIVATE vs VIRTUAL</span>
+  </div>
+  <p class="socratic-insight">Private Service Edges and Virtual Service Edges both put a dedicated Public-Service-Edge instance inside customer infrastructure. PSE is hardware; VSE is a VM. Why do customers still pick PSE in the cloud era, and where does each one win?</p>
+  <ul class="socratic-questions">
+    <li>PSE requires at least two appliances in customer data-centre racks; VSE runs as a VM with an AS_SSL accelerator add-in for SSL inspection. Why is the SSL inspection story so different between the two?</li>
+  </ul>
+  <div class="answer-area" data-section="pse-vs-vse">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">PSE is purpose-built hardware with built-in SSL acceleration — it can decrypt and inspect at full link speed without offload. VSE is a VM running on the customer's hypervisor, which means it inherits the host's CPU and crypto capabilities; for high SSL inspection throughput Zscaler recommends the <strong>AS_SSL accelerator</strong>, designed for ~50 Mbps with full inspection per VM. The throughput tradeoff is the price for the operational simplicity of running on commodity infrastructure.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-pse-vs-vse">
+  <div class="section-tag">SECTION 2</div>
+  <h2>Private Service Edge vs Virtual Service Edge</h2>
+
+  <div class="screenshot-embed">
+    <img src="private-service-edge-architecture.png" alt="Private Service Edge architecture">
+    <div class="screenshot-caption">Private Service Edges installed in the customer's data centre. PSE handles internet traffic for the corporate network and links back to the Zscaler cloud's Central Authority and Nanolog Routers.</div>
+  </div>
+
+  <p>Both PSE and VSE function as <strong>full-featured Public Service Edges</strong> dedicated to one customer's traffic. They differ in form factor, requirements, and operational responsibility:</p>
+
+  <div class="screenshot-embed">
+    <img src="pse-vs-vse-comparison.png" alt="PSE vs VSE comparison table">
+    <div class="screenshot-caption">The comparison table you should know by heart. PSE = customer-installed appliances, customer maintains, 2 minimum for redundancy. VSE = VM, easy to deploy, can be horizontally scaled, instantly available with no need for shipping, no need to purchase public IPs, includes a built-in load balancer; AS_SSL accelerator recommended for SSL inspection (~50 Mbps full inspection per VM throughput).</div>
+  </div>
+
+  <h3>What you need to remember</h3>
+  <ul>
+    <li><strong>PSE</strong> — needs at least 2 appliances for redundancy; you install/maintain them; Zscaler Cloud Ops configures, maintains, and monitors the PSE software; Zscaler ships the hardware.</li>
+    <li><strong>VSE</strong> — VM only; deploys in the DMZ; horizontally scalable; built-in load balancer; instantly available, no shipping, no purchase of public IPs. <strong>AS_SSL accelerator recommended</strong> for SSL inspection at ~50 Mbps full-inspection throughput per VM. You provide the cluster IP, subnet mask, default gateway.</li>
+  </ul>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">PSE = hardware (≥2 per site, customer racks them). VSE = VM (horizontally scalable, built-in LB, no shipping). For full SSL inspection on VSE: <strong>AS_SSL accelerator, ~50 Mbps per VM</strong>. VSE manages Public Service Edge software automatically; customer just provides cluster IP / subnet / gateway. Both share one policy via the ZIA Admin Portal.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-pse-vs-vse" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('pse-vs-vse','Section 2 — PSE vs VSE')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-pse-vs-vse" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('pse-vs-vse')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 3 — DEPLOY -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · CLUSTER OF SIXTEEN</span>
+  </div>
+  <p class="socratic-insight">A VSE cluster supports a maximum of 16 VSE instances. Why cap it there, and what does the cluster boundary do for the operational model?</p>
+  <ul class="socratic-questions">
+    <li>What's the practical reason for grouping VSEs into a cluster behind a single virtual IP rather than letting clients hit them directly?</li>
+  </ul>
+  <div class="answer-area" data-section="deploy">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Clients need a single, stable IP target so PAC files / DNS / firewall rules don't have to know about every VSE instance. The cluster's virtual IP fronts a built-in load balancer that distributes sessions to active VSEs and routes around failed ones, giving you horizontal scaling and HA from the client's perspective. Capping at 16 keeps cluster control-plane chatter, health checks, and policy sync predictable; if you need more capacity, build more clusters.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-deploy">
+  <div class="section-tag">SECTION 3</div>
+  <h2>Deploy a VSE cluster — the steps</h2>
+
+  <p>To get a VSE running, Zscaler admin reviews your requirements; Zscaler then approves and deploys the VSE. Customer-side, the workflow in the ZIA Admin Portal is:</p>
+
+  <div class="phase-steps">
+    <div class="phase-step">
+      <div class="phase-step-num">1</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">PROVISION</div>
+        <div class="phase-step-title">Download installer + SSL certificate</div>
+        <div class="phase-step-text">Admins define VSEs the same as Public Service Edges. <strong>Administration → Virtual Service Edges</strong> → download the installer for your platform (Hyper-V, KVM, VMware), download the SSL certificate, then download the SNMP MIB files. Note SSL cert and installer are platform-specific.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">2</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">DEPLOY VM</div>
+        <div class="phase-step-title">Install the VM onto your hypervisor</div>
+        <div class="phase-step-text">After installation, the VSE instance shows up in the Virtual Service Edges page. Each VSE instance has its own SSL Certificate column you can re-download if needed.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">3</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">FORM CLUSTER</div>
+        <div class="phase-step-title">Virtual Service Edge Clusters → Add Cluster</div>
+        <div class="phase-step-text">A VSE cluster can contain a maximum of <strong>16 VSE instances</strong>. Click <em>Add Virtual Service Edge Cluster</em> → name, enable status, select instances, enter <strong>cluster IP, subnet mask, default gateway</strong>. Save. The cluster appears in the Virtual Service Edge Clusters page.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">4</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">DIRECT TRAFFIC</div>
+        <div class="phase-step-title">Point clients at the cluster VIP</div>
+        <div class="phase-step-text">Update PAC files / GRE / IPsec tunnel destinations to the cluster's VIP. The built-in load balancer fans traffic across active VSEs. Policies are downloaded from the ZIA Admin Portal automatically.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">i</div>LOGS REQUIRED FOR TROUBLESHOOTING</div>
+    <div class="callout-body">If you open a Zscaler Support case on a VSE, you need to attach: <strong>zscaler.log</strong> from <code>/sc/sme/log/</code> and <code>/sc/smlb/log/</code>, and <strong>autoupgrade.log</strong> from <code>/sc/update/log/</code>. Bundle these on every escalation.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Cluster max = <strong>16 instances</strong>. Cluster needs cluster IP / subnet / gateway. Required ZIA portal path: Administration → Virtual Service Edges → Clusters. Log paths for Support: <code>/sc/sme/log/zscaler.log</code> · <code>/sc/smlb/log/zscaler.log</code> · <code>/sc/update/log/autoupgrade.log</code>. SSL cert is platform-specific and per-instance.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-deploy" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('deploy','Section 3 — Deploy &amp; Cluster')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-deploy" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('deploy')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 4 — UC POLICY -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · UC #1 — POLICIES NOT GETTING APPLIED</span>
+  </div>
+  <p class="socratic-insight">Traffic is passing through the VSE, but the policies you defined in the ZIA Admin Portal aren't being applied. The VSE downloads policy from Zscaler periodically — so where does this break down?</p>
+  <ul class="socratic-questions">
+    <li>The <code>sudo vzen troubleshoot connection</code> output shows <strong>cloud-config: Suspicious</strong>. What does "Suspicious" actually mean, and is that the root cause or a symptom?</li>
+  </ul>
+  <div class="answer-area" data-section="uc-policy">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">"Suspicious" means there was at least one disconnection to the Zscaler Certificate Authority (CA) in the last two hours — the VSE momentarily lost the ability to download policy / verify identity. It's a symptom, not a root cause: the underlying cause is a network or firewall issue between the VSE and the Zscaler CA. "Not Present" is worse — the VSE cannot reach the CA at all. The fix is to verify outbound network reachability (DNS, firewall, proxy) and confirm cloud-config returns to <em>Stable</em>; until it does, policy stays stale.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-uc-policy">
+  <div class="section-tag">USE CASE 1</div>
+  <h2>Policies not getting applied when traffic is passing via VSE</h2>
+  <p><strong>Problem:</strong> You are passing traffic via the VSE, but the configured policies are not getting applied to your traffic.</p>
+
+  <div class="phase-steps">
+    <div class="phase-step">
+      <div class="phase-step-num">1</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">LOCATE</div>
+        <div class="phase-step-title">Confirm the policy doesn't fire on test traffic</div>
+        <div class="phase-step-text">Create a fresh <em>Block</em> policy in the ZIA Admin UI. Wait a few seconds for the VSE to download. Try the blocked website. The website is still allowed → policy is not propagating to the VSE.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">2</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">ISOLATE</div>
+        <div class="phase-step-title">Run vzen troubleshoot connection on the VSE</div>
+        <div class="phase-step-text">SSH to the VSE and run <code>sudo vzen troubleshoot connection</code>. In an ideal state, the cloud-config section shows <strong>Stable</strong>. If you see <strong>Suspicious</strong> → at least one disconnect to the Zscaler CA in the last 2 hours. <strong>Not Present</strong> → VSE can't reach the CA at all to download policies.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">3</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">DIAGNOSE</div>
+        <div class="phase-step-title">Restore CA connectivity</div>
+        <div class="phase-step-text">Verify DNS resolution and firewall rules permit outbound to the Zscaler CA endpoints, restart the VSE / vzen service if needed, then re-run <code>sudo vzen troubleshoot connection</code> until cloud-config = <em>Stable</em>. Policy download resumes automatically when the connection is healthy.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cli-block">[root@vzen-79-1-clust-depl /sc/sme]# vzen troubleshoot connection
+cloud-config:
+    [ 10.66.79.2:5247 -&gt; 10.10.104.21:9422 ] : <span class="cmt">Suspicious</span>
+log-stream:
+    [ 10.66.79.2:23359 -&gt; 10.10.104.22:9431 ] : <span class="cmt">Suspicious</span>
+SMBA:  ...  LB Status:
+cloud-config:
+    [ 10.66.79.3:7871 -&gt; 10.10.104.21:9422 ] : <span class="cmt">Suspicious</span></div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">First diagnostic for VSE policy issues: <code>sudo vzen troubleshoot connection</code>. cloud-config states = <strong>Stable</strong> (good) · <strong>Suspicious</strong> (≥1 disconnect to Zscaler CA in last 2 hours) · <strong>Not Present</strong> (cannot reach CA at all = no policy download). Fix outbound network to Zscaler CA before chasing anything else.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-uc-policy" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('uc-policy','UC 1 — Policies Not Applied')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-uc-policy" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('uc-policy')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 5 — UC WEBLOG -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · UC #2 — TRAFFIC IS FINE, LOGS ARE MISSING</span>
+  </div>
+  <p class="socratic-insight">The VSE is processing user traffic and the right policies are applying — but transactions never show up in Web Insight Logs. If traffic works, why would logs disappear?</p>
+  <ul class="socratic-questions">
+    <li>The <code>smmgr</code> output shows <code>WEBLOGDISABLE</code> with value 32604. What does this single feature flag tell you, and why might Zscaler ship VSEs with weblogs deliberately disabled?</li>
+    <li>Once you've ruled out the WEBLOGDISABLE flag, what's the second suspect — and why is it about a config name rather than the VSE itself?</li>
+  </ul>
+  <div class="answer-area" data-section="uc-weblog">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">It tells you weblogs have been explicitly disabled on this VSE — usually because of regulatory or privacy requirements at the customer site (data residency, sensitive industry), or because the customer is intentionally pushing logs to a different destination. The fix isn't to flip a CLI switch yourself — open an Ops ticket to request enablement, because the disable is often deliberate.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Check the ZSCM-side configuration: "Nanolog Cluster for VZEN to Forward Logs to" must be set to <code>default_cloudrouter.&lt;cloudname&gt;.net</code>. If the value is wrong, the VSE is dutifully forwarding logs — to the wrong destination — and they never land in Web Insight Logs. The issue is configuration, not the VSE process. Always validate this string before raising a logging case with Support.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-uc-weblog">
+  <div class="section-tag">USE CASE 2</div>
+  <h2>Logs of traffic processed by VSE are not seen on Web Insight Logs</h2>
+  <p><strong>Problem:</strong> VSE can process the traffic and apply the correct policies, but the logs are not visible in the Web Insight Logs.</p>
+
+  <div class="phase-steps">
+    <div class="phase-step">
+      <div class="phase-step-num">1</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">LOCATE</div>
+        <div class="phase-step-title">Take a packet capture on the VSE</div>
+        <div class="phase-step-text">Initiate a pcap. If you don't see <em>any</em> packets being captured, the weblog feature has been explicitly disabled on the VSE.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">2</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">ISOLATE — Scenario A</div>
+        <div class="phase-step-title">Check WEBLOGDISABLE flag with smmgr</div>
+        <div class="phase-step-text">Run the smmgr feature-show command and grep for weblogdisable. If you see <code>WEBLOGDISABLE</code> with a value, weblogs are off. Open an Ops ticket to request enablement on the VSE — do not flip the flag manually.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">3</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">ISOLATE — Scenario B</div>
+        <div class="phase-step-title">Verify the Nanolog Cluster string on ZSCM</div>
+        <div class="phase-step-text">Check ZSCM for "<strong>Nanolog Cluster for VZEN to Forward Logs to</strong>". The correct value is <code>default_cloudrouter.&lt;cloudname&gt;.net</code>. If anything else is set, logs are routed away from Web Insight Logs.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">4</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">DIAGNOSE</div>
+        <div class="phase-step-title">Decide which side to escalate</div>
+        <div class="phase-step-text">Scenario A → open Zscaler Ops ticket to enable weblogs (often deliberate). Scenario B → correct the cloudrouter string on the ZSCM and wait for sync.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="vse-weblog-disable-cli.png" alt="VSE weblog disable CLI output">
+    <div class="screenshot-caption">Output of the smmgr feature-show command. <code>WEBLOGDISABLE</code> appears with value <code>32604</code> — confirming weblogs are explicitly disabled on this VSE. Don't try to flip it locally; raise an Ops ticket.</div>
+  </div>
+
+  <div class="cli-block">/sc/sme/bin/smmgr -ys show=feature |egrep -i weblogdisable
+//+SHARED MEMORY KEY 17 (/sc/sme/)
+32604               WEBLOGDISABLE      <span class="cmt">&lt;&lt;&lt; Weblog is disabled</span></div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Logs missing but traffic OK = two suspects. <strong>Scenario A:</strong> WEBLOGDISABLE feature flag set on VSE (smmgr feature-show |grep WEBLOGDISABLE) → open Ops ticket, don't toggle manually. <strong>Scenario B:</strong> wrong "Nanolog Cluster for VZEN to Forward Logs to" config on ZSCM — must be <code>default_cloudrouter.&lt;cloudname&gt;.net</code>.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-uc-weblog" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('uc-weblog','UC 2 — Logs Missing')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-uc-weblog" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('uc-weblog')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 6 — UC VIP -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · UC #3 — VIP DOWN ACROSS THE CLUSTER</span>
+  </div>
+  <p class="socratic-insight">A customer has VZEN 1 and VZEN 2 in a cluster (Master-Backup) on ESXi. Users can't reach the internet through the VIP. <code>smmgr -ys show=smlbclusters</code> shows BOTH VZENs in <strong>backup</strong> state. There's no master. How does that happen, and what's the symmetric way to fix it?</p>
+  <ul class="socratic-questions">
+    <li>Why would BOTH cluster members elect themselves as backup? What does that tell you about the heartbeat / cluster-keepalive path?</li>
+    <li>Two scenarios appear in the troubleshooting flow — TCP 9431 blocked by an intermediate firewall, and VZEN running on very old build. Why are those the most common root causes for VIPless-clusters, and how do you tell them apart?</li>
+  </ul>
+  <div class="answer-area" data-section="uc-vip">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Both VZENs going to backup means each one failed to see heartbeats from the other and from the SMBA peer over the cluster keepalive channel. Without a master election, neither node owns the VIP — so traffic to the VIP has nowhere to land. The cluster control path is broken between them or to SMBA; the data path may be fine. This is almost always a network or version problem, not a workload problem.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Cluster control uses <strong>TCP 9431</strong>. If an intermediate firewall blocks that port, neither node can see the other's keepalives, so both fall to backup. Open a pcap on both VZENs and confirm TCP 9431 is reaching them — if the TTL on RST packets is ~62, an intermediate device is killing the connection. The second scenario is that the VZEN is running on a very old build that has a known bug — the fix is to force-upgrade by running the upgrade script against the latest build. Tell them apart by checking the build first; if it's current, escalate to the firewall.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-uc-vip">
+  <div class="section-tag">USE CASE 3</div>
+  <h2>Internet not accessible through VIP while using VZEN 1 and VZEN 2</h2>
+  <p><strong>Problem:</strong> Customer has VZEN 1 and VZEN 2 deployed in a Master-Backup cluster on ESXi. Users are unable to access internet using the VIP IP. Running <code>/sc/smlb/bin/smmgr -ys show=smlbclusters</code> on both VZENs shows both in <em>backup</em> state.</p>
+
+  <div class="screenshot-embed">
+    <img src="vse-vip-issue-scenario.png" alt="VSE VIP cluster issue scenario card">
+    <div class="screenshot-caption">The four-phase scenario card. Problem → Locate → Isolate → Diagnose. Both VZENs in backup state = nobody owns the VIP, so internet access via the cluster IP fails.</div>
+  </div>
+
+  <div class="phase-steps">
+    <div class="phase-step">
+      <div class="phase-step-num">1</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">LOCATE</div>
+        <div class="phase-step-title">Confirm both nodes are in backup</div>
+        <div class="phase-step-text">SSH to both VZENs. Run <code>/sc/smlb/bin/smmgr -ys show=smlbclusters</code>. If both report backup, neither owns the VIP and the issue is at the cluster control plane.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">2</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">ISOLATE</div>
+        <div class="phase-step-title">Two root causes — firewall vs old build</div>
+        <div class="phase-step-text">The cluster keepalive uses <strong>TCP 9431</strong> between the VSE and the SMBA peer. Two reasons it might fail: (1) intermediate firewall is blocking TCP 9431; (2) VZEN is running on a very old build with a cluster bug.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">3</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">DIAGNOSE — Firewall</div>
+        <div class="phase-step-title">Validate IPs, ports, protocols and SMBA reachability</div>
+        <div class="phase-step-text">Verify IPs / ports / protocols required for the customer's perimeter device. Collect a packet capture on the management + service interfaces of the VSE and analyze for RST packets. RST packets with <strong>TTL ~62</strong> indicate an intermediate firewall is killing the TCP 9431 stream. Open pcap-side-by-side on both VZENs; look for the cluster heartbeats; check the Time-To-Live on the RST.</div>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">4</div>
+      <div class="phase-step-body">
+        <div class="phase-step-label">DIAGNOSE — Old build</div>
+        <div class="phase-step-title">Force-upgrade the VZEN</div>
+        <div class="phase-step-text">Run pcaps on management + service interfaces. If you see the CA resetting connections after successful TCP and SSL handshakes, you're upgrading. Method 1: run upgrade-script <code>sudo /sc/update/run_mgmt.sh 0</code> — if normal run silently completes, you're done; otherwise <code>tail -f /sc/update/log/autoupgrade.log</code>. Method 2: force-upgrade to latest build via <code>sudo vzen force-upgrade</code> — shows real-time progress.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">i</div>WHY TTL ~62 IS THE FINGERPRINT</div>
+    <div class="callout-body">Linux defaults TTL to 64 for outgoing packets. After one intermediate hop (a firewall doing TCP RST injection on policy block) decrements TTL and re-emits the RST, you see the reset arrive at the VSE with a TTL ~62 instead of the expected ~64. That two-hop drop in TTL is the smoking gun pointing at an in-line firewall rather than a peer-issued reset.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Both VZENs in backup state = no VIP master → internet via cluster IP fails. Diagnostic command: <code>/sc/smlb/bin/smmgr -ys show=smlbclusters</code>. Cluster control port = <strong>TCP 9431</strong>. RST with <strong>TTL ~62</strong> = intermediate firewall blocking. Fix paths: (a) open the firewall for 9431; (b) force-upgrade VZEN via <code>sudo vzen force-upgrade</code> if old build.</div>
+    </div>
+  </div>
+
+  <div class="analogy-box">
+    <div class="analogy-label">Analogy</div>
+    <div class="analogy-text">Both VZENs going to backup is like two co-pilots in separate cockpits who can't hear each other over the radio — each one assumes the other is flying the plane, so neither takes the controls. The radio (TCP 9431) might be blocked by a stationmaster (firewall) cutting the call short, or the radio itself might be a 30-year-old model the airline never upgraded (old build). Either way, the plane has no pilot until you restore the channel.</div>
+    <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+      <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+      <div class="prompt-content" hidden>Three-panel cartoon: Panel 1 labelled "Healthy Cluster" shows two side-by-side cockpits ("VZEN 1 — Master", "VZEN 2 — Backup") with a clear radio wave between them labelled "TCP 9431 keepalive"; one pilot has hands on controls. Panel 2 labelled "Firewall Block" shows a stern stationmaster figure with a STOP sign cutting the radio wave between the cockpits; both pilots wear confused hats and label boxes overhead read "Both → BACKUP"; tag "TTL ~62 on RST". Panel 3 labelled "Old Build" shows the same two cockpits but with a vintage radio labelled "Old build" emitting static; a small caption "Run sudo vzen force-upgrade". Modern flat cartoon style, minimal text labels only where needed, educational infographic feel, modern tech-analogy aesthetic</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-uc-vip" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('uc-vip','UC 3 — VIP Down')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-uc-vip" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('uc-vip')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .main-content -->
+
+<aside>
+  <a class="hub-back" href="edu-260-use-cases-hub.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    EDU-260 Use Cases Hub
+  </a>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS</div>
+    <ul class="checklist">
+      <li class="check-item" onclick="toggleDone(this,'check-1')"><input type="checkbox" id="check-1" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> VSE Overview</li>
+      <li class="check-item" onclick="toggleDone(this,'check-2')"><input type="checkbox" id="check-2" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> PSE vs VSE</li>
+      <li class="check-item" onclick="toggleDone(this,'check-3')"><input type="checkbox" id="check-3" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> Deploy &amp; Cluster</li>
+      <li class="check-item" onclick="toggleDone(this,'check-4')"><input type="checkbox" id="check-4" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> UC · Policies Not Applied</li>
+      <li class="check-item" onclick="toggleDone(this,'check-5')"><input type="checkbox" id="check-5" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> UC · Logs Missing</li>
+      <li class="check-item" onclick="toggleDone(this,'check-6')"><input type="checkbox" id="check-6" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)"> UC · Internet via VIP Down</li>
+    </ul>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="quick-ref">
+    <div class="quick-ref-title">KEY TERMS</div>
+    <div class="qr-term"><div class="qr-label">VSE / VZEN</div><div class="qr-def">Virtual Service Edge — customer-deployed VM running the full Public Service Edge software.</div></div>
+    <div class="qr-term"><div class="qr-label">PSE</div><div class="qr-def">Private Service Edge — physical appliance version of the same concept (≥2 per site).</div></div>
+    <div class="qr-term"><div class="qr-label">vzen troubleshoot connection</div><div class="qr-def">CLI to check cloud-config state: Stable / Suspicious / Not Present.</div></div>
+    <div class="qr-term"><div class="qr-label">AS_SSL</div><div class="qr-def">SSL accelerator recommended for VSE — ~50 Mbps full inspection per VM.</div></div>
+    <div class="qr-term"><div class="qr-label">Cluster max</div><div class="qr-def">16 VSE instances per cluster; cluster IP / subnet / gateway set during creation.</div></div>
+    <div class="qr-term"><div class="qr-label">TCP 9431</div><div class="qr-def">Cluster keepalive port between VZENs. Block it → both nodes go to backup.</div></div>
+    <div class="qr-term"><div class="qr-label">WEBLOGDISABLE</div><div class="qr-def">Feature flag on VSE; when set, weblogs go to <code>/dev/null</code> from the VSE.</div></div>
+    <div class="qr-term"><div class="qr-label">Logs for Support</div><div class="qr-def"><code>/sc/sme/log/zscaler.log</code> · <code>/sc/smlb/log/zscaler.log</code> · <code>/sc/update/log/autoupgrade.log</code></div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div>EDU-260 · <span>Use Cases</span></div>
+  <div>Lesson 10 — Virtual Service Edge</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu-260-uc-10-virtual-service-edge';
+const SECTIONS={
+  'overview':'Section 1 — VSE Overview',
+  'pse-vs-vse':'Section 2 — PSE vs VSE',
+  'deploy':'Section 3 — Deploy & Cluster',
+  'uc-policy':'UC 1 — Policies Not Applied',
+  'uc-weblog':'UC 2 — Logs Missing',
+  'uc-vip':'UC 3 — Internet via VIP Down'
+};
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();ns.push({id:Date.now(),section:key,sectionName:SECTIONS[key]||key,text});saveNotesArr(ns);ta.value='';renderNotesPanel();if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function getQArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQArr(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const qs=getQArr();qs.push({id:Date.now(),section:key,sectionName:name,text});saveQArr(qs);ta.value='';renderQPanel();if(!document.getElementById('qpanel-body').classList.contains('open'))toggleQPanel();}
+function deleteQ(id){saveQArr(getQArr().filter(q=>q.id!==id));renderQPanel();}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function renderQPanel(){const qs=getQArr();const count=document.getElementById('qpanel-count');if(count){count.textContent=qs.length;count.style.display=qs.length?'inline':'none';}const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!body)return;if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));qs.forEach(q=>{if(groups[q.section])groups[q.section].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQ(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=PAGE_KEY+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+function navTo(id){const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}const ids=['section-overview','section-pse-vs-vse','section-deploy','section-uc-policy','section-uc-weblog','section-uc-vip'];document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));}
+function toggleDone(li,id){const cb=li.querySelector('input[type="checkbox"]');const checked=!cb.checked;cb.checked=checked;li.classList.toggle('done',checked);localStorage.setItem(PAGE_KEY+'-check-'+id,checked);}
+function initChecks(){document.querySelectorAll('.check-item').forEach(function(li){const cb=li.querySelector('input[type="checkbox"]');if(!cb)return;if(localStorage.getItem(PAGE_KEY+'-check-'+cb.id)==='true'){cb.checked=true;li.classList.add('done');}});}
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();renderNotesPanel();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){const key=PAGE_KEY+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;area.querySelector('.btn-add-answer').textContent='✓ Answer saved';area.querySelector('.btn-add-answer').disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
+  document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
+  document.querySelectorAll('.analogy-img img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  document.querySelectorAll('.screenshot-embed img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  setTimeout(function(){document.body.style.opacity='1';document.body.style.transition='opacity 0.35s ease';},10);
+  document.querySelectorAll('a[href]').forEach(function(a){a.addEventListener('click',function(){if(a.hostname===location.hostname)sessionStorage.setItem('pt','1');});});
+});
+</script>
+</body>
+</html>

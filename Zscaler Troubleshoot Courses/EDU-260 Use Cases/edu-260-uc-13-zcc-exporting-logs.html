@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZCC — Exporting Logs · Lesson 13 — EDU-260 Use Cases</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#fff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;--blue-deep:#0f3d7a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html.pt-init body{opacity:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{background:#0d1a2e;color:#fff;padding:28px 40px 32px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:#93c5fd;letter-spacing:0.06em;margin-bottom:20px;flex-wrap:wrap;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;opacity:0.8;}
+.breadcrumb a:hover{opacity:1;text-decoration:underline;}
+.breadcrumb-sep{opacity:0.5;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.eyebrow-chip{background:rgba(147,197,253,0.15);border:1px solid rgba(147,197,253,0.3);color:#93c5fd;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:4px 12px;border-radius:20px;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:#93c5fd;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+h1{font-family:'Fraunces',serif;font-size:42px;font-weight:700;line-height:1.1;color:#fff;margin-bottom:4px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-top:6px;letter-spacing:0.03em;}
+.motivation-banner{background:#1e3a5c;border-bottom:1px solid rgba(147,197,253,0.15);padding:14px 40px;}
+.motivation-text{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.6;}
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.qpanel{background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 24px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 24px 22px;}
+.qpanel-body.open{display:block;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+.no-questions{font-size:12px;color:var(--text-muted);padding:10px 0;}
+.q-group{margin-bottom:14px;}
+.q-group-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:8px;}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-num{font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0;margin-top:2px;}
+.q-text{font-size:13px;color:var(--text-soft);flex:1;line-height:1.5;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 4px;flex-shrink:0;}
+.q-del:hover{color:var(--red);}
+.section-nav{display:flex;gap:2px;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:10;}
+.nav-tab{background:none;border:1px solid transparent;border-radius:8px;padding:6px 14px;font-family:'Epilogue',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.nav-tab:hover{background:var(--surface-2);color:var(--text);}
+.nav-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;flex:1;}
+.main-content{padding:32px 40px;min-width:0;}
+aside{padding:28px 24px;border-left:1px solid var(--border);position:sticky;top:45px;height:calc(100vh - 45px);overflow-y:auto;background:var(--surface);}
+.section-block{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border-dim);}
+.section-block:last-child{border-bottom:none;}
+.section-tag{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--blue);margin-bottom:8px;}
+h2{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:16px;}
+h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 10px;}
+p{font-size:14px;line-height:1.75;color:var(--text-soft);margin-bottom:12px;}
+ul,ol{padding-left:20px;margin-bottom:12px;}
+li{font-size:13.5px;line-height:1.7;color:var(--text-soft);margin-bottom:4px;}
+code{background:var(--surface-2);border:1px solid var(--border-dim);border-radius:4px;padding:1px 6px;font-size:12.5px;font-family:'SF Mono',Menlo,monospace;color:var(--blue-deep);}
+.info-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:16px 0;}
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.info-card-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:6px;}
+.info-card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.info-card-desc{font-size:12px;color:var(--text-muted);line-height:1.6;}
+.phase-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:16px 0;counter-reset:step;}
+.phase-step{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;}
+.phase-step::before{counter-increment:step;content:counter(step);position:absolute;top:-10px;left:14px;background:var(--blue);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.phase-step-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--blue);margin:6px 0 4px;}
+.phase-step-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.phase-step-desc{font-size:12px;color:var(--text-muted);line-height:1.55;}
+.callout{border-radius:10px;padding:14px 16px;margin:16px 0;border-left:3px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.14em;margin-bottom:6px;}
+.callout-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.65;color:var(--text-soft);}
+.callout-tip{background:var(--blue-glow);border-color:var(--blue);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-tip .callout-icon{background:rgba(26,109,204,0.15);color:var(--blue);}
+.callout-warn{background:#fef9ec;border-color:#b45309;}
+.callout-warn .callout-header{color:#b45309;}
+.callout-warn .callout-icon{background:rgba(180,83,9,0.15);color:#b45309;}
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;transform:scale(1.5);transform-origin:top left;transition:transform 0.2s ease;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+.img-missing-msg{padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:24px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.tool-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:72px;outline:none;line-height:1.6;}
+.tool-textarea:focus{border-color:var(--blue);}
+.tool-row{margin-top:8px;text-align:right;}
+.btn-add-q{background:#0d1a2e;color:#93c5fd;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:24px;}
+.sidebar-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:10px;}
+.hub-back{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:10px 16px;border-radius:10px;transition:opacity 0.15s;margin-bottom:20px;}
+.hub-back:hover{opacity:0.88;}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.check-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-soft);padding:6px 10px;border-radius:8px;cursor:pointer;transition:background 0.12s;}
+.check-item:hover{background:var(--surface-2);}
+.check-item input{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.check-item.done{color:var(--text-muted);text-decoration:line-through;}
+.sidebar-divider{height:1px;background:var(--border);margin:18px 0;}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:16px;}
+.quick-ref-title{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#93c5fd;margin-bottom:12px;}
+.qr-term{margin-bottom:10px;}
+.qr-label{font-size:10px;font-weight:700;color:#93c5fd;letter-spacing:0.08em;}
+.qr-def{font-size:11.5px;color:rgba(255,255,255,0.65);line-height:1.55;margin-top:2px;}
+footer{background:#0d1a2e;color:rgba(255,255,255,0.45);font-size:11px;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.04em;}
+footer span{color:#93c5fd;}
+@media(max-width:900px){main{grid-template-columns:1fr;}aside{display:none;}.main-content{padding:24px 20px;}header,footer{padding:24px 20px;}.motivation-banner{padding:12px 20px;}.section-nav{padding:8px 16px;}.lesson-tools-grid{grid-template-columns:1fr;}.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../troubleshoot-hub.html">Zscaler Troubleshoot Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="edu-260-use-cases-hub.html">EDU-260 Use Cases</a>
+    <span class="breadcrumb-sep">›</span>
+    ZCC — Exporting Logs
+  </div>
+  <div class="eyebrow">
+    <span class="eyebrow-chip">EDU-260 · LESSON 13</span>
+    <span class="header-dot"></span>
+  </div>
+  <h1>ZCC — Exporting <em>Logs</em></h1>
+  <div class="header-sub">Collecting log bundles, packet captures, and connector evidence from the client side</div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">"Every ZCC failure has a fingerprint on disk. Knowing exactly where to copy it from — and what to ship with it — is what turns a vague complaint into a solved ticket."</div>
+</div>
+
+<div class="top-panels">
+  <div class="qpanel" id="qpanel">
+    <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+      <span class="qpanel-title">MY QUESTIONS</span>
+      <span class="qpanel-count" id="qpanel-count">0</span>
+      <span class="qpanel-hint">— click to expand</span>
+      <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+    </button>
+    <div class="qpanel-body" id="qpanel-body"></div>
+  </div>
+  <div class="notes-panel" id="notes-panel">
+    <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+      <span class="notes-panel-title">MY NOTES</span>
+      <span class="notes-panel-count" id="notes-panel-count">0</span>
+      <span class="notes-panel-hint">— click to expand</span>
+      <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+    </button>
+    <div class="notes-panel-body" id="notes-panel-body"></div>
+  </div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-zcc-export')">1 · Export ZCC Logs</button>
+  <button class="nav-tab" onclick="navTo('section-app-connector')">2 · App Connector Logs</button>
+  <button class="nav-tab" onclick="navTo('section-performance')">3 · Performance Triage</button>
+  <button class="nav-tab" onclick="navTo('section-wireshark')">4 · Wireshark Recipes</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- SECTION 1 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · EXPORTING ZCC LOGS</span>
+  </div>
+  <p class="socratic-insight">The Zscaler Client Connector log export is the single most useful artifact you can hand to Zscaler support. It captures authentication state, posture results, tunnel decisions, and per-app session attempts — all from the user's actual device, at the moment of failure. But it only works as evidence if it's collected at the right time.</p>
+  <ul class="socratic-questions">
+    <li>If a user encounters a ZCC issue and immediately hits "Export Logs" from the system tray, what does the export contain — and what's missing if they wait an hour?</li>
+    <li>Why does the recommended workflow ask you to start a packet capture <em>before</em> reproducing the problem, even though the ZCC log will already show the problem on its own?</li>
+  </ul>
+  <div class="answer-area" data-section="zcc-export">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">An immediate export captures the live tunnel state, the most recent authentication and posture transactions, and the rolling log buffer with the failure inside it. Wait an hour and that buffer rolls over: a busy ZCC easily writes through its log limit, the relevant lines age out, and you're left with logs that show only "things are working now". Worse, if the user logs out and back in, the failure event may be permanently lost. Speed of capture matters more than completeness of analysis at the moment.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">The ZCC log shows ZCC's view of events — but if the failure is on the wire (a SYN that gets no SYN-ACK, an RST from an upstream firewall, a TLS handshake that's reset), ZCC just sees "the connection failed". A parallel packet capture shows the actual bytes: was there a SYN-ACK? Was there a TCP reset, and with which TTL? That's why support recommends running both: ZCC tells you what was attempted; the PCAP tells you what was returned.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-zcc-export">
+  <div class="section-tag">SECTION 1</div>
+  <h2>Exporting Zscaler Client Connector Logs</h2>
+  <p>The ZCC log export is the canonical "bundle for support" from the user's device. The workflow is: collect logs first by clearing and starting a packet capture, then reproduce the problem, then export the logs for support.</p>
+
+  <div class="screenshot-embed">
+    <img src="zcc-log-export-steps.png" alt="Zscaler Client Connector Log export procedure — collect logs by clearing first, start packet capture, reproduce, then export ZCC log file from system tray; also covers App Connector log collection over SSH with reproduce-and-bundle pattern">
+    <div class="screenshot-caption">The full ZCC and App Connector log-export procedure as documented in the course: clear logs · start the packet capture · reproduce the problem · export ZCC log via the system tray icon · for ZPA App Connector access, SSH in as admin and run journalctl with reproduce-and-bundle.</div>
+  </div>
+
+  <h3>Procedure</h3>
+  <div class="phase-steps">
+    <div class="phase-step">
+      <div class="phase-step-label">STEP 1</div>
+      <div class="phase-step-title">Clear logs</div>
+      <div class="phase-step-desc">From a clean baseline. Everything from here is causally tied to the reproduction.</div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-label">STEP 2</div>
+      <div class="phase-step-title">Start packet capture</div>
+      <div class="phase-step-desc">Wireshark on Windows/macOS or tcpdump on Linux. Save to disk with a recognisable filename.</div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-label">STEP 3</div>
+      <div class="phase-step-title">Reproduce</div>
+      <div class="phase-step-desc">Do the exact action the user reported failing. Note the wall-clock time.</div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-label">STEP 4</div>
+      <div class="phase-step-title">Export logs</div>
+      <div class="phase-step-desc">Right-click the ZCC tray icon → Export Logs. Stop the packet capture.</div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-label">STEP 5</div>
+      <div class="phase-step-title">Bundle and submit</div>
+      <div class="phase-step-desc">ZCC log zip + PCAP + screenshot + timestamp + user identifier. Attach to ticket.</div>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">i</div>WHY THIS ORDER</div>
+    <div class="callout-body">Capturing the packet trace <em>before</em> the export means the PCAP and the ZCC log share a timestamp range. Support correlates "this failed ZCC session" against "this TLS handshake that got an RST" in seconds — instead of trying to align two artifacts that overlap by accident.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">ZCC log export = right-click tray icon → Export Logs. Pre-export order: clear → PCAP-on → reproduce → export → PCAP-off → bundle. Submit ZCC log + PCAP + screenshot + timestamp + user ID. Speed matters; the log buffer rolls over.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-zcc-export" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zcc-export','Section 1 — Export ZCC Logs')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-zcc-export" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('zcc-export')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 2 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · APP CONNECTOR LOGS</span>
+  </div>
+  <p class="socratic-insight">App Connector log collection happens over SSH on the connector itself, not from the ZPA admin portal. That's a deliberate design choice: when a connector is unhealthy, the admin portal sees only "Disconnected" — but the connector still has detailed local logs about <em>why</em> it disconnected.</p>
+  <ul class="socratic-questions">
+    <li>If an App Connector shows "Disconnected" in the ZPA admin portal but ping to the connector's IP from your laptop succeeds, what does that combination tell you?</li>
+    <li>Why is "free up space on /opt/zscaler" a frequent first remediation step for App Connector failures?</li>
+  </ul>
+  <div class="answer-area" data-section="app-connector">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">It tells you the connector host is up and reachable, but its outbound tunnel to the upstream ZPA Public Service Edge has broken. The connector dials out — it doesn't accept inbound from ZPA — so it can be perfectly responsive on its own subnet while completely unable to register. The next step is to verify the connector's outbound path: DNS resolves to broker.prod.zpath.net, and the firewall match goes to the ZPA range config.zscaler.com/private.zscaler.com/zpa.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Upgrade failures often leave behind copies of /opt/zscaler/var/version and /opt/zscaler/var/updater.version that fill the connector's small partition. Once the disk is full, the connector can't write logs, can't complete upgrades, and may fail to start the tunnel. Clearing extra version directories and removing /opt/zscaler/var/image.bin reclaims space and lets the connector recover without a full reinstall.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-app-connector">
+  <div class="section-tag">SECTION 2</div>
+  <h2>App Connector — Common Issues & Logs</h2>
+  <p>App Connectors are Linux hosts deployed close to the private application. Most issues fall into two buckets: <strong>Upgrade Failure</strong> (disk full, stale binaries) and <strong>Disconnected</strong> (outbound path to the ZPA Public Service Edge has broken).</p>
+
+  <div class="screenshot-embed">
+    <img src="common-app-connector-issues.png" alt="Common App Connector Issues table: Upgrade Failure remediated by collecting outputs from sudo cat /opt/zscaler/var/version and /etc/yum/repos, freeing space in /opt/zscaler, deleting stale image binaries; Disconnected resolved by testing upstream ZPA Public Service Edge connectivity to broker.prod.zpath.net and verifying firewall match against ZPA IP ranges">
+    <div class="screenshot-caption">The course's reference table for the two most common App Connector failures and their remediation steps — Upgrade Failure (collect version outputs, free disk space, delete stale image binaries) and Disconnected (test upstream Service Edge connectivity, verify firewall match against ZPA IP ranges).</div>
+  </div>
+
+  <h3>App Connector Log Collection (over SSH)</h3>
+  <ol>
+    <li>SSH into the App Connector as admin.</li>
+    <li>Initiate packet capture: <code>tcpdump -i &lt;iface&gt; -w /var/log/messages/&lt;relevant_file_name&gt; &lt;filter&gt;</code></li>
+    <li>Press <strong>Ctrl+C</strong> on the App Connector to stop the packet capture once the issue has been reproduced.</li>
+    <li>Enter the journal command: <code>cd /var/tmp</code> then run <code>journalctl -p info --since &lt;time&gt; &gt; journal_logs.txt</code></li>
+    <li>Run the command <code>cat /var/log/messages/*</code> and copy the messages from the last 2 minutes of the duration when the test was made — paste into your local machine to share with support.</li>
+    <li>Upload ZCC exported logs, connector logs (PCAPs) and journal logs to <code>https://tools.zscaler.com/upload</code> (password <code>P5Fg9SNCVxpLqUFJ</code>) and once done, share the link.</li>
+  </ol>
+
+  <div class="callout callout-warn">
+    <div class="callout-header"><div class="callout-icon">!</div>UPGRADE FAILURE — RECOVERY</div>
+    <div class="callout-body">Collect <code>sudo cat /opt/zscaler/var/version</code>, <code>sudo ls /etc/yum/repos.d/zscaler.repo</code>, and <code>sudo /opt/zscaler/var/updater.version</code>. If the connector can't download a new image because disk is full, delete extra version directories and <code>/opt/zscaler/var/image.bin</code> to free space.</div>
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-header"><div class="callout-icon">!</div>DISCONNECTED — RECOVERY</div>
+    <div class="callout-body">Test connectivity to the upstream <strong>ZPA Public Service Edge</strong> by reaching <code>broker.prod.zpath.net</code> from the connector. Verify the connector's source IP is in the firewall match against the ZPA range at <code>config.zscaler.com/private.zscaler.com/zpa</code>.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Two main App Connector failures: Upgrade Failure (disk-full and stale binaries — free /opt/zscaler, delete image.bin) and Disconnected (broker.prod.zpath.net unreachable — verify outbound firewall). App Connector logs come from journalctl + tcpdump over SSH, NOT from the ZPA admin portal. Upload bundle: tools.zscaler.com/upload.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-app-connector" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('app-connector','Section 2 — App Connector Logs')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-app-connector" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('app-connector')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 3 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · PERFORMANCE TRIAGE</span>
+  </div>
+  <p class="socratic-insight">"Performance is bad" is rarely a single problem. It's a vague symptom that resolves into one of several specific paths once you ask better questions: client to ZPA Service Edge, App Connector to ZPA Service Edge, or App Connector to the application server. Each path has its own diagnostic recipe.</p>
+  <ul class="socratic-questions">
+    <li>If a user reports slow access to ONE private app but other private apps work fine, which path is the most likely suspect — and which path can you essentially rule out?</li>
+  </ul>
+  <div class="answer-area" data-section="performance">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Other apps working fine means the client-to-Service-Edge path and the Service-Edge-to-Connector tunnel are healthy — those are shared by all private apps and would degrade together. The suspect path is App Connector to the specific application server: a ping test and ICMP MTR from the App Connector toward that server's IP, plus a packet capture on the App Connector while a user accesses the app, will isolate whether the slowness is on the connector-to-server leg or inside the application itself.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-performance">
+  <div class="section-tag">SECTION 3</div>
+  <h2>Performance Triage: 3 Paths, 3 Recipes</h2>
+  <p>Performance issues in a ZPA path could potentially reside on one of three legs. Each leg has its own troubleshooting recipe to isolate where the issue is originating from.</p>
+
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="info-card-label">PATH 1</div>
+      <div class="info-card-title">Client → ZPA Service Edge</div>
+      <div class="info-card-desc">Ping test · ICMP MTR · throughput test from a server near the Service Edge's geographic location · packet capture from the ZCC while accessing the application.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">PATH 2</div>
+      <div class="info-card-title">App Connector → ZPA Service Edge</div>
+      <div class="info-card-desc">Ping test · ICMP MTR from the App Connector. Confirms the connector's outbound tunnel leg is healthy.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">PATH 3</div>
+      <div class="info-card-title">App Connector → App Server</div>
+      <div class="info-card-desc">Ping test · ICMP MTR · packet capture from the App Connector while a user accesses the application. Isolates server-side issues.</div>
+    </div>
+  </div>
+
+  <h3>Client-Side Performance Sanity Check</h3>
+  <p>Before blaming Zscaler, run Task Manager on Windows clients. The Performance tab gives a quick read on whether the client itself is bottlenecking the experience — CPU, memory, disk, and Wi-Fi throughput in one view.</p>
+
+  <div class="screenshot-embed">
+    <img src="task-manager-throughput.png" alt="Windows Task Manager Performance tab showing Wi-Fi adapter throughput graph peaking at 50 Mbps during a 100 MB file download, with send 64 Kbps and receive 24 Kbps live readings and adapter details (Intel Wi-Fi 6 AX200 160 MHz, 802.11n)">
+    <div class="screenshot-caption">Windows Task Manager Performance tab — quick sanity check on whether the client itself is bottlenecking. Download a 100 MB test file (e.g. azurespeed.com) and watch the throughput graph and resource utilisation with and without Zscaler. Big drops with Zscaler enabled point to inspection load; equal drops in both cases point to the local network or device.</div>
+  </div>
+
+  <h3>The Performance Triage Questionnaire</h3>
+  <ul>
+    <li>Is this a <strong>new issue</strong> or an existing one?</li>
+    <li>Are <strong>other users</strong> affected? What's the common pattern among them?</li>
+    <li>What kind of <strong>internet link</strong> is the user connected to — ethernet, Wi-Fi?</li>
+    <li>Is the user accessing from a single location, or <strong>moving between locations</strong> (home, office, hotel)?</li>
+    <li>Is the issue <strong>regardless of location</strong> — does it follow a single user across networks?</li>
+    <li>Is the issue specific to a <strong>single app, single connector group</strong>, or present everywhere on ZPA?</li>
+    <li>Is the issue present <strong>when ZPA is not connected</strong> (i.e. accessing internet directly)? If yes, it's not ZPA.</li>
+    <li>Is there a different method of accessing the same application that shows similar symptoms?</li>
+    <li>Is there more than one internet link at the site? Does the issue change on the alternate link?</li>
+  </ul>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">i</div>NARROWING THE WINDOW</div>
+    <div class="callout-body">If the issue appears <em>only when ZPA is enabled</em>, the cause sits inside the ZPA path — work the three legs above. If the issue happens <em>also when ZPA is disconnected</em>, ZPA is innocent — the problem is the device, local network, or upstream ISP.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Performance issues live on one of three legs: (1) Client → ZPA Service Edge, (2) App Connector → ZPA Service Edge, (3) App Connector → App Server. Each leg's recipe = ping + ICMP MTR + PCAP. First triage question: does the problem persist with ZPA disconnected? If yes, ZPA is not the cause.</div>
+    </div>
+  </div>
+
+  <div class="analogy-box">
+    <div class="analogy-label">Analogy</div>
+    <div class="analogy-text">Triaging a slow ZPA path is like diagnosing a slow water tap with three pipe segments in series: the street main, the house feed, and the kitchen pipe. You don't replace the whole plumbing — you test each segment separately. If the street pressure is fine and the house feed is fine, then the kitchen pipe is the suspect. ZPA is the same: ping each leg, find the slow one, fix only that leg.</div>
+    <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+      <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+      <div class="prompt-content" hidden>Cartoon infographic of a three-segment water pipe running left to right with three labelled pressure gauges. Segment 1 labelled "Client to Service Edge" with a green gauge ("OK"). Segment 2 labelled "Service Edge to Connector" with a green gauge ("OK"). Segment 3 labelled "Connector to App Server" with a red gauge ("Slow") and a small drip at the end at a kitchen tap labelled "App". A friendly cartoon plumber stands beside segment 3 with a wrench, smiling. Bright clean cartoon style, minimal text labels only where needed, educational infographic feel, modern tech-analogy aesthetic.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-performance" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('performance','Section 3 — Performance Triage')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-performance" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('performance')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 4 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · WIRESHARK RECIPES</span>
+  </div>
+  <p class="socratic-insight">A packet capture without a filter is just noise. The course Appendices distill the seven most common Wireshark/packet-capture investigations into specific filter strings — each one designed to answer a specific question fast.</p>
+  <ul class="socratic-questions">
+    <li>If you see TCP retransmissions and RSTs coming back with a TTL that differs from the rest of the trace, what does that imply about <em>who</em> is sending the reset?</li>
+    <li>Why does the SSL-issues recipe filter for both <code>tls.handshake.type eq 1</code> and <code>frame contains xyz.com</code> together, rather than just one of them?</li>
+  </ul>
+  <div class="answer-area" data-section="wireshark">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">A different TTL on RST packets indicates the resets are originating from a different number of hops away than the legitimate traffic — meaning a middlebox (firewall, IPS, transparent proxy) is forging RSTs to tear down the session, while the real endpoint's packets travel a different distance. This is the classic signature of an inline policy device blocking the connection rather than the server refusing it. Same source IP, different TTL = forged reset.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Filtering only on TLS handshake type 1 gives every Client Hello in the trace — far too many to read. Filtering only on the hostname misses the Client Hello itself, which is unencrypted and contains the SNI you actually want to inspect. The compound filter narrows the result to the handshakes for the impacted hostname, so you immediately see the start of the failed TLS conversation and the response (or RST) that followed it.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-wireshark">
+  <div class="section-tag">SECTION 4</div>
+  <h2>Wireshark Recipes (Course Appendices 1–7)</h2>
+  <p>Seven targeted packet-capture investigations, each tied to a question you commonly need to answer when handing evidence to support.</p>
+
+  <h3>Appendix 1 — Connections to a Specific Website/IP</h3>
+  <ul>
+    <li>Filter HTTP requests: <code>http.request.method</code></li>
+    <li>Filter HTTPS Client Hellos: <code>tls.handshake.type eq 1</code></li>
+    <li>Specific IP: <code>ip.addr eq x.x.x.x</code></li>
+    <li>Apply <strong>host</strong> in the HTTP request column and <strong>Servername</strong> (SNI) in the Client Hello column. Right-click the request and <strong>Follow the TCP Stream</strong>.</li>
+  </ul>
+
+  <h3>Appendix 2 — Firewall or Local Network Blocks</h3>
+  <ul>
+    <li>Look for SYN packets to a specific IP with <strong>no SYN-ACK</strong> coming back.</li>
+    <li>Check for reset packets with a TTL <em>different</em> from the other packets received from Zscaler — a sign of a forged RST from an inline middlebox.</li>
+  </ul>
+
+  <div class="screenshot-embed">
+    <img src="wireshark-tcp-ttl-filter.png" alt="Wireshark packet list filtered on tcp.stream eq 157 showing a successful TLSv1.2 Client Hello and Server Hello followed by RST packets — the lower pane highlights Time to Live (TTL) 118 on the RST frame, which differs from the 128 TTL on the establishment packets, indicating the reset originated from a different hop count than the real endpoint">
+    <div class="screenshot-caption">A forged-RST signature in Wireshark: the TLS handshake establishes with TTL 128, but the reset packets arrive with TTL 118 — confirming the reset came from an inline device (firewall/IPS), not the actual server.</div>
+  </div>
+
+  <h3>Appendix 3 — DNS Issues</h3>
+  <ul>
+    <li>Filter for DNS protocol: <code>dns</code></li>
+    <li>Optional: <code>dns contains "xyz.com"</code> to scope to one domain.</li>
+    <li><strong>Follow the UDP Stream</strong> and check the DNS response for the resolved IP.</li>
+  </ul>
+
+  <div class="screenshot-embed">
+    <img src="wireshark-follow-udp-stream.png" alt="Wireshark packet list filtered to DNS traffic for a specific hostname, with right-click context menu open on a query showing the Follow → UDP Stream option highlighted — used to extract the full DNS query and response pair for the resolved IP">
+    <div class="screenshot-caption">Following a DNS UDP stream in Wireshark: filter for the DNS protocol (optionally narrowed by hostname), right-click a query, choose Follow → UDP Stream. The response reveals the resolved IP that the client actually used — a quick way to confirm DNS poisoning or split-DNS misconfig.</div>
+  </div>
+
+  <h3>Appendix 4 — SSL Issues</h3>
+  <ul>
+    <li>Filter for the impacted site: <code>tls.handshake.type eq 1</code> and <code>frame contains "xyz.com"</code></li>
+    <li>Follow the stream and look for SSL errors — certificate, Encrypted Alerts. SSL failures usually close with an RST or FIN-ACK immediately after the handshake messages.</li>
+  </ul>
+
+  <h3>Appendix 5 — File Download or Webpage Load Time</h3>
+  <ul>
+    <li>Apply Appendix 1 filter for the specific page or test file.</li>
+    <li>Right-click the request and Follow the TCP stream.</li>
+    <li><strong>Statistics → Capture File Properties → Statistics → Displayed</strong> — observe the time taken and average bits/s, with and without Zscaler.</li>
+  </ul>
+
+  <h3>Appendix 6 — Client Performance via Task Manager</h3>
+  <ul>
+    <li>Open Task Manager → Performance tab.</li>
+    <li>Download a 100 MB test file from azurespeed.com or any test site.</li>
+    <li>Monitor the throughput graph and download speed with and without Zscaler.</li>
+    <li>Track CPU, Memory, Disk utilisation in parallel.</li>
+  </ul>
+
+  <h3>Appendix 7 — Page Loading Time (Browser DevTools)</h3>
+  <ul>
+    <li>In Chrome: More tools → Developer tools (or <strong>Ctrl+Shift+I</strong>).</li>
+    <li>Start the trace and open the impacted site.</li>
+    <li>Click the relevant request and select the <strong>Timings</strong> tab.</li>
+    <li>Note DNS lookup time, SSL handshake, and response times.</li>
+  </ul>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">7 PCAP recipes: (1) Specific IP — <code>tls.handshake.type eq 1</code> + <code>ip.addr eq x.x.x.x</code>; (2) Firewall blocks — SYN without SYN-ACK; check RST TTL mismatch; (3) DNS — <code>dns</code> filter, Follow UDP Stream; (4) SSL — handshake + frame contains; (5) Download time — Statistics → Capture File Properties; (6) Client throughput — Task Manager + 100MB azurespeed; (7) Page load — DevTools Timings.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-wireshark" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('wireshark','Section 4 — Wireshark Recipes')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-wireshark" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('wireshark')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .main-content -->
+
+<aside>
+  <a class="hub-back" href="edu-260-use-cases-hub.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    EDU-260 Hub
+  </a>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS</div>
+    <ul class="checklist">
+      <li class="check-item" onclick="toggleDone(this,'check-1')">
+        <input type="checkbox" id="check-1" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">
+        Export ZCC Logs
+      </li>
+      <li class="check-item" onclick="toggleDone(this,'check-2')">
+        <input type="checkbox" id="check-2" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">
+        App Connector Logs
+      </li>
+      <li class="check-item" onclick="toggleDone(this,'check-3')">
+        <input type="checkbox" id="check-3" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">
+        Performance Triage
+      </li>
+      <li class="check-item" onclick="toggleDone(this,'check-4')">
+        <input type="checkbox" id="check-4" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">
+        Wireshark Recipes
+      </li>
+    </ul>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="quick-ref">
+    <div class="quick-ref-title">KEY TERMS</div>
+    <div class="qr-term">
+      <div class="qr-label">ZCC Log Export</div>
+      <div class="qr-def">Right-click tray icon → Export Logs. The canonical client-side evidence bundle.</div>
+    </div>
+    <div class="qr-term">
+      <div class="qr-label">broker.prod.zpath.net</div>
+      <div class="qr-def">Upstream ZPA Public Service Edge endpoint that App Connectors dial out to.</div>
+    </div>
+    <div class="qr-term">
+      <div class="qr-label">tcpdump / journalctl</div>
+      <div class="qr-def">App Connector log tools — capture traffic and pull last 2 min of system logs.</div>
+    </div>
+    <div class="qr-term">
+      <div class="qr-label">tools.zscaler.com/upload</div>
+      <div class="qr-def">Secure upload point for ZCC/connector log bundles to share with support.</div>
+    </div>
+    <div class="qr-term">
+      <div class="qr-label">3 Performance Paths</div>
+      <div class="qr-def">Client → SE · Connector → SE · Connector → App. Test each with ping, MTR, PCAP.</div>
+    </div>
+    <div class="qr-term">
+      <div class="qr-label">Forged RST</div>
+      <div class="qr-def">Reset packet with TTL different from the establishment packets = middlebox is blocking.</div>
+    </div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div>EDU-260 · <span>Use Cases</span></div>
+  <div>Lesson 13 — ZCC Exporting Logs</div>
+</footer>
+
+<script>
+const PAGE_KEY = 'edu-260-uc-13-zcc-exporting-logs';
+const SECTIONS = {
+  'zcc-export':    'Section 1 — Export ZCC Logs',
+  'app-connector': 'Section 2 — App Connector Logs',
+  'performance':   'Section 3 — Performance Triage',
+  'wireshark':     'Section 4 — Wireshark Recipes'
+};
+
+document.querySelectorAll('.socratic-header').forEach(function(h){
+  h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});
+});
+
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();ns.push({id:Date.now(),section:key,sectionName:SECTIONS[key]||key,text});saveNotesArr(ns);ta.value='';renderNotesPanel();if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+
+function getQArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQArr(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const qs=getQArr();qs.push({id:Date.now(),section:key,sectionName:name,text});saveQArr(qs);ta.value='';renderQPanel();if(!document.getElementById('qpanel-body').classList.contains('open'))toggleQPanel();}
+function deleteQ(id){saveQArr(getQArr().filter(q=>q.id!==id));renderQPanel();}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function renderQPanel(){const qs=getQArr();const count=document.getElementById('qpanel-count');if(count){count.textContent=qs.length;count.style.display=qs.length?'inline':'none';}const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!body)return;if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));qs.forEach(q=>{if(groups[q.section])groups[q.section].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQ(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=PAGE_KEY+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+
+function navTo(id){const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}const ids=['section-zcc-export','section-app-connector','section-performance','section-wireshark'];document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));}
+
+function toggleDone(li,id){const cb=li.querySelector('input[type="checkbox"]');const checked=!cb.checked;cb.checked=checked;li.classList.toggle('done',checked);localStorage.setItem(PAGE_KEY+'-check-'+id,checked);}
+function initChecks(){document.querySelectorAll('.check-item').forEach(function(li){const cb=li.querySelector('input[type="checkbox"]');if(!cb)return;if(localStorage.getItem(PAGE_KEY+'-check-'+cb.id)==='true'){cb.checked=true;li.classList.add('done');}});}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();renderNotesPanel();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){
+    const key=PAGE_KEY+'-socans-'+area.dataset.section;
+    try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;area.querySelector('.btn-add-answer').textContent='✓ Answer saved';area.querySelector('.btn-add-answer').disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}
+  });
+  document.querySelectorAll('.analogy-box').forEach(function(box){
+    if(box.dataset.collapsibleInit)return;
+    box.dataset.collapsibleInit='1';
+    box.classList.add('expanded');
+    const label=box.querySelector(':scope > .analogy-label');
+    if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));
+  });
+  document.querySelectorAll('.analogy-img img').forEach(function(img){
+    img.addEventListener('click',()=>img.classList.toggle('zoomed'));
+  });
+  document.querySelectorAll('.screenshot-embed img').forEach(function(img){
+    img.addEventListener('click',()=>img.classList.toggle('zoomed'));
+  });
+  setTimeout(function(){document.body.style.opacity='1';document.body.style.transition='opacity 0.35s ease';},10);
+  document.querySelectorAll('a[href]').forEach(function(a){
+    a.addEventListener('click',function(){if(a.hostname===location.hostname)sessionStorage.setItem('pt','1');});
+  });
+});
+</script>
+</body>
+</html>

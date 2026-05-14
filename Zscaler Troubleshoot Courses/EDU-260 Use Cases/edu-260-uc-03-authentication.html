@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Authentication · EDU-260 Use Cases — Zscaler Troubleshoot</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef4ff;--surface:#fff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;--text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;--blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;--blue-deep:#0f3d7a;--green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;--red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;--amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html.pt-init body{opacity:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{background:#0d1a2e;color:#fff;padding:28px 40px 32px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:#93c5fd;letter-spacing:0.06em;margin-bottom:20px;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;opacity:0.8;}
+.breadcrumb a:hover{opacity:1;text-decoration:underline;}
+.breadcrumb-sep{opacity:0.5;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.eyebrow-chip{background:rgba(147,197,253,0.15);border:1px solid rgba(147,197,253,0.3);color:#93c5fd;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:4px 12px;border-radius:20px;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:#93c5fd;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+h1{font-family:'Fraunces',serif;font-size:42px;font-weight:700;line-height:1.1;color:#fff;margin-bottom:4px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-top:6px;letter-spacing:0.03em;}
+.motivation-banner{background:#1e3a5c;border-bottom:1px solid rgba(147,197,253,0.15);padding:14px 40px;}
+.motivation-text{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.6;}
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.qpanel{background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 24px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 24px 22px;}
+.qpanel-body.open{display:block;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+.no-questions{font-size:12px;color:var(--text-muted);padding:10px 0;}
+.q-group{margin-bottom:14px;}
+.q-group-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:8px;}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-num{font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0;margin-top:2px;}
+.q-text{font-size:13px;color:var(--text-soft);flex:1;line-height:1.5;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 4px;flex-shrink:0;}
+.q-del:hover{color:var(--red);}
+.section-nav{display:flex;gap:2px;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:10;}
+.nav-tab{background:none;border:1px solid transparent;border-radius:8px;padding:6px 14px;font-family:'Epilogue',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.nav-tab:hover{background:var(--surface-2);color:var(--text);}
+.nav-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;flex:1;}
+.main-content{padding:32px 40px;min-width:0;}
+aside{padding:28px 24px;border-left:1px solid var(--border);position:sticky;top:45px;height:calc(100vh - 45px);overflow-y:auto;background:var(--surface);}
+.section-block{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border-dim);}
+.section-block:last-child{border-bottom:none;}
+.section-tag{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--blue);margin-bottom:8px;}
+h2{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:16px;}
+h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 10px;}
+p{font-size:14px;line-height:1.75;color:var(--text-soft);margin-bottom:12px;}
+ul,ol{padding-left:20px;margin-bottom:12px;}
+li{font-size:13.5px;line-height:1.7;color:var(--text-soft);margin-bottom:4px;}
+code{font-family:'SF Mono',Menlo,monospace;font-size:12px;background:var(--surface-2);padding:1px 6px;border-radius:4px;color:var(--blue-deep);}
+.pli-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0;}
+.pli-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;border-left:3px solid var(--blue);}
+.pli-card-num{display:inline-block;background:var(--blue);color:#fff;font-size:9px;font-weight:700;letter-spacing:0.16em;padding:2px 8px;border-radius:10px;margin-bottom:6px;}
+.pli-card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.pli-card-desc{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+.pli-card-desc code{font-size:11.5px;}
+.callout{border-radius:10px;padding:14px 16px;margin:16px 0;border-left:3px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.14em;margin-bottom:6px;}
+.callout-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.65;color:var(--text-soft);}
+.callout-tip{background:var(--blue-glow);border-color:var(--blue);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-tip .callout-icon{background:rgba(26,109,204,0.15);color:var(--blue);}
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;transform:scale(1.5);transform-origin:top left;transition:transform 0.2s ease;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:24px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.tool-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:72px;outline:none;line-height:1.6;}
+.tool-textarea:focus{border-color:var(--blue);}
+.tool-row{margin-top:8px;text-align:right;}
+.btn-add-q{background:#0d1a2e;color:#93c5fd;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:24px;}
+.sidebar-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:10px;}
+.hub-back{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:10px 16px;border-radius:10px;transition:opacity 0.15s;margin-bottom:20px;}
+.hub-back:hover{opacity:0.88;}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.check-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-soft);padding:6px 10px;border-radius:8px;cursor:pointer;transition:background 0.12s;}
+.check-item:hover{background:var(--surface-2);}
+.check-item input{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.check-item.done{color:var(--text-muted);text-decoration:line-through;}
+.sidebar-divider{height:1px;background:var(--border);margin:18px 0;}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:16px;}
+.quick-ref-title{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#93c5fd;margin-bottom:12px;}
+.qr-term{margin-bottom:10px;}
+.qr-label{font-size:10px;font-weight:700;color:#93c5fd;letter-spacing:0.08em;}
+.qr-def{font-size:11.5px;color:rgba(255,255,255,0.65);line-height:1.55;margin-top:2px;}
+footer{background:#0d1a2e;color:rgba(255,255,255,0.45);font-size:11px;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.04em;}
+footer span{color:#93c5fd;}
+@media(max-width:900px){main{grid-template-columns:1fr;}aside{display:none;}.main-content{padding:24px 20px;}header,footer{padding:24px 20px;}.motivation-banner{padding:12px 20px;}.section-nav{padding:8px 16px;}.lesson-tools-grid{grid-template-columns:1fr;}.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../troubleshoot-hub.html">Zscaler Troubleshoot Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="edu-260-use-cases-hub.html">EDU-260 Use Cases</a>
+    <span class="breadcrumb-sep">›</span>
+    Authentication
+  </div>
+  <div class="eyebrow">
+    <span class="eyebrow-chip">EDU-260 · LESSON 3</span>
+    <span class="header-dot"></span>
+  </div>
+  <h1>Authentication <em>Use Cases</em></h1>
+  <div class="header-sub">SAML, IdP, ZIA & ZPA — four real auth failures and how to fix them</div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">"In Zero Trust, identity is the very first hop. If auth breaks, nothing else gets a chance to."</div>
+</div>
+
+<div class="top-panels">
+  <div class="qpanel" id="qpanel">
+    <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+      <span class="qpanel-title">MY QUESTIONS</span>
+      <span class="qpanel-count" id="qpanel-count">0</span>
+      <span class="qpanel-hint">— click to expand</span>
+      <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+    </button>
+    <div class="qpanel-body" id="qpanel-body"></div>
+  </div>
+  <div class="notes-panel" id="notes-panel">
+    <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+      <span class="notes-panel-title">MY NOTES</span>
+      <span class="notes-panel-count" id="notes-panel-count">0</span>
+      <span class="notes-panel-hint">— click to expand</span>
+      <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+    </button>
+    <div class="notes-panel-body" id="notes-panel-body"></div>
+  </div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-overview')">1 · Auth Overview</button>
+  <button class="nav-tab" onclick="navTo('section-flow')">2 · Troubleshooting Flow</button>
+  <button class="nav-tab" onclick="navTo('section-uc1')">3 · UC1 · ZIA Internal Error</button>
+  <button class="nav-tab" onclick="navTo('section-uc2')">4 · UC2 · No Auth Enforced</button>
+  <button class="nav-tab" onclick="navTo('section-uc3')">5 · UC3 · ZCC Auth Error</button>
+  <button class="nav-tab" onclick="navTo('section-uc4')">6 · UC4 · Cookie Auth</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- SECTION 1 — Overview -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · ZERO-TRUST AUTH</span>
+  </div>
+  <p class="socratic-insight">Zero Trust blocks every request until the requestor's identity is explicitly validated. SAML and OAuth are the two main exchanges; Zscaler acts as the SP, the IdP holds the credentials, and the SAML assertion is what proves the user to Zscaler.</p>
+  <ul class="socratic-questions">
+    <li>Why must Zscaler trust the IdP's assertion rather than validate the password itself?</li>
+    <li>What's the difference between SAML's role and the auth token (HMAC ID) that Zscaler issues afterwards?</li>
+  </ul>
+  <div class="answer-area" data-section="overview">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Federated SSO offloads credential validation to the IdP so Zscaler never sees the password. Zscaler only sees a signed SAML assertion saying "this IdP vouches that this user is who they claim to be". This is what makes SSO + MFA possible without Zscaler having to integrate with every credential store on earth — the IdP owns identity, Zscaler owns access enforcement.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">SAML proves identity once, at login. After validation Zscaler issues its own auth token (an HMAC ID) and inserts an auth cookie so subsequent requests don't have to re-traverse the IdP. SAML = identity proof; the cookie = persistent session proof for the proxy itself.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-overview">
+  <div class="section-tag">SECTION 1</div>
+  <h2>Authentication Overview</h2>
+  <p>In Zero Trust the first decision Zscaler makes is whether the requestor (user, IoT, OT, or app) has a valid identity. Zscaler acts like a switchboard and exchange in the middle: the user-agent sends a request, Zscaler intercepts it, and identity is validated through an IdP via SAML — or against an external service via OAuth — before any traffic is allowed through.</p>
+
+  <h3>The SAML exchange (11 steps)</h3>
+  <ol>
+    <li>User browser sends request to destination.</li>
+    <li>Zscaler intercepts; redirects to Zscaler SP.</li>
+    <li>Zscaler SP returns a login request.</li>
+    <li>Browser is redirected to the SAML IdP.</li>
+    <li>User logs into IdP (credentials, MFA).</li>
+    <li>IdP returns SAML Assertion Identity.</li>
+    <li>Browser POSTs the SAML Assertion to Zscaler.</li>
+    <li>Zscaler issues an Auth Token.</li>
+    <li>Browser request + User HMAC ID forwarded.</li>
+    <li>Zscaler inserts the Auth Cookie.</li>
+    <li>User is redirected to the original URL (OURL).</li>
+  </ol>
+
+  <div class="screenshot-embed">
+    <img src="l3-saml-auth-flow.png" alt="SAML 2.0 authentication flow showing the 11 numbered steps between user, browser, Zscaler SP, SAML IdP, and destination apps like Google, Workday, Salesforce, Office 365, Amazon">
+    <div class="screenshot-caption">The SAML 2.0 exchange used by Zscaler. Identity is proven once at the IdP (steps 5–6); the resulting auth cookie carries the session through every subsequent request.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">SAML flow = 11 steps. Zscaler = SP. IdP holds the credential store. Two exchanges to remember: SAML (federated) and OAuth (external). The artefact Zscaler trusts is the signed SAML Assertion; the artefact that keeps the session alive is the Auth Cookie (carrying the user's HMAC ID).</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Section 1 — Auth Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-overview" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('overview')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 — Troubleshooting Flow -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · BRANCHING ON ZIA vs ZPA</span>
+  </div>
+  <p class="socratic-insight">The troubleshooting flow forks early on a single binary: are we troubleshooting ZIA or ZPA? Each takes a different path to a different SAML URL. Knowing which limb you're on saves you 10 minutes.</p>
+  <ul class="socratic-questions">
+    <li>Why does the ZIA flow check ZCC presence even though the user is hitting the web?</li>
+  </ul>
+  <div class="answer-area" data-section="flow">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">If ZCC is installed and logged in, Zscaler already trusts the device identity via the ZCC tunnel — the auth path is shorter. If ZCC isn't installed or the user isn't logged in, Zscaler must drive a full browser-side SAML round trip. The flow branches because the steps that follow are different.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-flow">
+  <div class="section-tag">SECTION 2</div>
+  <h2>Authentication Troubleshooting Flow</h2>
+  <p>Both ZIA and ZPA share the same starting question — <strong>Can the user reach the Service Edge?</strong> — but diverge from there. Use these two flowcharts as a top-level map for any auth ticket.</p>
+
+  <div class="screenshot-embed">
+    <img src="l3-zia-auth-troubleshooting-flow.png" alt="ZIA Authentication troubleshooting flowchart starting at connection to ZIA Service Edge, branching through ZCC login state, auth success, SAML check, IdP connectivity, and ending in error-code lookup at help.zscaler.com">
+    <div class="screenshot-caption">ZIA auth flow. Key branches: ZCC presence → SAML success → IdP connectivity → error code lookup at help.zscaler.com/zia/troubleshooting-saml.</div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="l3-zpa-auth-troubleshooting-flow.png" alt="ZPA Authentication troubleshooting flowchart starting at connection to Public Service Edge, with branches for client connector presence, ZIA-only vs ZIA-and-ZPA enrollment, and ending in a SAML URL test at samlsp.private.zscaler.com">
+    <div class="screenshot-caption">ZPA auth flow. The critical test URL is <code>https://samlsp.private.zscaler.com/auth/v2/login?domain=&lt;domain&gt;&amp;ssotype=test</code> — feed in the user's domain and read the returned error code.</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">i</div>SAML TEST URL</div>
+    <div class="callout-body">For ZPA: <code>https://samlsp.private.zscaler.com/auth/v2/login?domain=&lt;your-domain&gt;&amp;ssotype=test</code>. The response either redirects to the IdP (success path) or returns a code such as <code>noauthavailableforuser</code> that maps to a specific cause in the Help portal.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Always branch on ZIA vs ZPA. ZIA SAML test URL = <code>samlsp.private.zscaler.com/auth/v2/login?domain=&lt;d&gt;&amp;ssotype=test</code>. For ZIA error codes use help.zscaler.com/zia/troubleshooting-saml. For ZPA status codes use help.zscaler.com/zpa/about-zpa-session-status-codes.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-flow" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('flow','Section 2 — Troubleshooting Flow')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-flow" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('flow')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 — UC1: ZIA Internal Error -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · INTERNAL ERROR 0xA020</span>
+  </div>
+  <p class="socratic-insight">When a SAML error reads "Internal Error", the temptation is to call it a Zscaler bug. But the tiny hex codes at the bottom right of the error page (IdP code + 0xA020) tell a precise story — usually that the user's domain isn't provisioned on the tenant.</p>
+  <ul class="socratic-questions">
+    <li>Why is "user domain not registered to the organization" the most common cause of an apparent "Internal Error"?</li>
+  </ul>
+  <div class="answer-area" data-section="uc1">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">SAML succeeds at the IdP — Zscaler sees a valid assertion. But the assertion includes a UPN/domain Zscaler doesn't recognise on the tenant, so Zscaler refuses to bind the session and surfaces a generic Internal Error. The fix is rarely "fix Zscaler" — it's provisioning the user's domain on the tenant (Admin Portal → Administration → Company Profile), or ensuring the IdP applies the correct UPN/domain suffix.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-uc1">
+  <div class="section-tag">USE CASE 1 · ZIA INTERNAL ACCESS</div>
+  <h2>Internet Access Authentication — Internal Error</h2>
+
+  <div class="screenshot-embed">
+    <img src="l3-uc1-internal-error-ui.png" alt="Zscaler We've run into an Error UI showing An internal error occurred while processing your authentication request with User test@hnaseer1.zscloud.net and codes 0xa020 IdP 0x69937cc0">
+    <div class="screenshot-caption">The "Internal Error" page. Read the bottom-right hex codes (IdP code + Zscaler code <code>0xA020</code>) — these map directly to a cause in help.zscaler.com.</div>
+  </div>
+
+  <div class="pli-cards">
+    <div class="pli-card">
+      <span class="pli-card-num">01 · PROBLEM</span>
+      <div class="pli-card-title">User sees "We've run into an Error" after IdP login</div>
+      <div class="pli-card-desc">SAML completes at the IdP but Zscaler returns: "An internal error occurred while processing your authentication request. Please try again. If the issue persists, contact your administrator." Error references the user identity and ends with codes like <code>0xA020 | IdP: 0x69937cc0</code>.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">02 · LOCATE</span>
+      <div class="pli-card-title">Zscaler or IdP side — read the message</div>
+      <div class="pli-card-desc">"Internal error" is Zscaler-side wording. The user reached Zscaler, so the failure is downstream of the IdP. Localize to Zscaler-IdP integration.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">03 · ISOLATE</span>
+      <div class="pli-card-title">Look up <code>0xA020</code> in the Help portal</div>
+      <div class="pli-card-desc">help.zscaler.com → search the code → returns "Troubleshooting SAML" article. <code>0xA020</code> = "The user domain name isn't registered to the organization." If you pass the sAMAccountName attribute instead of the UPN, ensure only one domain is associated with your Zscaler account.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">04 · DIAGNOSE</span>
+      <div class="pli-card-title">Provision the domain on the tenant</div>
+      <div class="pli-card-desc"><strong>Step 1:</strong> review provisioned domains at <strong>Admin Portal → Administration → Company Profile</strong>. If present, check at the IdP that the correct UPN/Domain suffix is being applied.<br><strong>Step 2:</strong> if not provisioned, raise a provisioning-type ticket with Zscaler with the domain to be added.</div>
+    </div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">"Internal Error" + code <code>0xA020</code> = user domain not registered. Fix path: Admin Portal → Administration → Company Profile to verify; if missing, raise a provisioning ticket. Always read the hex codes at the bottom of the error UI — they map directly to a cause article on help.zscaler.com.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-uc1" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('uc1','UC1 — ZIA Internal Error')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-uc1" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('uc1')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4 — UC2: No Auth Enforced -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · WHEN "NOAUTH-BYPASSURL" APPEARS</span>
+  </div>
+  <p class="socratic-insight">If web-insights logs show the user as <code>noauth-bypassurl$</code> instead of an actual username, the user isn't anonymous — Zscaler simply couldn't identify them. The cause is almost always config: either no ZCC + cookie-based auth in PAC mode, or a URL/category sitting under Authentication Exemption.</p>
+  <ul class="socratic-questions">
+    <li>Why does Zscaler route an unauthenticated transaction to a "special user" rather than just dropping it?</li>
+  </ul>
+  <div class="answer-area" data-section="uc2">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Because some categories are intentionally exempted from auth — software updates, certificate revocation, ad networks — and the customer wants them allowed even when no user identity is available. Routing the unauthenticated transaction to a synthetic user keeps the traffic flowing while still logging it for review. If the user shouldn't be on that path, the fix is removing the exemption rather than blocking the synthetic user.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-uc2">
+  <div class="section-tag">USE CASE 2 · ZIA INTERNET ACCESS</div>
+  <h2>Internet Access — No Authentication Enforced</h2>
+
+  <div class="pli-cards">
+    <div class="pli-card">
+      <span class="pli-card-num">01 · PROBLEM</span>
+      <div class="pli-card-title">User shows as <code>noauth-bypassurl$</code> in web-insights</div>
+      <div class="pli-card-desc">A transaction logs against URL category CDN (or similar) with the user field set to <code>noauth-bypassurl$</code> instead of the real username.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">02 · LOCATE</span>
+      <div class="pli-card-title">PAC-enforced mode + Authentication Bypass URL config</div>
+      <div class="pli-card-desc">The Help article "Configuring Policies for Unauthenticated Traffic" matches: Zscaler couldn't identify the user (no cookie, ZCC in PAC-enforced mode). The "Authentication Bypass URL" special user points to a policy under <strong>Authentication Bypass</strong>.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">03 · ISOLATE</span>
+      <div class="pli-card-title">Review Authentication Exemption config</div>
+      <div class="pli-card-desc"><strong>Administration → Advanced Settings → Authentication Exemption.</strong> List which URLs, URL categories, or applications are exempt from auth.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">04 · DIAGNOSE</span>
+      <div class="pli-card-title">Match URL/category against the exemption list</div>
+      <div class="pli-card-desc">If the offending URL/category/app matches an entry, the behaviour is by design. If you need to see the username, remove the matching exemption or switch ZCC to <strong>tunnel mode</strong> / <strong>tunnel with local proxy</strong> so the cookie-based path goes away and ZCC supplies the identity directly.</div>
+    </div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Username = <code>noauth-bypassurl$</code> → check <strong>Administration → Advanced Settings → Authentication Exemption</strong>. Either remove the URL/category match or switch ZCC to tunnel / tunnel-with-local-proxy mode. Cookie-based auth (PAC mode) is the precondition that allows the bypass to happen.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-uc2" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('uc2','UC2 — No Auth Enforced')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-uc2" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('uc2')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5 — UC3: ZPA / ZCC Auth Error -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · ZCC SAYS "AUTH ERROR"</span>
+  </div>
+  <p class="socratic-insight">The ZCC status panel reads "Authentication Error / Authentication Required" but a service restart doesn't help. The IdP config is fine. That points away from auth-as-design and toward <strong>device fingerprint mismatch</strong> in the ZCC logs.</p>
+  <ul class="socratic-questions">
+    <li>Why does Zscaler bind a device fingerprint to the session, and what breaks it?</li>
+  </ul>
+  <div class="answer-area" data-section="uc3">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">A hardware fingerprint stops a stolen auth cookie from being replayed on another machine. Anything that legitimately changes the hardware identity — a NIC swap, motherboard replacement, sometimes a major OS upgrade — invalidates the fingerprint. The fix is to log the user out of ZCC (with a one-time logout password if required) and log back in so a new fingerprint is registered.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-uc3">
+  <div class="section-tag">USE CASE 3 · PRIVATE ACCESS</div>
+  <h2>Private Access — ZCC Authentication Error</h2>
+
+  <div class="screenshot-embed">
+    <img src="l3-uc3-zcc-auth-error-ui.png" alt="Zscaler Client Connector UI showing Private Access service Status of Authentication Error Off-Trusted Network and Authentication Status Authentication Required, with a RETRY and AUTHENTICATE button">
+    <div class="screenshot-caption">ZCC's Connectivity panel: Authentication Error + Authentication Required. Restart doesn't fix it — the cause hides in the ZSAAuth_* logs.</div>
+  </div>
+
+  <div class="pli-cards">
+    <div class="pli-card">
+      <span class="pli-card-num">01 · PROBLEM</span>
+      <div class="pli-card-title">Private Access Status = Authentication Error</div>
+      <div class="pli-card-desc">ZCC shows Authentication Required. Re-authenticating with credentials still fails. Service restart does not help.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">02 · LOCATE</span>
+      <div class="pli-card-title">Past the SAML/IdP — into ZCC logs</div>
+      <div class="pli-card-desc">Auth workflow has been followed; IdP config and domain/user info are correct. The fault must be inside ZCC itself.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">03 · ISOLATE</span>
+      <div class="pli-card-title">Export ZCC logs · search <code>ZSAAuth_*</code> and <code>ZSATunnel_*</code></div>
+      <div class="pli-card-desc">Look at ERR log entries around the time of the error. Cross-reference with the ZPA Session Status Codes article at help.zscaler.com/zpa/about-zpa-session-status-codes.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">04 · DIAGNOSE</span>
+      <div class="pli-card-title">Status code <code>BRK_MT_AUTH_SAML_FINGER_PRINT_FAIL</code></div>
+      <div class="pli-card-desc">"ERR zpn_client_authenticate error" with <code>BRK_MT_AUTH_SAML_FINGER_PRINT_FAIL</code> = hardware fingerprint changed. Ask the user to log out of ZCC (provide one-time logout password if needed), then log back in to register a new fingerprint. If unresolved, open a Support case with the ZCC log bundle.</div>
+    </div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">ZCC "Authentication Error" + status code <code>BRK_MT_AUTH_SAML_FINGER_PRINT_FAIL</code> = hardware fingerprint changed. Fix: log out of ZCC (one-time logout password if needed) → log back in. Log files to search: <code>ZSAAuth_*</code> and <code>ZSATunnel_*</code>. ZPA status code reference: help.zscaler.com/zpa/about-zpa-session-status-codes.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-uc3" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('uc3','UC3 — ZCC Auth Error')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-uc3" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('uc3')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6 — UC4: Cookie-Based Auth -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · COOKIES vs ZCC</span>
+  </div>
+  <p class="socratic-insight">Without ZCC, Zscaler must identify the user from a domain cookie set by a 307-redirect to the Zscaler gateway. If the redirect fails or the cookie isn't present for both the destination domain and the Zscaler gateway domain, the user falls into the "unauth" bucket on ports 80/443.</p>
+  <ul class="socratic-questions">
+    <li>What two domain cookies must be present for cookie-based auth to succeed, and why?</li>
+  </ul>
+  <div class="answer-area" data-section="uc4">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Two cookies share the same name (<code>_sm_au_c</code>): one scoped to the destination domain (e.g. <code>.purple.com</code>) and one scoped to the Zscaler gateway domain (<code>.zscalertwo.net</code>). The destination cookie identifies the user to Zscaler in the request; the gateway cookie keeps the session alive across the redirect. If either is missing, the auth handshake breaks and the user appears as <code>unauth</code>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-uc4">
+  <div class="section-tag">USE CASE 4 · COOKIE AUTH</div>
+  <h2>Cookie-Based Authentication Issue</h2>
+  <p>When Zscaler proxy is reached on standard web ports 80/443 without the ZCC agent, Zscaler defaults to cookie-based auth. If the cookies aren't set correctly the transaction maps to a special <strong>unauth</strong> user.</p>
+
+  <div class="pli-cards">
+    <div class="pli-card">
+      <span class="pli-card-num">01 · PROBLEM</span>
+      <div class="pli-card-title">User without ZCC cannot authenticate on 80/443</div>
+      <div class="pli-card-desc">Web requests on 80/443 from a non-ZCC device fail to identify the user — transaction logs as <code>unauth</code>.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">02 · LOCATE</span>
+      <div class="pli-card-title">ZCC absence forces cookie-based path</div>
+      <div class="pli-card-desc">User PC has no ZCC. Cookie-based auth is the only available path on 80/443. Failure is in cookie issuance or scope.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">03 · ISOLATE</span>
+      <div class="pli-card-title">Confirm two <code>_sm_au_c</code> cookies on the device</div>
+      <div class="pli-card-desc">Remotely connect to the user's machine. Verify two browser cookies sharing the name <code>_sm_au_c</code>: one for the destination domain, one for the Zscaler gateway domain. Inspect headers for the <strong>307 Temporary Redirect</strong> from Zscaler to the gateway endpoint that sets these cookies.</div>
+    </div>
+    <div class="pli-card">
+      <span class="pli-card-num">04 · DIAGNOSE</span>
+      <div class="pli-card-title">Cookies present → 200 OK with identified user</div>
+      <div class="pli-card-desc">Client follows the redirect and generates a request to the Zscaler gateway carrying both cookies. Zscaler reads the gateway cookie, identifies the user, and proxies the request to the destination with a 200 OK. If cookies are blocked (browser policy, MDM, third-party-cookie rules), unblock them; if the redirect isn't happening, validate the PAC file routing and reachability to the gateway endpoint.</div>
+    </div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="l3-uc4-cookie-based-flow.png" alt="Internet Access HTTP flow showing client following a 307 redirect to a Zscaler gateway, then a 200 OK response with two _sm_au_d cookies set for purple.com and zscalertwo.net">
+    <div class="screenshot-caption">The healthy cookie-based flow: 307 redirect inserts the two <code>_sm_au_c</code> cookies, then the gateway request returns 200 OK with the user correctly identified.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Cookie-based auth = default for non-ZCC users on 80/443. Two cookies with the same name (<code>_sm_au_c</code>) — one for destination domain, one for Zscaler gateway. Triggered by a HTTP <strong>307 Temporary Redirect</strong>. If either cookie is missing or blocked, the user logs as <code>unauth</code>.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-uc4" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('uc4','UC4 — Cookie Auth')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-uc4" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('uc4')">+ Add Note</button></div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .main-content -->
+
+<aside>
+  <a class="hub-back" href="edu-260-use-cases-hub.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    EDU-260 Use Cases Hub
+  </a>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS</div>
+    <ul class="checklist">
+      <li class="check-item" onclick="toggleDone(this,'check-1')"><input type="checkbox" id="check-1" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">Auth Overview</li>
+      <li class="check-item" onclick="toggleDone(this,'check-2')"><input type="checkbox" id="check-2" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">Troubleshooting Flow</li>
+      <li class="check-item" onclick="toggleDone(this,'check-3')"><input type="checkbox" id="check-3" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">UC1 · ZIA Internal Error</li>
+      <li class="check-item" onclick="toggleDone(this,'check-4')"><input type="checkbox" id="check-4" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">UC2 · No Auth Enforced</li>
+      <li class="check-item" onclick="toggleDone(this,'check-5')"><input type="checkbox" id="check-5" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">UC3 · ZCC Auth Error</li>
+      <li class="check-item" onclick="toggleDone(this,'check-6')"><input type="checkbox" id="check-6" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">UC4 · Cookie Auth</li>
+    </ul>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="quick-ref">
+    <div class="quick-ref-title">KEY AUTH TERMS</div>
+    <div class="qr-term"><div class="qr-label">SAML</div><div class="qr-def">Security Assertion Markup Language — federated identity assertion exchange.</div></div>
+    <div class="qr-term"><div class="qr-label">IdP</div><div class="qr-def">Identity Provider — owns user creds, returns signed SAML assertions.</div></div>
+    <div class="qr-term"><div class="qr-label">SP</div><div class="qr-def">Service Provider — Zscaler's role in the SAML exchange.</div></div>
+    <div class="qr-term"><div class="qr-label">OURL</div><div class="qr-def">Original URL — the destination redirected back to after auth completes.</div></div>
+    <div class="qr-term"><div class="qr-label">AUTH TOKEN</div><div class="qr-def">HMAC ID issued by Zscaler after SAML success — proves session.</div></div>
+    <div class="qr-term"><div class="qr-label">0xA020</div><div class="qr-def">"User domain not registered to organization" — common ZIA SAML error.</div></div>
+    <div class="qr-term"><div class="qr-label">_sm_au_c</div><div class="qr-def">Cookie-auth identifier — required twice (destination + gateway domain).</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div>EDU-260 · <span>Use Cases</span></div>
+  <div>Lesson 3 — Authentication</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu-260-uc-03-authentication';
+const SECTIONS={'overview':'Section 1 — Auth Overview','flow':'Section 2 — Troubleshooting Flow','uc1':'UC1 — ZIA Internal Error','uc2':'UC2 — No Auth Enforced','uc3':'UC3 — ZCC Auth Error','uc4':'UC4 — Cookie Auth'};
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();ns.push({id:Date.now(),section:key,sectionName:SECTIONS[key]||key,text});saveNotesArr(ns);ta.value='';renderNotesPanel();if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function getQArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQArr(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const qs=getQArr();qs.push({id:Date.now(),section:key,sectionName:name,text});saveQArr(qs);ta.value='';renderQPanel();if(!document.getElementById('qpanel-body').classList.contains('open'))toggleQPanel();}
+function deleteQ(id){saveQArr(getQArr().filter(q=>q.id!==id));renderQPanel();}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function renderQPanel(){const qs=getQArr();const count=document.getElementById('qpanel-count');if(count){count.textContent=qs.length;count.style.display=qs.length?'inline':'none';}const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!body)return;if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));qs.forEach(q=>{if(groups[q.section])groups[q.section].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQ(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=PAGE_KEY+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function navTo(id){const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}const ids=['section-overview','section-flow','section-uc1','section-uc2','section-uc3','section-uc4'];document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));}
+function toggleDone(li,id){const cb=li.querySelector('input[type="checkbox"]');const checked=!cb.checked;cb.checked=checked;li.classList.toggle('done',checked);localStorage.setItem(PAGE_KEY+'-check-'+id,checked);}
+function initChecks(){document.querySelectorAll('.check-item').forEach(function(li){const cb=li.querySelector('input[type="checkbox"]');if(!cb)return;if(localStorage.getItem(PAGE_KEY+'-check-'+cb.id)==='true'){cb.checked=true;li.classList.add('done');}});}
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();renderNotesPanel();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){
+    const key=PAGE_KEY+'-socans-'+area.dataset.section;
+    try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;area.querySelector('.btn-add-answer').textContent='✓ Answer saved';area.querySelector('.btn-add-answer').disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}
+  });
+  document.querySelectorAll('.screenshot-embed img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  setTimeout(function(){document.body.style.opacity='1';document.body.style.transition='opacity 0.35s ease';},10);
+  document.querySelectorAll('a[href]').forEach(function(a){a.addEventListener('click',function(){if(a.hostname===location.hostname)sessionStorage.setItem('pt','1');});});
+});
+</script>
+</body>
+</html>

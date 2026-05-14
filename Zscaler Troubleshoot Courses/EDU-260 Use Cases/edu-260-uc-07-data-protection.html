@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Protection — EDU-260 Use Cases</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#fff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;--blue-deep:#0f3d7a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html.pt-init body{opacity:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{background:#0d1a2e;color:#fff;padding:28px 40px 32px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:#93c5fd;letter-spacing:0.06em;margin-bottom:20px;flex-wrap:wrap;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;opacity:0.8;}
+.breadcrumb a:hover{opacity:1;text-decoration:underline;}
+.breadcrumb-sep{opacity:0.5;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.eyebrow-chip{background:rgba(147,197,253,0.15);border:1px solid rgba(147,197,253,0.3);color:#93c5fd;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:4px 12px;border-radius:20px;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:#93c5fd;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+h1{font-family:'Fraunces',serif;font-size:42px;font-weight:700;line-height:1.1;color:#fff;margin-bottom:4px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-top:6px;letter-spacing:0.03em;}
+.motivation-banner{background:#1e3a5c;border-bottom:1px solid rgba(147,197,253,0.15);padding:14px 40px;}
+.motivation-text{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.6;}
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.qpanel{background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 24px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 24px 22px;}
+.qpanel-body.open{display:block;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+.no-questions{font-size:12px;color:var(--text-muted);padding:10px 0;}
+.q-group{margin-bottom:14px;}
+.q-group-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:8px;}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-num{font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0;margin-top:2px;}
+.q-text{font-size:13px;color:var(--text-soft);flex:1;line-height:1.5;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 4px;flex-shrink:0;}
+.q-del:hover{color:var(--red);}
+.section-nav{display:flex;gap:2px;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:10;}
+.nav-tab{background:none;border:1px solid transparent;border-radius:8px;padding:6px 14px;font-family:'Epilogue',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.nav-tab:hover{background:var(--surface-2);color:var(--text);}
+.nav-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;flex:1;}
+.main-content{padding:32px 40px;min-width:0;}
+aside{padding:28px 24px;border-left:1px solid var(--border);position:sticky;top:45px;height:calc(100vh - 45px);overflow-y:auto;background:var(--surface);}
+.section-block{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border-dim);}
+.section-block:last-child{border-bottom:none;}
+.section-tag{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--blue);margin-bottom:8px;}
+h2{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:16px;}
+h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 10px;}
+p{font-size:14px;line-height:1.75;color:var(--text-soft);margin-bottom:12px;}
+ul,ol{padding-left:20px;margin-bottom:12px;}
+li{font-size:13.5px;line-height:1.7;color:var(--text-soft);margin-bottom:4px;}
+code{background:var(--surface-2);border:1px solid var(--border-dim);border-radius:4px;padding:1px 6px;font-size:12px;color:var(--blue-deep);font-family:'SF Mono','Menlo',monospace;}
+.phase-steps{display:grid;grid-template-columns:1fr;gap:10px;margin:18px 0;}
+.phase-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:10px;padding:12px 16px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;}
+.phase-num{background:var(--blue);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.phase-body{min-width:0;}
+.phase-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--blue);margin-bottom:4px;}
+.phase-text{font-size:13px;color:var(--text-soft);line-height:1.65;}
+.phase-text ul{margin:6px 0 0;padding-left:18px;}
+.phase-text li{font-size:12.5px;margin-bottom:2px;}
+.callout{border-radius:10px;padding:14px 16px;margin:16px 0;border-left:3px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.14em;margin-bottom:6px;}
+.callout-body{font-size:13px;line-height:1.65;color:var(--text-soft);}
+.callout-tip{background:var(--blue-glow);border-color:var(--blue);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-amber{background:var(--amber-light);border-color:var(--amber);}
+.callout-amber .callout-header{color:var(--amber);}
+.callout-amber .callout-body{color:#78350f;}
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;transform:scale(1.5);transform-origin:top left;transition:transform 0.2s ease;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+.lesson-tools{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:24px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.tool-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:72px;outline:none;line-height:1.6;}
+.tool-textarea:focus{border-color:var(--blue);}
+.tool-row{margin-top:8px;text-align:right;}
+.btn-add-q{background:#0d1a2e;color:#93c5fd;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:24px;}
+.sidebar-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:10px;}
+.hub-back{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:10px 16px;border-radius:10px;transition:opacity 0.15s;margin-bottom:20px;}
+.hub-back:hover{opacity:0.88;}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.check-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-soft);padding:6px 10px;border-radius:8px;cursor:pointer;transition:background 0.12s;}
+.check-item:hover{background:var(--surface-2);}
+.check-item input{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.check-item.done{color:var(--text-muted);text-decoration:line-through;}
+.sidebar-divider{height:1px;background:var(--border);margin:18px 0;}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:16px;}
+.quick-ref-title{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#93c5fd;margin-bottom:12px;}
+.qr-term{margin-bottom:10px;}
+.qr-label{font-size:10px;font-weight:700;color:#93c5fd;letter-spacing:0.08em;}
+.qr-def{font-size:11.5px;color:rgba(255,255,255,0.65);line-height:1.55;margin-top:2px;}
+footer{background:#0d1a2e;color:rgba(255,255,255,0.45);font-size:11px;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.04em;}
+footer span{color:#93c5fd;}
+@media(max-width:900px){main{grid-template-columns:1fr;}aside{display:none;}.main-content{padding:24px 20px;}header,footer{padding:24px 20px;}.motivation-banner{padding:12px 20px;}.section-nav{padding:8px 16px;}.lesson-tools-grid{grid-template-columns:1fr;}.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../troubleshoot-hub.html">Zscaler Troubleshoot Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="edu-260-use-cases-hub.html">EDU-260 Use Cases</a>
+    <span class="breadcrumb-sep">›</span>
+    Data Protection
+  </div>
+  <div class="eyebrow">
+    <span class="eyebrow-chip">EDU-260 · LESSON 7</span>
+    <span class="header-dot"></span>
+  </div>
+  <h1>Data <em>Protection</em></h1>
+  <div class="header-sub">DLP misfires, dictionary tuning, and the multi-file upload trap</div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">"DLP works when SSL inspection works — and stops at the first match per upload. Both are quiet rules that turn most DLP tickets into one-line answers."</div>
+</div>
+
+<div class="top-panels">
+  <div class="qpanel" id="qpanel">
+    <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+      <span class="qpanel-title">MY QUESTIONS</span>
+      <span class="qpanel-count" id="qpanel-count">0</span>
+      <span class="qpanel-hint">— click to expand</span>
+      <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+    </button>
+    <div class="qpanel-body" id="qpanel-body"></div>
+  </div>
+  <div class="notes-panel" id="notes-panel">
+    <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+      <span class="notes-panel-title">MY NOTES</span>
+      <span class="notes-panel-count" id="notes-panel-count">0</span>
+      <span class="notes-panel-hint">— click to expand</span>
+      <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+    </button>
+    <div class="notes-panel-body" id="notes-panel-body"></div>
+  </div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-flow')">0 · Flow Map</button>
+  <button class="nav-tab" onclick="navTo('section-cc')">1 · CC Not Detected</button>
+  <button class="nav-tab" onclick="navTo('section-weba-webb')">2 · WebA vs WebB</button>
+  <button class="nav-tab" onclick="navTo('section-multi-file')">3 · Multi-File Upload</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- SECTION 0 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · WHAT DLP HAS TO SEE TO ACT</span>
+  </div>
+  <p class="socratic-insight">DLP can only act on bytes Zscaler can read. Encrypted bytes → SSL Inspection. POST/PUT bytes → the actual payload, not headers. And only the file types and policies the rule says to look at.</p>
+  <ul class="socratic-questions">
+    <li>If SSL inspection is OFF for a category, what is the DLP service actually seeing?</li>
+    <li>Why is the difference between "the rule fired but didn't notify" and "the rule didn't fire" the most useful early branch?</li>
+  </ul>
+  <div class="answer-area" data-section="flow">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Nothing useful. Without SSL inspection, the DLP engine sees an opaque TLS stream — destination IP, SNI, perhaps file size, but no content. Dictionaries and engines have no payload to scan, so even a perfectly configured rule never matches. Step zero of every DLP troubleshoot is "SSL Inspected = Yes" in Web Insights.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">"Fired but didn't notify" sends you to the notification template, auditor address, and template assignment on the policy. "Didn't fire" sends you to dictionary/engine config, criteria match, and SSL Inspection. They are different paths through the troubleshooting flow and conflating them costs an hour.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-flow">
+  <div class="section-tag">SECTION 0</div>
+  <h2>The Data Protection Troubleshooting Flow</h2>
+  <p>Three DLP areas: <strong>AI Discovery &amp; Classification</strong>, <strong>Secure Data in Motion</strong>, <strong>Secure Data at Rest</strong>. For inline DLP (data in motion), the chain is: traffic forwarded → SSL inspected → DLP policy evaluated → if matched, notification sent. Each branch in the flow points at a different config to check.</p>
+
+  <div class="screenshot-embed">
+    <img src="data-protection-flow.png" alt="DLP troubleshooting decision tree showing SSL inspection, policy match, notification, dictionary verification">
+    <div class="screenshot-caption">The canonical DLP troubleshooting tree. Branch one: SSL inspection on? Branch two: policy matched? Branch three: notification format correct? Each leaf points to a specific Web Insights column or config screen.</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><span>💡</span><span>WEB INSIGHTS COLUMNS FOR DLP</span></div>
+    <div class="callout-body">For any DLP ticket, the must-have columns are: <strong>SSL Inspected</strong>, <strong>DLP Identifier</strong>, <strong>DLP Engine</strong>, <strong>Filename</strong>, <strong>URL</strong>, <strong>User</strong>, <strong>Location</strong>, <strong>Protocol</strong>, <strong>Request Method</strong> (POST/PUT). Filter Request Method to POST/PUT to see only uploads.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">DLP rule never matches without SSL inspection — first check is always <strong>SSL Inspected = Yes</strong>. DLP Engine = None in Web Insights → diagnose the rule criteria. If everything matches but the user isn't notified → notification template, auditor address, template assignment.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-flow" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('flow','Section 0 — Flow Map')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-flow" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('flow')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · DLP POLICY NOT DETECTING CREDIT CARD DATA</span>
+  </div>
+  <p class="socratic-insight">A user uploads an Excel spreadsheet of credit card numbers. The DLP rule for Excel files is configured — but Web Insights shows DLP Engine = None. Three classes of cause: the payload, the rule, or the inspection.</p>
+  <ul class="socratic-questions">
+    <li>What does "copy the same data into a text file and re-upload" actually test?</li>
+    <li>If the Match Count in the rule is 5 but the spreadsheet has 4 credit cards, what's the expected behaviour and why?</li>
+  </ul>
+  <div class="answer-area" data-section="cc">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">It splits "is it a content problem?" from "is it a file-type problem?" If the same data triggers the rule when uploaded as text, then dictionaries and engines are fine; the spreadsheet was the issue (file-type criteria missing, format wrong, or DLP couldn't parse the file). If the text file also doesn't trigger, the problem is dictionary or engine configuration.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">No notification — the engine requires at least 5 matches before it fires. The rule is working as designed; the upload is below the threshold. Either lower the Match Count or upload a sample with ≥5 credit-card numbers to verify the rule.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-cc">
+  <div class="section-tag">USE CASE 1 · ZIA</div>
+  <h2>DLP Policy Not Detecting Credit Card Data</h2>
+  <p><strong>Symptom:</strong> The DLP policy configured for Excel files is not detecting credit card data in a spreadsheet uploaded to a website.</p>
+
+  <div class="phase-steps">
+    <div class="phase-card"><div class="phase-num">1</div><div class="phase-body"><div class="phase-label">PROBLEM</div><div class="phase-text">Excel spreadsheet upload contains credit-card numbers but the configured DLP rule does not fire.</div></div></div>
+    <div class="phase-card"><div class="phase-num">2</div><div class="phase-body"><div class="phase-label">LOCATE</div><div class="phase-text">Four cheap checks before deep config review:<ul><li>Copy the same data into a text file and upload — does it trigger?</li><li>Verify the data format in the spreadsheet matches a credit-card format.</li><li>Reduce the <strong>Confidence Score Threshold</strong> in the Credit Card DLP Dictionary.</li><li>Investigate Web Insights for the upload transaction.</li></ul></div></div></div>
+    <div class="phase-card"><div class="phase-num">3</div><div class="phase-body"><div class="phase-label">ISOLATE</div><div class="phase-text">Web Insights filter: Request Method = <code>POST</code> or <code>PUT</code>; filter by user or client IP. Check these columns:<ul><li><strong>URL</strong> — matches the rule's URL?</li><li><strong>SSL Inspected = Yes</strong> (must be).</li><li><strong>DLP Engine</strong> — if None, criteria don't match.</li><li>User, Location, Protocol all match rule criteria.</li></ul></div></div></div>
+    <div class="phase-card"><div class="phase-num">4</div><div class="phase-body"><div class="phase-label">DIAGNOSE</div><div class="phase-text">If Web Insights criteria match the rule but DLP still didn't fire, inspect the DLP engine:<ul><li>Verify the correct <strong>DLP Dictionary</strong> (or Dictionaries) is selected.</li><li>Verify expression logic — if wrong, build a new engine rather than mutating a predefined one used elsewhere.</li><li>Verify <strong>Match Count</strong> corresponds to the actual number of credit-card numbers in the data (often 5; if your sample has fewer it won't fire).</li><li>Double-check SSL Inspection is enabled for the upload traffic.</li></ul></div></div></div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Cheap-first-checks for DLP misses: (1) text-file re-upload test; (2) format match; (3) lower Confidence Score Threshold; (4) Web Insights. Match Count default ~5 — fewer matches in the sample = no notification. Never mutate a predefined DLP engine; create a new one.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-cc" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('cc','Use Case 1 — CC Not Detected')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-cc" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('cc')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · WORKS ON WEBB, FAILS ON WEBA</span>
+  </div>
+  <p class="socratic-insight">Same file, same data, same DLP policy. Uploaded to WebA → no notification. Uploaded to WebB → notification fires. The dictionaries are clearly working. What's different about WebA?</p>
+  <ul class="socratic-questions">
+    <li>If WebA and WebB share the same DLP rule but only WebB triggers, where would you look first — and why?</li>
+    <li>Why is taking an HTTP header trace on both uploads more informative than reviewing the rule one more time?</li>
+  </ul>
+  <div class="answer-area" data-section="weba-webb">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">SSL Inspection for the domains WebA actually uses. The most common cause is that WebA uploads to a sub-domain or CDN that isn't covered by the SSL inspection rule, so the upload bytes are encrypted and invisible to DLP. WebB happens to upload to a domain that is inspected. Same rule, different inspection coverage.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Header traces show the actual destination host and Content-Type of each request. You'll see whether WebA POSTs to a different host than you assumed, or splits the upload into a multipart request that doesn't match the rule. That ground-truth often contradicts what the developer or admin "remembers" about how the site uploads.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-weba-webb">
+  <div class="section-tag">USE CASE 2 · ZIA</div>
+  <h2>Uploading Sensitive Data Doesn't Trigger DLP Rule on WebA</h2>
+  <p><strong>Symptom:</strong> Uploading sensitive data to web application <strong>WebA</strong> does not trigger the DLP rule, which <em>does</em> work when uploading the same data to <strong>WebB</strong>.</p>
+
+  <div class="phase-steps">
+    <div class="phase-card"><div class="phase-num">1</div><div class="phase-body"><div class="phase-label">PROBLEM</div><div class="phase-text">Identical data + same rule + WebA = no DLP. Same upload to WebB = rule fires.</div></div></div>
+    <div class="phase-card"><div class="phase-num">2</div><div class="phase-body"><div class="phase-label">LOCATE</div><div class="phase-text">Good news — the policy works (proven by WebB). Two things to verify:<ul><li>The data actually contains sensitive info per the configured dictionary/engine.</li><li>WebA and WebB are subject to the <strong>same DLP rule</strong> for the relevant context.</li></ul></div></div></div>
+    <div class="phase-card"><div class="phase-num">3</div><div class="phase-body"><div class="phase-label">ISOLATE</div><div class="phase-text"><ol><li>Ensure the file type and other criteria in Web Insights match those in the DLP rule for WebA.</li><li>Ensure <strong>SSL Inspection is enabled for the domains WebA actually uses</strong> — an HTTP header trace will reveal them.</li><li>Take HTTP header traces while uploading the same file to WebA <em>and</em> WebB to compare.</li></ol></div></div></div>
+    <div class="phase-card"><div class="phase-num">4</div><div class="phase-body"><div class="phase-label">DIAGNOSE</div><div class="phase-text">The most common cause: WebA's upload domain (or CDN) is not covered by the SSL Inspection rule. The bytes go through encrypted; DLP cannot inspect. Extend SSL inspection coverage to the WebA upload host(s) and the rule will fire.</div></div></div>
+  </div>
+
+  <div class="callout callout-amber">
+    <div class="callout-header"><span>⚠</span><span>HEADER TRACES BEFORE POLICY EDITS</span></div>
+    <div class="callout-body">Before changing any DLP rule, take HTTP header traces of the working and non-working uploads. They reveal the actual domains, request methods, and Content-Type — which is almost always the root cause.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Works-on-WebB-but-not-WebA → almost always SSL Inspection coverage for the actual upload domain. Diagnose with HTTP header traces of both uploads (revealing real destination host + Content-Type). Then extend SSL Inspection to the WebA domain.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-weba-webb" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('weba-webb','Use Case 2 — WebA vs WebB')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-weba-webb" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('weba-webb')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · MULTI-FILE UPLOAD &amp; THE STOP-ON-FIRST-MATCH RULE</span>
+  </div>
+  <p class="socratic-insight">FileA and FileB both contain 5 SSNs. The DLP rule notifies on FileA — but FileB is silent. The instinct is to suspect FileB. The reality is in how DLP processes batched uploads.</p>
+  <ul class="socratic-questions">
+    <li>Why does the DLP engine stop scanning after the first policy match in a single multipart upload?</li>
+    <li>How does reversing the upload order let you confirm the diagnosis in 30 seconds?</li>
+  </ul>
+  <div class="answer-area" data-section="multi-file">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">DLP processes each file in a single multipart upload in browser order, and once the first file matches the policy, the engine stops processing — by design. Subsequent files in the same request are not scanned. So the second file in any batched upload is invisible to DLP regardless of its content.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Re-upload with FileB first instead of FileA. If FileB now triggers and FileA is silent, you've proven the "stop on first match" behaviour rather than any difference between the files. You can also rename the files to verify it's purely about position in the request.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-multi-file">
+  <div class="section-tag">USE CASE 3 · ZIA</div>
+  <h2>DLP Rule Sends Notification for Only One File</h2>
+  <p><strong>Symptom:</strong> When uploading FileA and FileB, each containing 5 SSNs, the DLP rule sends a notification only for FileA.</p>
+
+  <div class="phase-steps">
+    <div class="phase-card"><div class="phase-num">1</div><div class="phase-body"><div class="phase-label">PROBLEM</div><div class="phase-text">Two files, identical risk, same upload — only one triggers DLP.</div></div></div>
+    <div class="phase-card"><div class="phase-num">2</div><div class="phase-body"><div class="phase-label">LOCATE</div><div class="phase-text">Surface checks first:<ul><li>Verify FileB's file type is also a criterion in the DLP policy (if FileA &amp; FileB differ).</li><li>Verify the notification template and settings are correct.</li></ul></div></div></div>
+    <div class="phase-card"><div class="phase-num">3</div><div class="phase-body"><div class="phase-label">ISOLATE</div><div class="phase-text">If both files <em>should</em> have been flagged per policy config, isolate the session:<ol><li>Inspect the <strong>Filename</strong> field in Web Insights for both transactions.</li><li>Confirm the <strong>DLP Identifier</strong> in Web Insights matches the one in the notification email.</li><li>Capture <strong>HTTP headers</strong> for both file uploads.</li></ol></div></div></div>
+    <div class="phase-card"><div class="phase-num">4</div><div class="phase-body"><div class="phase-label">DIAGNOSE</div><div class="phase-text">When a user uploads multiple files in <strong>one session</strong>, the DLP engine processes each file in the order the browser sends them. <strong>The engine stops processing after the first policy match.</strong> So if FileA fires first, FileB is never scanned.<br><br>Confirm by checking the POST request in the HTTP header trace — both files appear in the same request with <code>Content-Type: multipart</code>. Reverse the upload order; you'll get a notification for FileB only. Renaming files can also reverse the order if the site sorts alphabetically.</div></div></div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><span>💡</span><span>30-SECOND CONFIRMATION TEST</span></div>
+    <div class="callout-body">Reverse the file upload order (or rename the files to swap alphabetical order). If the "missed" file now fires and the "caught" one goes silent, it's the stop-on-first-match behaviour — not a rule misconfiguration.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Multi-file upload in one HTTP request → DLP engine processes in browser order and <strong>stops at first policy match</strong>. Confirm via <code>Content-Type: multipart</code> in the POST. Workaround for testing: reverse the upload order; renaming files can also reverse it.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-multi-file" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('multi-file','Use Case 3 — Multi-File Upload')">+ Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-multi-file" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('multi-file')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end main-content -->
+
+<aside>
+  <a class="hub-back" href="edu-260-use-cases-hub.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    EDU-260 Use Cases Hub
+  </a>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS</div>
+    <ul class="checklist">
+      <li class="check-item" onclick="toggleDone(this,'check-0')"><input type="checkbox" id="check-0" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">DLP Flow Map</li>
+      <li class="check-item" onclick="toggleDone(this,'check-1')"><input type="checkbox" id="check-1" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">CC Data Not Detected</li>
+      <li class="check-item" onclick="toggleDone(this,'check-2')"><input type="checkbox" id="check-2" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">WebA vs WebB</li>
+      <li class="check-item" onclick="toggleDone(this,'check-3')"><input type="checkbox" id="check-3" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">Multi-File Upload</li>
+    </ul>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="quick-ref">
+    <div class="quick-ref-title">KEY TERMS</div>
+    <div class="qr-term"><div class="qr-label">DLP DICTIONARY</div><div class="qr-def">Set of patterns / EDM / IDM / OCR rules. Dictionaries feed into engines.</div></div>
+    <div class="qr-term"><div class="qr-label">DLP ENGINE</div><div class="qr-def">Boolean expression over dictionaries with a Match Count threshold (e.g. PCI requires ≥5 CC numbers).</div></div>
+    <div class="qr-term"><div class="qr-label">DLP IDENTIFIER</div><div class="qr-def">Per-transaction ID in Web Insights — must match the value in the notification email.</div></div>
+    <div class="qr-term"><div class="qr-label">CONFIDENCE SCORE</div><div class="qr-def">Dictionary's tunable threshold below which matches are discarded as noise.</div></div>
+    <div class="qr-term"><div class="qr-label">SSL INSPECTED</div><div class="qr-def">Required column in Web Insights for any DLP ticket. Must = Yes.</div></div>
+    <div class="qr-term"><div class="qr-label">MULTIPART POST</div><div class="qr-def">HTTP request bundling several files. DLP scans in order, stops at first match.</div></div>
+    <div class="qr-term"><div class="qr-label">HEADER TRACE</div><div class="qr-def">Ground truth for the real upload host + Content-Type. Always take before editing rules.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div>EDU-260 · <span>Use Cases</span></div>
+  <div>Lesson 7 — Data Protection</div>
+</footer>
+
+<script>
+const PAGE_KEY = 'edu-260-uc-07-data-protection';
+const SECTIONS = {
+  'flow':       'Section 0 — Flow Map',
+  'cc':         'Use Case 1 — CC Not Detected',
+  'weba-webb':  'Use Case 2 — WebA vs WebB',
+  'multi-file': 'Use Case 3 — Multi-File Upload'
+};
+
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();ns.push({id:Date.now(),section:key,sectionName:SECTIONS[key]||key,text});saveNotesArr(ns);ta.value='';renderNotesPanel();if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+
+function getQArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQArr(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const qs=getQArr();qs.push({id:Date.now(),section:key,sectionName:name,text});saveQArr(qs);ta.value='';renderQPanel();if(!document.getElementById('qpanel-body').classList.contains('open'))toggleQPanel();}
+function deleteQ(id){saveQArr(getQArr().filter(q=>q.id!==id));renderQPanel();}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function renderQPanel(){const qs=getQArr();const count=document.getElementById('qpanel-count');if(count){count.textContent=qs.length;count.style.display=qs.length?'inline':'none';}const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!body)return;if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));qs.forEach(q=>{if(groups[q.section])groups[q.section].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQ(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=PAGE_KEY+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+
+function navTo(id){const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}const ids=['section-flow','section-cc','section-weba-webb','section-multi-file'];document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));}
+
+function toggleDone(li,id){const cb=li.querySelector('input[type="checkbox"]');const checked=!cb.checked;cb.checked=checked;li.classList.toggle('done',checked);localStorage.setItem(PAGE_KEY+'-check-'+id,checked);}
+function initChecks(){document.querySelectorAll('.check-item').forEach(function(li){const cb=li.querySelector('input[type="checkbox"]');if(!cb)return;if(localStorage.getItem(PAGE_KEY+'-check-'+cb.id)==='true'){cb.checked=true;li.classList.add('done');}});}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();renderNotesPanel();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){
+    const key=PAGE_KEY+'-socans-'+area.dataset.section;
+    try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;area.querySelector('.btn-add-answer').textContent='✓ Answer saved';area.querySelector('.btn-add-answer').disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}
+  });
+  document.querySelectorAll('.screenshot-embed img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  setTimeout(function(){document.body.style.opacity='1';document.body.style.transition='opacity 0.35s ease';},10);
+  document.querySelectorAll('a[href]').forEach(function(a){a.addEventListener('click',function(){if(a.hostname===location.hostname)sessionStorage.setItem('pt','1');});});
+});
+</script>
+</body>
+</html>
