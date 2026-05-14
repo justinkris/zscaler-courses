@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zero Trust Automation — EDU-302</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#ffffff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --amber:#b45309;--amber-glow:rgba(180,83,9,0.07);--amber-dim:#fde68a;--amber-deep:#78350f;
+  --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+html.pt-init body{opacity:0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:#0d1a2e;display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#5a7a9a;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#0d1a2e;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(147,197,253,0.1);border:1px solid rgba(147,197,253,0.28);padding:5px 14px;border-radius:20px;font-size:11px;color:#93c5fd;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#93c5fd;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--blue);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#0d1a2e;color:#93c5fd;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 16px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+h4{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;margin-top:16px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--blue);font-weight:700;font-size:18px;line-height:1.2;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--blue-glow);border-color:var(--border);}
+.callout-note .callout-header{color:var(--blue);}
+.callout-note .callout-icon{background:var(--border);color:var(--blue);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-tip{background:var(--green-light);border-color:var(--green-border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-tip .callout-body{color:#0f4a28;}
+.callout-warn{background:var(--red-light);border-color:var(--red-border);}
+.callout-warn .callout-header{color:var(--red);}
+.callout-warn .callout-icon{background:var(--red-border);color:var(--red);}
+.callout-warn .callout-body{color:#78350f;}
+.phase-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:18px;}
+.phase-step{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:0 12px 12px 0;padding:14px 16px;}
+.phase-num{width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.phase-body{flex:1;}
+.phase-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.phase-text{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+.two-col-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;border-left:4px solid var(--blue);}
+.info-card-title{font-size:13px;font-weight:700;color:var(--blue);margin-bottom:6px;}
+.info-card-body{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+@media(max-width:700px){.two-col-grid{grid-template-columns:1fr;}}
+.code-block{background:#0d1a2e;border-radius:10px;padding:14px 18px;margin:14px 0;font-family:'Courier New',monospace;font-size:12px;color:#fde68a;line-height:1.7;overflow-x:auto;}
+.code-block .comment{color:#5a7a9a;}
+/* SCREENSHOT EMBED */
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
+/* ERROR CODE TABLE */
+.error-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px;}
+.error-table th{background:#0d1a2e;color:#93c5fd;padding:10px 14px;text-align:left;font-size:10px;letter-spacing:0.1em;font-weight:600;}
+.error-table td{padding:10px 14px;border-bottom:1px solid var(--border-dim);color:var(--text-soft);line-height:1.5;}
+.error-table tr:last-child td{border-bottom:none;}
+.error-table .code-cell{font-family:'Courier New',monospace;font-weight:700;color:var(--blue);}
+.error-table tr:hover td{background:var(--surface-2);}
+/* SOCRATIC */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+/* MENTAL NOTE */
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--blue-glow);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+/* ANALOGY */
+.analogy-box{background:#eff6ff;border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:var(--blue-deep);line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img .img-missing-msg{display:none !important;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+/* IMG PLACEHOLDER */
+.img-display-block{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;cursor:zoom-in;}
+.img-display-block img.zoomed{cursor:zoom-out;}
+.img-display-block .img-missing-msg{display:none !important;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted);font-size:13px;margin-bottom:12px;}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+/* ANSWER FEATURE */
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+/* LESSON TOOLS */
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--blue);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{background:var(--blue-deep);}
+.save-status{font-size:11px;color:var(--blue);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--blue);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#0d1a2e;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
+.mod-nav-hub:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--blue);border-color:var(--blue);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#93c5fd;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#5a7a9a;line-height:1.6;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+/* TOP PANELS — Q-panel left, Notes-panel right */
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+@media(max-width:900px){.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}
+.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../digital-delivery-consultant-hub.html">Digital Delivery Consultant</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-302-hub.html">EDU-302</a>
+      <span class="breadcrumb-sep">›</span>
+      Zero Trust Automation
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Section 11 · EDU-302</div>
+    <h1>Zero Trust <em>Automation</em></h1>
+    <p>Zscaler Zero Trust Automation framework (OneAPI · ZIdentity), the Delivery Consultant's role, manual and automated deployment methodologies, practical automation use cases, OneAPI error codes, and best practices for secure and scalable Zscaler API scripting.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">Automation is not about replacing the consultant — it's about making <em>consistent, scalable, repeatable</em> what used to be manual and error-prone.</div>
+  <p class="motivation-sub">A single misconfigured ZIA policy pushed manually to 200 tenants is 200 separate problems. The same policy deployed via OneAPI script, validated against a template, is one problem — and it's caught before it ships.</p>
+</div>
+
+<div class="top-panels">
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+<div class="notes-panel" id="notes-panel">
+  <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+    <span class="notes-panel-title">MY NOTES</span>
+    <span class="notes-panel-count" id="notes-panel-count">0</span>
+    <span class="notes-panel-hint">— click to expand</span>
+    <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+  </button>
+  <div class="notes-panel-body" id="notes-panel-body"></div>
+</div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-zta-overview',this)">ZTA Framework</button>
+  <button class="nav-tab" onclick="navTo('section-dc-role',this)">DC Role</button>
+  <button class="nav-tab" onclick="navTo('section-deployment',this)">Deployment</button>
+  <button class="nav-tab" onclick="navTo('section-use-cases',this)">Use Cases</button>
+  <button class="nav-tab" onclick="navTo('section-troubleshooting',this)">Troubleshooting &amp; Best Practices</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- ============================================================ -->
+  <!-- SECTION 1: ZTA FRAMEWORK OVERVIEW -->
+  <!-- ============================================================ -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZTA FRAMEWORK</span></div>
+    <p class="socratic-insight">Zscaler Zero Trust Automation (ZTA) provides a unified API interface — OneAPI — that acts as a single gateway to ZIA, ZPA, and Zscaler Client Connector. Instead of learning separate authentication flows and endpoint schemas for each product, automation scripts authenticate once via ZIdentity and operate across all products through one consistent interface.</p>
+    <ul class="socratic-questions">
+      <li>ZTA introduces OneAPI as a "unified interface" over existing ZIA, ZPA, and ZCC product APIs. What specific problem does this solve for a Delivery Consultant managing multiple tenants across multiple products?</li>
+      <li>ZIdentity manages both user authentication and API client credentials. Why is it important that automated scripts are treated as identity principals (with their own client IDs) rather than using admin usernames and passwords?</li>
+      <li>The ZTA framework is described as providing advantages over "legacy APIs" — Integration Benefits, Enhanced Security, and Smooth Transition. What does "Smooth Transition" mean in practice for an org migrating from direct product API scripting to OneAPI?</li>
+    </ul>
+    <div class="answer-area" data-section="zta-overview">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+          <div class="model-answer-text">Without OneAPI, a consultant managing ZIA, ZPA, and ZCC for 50 tenants needs three separate authentication flows, three different endpoint schemas, and three different error-handling patterns. Credential rotation, access control, and monitoring must be maintained per-product. OneAPI collapses this to one credential (ZIdentity client ID/JWT), one authentication endpoint, and one consistent API shape — dramatically reducing the surface area for authentication bugs and making multi-product automation scripts far simpler to write and audit.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+          <div class="model-answer-text">Admin credentials carry a human identity, session history, and audit trail tied to a person. Using them in scripts means: (1) the script breaks whenever the admin rotates their password; (2) the admin's access is broader than the script needs, violating least-privilege; (3) audit logs show actions attributed to the admin, not the script — making forensics ambiguous. API client identities (client IDs + JWT) can be scoped to specific endpoints, rotated independently, monitored for API-specific rate limit patterns, and revoked without affecting any human account.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q3 — MODEL ANSWER</div>
+          <div class="model-answer-text">"Smooth Transition" means existing scripts targeting individual ZIA/ZPA APIs don't need to be rewritten immediately — OneAPI acts as a compatibility layer that routes requests. The migration can be incremental: wrap authentication in a ZIdentity helper, change the base URL to the OneAPI gateway, and the endpoint paths mostly carry over. This is critical for organisations with existing automation assets — they don't need to choose between investing in new automation or preserving existing scripts.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-zta-overview">
+    <div class="section-label">LESSONS 1–3 · ZTA FRAMEWORK INTRODUCTION</div>
+    <h2>Zscaler Zero Trust Automation Framework</h2>
+    <p>Zscaler Zero Trust Automation (ZTA) is a comprehensive API framework designed to automate and streamline deployment processes. It provides a wide range of endpoints to manage configurations, enforce security policies, monitor environments, and handle multi-tenant setups effectively.</p>
+
+    <div class="screenshot-embed">
+      <img src="zta-learning-outcomes.png" alt="6 learning outcomes: Explain ZTA framework components, Describe DC role, Implement deployment methodologies, Identify OneAPI error codes, Assess automation use cases, Develop scripts and workflows">
+      <div class="screenshot-caption">Six learning outcomes for the ZTA course — spanning conceptual understanding through practical script development.</div>
+    </div>
+
+    <h3>Five Course Sections</h3>
+    <div class="phase-steps">
+      <div class="phase-step"><div class="phase-num">1</div><div class="phase-body"><div class="phase-title">Role of Delivery Consultant</div><div class="phase-text">Understanding the responsibilities and key tasks of a Delivery Consultant within the ZTA framework — Automation, Security, Consistency, and Incident Response.</div></div></div>
+      <div class="phase-step"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">Deployment Methodologies</div><div class="phase-text">Manual deployments using Python scripts directly against OneAPI endpoints, and automated deployments using Postman collections and pre-built templates.</div></div></div>
+      <div class="phase-step"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Automation Use Cases</div><div class="phase-text">Practical scenarios: configuring URL filtering, managing App Connector groups, multi-tenant onboarding, and fetching device status.</div></div></div>
+      <div class="phase-step"><div class="phase-num">4</div><div class="phase-body"><div class="phase-title">Troubleshooting Scenarios</div><div class="phase-text">Common API response codes and error messages, root causes of 403/409/429 responses, and debugging strategies for OneAPI integrations.</div></div></div>
+      <div class="phase-step"><div class="phase-num">5</div><div class="phase-body"><div class="phase-title">Best Practices</div><div class="phase-text">Secure API token usage, maintaining consistency via JSON templates and version control, and enhancing scalability with batch requests.</div></div></div>
+    </div>
+
+    <h3>OneAPI Architecture</h3>
+    <div class="screenshot-embed">
+      <img src="zta-architecture.png" alt="OneAPI Platform architecture: Customers (NOC SOC, IT PSE, Developers, Partners) connect through OneAPI Gateway to API Resources (ZIA, ZPA, Zscaler Client Connector, Other Products), with ZIdentity handling API credential management">
+      <div class="screenshot-caption">OneAPI Platform architecture — ZIdentity handles API client authentication; the OneAPI Gateway routes requests to ZIA, ZPA, ZCC, and other Zscaler products.</div>
+    </div>
+
+    <h3>Key Components</h3>
+    <div class="two-col-grid">
+      <div class="info-card"><div class="info-card-title">OneAPI Platform</div><div class="info-card-body">The unified API gateway. Single endpoint for all Zscaler product APIs. Supports token-based authentication, rate limiting, and consistent error responses across all products.</div></div>
+      <div class="info-card"><div class="info-card-title">ZIdentity</div><div class="info-card-body">API credential management for OneAPI. Issues JWT access tokens via OAuth2 client credentials flow. Also provides Identity Management for user and API client identities across all Zscaler products.</div></div>
+      <div class="info-card"><div class="info-card-title">Single Endpoint</div><div class="info-card-body">One base URL for all Zscaler product APIs. Eliminates per-product endpoint management. Consumers only need to know one API gateway address.</div></div>
+      <div class="info-card"><div class="info-card-title">OneAPI Gateway</div><div class="info-card-body">Multi-product router with common features: token validation, rate limit enforcement (Access Policy, Quota, Rate Limit, Much More), and request routing to the appropriate product backend.</div></div>
+    </div>
+
+    <h3>Advantages over Legacy APIs</h3>
+    <ul class="content-list">
+      <li><strong>Integration Benefits:</strong> Minimal setup for individual products — simplify configuration and incorporation of best practices.</li>
+      <li><strong>Enhanced Security:</strong> Manage and automate ZIA and ZPA security policies within the Zero Trust framework. API access is identity-scoped, not credential-shared.</li>
+      <li><strong>Smooth Transition:</strong> Bridges from traditional systems to more automated and scalable processes without requiring a full script rewrite.</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">ZTA = OneAPI + ZIdentity. OneAPI = single endpoint for ZIA, ZPA, ZCC. ZIdentity = API client credential management (OAuth2 JWT, RS256, 10-min expiry). Authentication flow: generate JWT → POST to ZIdentity oauth2/v1/token → receive access_token → use as Bearer token for all OneAPI calls.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">OneAPI is like a hotel concierge desk. Instead of going to separate departments — front desk for room service, maintenance for repairs, valet for the car — guests ask the concierge for everything. The concierge knows every department's interface, handles access control (your room key = your client ID), routes the request to the right team, and returns a consistent answer format. Departments can change their internal processes without guests learning new procedures.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--amber-dim);border-radius:8px;color:var(--amber-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon of a hotel concierge desk analogy for OneAPI. Wide scene: centre foreground is a friendly concierge at a circular desk holding a glowing key card (ZIdentity token). Around the desk, three guests (representing different customer types — a developer in a hoodie, a suited IT manager, a network engineer) pass requests to the concierge via small cards. Behind the desk, three service counters are labelled ZIA, ZPA, and ZCC — each with a small staff member ready. The concierge routes a card to the correct counter with a smile. Soft warm amber and cream tones, clean cartoon line art, small expressive characters, no text labels, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zta-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zta-overview','ZTA Framework')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-zta-overview" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('zta-overview')">+ Add Note</button></div></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 2: DC ROLE -->
+  <!-- ============================================================ -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · DELIVERY CONSULTANT ROLE</span></div>
+    <p class="socratic-insight">The Delivery Consultant's ZTA responsibilities go beyond writing scripts — they ensure that automation maintains security, produces consistent configurations across tenants, and enables rapid incident resolution. This is the difference between a DC who deploys code and one who owns the operational outcome.</p>
+    <ul class="socratic-questions">
+      <li>"Automation" and "Consistency" are listed as separate Delivery Consultant responsibilities. They sound similar — why aren't they the same thing?</li>
+      <li>A DC is responsible for "Incident Response: detecting and resolving issues promptly using OneAPI data." How does having OneAPI access change the speed of incident response compared to investigating via the admin portal?</li>
+      <li>The DC role includes "Security: enforcing ZIA and ZPA policies and monitoring system health." When should a DC use automation to enforce security policies rather than configuring them manually in the portal?</li>
+    </ul>
+    <div class="answer-area" data-section="dc-role">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+          <div class="model-answer-text">Automation means reducing or removing manual tasks — it's about speed and eliminating human touch. Consistency means standardizing configurations across environments — it's about correctness and repeatability. You can have automation without consistency: a script that deploys quickly but writes different configurations to different tenants based on context drift. And you can have consistency without automation: a well-documented manual checklist that produces identical configs every time but is slow. The best ZTA deployment achieves both.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+          <div class="model-answer-text">Portal investigation is sequential — you click through menus, filter tables, and export reports. With OneAPI, a DC can write a script that simultaneously fetches health status for all ZIA locations, all ZPA App Connectors, and all Client Connector enrollment states, then filters for anomalies in seconds. During an active incident, the time saved by parallel API queries versus manual portal clicks can be the difference between a 5-minute diagnosis and a 90-minute one. OneAPI also enables automated health checks that alert before a problem is escalated.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q3 — MODEL ANSWER</div>
+          <div class="model-answer-text">Automation is warranted when: (1) the same policy must be applied consistently across many tenants or locations — manual application introduces drift; (2) the policy needs to be applied on a schedule (e.g., maintenance window configs); (3) policy state needs to be continuously verified — automated checks catch out-of-policy drift that manual audits miss. Manual configuration is acceptable for one-time, context-specific changes where human judgment about edge cases matters more than speed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-dc-role">
+    <div class="section-label">LESSON 4 · ROLE OF DELIVERY CONSULTANT</div>
+    <h2>The Delivery Consultant's Role in ZTA</h2>
+    <p>Delivery Consultants are responsible for ensuring smooth and efficient deployments while maintaining security, compliance, and scalability through the Zscaler Zero Trust Automation framework.</p>
+
+    <div class="phase-steps">
+      <div class="phase-step"><div class="phase-num">1</div><div class="phase-body"><div class="phase-title">Automation</div><div class="phase-text">Reducing or removing manual tasks by leveraging Zscaler API integrations. This includes scripting repetitive configuration tasks, deploying policies at scale, and integrating Zscaler APIs into existing CI/CD or ITSM pipelines.</div></div></div>
+      <div class="phase-step"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">Security</div><div class="phase-text">Enforcing ZIA and ZPA policies and monitoring system health via OneAPI. Ensures that policy configurations are applied consistently and that security monitoring is automated — detecting policy drift or misconfigurations before they become incidents.</div></div></div>
+      <div class="phase-step"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Consistency</div><div class="phase-text">Standardizing configurations across multiple ZIA, ZPA, and Zscaler Client Connector environments. Using Zscaler-provided JSON templates and version-controlled scripts ensures every tenant or location receives the intended configuration — no manual variation.</div></div></div>
+      <div class="phase-step"><div class="phase-num">4</div><div class="phase-body"><div class="phase-title">Incident Response</div><div class="phase-text">Detecting and resolving issues promptly using OneAPI data. API-level access enables parallel data collection across all Zscaler products simultaneously — dramatically reducing MTTD and MTTR compared to portal-based investigation.</div></div></div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">4 DC responsibilities: Automation (reduce manual tasks) · Security (enforce ZIA/ZPA policies) · Consistency (standardize configs via templates + version control) · Incident Response (detect/resolve via OneAPI data). Automation ≠ Consistency — you can have one without the other.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">A Delivery Consultant in ZTA is like the head chef at a restaurant franchise. They don't cook every meal — they write the recipes (automation scripts), train the kitchens (deploy consistently across tenants), enforce food safety standards (security policies via API), and call the supplier directly when an ingredient goes missing (incident response via OneAPI). Individual restaurants follow the standard; the head chef ensures the standard itself is applied and monitored.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--amber-dim);border-radius:8px;color:var(--amber-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon of a head chef at a franchise restaurant analogy for the DC role. Wide scene divided into four zones. Zone 1: the head chef at a desk writing recipes on scrolls (Automation). Zone 2: the chef pinning identical recipe cards onto three different kitchen notice boards (Consistency). Zone 3: the chef inspecting a kitchen with a checklist and a health badge (Security). Zone 4: the chef on a phone call while looking at a digital supply chain dashboard (Incident Response). Warm amber and cream palette, small friendly cartoon characters, clean flat illustration, no text labels, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-dc-role" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('dc-role','DC Role')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-dc-role" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('dc-role')">+ Add Note</button></div></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 3: DEPLOYMENT METHODOLOGIES -->
+  <!-- ============================================================ -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · DEPLOYMENT METHODOLOGIES</span></div>
+    <p class="socratic-insight">ZTA deployments can be manual (Python scripts directly calling OneAPI) or automated (Postman collections, pre-configured templates). The authentication pattern is consistent: generate a JWT using your private key → exchange it at ZIdentity for an access token → use that token as a Bearer header for all API calls.</p>
+    <ul class="socratic-questions">
+      <li>ZIdentity authentication uses RS256 JWT tokens with a 10-minute expiry, rather than long-lived API keys. Why is short-lived JWT authentication preferred for API automation despite adding complexity?</li>
+      <li>When creating an App Connector Group via the ZPA API, the payload includes latitude and longitude coordinates. Why would network infrastructure configuration include geographic location data?</li>
+      <li>Postman is recommended for testing and automated deployment. What are the risks of using Postman-based deployments in a production CI/CD pipeline without additional controls like environment variable management and secret rotation?</li>
+    </ul>
+    <div class="answer-area" data-section="deployment">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+          <div class="model-answer-text">Long-lived API keys are revoked by rotating them — which breaks any script using the old key and requires immediate updates to all consumers. A stolen long-lived key is valid until someone notices and rotates it, which could be weeks. Short-lived JWTs expire in 10 minutes: a stolen token is useless almost immediately. The private key that generates them never leaves the server, so rotation means generating a new keypair — not coordinating a multi-system update. The added authentication complexity is amortized across the improved security posture and reduced key management overhead.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+          <div class="model-answer-text">ZPA uses App Connector location to inform intelligent routing decisions — directing user traffic to the nearest connector reduces latency. Location also enables geographic filtering, compliance boundaries (data sovereignty rules requiring traffic to stay in a region), and capacity planning. When a connector is provisioned via API without accurate coordinates, ZPA may route users to sub-optimal paths or fail geographic policy checks. Automating connector deployment means automating the accuracy of this metadata.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q3 — MODEL ANSWER</div>
+          <div class="model-answer-text">Postman stores credentials (client IDs, private key paths, base URLs) in environment variables or collection variables. Without controls: (1) credentials can be accidentally committed to shared workspaces or exported files; (2) there's no automatic secret rotation — old tokens stay in collection variables indefinitely; (3) Postman's Newman CLI lacks the same secret injection mechanisms as CI/CD native tools. Production automation should store secrets in a vault (HashiCorp, AWS Secrets Manager), inject them at runtime, and never persist them in collection files.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-deployment">
+    <div class="section-label">LESSON 5 · DEPLOYMENT METHODOLOGIES</div>
+    <h2>Manual &amp; Automated Deployment Approaches</h2>
+    <p>ZTA deployments use two approaches: manual Python scripting that directly calls OneAPI endpoints with full control, and automated Postman-based workflows for testing and templated deployments.</p>
+
+    <h3>Authentication Flow (Both Approaches)</h3>
+    <p>All OneAPI calls require a Bearer access token obtained through ZIdentity. The pattern is always the same:</p>
+
+    <div class="phase-steps">
+      <div class="phase-step"><div class="phase-num">1</div><div class="phase-body"><div class="phase-title">Generate JWT (RS256)</div><div class="phase-text">Use your private key (key.pem) to sign a JWT payload: iss=client_id, sub=client_id, aud="https://api.zscaler.com", exp=now+10min. Libraries: PyJWT (Python) or jose (Node.js).</div></div></div>
+      <div class="phase-step"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">Exchange JWT for Access Token</div><div class="phase-text">POST to <code>https://&lt;zidentity_base_url&gt;/oauth2/v1/token</code> with grant_type=client_credentials, client_id, client_assertion (the JWT), and client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer.</div></div></div>
+      <div class="phase-step"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Use Bearer Token</div><div class="phase-text">Include <code>Authorization: Bearer &lt;access_token&gt;</code> in all OneAPI request headers. Tokens expire in 10 minutes — scripts must handle re-authentication gracefully.</div></div></div>
+    </div>
+
+    <h3>Key Setup Commands</h3>
+    <div class="code-block">
+<span class="comment"># Generate RSA keypair for ZIdentity JWT authentication</span>
+openssl genrsa -out key.pem 2048
+openssl rsa -in key.pem -outform PEM -pubout -out public.pem
+
+<span class="comment"># Install Python dependencies</span>
+pip install pyjwt requests</div>
+
+    <h3>Manual Deployment (Python)</h3>
+    <p>Python scripts interact directly with OneAPI endpoints, providing maximum control for custom integrations. The script: authenticates via ZIdentity → builds a request payload → POSTs to the appropriate OneAPI endpoint → validates the response code.</p>
+
+    <div class="two-col-grid">
+      <div class="info-card"><div class="info-card-title">Advantages</div><div class="info-card-body">Full control over request logic and error handling. Easy to integrate into existing Python automation. Can be parameterised for multi-tenant loops. No external tool dependency.</div></div>
+      <div class="info-card"><div class="info-card-title">Considerations</div><div class="info-card-body">Must implement JWT refresh logic manually. Requires careful secret management (never hardcode client IDs). Needs version control for all scripts. Rate limiting must be handled explicitly.</div></div>
+    </div>
+
+    <h3>Automated Deployment (Postman)</h3>
+    <div class="two-col-grid">
+      <div class="info-card"><div class="info-card-title">Use Zscaler JSON Templates</div><div class="info-card-body">Always use Zscaler-provided JSON templates for all Zscaler APIs. Templates ensure correct field names, required properties, and default values — reducing 400/415 errors from malformed requests.</div></div>
+      <div class="info-card"><div class="info-card-title">Environment Variables</div><div class="info-card-body">Store client IDs, ZIdentity base URLs, and tenant-specific values in Postman environment variables. Never embed credentials directly in collection requests. Rotate environment secrets regularly.</div></div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">💡</div> BATCH REQUESTS FOR SCALE</div>
+      <div class="callout-body">Use batch requests for bulk operations to reduce API call volume. Monitor OneAPI usage via Postman REST API client to stay within rate limits and avoid 429 responses during large deployments.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Authentication flow: generate_jwt(client_id, key.pem, RS256, exp=10min) → POST /oauth2/v1/token (grant_type=client_credentials, client_assertion_type=jwt-bearer) → access_token → Bearer header. Keypair setup: openssl genrsa -out key.pem 2048. Always use Zscaler JSON templates. Use environment variables, never hardcoded credentials.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">ZIdentity JWT authentication is like a visitor badge system at a secure building. You prove your identity once at the front desk (generate JWT using your private ID card), receive a temporary badge valid for 10 minutes (access token), and use that badge to access any floor (any OneAPI endpoint) for the duration. The badge expires automatically — you don't need to "log out" and you don't leave a persistent credential that someone else could steal and reuse hours later.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--amber-dim);border-radius:8px;color:var(--amber-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon of a visitor badge system analogy for JWT authentication. Three-step scene left to right: (1) A visitor at a front desk presents a private ID card to a security guard — the guard is a computer server labelled "ZIdentity". (2) The guard prints a glowing temporary badge with a visible 10-minute countdown timer. (3) The visitor uses the badge to walk through three different doors labelled ZIA, ZPA, and ZCC — each door auto-opens as the badge is scanned. A faded clock in the background shows the badge expiring. Clean flat cartoon, warm amber and cream tones, small friendly characters, no text labels, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-deployment" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('deployment','Deployment')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-deployment" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('deployment')">+ Add Note</button></div></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 4: AUTOMATION USE CASES -->
+  <!-- ============================================================ -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · AUTOMATION USE CASES</span></div>
+    <p class="socratic-insight">The automation use cases follow a consistent pattern: authenticate → fetch existing state → create or modify → validate. This verify-then-act sequence is critical for idempotent operations in multi-tenant environments where running a script twice must not cause duplicate entries or conflicting configurations.</p>
+    <ul class="socratic-questions">
+      <li>Multi-Tenant Onboarding uses three sequential calls: GET /adminRoles/lite → GET /users → POST /webDlpRules. Why must these run in sequence rather than in parallel, and what does each call depend on from the previous?</li>
+      <li>The ZIA Deny List supports up to 25,000 URLs. What API approach ensures that adding URLs to the deny list doesn't accidentally overwrite entries already in it — and how would you validate the update was applied correctly?</li>
+      <li>Creating a Rule Label via POST /ruleLabels returns 200 OK. What would cause a 409 response instead, and how should a production script handle it?</li>
+    </ul>
+    <div class="answer-area" data-section="use-cases">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+          <div class="model-answer-text">Each call depends on data from the previous: Step 1 (GET /adminRoles/lite) returns a name-to-ID dictionary needed to assign the correct role in step 3's DLP rule. Step 2 (GET /users) verifies the user IDs that belong to this tenant — those IDs are used in the DLP policy assignment. Step 3 (POST /webDlpRules) uses both the role IDs and user IDs from steps 1-2 as required fields. Running in parallel would mean step 3 fires before you have the IDs it needs, causing a 400 error with missing required fields.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+          <div class="model-answer-text">Never POST a new list — always GET the current list first, then PATCH or PUT with the merged result. The safe pattern: GET /security/advanced (fetch existing deny list) → parse the current URL array → append new URLs to the array → PUT the full updated array back. To validate: GET again after the PUT and verify all expected URLs are present. An alternative is using append-specific endpoints if the API provides them, to avoid read-modify-write race conditions during concurrent updates.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q3 — MODEL ANSWER</div>
+          <div class="model-answer-text">A 409 means a request could not be processed because of a possible edit conflict — typically, another admin is saving a configuration change at the same time. Production scripts should implement exponential backoff retry logic for 409 responses: wait a short time (e.g., 2-5 seconds) and retry the operation. The 409 is transient — it doesn't indicate your payload is wrong, just that the resource was locked by another concurrent operation. The Retry-After header (if present) should be respected. After 3-5 retries without success, the script should log the failure and alert for manual investigation.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-use-cases">
+    <div class="section-label">LESSONS 6 · AUTOMATION USE CASES</div>
+    <h2>Practical Automation Use Cases</h2>
+    <p>These use cases demonstrate the verify-then-act pattern central to safe ZTA automation: always read current state before writing new state, and validate that changes were applied as expected.</p>
+
+    <h3>Use Case 1: Creating a Rule Label in ZIA</h3>
+    <p>Rule Labels organise and categorise ZIA policies. The automation adds a new rule label via POST and confirms the 200 OK response before proceeding.</p>
+    <ul class="content-list">
+      <li><strong>Endpoint:</strong> <code>POST /ruleLabels</code> (ZIA base URL)</li>
+      <li><strong>Payload:</strong> name, description fields in JSON</li>
+      <li><strong>Success:</strong> 200 OK → label immediately visible in ZIA Admin Portal under Rule Labels</li>
+    </ul>
+
+    <h3>Use Case 2: Fetching Device Status</h3>
+    <p>Verify device compliance and security posture by retrieving details for all devices connected through Zscaler Client Connector.</p>
+    <ul class="content-list">
+      <li><strong>Endpoint:</strong> <code>GET /getDevices</code> (Zscaler Client Connector API)</li>
+      <li><strong>Steps:</strong> Call getDevices → confirm 200 OK responses contain device details → log status for audit</li>
+      <li><strong>Use:</strong> Confirm devices are registered with correct user credentials and details. Enables compliance checking at scale.</li>
+    </ul>
+
+    <h3>Use Case 3: Multi-Tenant Onboarding</h3>
+    <p>Automates onboarding for new tenants — assigning roles, fetching users, and applying DLP policies in a single workflow. Three sequential steps:</p>
+    <div class="phase-steps">
+      <div class="phase-step"><div class="phase-num">1</div><div class="phase-body"><div class="phase-title">Fetch Admin Roles — GET /adminRoles/lite</div><div class="phase-text">Retrieves all admin roles with their IDs, names, ranks, and permissions. Builds a name-to-ID dictionary needed for policy assignment in step 3.</div></div></div>
+      <div class="phase-step"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">Get User Details — GET /users</div><div class="phase-text">Retrieves all users and auditors for the tenant — roles, permissions, and relevant attributes. Provides user IDs needed for the DLP rule.</div></div></div>
+      <div class="phase-step"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Apply DLP Policy — POST /webDlpRules</div><div class="phase-text">Applies tenant-specific security policies using DLP engines (PCI, HIPAA, Sensitive Data), protocols (FTP, HTTPS, HTTP), and action (BLOCK). Uses IDs from steps 1 and 2.</div></div></div>
+    </div>
+
+    <h3>Use Case 4: URL Filtering Automation</h3>
+    <ul class="content-list">
+      <li><strong>Deny List URLs:</strong> GET /security/advanced to fetch current blocklist (up to 25,000 URLs) → merge new entries → PUT updated list back. Always fetch before write to avoid overwriting existing entries.</li>
+      <li><strong>Blocked Malicious URLs:</strong> Configure via Advanced Threat Protection Policy in ZIA. Supports up to 275,000 entries. Script validates additions by fetching the list post-update.</li>
+      <li><strong>DLP Notification Templates:</strong> Use POST to create templates with Name, Subject, TLS settings, and plain-text message body. Templates are attached to DLP notification rules for user-facing alerts.</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Verify-then-act pattern: always GET current state before PUT/POST. Multi-Tenant Onboarding: GET /adminRoles/lite → GET /users → POST /webDlpRules (sequential, each step feeds the next). URL Deny List: max 25,000 URLs, GET first then PUT full merged list. 409 = edit conflict, retry with backoff. 200 OK = success, 201 = created.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">The verify-then-act automation pattern is like a pharmacist filling a prescription. They don't just grab the requested drug off the shelf — they first check the patient's existing medication list (GET current state), verify there are no conflicts (validate), then dispense the new medication (POST/PUT). Skipping the check creates dangerous interactions. In ZTA, "dispensing" a DLP policy without first knowing what roles and users exist creates broken references and a 400 error instead of a 200 OK.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--amber-dim);border-radius:8px;color:var(--amber-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon of a pharmacist filling a prescription as a verify-then-act analogy. Three-panel sequence: (1) Pharmacist at a computer looking at an existing patient medication list — a glowing GET request bubble floats above the screen. (2) Pharmacist checking for conflicts between the new prescription and existing meds — a small checkmark badge appears. (3) Pharmacist handing over the correct medication with a 200 OK badge on the pill bottle. A small red "X" panel beside shows the "wrong way" — pharmacist directly grabbing a bottle without checking, with a 400 error badge. Warm amber and cream palette, clean flat cartoon, small expressive characters, no text labels, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-use-cases" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('use-cases','Use Cases')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-use-cases" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('use-cases')">+ Add Note</button></div></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 5: TROUBLESHOOTING & BEST PRACTICES -->
+  <!-- ============================================================ -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · TROUBLESHOOTING &amp; BEST PRACTICES</span></div>
+    <p class="socratic-insight">Most OneAPI errors are deterministic — each HTTP status code maps to a specific, diagnosable root cause. 403 has four distinct causes. 409 is always transient. 429 always includes a Retry-After header. Knowing the specific cause, not just the code, is what turns a mystery into a five-minute fix.</p>
+    <ul class="socratic-questions">
+      <li>Error 403 is returned for four different reasons: API key disabled, no access permissions, missing SKU subscription, or ZIA Admin Portal in maintenance mode. Why does a maintenance window return 403 instead of a more specific error like 503 (service unavailable)?</li>
+      <li>The best practice says "always generate different Access Tokens for separate endpoints." Why use multiple tokens rather than one token for all API calls?</li>
+      <li>Error 409 means "another admin might be saving a configuration change at the same time." What does this tell you about the ZIA API's concurrency model, and what does a well-designed script do in response?</li>
+    </ul>
+    <div class="answer-area" data-section="troubleshooting">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+          <div class="model-answer-text">During a maintenance window, the ZIA Admin Portal is locked to prevent changes that could conflict with the upgrade being applied. From the API's perspective, this is an authorization decision — the API is actively choosing to reject write operations (POST, PUT, DELETE) to protect integrity. Returning 403 rather than 503 is intentional: 503 means the service is down, but the service is intentionally up and rejecting changes. For scripts, this means a maintenance-window 403 should trigger an "retry after maintenance window" backoff rather than an immediate error alert.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+          <div class="model-answer-text">Separate tokens per endpoint follows the least-privilege principle for API access. A single all-access token, if leaked, exposes every endpoint — a token scoped to only the endpoint it's used for limits blast radius. It also enables per-endpoint audit trails: you can see in the ZIdentity access logs that "token A accessed /ruleLabels" and "token B accessed /users" independently. When rotating credentials, you can rotate the token for a specific integration without affecting others. This is the same reasoning behind service accounts in traditional systems.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q3 — MODEL ANSWER</div>
+          <div class="model-answer-text">409 reveals that the ZIA API uses optimistic locking — it doesn't queue concurrent writes; instead, the first writer wins and subsequent writers get a 409. This is common in APIs where configuration consistency is more important than write throughput. A well-designed script handles this with exponential backoff: catch 409 → wait 2-5 seconds → retry the full read-modify-write sequence (not just the write, since the state may have changed). After 3-5 retries, escalate rather than loop indefinitely. The 409 is always transient and self-resolving once the conflicting admin operation completes.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-troubleshooting">
+    <div class="section-label">LESSONS 7–8 · TROUBLESHOOTING &amp; BEST PRACTICES</div>
+    <h2>OneAPI Error Codes &amp; Best Practices</h2>
+    <p>OneAPI returns standard HTTP status codes with consistent meanings. Understanding the specific causes — especially for 403 and 409 — prevents misdiagnosis during incident troubleshooting.</p>
+
+    <div class="screenshot-embed">
+      <img src="zta-api-error-codes.png" alt="API Response Codes table: 200 Successful, 204 Successful no content, 400 Invalid request, 401 Session not authenticated, 403 four causes including maintenance mode, 404 Not found, 405 Method not allowed, 409 Edit conflict, 415 Unsupported media type, 429 Rate limit exceeded, 500 Unexpected error, 503 Service unavailable">
+      <div class="screenshot-caption">OneAPI HTTP response codes — memorise the four causes of 403 and the transient nature of 409. Contact Zscaler Support for persistent 500/503 responses.</div>
+    </div>
+
+    <table class="error-table">
+      <thead><tr><th>Code</th><th>Meaning &amp; Key Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="code-cell">200</td><td>Successful. Operation completed as requested.</td></tr>
+        <tr><td class="code-cell">204</td><td>Successful. No content returned (common for DELETE operations).</td></tr>
+        <tr><td class="code-cell">400</td><td>Invalid or bad request — malformed JSON, missing required fields, or wrong data types. Check against Zscaler JSON template.</td></tr>
+        <tr><td class="code-cell">401</td><td>Session is not authenticated or timed out. JWT access token has expired (10-min TTL). Re-authenticate and retry.</td></tr>
+        <tr><td class="code-cell">403</td><td><strong>4 possible causes:</strong> (1) API key disabled by service provider. (2) User's role has no access permissions or functional scope. (3) Required SKU subscription is missing. (4) POST/PUT/DELETE during ZIA Admin Portal maintenance mode.</td></tr>
+        <tr><td class="code-cell">404</td><td>Resource does not exist. Check the ID or resource path in the request URL.</td></tr>
+        <tr><td class="code-cell">405</td><td>Method not allowed. The HTTP method (GET/POST/PUT/DELETE) is not supported for this endpoint. Check API docs.</td></tr>
+        <tr><td class="code-cell">409</td><td>Edit conflict — another admin is saving a configuration change at the same time. Transient. Implement retry with backoff.</td></tr>
+        <tr><td class="code-cell">415</td><td>Unsupported media type. Always include <code>Content-Type: application/json</code> in request headers.</td></tr>
+        <tr><td class="code-cell">429</td><td>Rate limit or quota exceeded. Response includes a <code>Retry-After</code> header. Respect this value — do not immediately retry.</td></tr>
+        <tr><td class="code-cell">500</td><td>Unexpected server error. Contact Zscaler Support.</td></tr>
+        <tr><td class="code-cell">503</td><td>Service temporarily unavailable. Contact Zscaler Support.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Best Practices</h3>
+    <div class="two-col-grid">
+      <div class="info-card"><div class="info-card-title">Secure API Usage</div><div class="info-card-body">· Rotate API tokens via ZIdentity periodically<br>· Generate different Access Tokens for separate endpoints<br>· Validate and assign specific API resources to users — never provide the super admin access to everyone<br>· Never share the Secret ID/JWT or Client ID<br>· Always use HTTPS for secure communication</div></div>
+      <div class="info-card"><div class="info-card-title">Consistency &amp; Scalability</div><div class="info-card-body">· Always use Zscaler-provided JSON templates for standardizing all Zscaler API configurations<br>· Implement version control for all Zscaler API scripts<br>· Use batch requests for bulk operations to reduce API call volume<br>· Monitor OneAPI usage via Postman REST API client to avoid exceeding rate limits</div></div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">💡</div> NEVER DO THESE</div>
+      <div class="callout-body"><strong>Never share your Secret ID/JWT or Client ID.</strong> Never hardcode credentials in scripts. Never use super admin access for automation — scope to only the endpoints the script needs. Never ignore 429 Retry-After values — repeated immediate retries will cause longer backoffs or account suspension.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Error codes to memorise: 401 = expired token (re-auth), 403 = 4 causes (disabled key / no permissions / missing SKU / maintenance mode), 409 = edit conflict (retry with backoff), 415 = missing Content-Type header, 429 = rate limit (respect Retry-After). Best practices: separate tokens per endpoint, Zscaler JSON templates, version control scripts, batch for bulk ops.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">OneAPI error codes are like a traffic system's response signals. 200 is a green light — proceed. 401 is an expired parking permit — valid yesterday, needs renewal today. 403 is a road closed sign — someone with authority explicitly blocked this route (for any of four reasons). 409 is two cars arriving at a one-lane bridge from opposite sides simultaneously — one has to back up and retry. 429 is a toll booth queue full sign — a Retry-After timer tells you exactly when to try again. 500 is a sinkhole — call maintenance.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--amber-dim);border-radius:8px;color:var(--amber-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a traffic system as an analogy for API error codes. Wide scene showing a road with five separate situations: (1) a green traffic light with a small "200" badge — a happy car drives through; (2) a parking meter with "EXPIRED" and a "401" badge — a confused driver checks their phone; (3) a road closed barrier with a "403" badge and a small official in a vest — car stopped; (4) two cartoon cars facing each other at a one-lane bridge with a "409" badge — one backing up with an arrow; (5) a full toll booth queue with a numbered timer sign and "429" badge. Warm amber and cream tones, clean flat cartoon, small expressive characters, no text labels, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-troubleshooting" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('troubleshooting','Troubleshooting &amp; Best Practices')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-troubleshooting" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('troubleshooting')">+ Add Note</button></div></div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-302-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-302 Hub
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleDone(this,0)"><div class="subtopic-check"></div><span>ZTA = OneAPI + ZIdentity. OneAPI = single gateway for ZIA + ZPA + ZCC.</span></li>
+      <li onclick="toggleDone(this,1)"><div class="subtopic-check"></div><span>Architecture: Customers → OneAPI Gateway → ZIdentity (auth) → API Resources</span></li>
+      <li onclick="toggleDone(this,2)"><div class="subtopic-check"></div><span>DC 4 responsibilities: Automation · Security · Consistency · Incident Response</span></li>
+      <li onclick="toggleDone(this,3)"><div class="subtopic-check"></div><span>Auth flow: RS256 JWT (10-min) → POST /oauth2/v1/token → Bearer access_token</span></li>
+      <li onclick="toggleDone(this,4)"><div class="subtopic-check"></div><span>Keypair: openssl genrsa -out key.pem 2048 / pip install pyjwt requests</span></li>
+      <li onclick="toggleDone(this,5)"><div class="subtopic-check"></div><span>Multi-tenant onboarding: GET /adminRoles/lite → GET /users → POST /webDlpRules</span></li>
+      <li onclick="toggleDone(this,6)"><div class="subtopic-check"></div><span>URL Deny List: max 25,000. Always GET first, merge, then PUT full list back.</span></li>
+      <li onclick="toggleDone(this,7)"><div class="subtopic-check"></div><span>Error codes: 401=expired token · 403=4 causes · 409=conflict (retry) · 429=rate limit</span></li>
+      <li onclick="toggleDone(this,8)"><div class="subtopic-check"></div><span>Best practices: separate tokens per endpoint · JSON templates · version control · batch requests</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="quick-ref"><div class="quick-ref-term">OneAPI</div><div class="quick-ref-def">Zscaler's unified API gateway for ZIA, ZPA, and ZCC. Single endpoint, single auth flow, consistent error schema. Eliminates per-product API management.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">ZIdentity</div><div class="quick-ref-def">API credential management component of ZTA. Issues JWT access tokens via OAuth2 client credentials flow. Manages both user and API client identities.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">JWT (RS256)</div><div class="quick-ref-def">JSON Web Token signed with RSA private key. Used to authenticate to ZIdentity's oauth2/v1/token endpoint. Expires in 10 minutes. Never expires in shared storage.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">client_assertion_type</div><div class="quick-ref-def">Required field for ZIdentity token exchange: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer". Specifies that the grant uses a JWT assertion rather than a password.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">409 Conflict</div><div class="quick-ref-def">Edit conflict — another admin is modifying the resource simultaneously. Always transient. Handle with retry + exponential backoff. Re-read state before retrying the write.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">429 Rate Limit</div><div class="quick-ref-def">Rate limit or quota exceeded. Response always includes a Retry-After header. Respect this value. Use batch requests to reduce call volume. Monitor usage via Postman REST API client.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">webDlpRules</div><div class="quick-ref-def">ZIA endpoint for DLP web policy rules. Used in multi-tenant onboarding to apply tenant-specific data protection policies. Requires admin role IDs and user IDs from prerequisite GET calls.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Deny List</div><div class="quick-ref-def">ZIA advanced threat protection URL blocklist. Max 25,000 URLs. Managed via GET /security/advanced then PUT with the full merged list. Always read before writing.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-302 · <span>Section 11</span></div>
+  <div class="footer-right">Zero Trust Automation · Section 11 of 11</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu302-zero-trust-automation';
+const SECTIONS={'zta-overview':'ZTA Framework','dc-role':'DC Role','deployment':'Deployment','use-cases':'Use Cases','troubleshooting':'Troubleshooting & Best Practices'};
+
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();const name=(typeof SECTIONS!=='undefined'&&SECTIONS[key])?SECTIONS[key]:key;ns.push({id:Date.now(),section:key,sectionName:name,text});saveNotesArr(ns);ta.value='';renderNotesPanel();const body=document.getElementById('notes-panel-body');if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=typeof SECTIONS!=='undefined'?Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]])):{};ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);else{if(!groups['_other'])groups['_other']=[];groups['_other'].push(n);}});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;const label=typeof SECTIONS!=='undefined'&&SECTIONS[key]?SECTIONS[key]:key;html+=`<div class="q-group"><div class="q-group-label">${label}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();renderNotesPanel();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
+  document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
+  document.querySelectorAll('.analogy-img img, .img-display-block img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  document.querySelectorAll('.screenshot-embed img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+});
+</script>
+<script src="../../../transitions.js"></script>
+</body>
+</html>

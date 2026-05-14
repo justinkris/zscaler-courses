@@ -13,7 +13,7 @@
   --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;
   --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
   --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
-  --amber:#b45309;--amber-light:#fef9ec;--amber-border:#fde68a;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
   --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
 }
 html.pt-init body{opacity:0;}
@@ -22,14 +22,14 @@ body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);mi
 header{padding:48px 60px 36px;background:#0d1a2e;display:flex;align-items:flex-end;gap:32px;}
 .header-left{flex:1;}
 .breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#5a7a9a;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
-.breadcrumb a{color:#60a5fa;text-decoration:none;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;}
 .breadcrumb a:hover{text-decoration:underline;}
 .breadcrumb-sep{color:#1e3a5c;}
-.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#60a5fa;letter-spacing:0.08em;margin-bottom:14px;}
-.dot-live{width:6px;height:6px;background:#60a5fa;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(147,197,253,0.1);border:1px solid rgba(147,197,253,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#93c5fd;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#93c5fd;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
-h1 em{font-style:italic;font-weight:400;color:#60a5fa;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
 header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
 .motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
 .motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
@@ -48,7 +48,7 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
 .q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
 .q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
 .q-item:last-child{border-bottom:none;}
-.q-num{width:22px;height:22px;border-radius:50%;background:#0d1a2e;color:#60a5fa;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#0d1a2e;color:#93c5fd;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
 .q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
 .q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
 .q-del:hover{color:var(--red);background:var(--red-light);}
@@ -95,7 +95,7 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--b
 .method-brl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
 .method-brl-col{font-size:12.5px;color:var(--text-soft);line-height:1.6;}
 .method-brl-label{font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:6px;}
-.method-brl-col.b .method-brl-label{color:var(--green);}
+.method-brl-col.b .method-brl-label{color:var(--blue);}
 .method-brl-col.r .method-brl-label{color:var(--blue);}
 .method-brl-col.l .method-brl-label{color:var(--red);}
 .method-brl-col ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:4px;}
@@ -130,7 +130,13 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--b
 
 /* SOCRATIC */
 .socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
-.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
 .socratic-icon{font-size:17px;flex-shrink:0;}
 .socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
 .socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
@@ -143,12 +149,12 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--b
 .mental-note-block-inner{flex:1;}
 .mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
 .mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
-.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
-.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-box{background:#eff6ff;border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:4px;}
 .analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
 .analogy-label:hover::after{opacity:1;}
 .analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
-.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.analogy-text{font-size:13px;color:var(--text-soft);line-height:1.65;font-style:italic;}
 .analogy-box > .analogy-img{display:none;}
 .analogy-box.expanded > .analogy-img{display:block;}
 .analogy-img .img-missing-msg{display:none !important;}
@@ -159,6 +165,10 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--b
 .img-display-block img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;border-radius:8px;display:block;margin:0 auto 12px;}
 .img-display-block img.zoomed{max-width:100% !important;cursor:zoom-out;}
 .img-display-block .img-missing-msg{display:none !important;}
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
 .prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
 .prompt-toggle:hover{color:var(--text);border-color:var(--text);}
 .prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
@@ -168,13 +178,13 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--b
 .answer-textarea:focus{border-color:var(--text);}
 .answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
 .answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
-.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
 .btn-add-answer:hover:not(:disabled){opacity:0.85;}
 .btn-add-answer:disabled{opacity:0.5;cursor:default;}
 .btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
 .btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
-.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
-.btn-see-answer:hover:not(:disabled){background:var(--surface-2);}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
 .model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
 .model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
 .model-answer-item:first-child{padding-top:0;}
@@ -188,9 +198,9 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--b
 .tool-textarea:focus{border-color:var(--blue);background:#fff;}
 .tool-textarea::placeholder{color:var(--text-muted);}
 .tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
-.btn-add-q{background:#0d1a2e;color:#60a5fa;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
-.btn-add-q:hover{background:#1e3a5c;}
-.save-status{font-size:11px;color:var(--green);font-style:italic;}
+.btn-add-q{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{background:var(--blue-deep);}
+.save-status{font-size:11px;color:var(--blue);font-style:italic;}
 footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
 .footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
 .footer-left span{color:var(--blue);}
@@ -204,16 +214,32 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
 .subtopic-list li:last-child{border-bottom:none;}
 .subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
-.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done .subtopic-check{background:var(--blue);border-color:var(--blue);}
 .subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
 .quick-ref{background:#0d1a2e;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
-.quick-ref-term{font-size:11px;font-weight:600;color:#60a5fa;letter-spacing:0.06em;margin-bottom:4px;}
-.quick-ref-def{font-size:12px;color:#7aa8cc;line-height:1.6;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#93c5fd;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#5a7a9a;line-height:1.6;}
 .sidebar-pdf{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-decoration:none;color:var(--text);margin-bottom:8px;transition:border-color 0.15s,background 0.15s;}
 .sidebar-pdf:hover{border-color:var(--blue);background:var(--blue-glow);}
 .sidebar-pdf-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--blue);margin-bottom:2px;}
 .sidebar-pdf-title{font-size:12px;font-weight:600;line-height:1.35;color:var(--text);}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+/* TOP PANELS — Q-panel left, Notes-panel right */
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+@media(max-width:900px){.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}
+.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
 <body>
@@ -240,6 +266,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <p class="motivation-sub">Every other Zscaler decision — policy, DLP, posture, ZDX — assumes traffic actually reaches the cloud. This section is where that assumption gets tested in real customer environments and broken designs get caught early.</p>
 </div>
 
+<div class="top-panels">
 <div class="qpanel" id="qpanel">
   <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
     <span class="qpanel-title">MY QUESTIONS</span>
@@ -248,6 +275,16 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
   </button>
   <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+<div class="notes-panel" id="notes-panel">
+  <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+    <span class="notes-panel-title">MY NOTES</span>
+    <span class="notes-panel-count" id="notes-panel-count">0</span>
+    <span class="notes-panel-hint">— click to expand</span>
+    <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+  </button>
+  <div class="notes-panel-body" id="notes-panel-body"></div>
+</div>
 </div>
 
 <nav class="section-nav">
@@ -332,7 +369,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-overview" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('overview')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -367,7 +404,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap','Recap')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-recap" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('recap')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -466,11 +503,9 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       </div>
     </div>
 
-    <div class="img-display-block">
-      <img src="1.png" alt="Traffic forwarding methods comparison" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
-      <div class="img-missing-msg" style="display:none;"><strong>1.png</strong></div>
-      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
-      <div class="prompt-content" hidden>Flat blue minimalist illustration comparing three traffic-forwarding methods (GRE, IPSec, PAC) as parallel pipelines from a customer site on the left to a Zscaler cloud on the right. GRE pipe is the widest with a "1 Gb" badge floating above it, drawn as an open pipe (unencrypted). IPSec pipe is medium width with a small padlock icon and a "500 Mb" badge. PAC pipe is the narrowest with a small browser icon and a faint dashed line indicating browser-only traffic. Each pipe has a customer-side connector and a cloud-side connector. Clean simple shapes, no text labels.</div>
+    <div class="screenshot-embed">
+      <img src="traffic-forwarding-comparison.png" alt="Traffic forwarding comparison chart: ZCC, GRE, IPSec, PAC files across user types and features">
+      <div class="screenshot-caption">Course reference chart comparing all four traffic-forwarding methods (Zscaler Client Connector, GRE Tunnels, IPSec Tunnels, PAC Files) across traffic types (mobile users, stationary users, guest access, servers, IoT) and feature capabilities — use this to quickly determine which method applies to a given scenario.</div>
     </div>
 
     <h3>Customer scenarios — what to recommend</h3>
@@ -524,7 +559,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-forwarding" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('forwarding','Traffic Forwarding')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-forwarding" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-forwarding"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-forwarding" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('forwarding')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -612,7 +647,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zcc-auth" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zcc-auth','ZCC Auth Troubleshooting')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-zcc-auth" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-zcc-auth"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-zcc-auth" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('zcc-auth')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -693,7 +728,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zcc-fwd" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zcc-fwd','ZCC Forwarding')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-zcc-fwd" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-zcc-fwd"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-zcc-fwd" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('zcc-fwd')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -742,11 +777,14 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="bp-card"><div class="bp-card-title">Never Clone VMs</div><div class="bp-card-body">App Connectors running in VM environments <strong>should never be cloned</strong> — the provisioning key will no longer match the virtual hardware fingerprint.</div></div>
     </div>
 
-    <div class="img-display-block">
-      <img src="2.png" alt="ZPA configuration relationship map" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
-      <div class="img-missing-msg" style="display:none;"><strong>2.png</strong></div>
-      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
-      <div class="prompt-content" hidden>Flat blue minimalist illustration of the ZPA configuration relationship chain — five horizontal stacked rounded rectangles from left to right with arrows between them: "Segment Groups" → "Application Segments" → "Server Groups" → "App Connector Groups" → "App Connectors". Each rectangle has a tiny pictogram inside (folder, app icon, server rack, network folder, plug). Many-to-many lines drawn between Server Groups and App Connector Groups; many-to-one arrows between others. Clean simple shapes, no text labels.</div>
+    <div class="screenshot-embed">
+      <img src="app-connector-deployment-designs.png" alt="App Connector deployment designs: Recommended, DMZ, DMZ Split DNS, Explicit Proxy, Tunnel options">
+      <div class="screenshot-caption">Zscaler's recommended App Connector deployment design alongside four alternative options (DMZ, DMZ with Split DNS, Explicit Proxy, Tunnel) — the recommended design keeps App Connectors closest to applications with outbound-only connections, while the alternatives accommodate different network segmentation requirements.</div>
+    </div>
+
+    <div class="screenshot-embed">
+      <img src="zpa-segment-connector-flow.png" alt="ZPA object hierarchy: Segment Groups → Application Segments → Server Groups → App Connector Groups → App Connectors">
+      <div class="screenshot-caption">Live ZPA portal view showing the configuration relationship chain from Segment Groups through Application Segments and Server Groups to App Connector Groups and individual App Connectors — each layer maps to the next, and one Server Group can link to multiple App Connector Groups.</div>
     </div>
 
     <h3>Safemarch customer scenario</h3>
@@ -798,7 +836,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-app-connectors" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('app-connectors','App Connectors')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-app-connectors" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-app-connectors"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-app-connectors" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('app-connectors')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -844,11 +882,9 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <h3>Operational management post-deployment</h3>
     <p>Following successful deployment, administrators gain access to a range of management options for Zero Trust Branch Devices — overseen by Zscaler Cloud Operations as part of the ZTP model. Click through the tabs in the original course content to see Health Monitoring, Configuration, Updates, and Lifecycle Management options that admins retain visibility into.</p>
 
-    <div class="img-display-block">
-      <img src="3.png" alt="Zero Trust Branch deployment flow" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
-      <div class="img-missing-msg" style="display:none;"><strong>3.png</strong></div>
-      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
-      <div class="prompt-content" hidden>Flat blue minimalist illustration of the Zero Trust Branch deployment flow — a customer site on the left containing a small server rack labelled with a "branch device" icon, a glowing arrow labelled with a small ZTP gear icon going upward to a central Zscaler Cloud Operations cloud shield with three connecting links to ZIA, ZPA, and the Branch/Cloud Connector Portal arranged in a triangle around the cloud. A small verification token icon hovers between the customer site and the portal. Clean simple shapes, no text labels.</div>
+    <div class="screenshot-embed">
+      <img src="ztb-device-setup-steps.png" alt="Zero Trust Branch Device setup steps table: hardware installation through deployment status">
+      <div class="screenshot-caption">Course reference table showing the six sequential steps to set up a Zero Trust Branch Device — from hardware installation and portal access through serial number retrieval, configuration template creation, template status update, and final deployment confirmation.</div>
     </div>
 
     <div class="mental-note-block">
@@ -873,7 +909,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-ztb" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('ztb','Zero Trust Branch')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-ztb" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-ztb"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-ztb" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('ztb')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -913,7 +949,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap-final" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap-final','Recap')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap-final" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap-final"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-recap-final" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('recap-final')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -990,16 +1026,24 @@ function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));r
 function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
 function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
 function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();const name=(typeof SECTIONS!=='undefined'&&SECTIONS[key])?SECTIONS[key]:key;ns.push({id:Date.now(),section:key,sectionName:name,text});saveNotesArr(ns);ta.value='';renderNotesPanel();const body=document.getElementById('notes-panel-body');if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=typeof SECTIONS!=='undefined'?Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]])):{};ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);else{if(!groups['_other'])groups['_other']=[];groups['_other'].push(n);}});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;const label=typeof SECTIONS!=='undefined'&&SECTIONS[key]?SECTIONS[key]:key;html+=`<div class="q-group"><div class="q-group-label">${label}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
 function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
 function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
 function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 
 document.addEventListener('DOMContentLoaded',function(){
-  renderQPanel();initNotes();initChecks();
+  renderQPanel();renderNotesPanel();initChecks();
   if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
   document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
   document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
-  document.querySelectorAll('.analogy-img img, .img-display-block img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  document.querySelectorAll('.analogy-img img, .img-display-block img, .screenshot-embed img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
 });
 </script>
 </body>

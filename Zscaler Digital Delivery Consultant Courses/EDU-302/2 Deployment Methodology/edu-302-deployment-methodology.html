@@ -8,38 +8,38 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#edfaf3;--surface:#ffffff;--surface-2:#f0faf5;--border:#a7e0c0;--border-dim:#d4f0e0;
-  --text:#0a1f12;--text-soft:#1a3d24;--text-muted:#4a7a5a;
+  --bg:#eef4ff;--surface:#ffffff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
   --green:#1a7c4a;--green-glow:rgba(26,124,74,0.07);--green-dim:#a7e0c0;
   --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
   --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
-  --amber:#b45309;--amber-light:#fef9ec;--amber-border:#fde68a;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
   --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
 }
 html.pt-init body{opacity:0;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-header{padding:48px 60px 36px;background:#0a1f12;display:flex;align-items:flex-end;gap:32px;}
+header{padding:48px 60px 36px;background:#0d1a2e;display:flex;align-items:flex-end;gap:32px;}
 .header-left{flex:1;}
-.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#4a7a5a;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
-.breadcrumb a{color:#4ade80;text-decoration:none;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#5a7a9a;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;}
 .breadcrumb a:hover{text-decoration:underline;}
-.breadcrumb-sep{color:#1a3d24;}
-.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#4ade80;letter-spacing:0.08em;margin-bottom:14px;}
-.dot-live{width:6px;height:6px;background:#4ade80;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+.breadcrumb-sep{color:#1e3a5c;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(147,197,253,0.1);border:1px solid rgba(147,197,253,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#93c5fd;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#93c5fd;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
-h1 em{font-style:italic;font-weight:400;color:#4ade80;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
 header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
 .motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
 .motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
-.motivation-text em{font-style:italic;color:var(--green);}
+.motivation-text em{font-style:italic;color:var(--blue);}
 .motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
 .qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
 .qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;transition:background 0.15s;}
 .qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
 .qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
-.qpanel-count{background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
 .qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
 .qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
 .qpanel-body{display:none;padding:0 60px 22px;}
@@ -48,7 +48,7 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
 .q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
 .q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
 .q-item:last-child{border-bottom:none;}
-.q-num{width:22px;height:22px;border-radius:50%;background:#0a1f12;color:#4ade80;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#0d1a2e;color:#93c5fd;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
 .q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
 .q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
 .q-del:hover{color:var(--red);background:var(--red-light);}
@@ -56,7 +56,7 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
 .section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
 .nav-tab{padding:14px 18px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
 .nav-tab:hover{color:var(--text);}
-.nav-tab.active{color:var(--green);border-bottom-color:var(--green);}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
 main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
 .main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
 .sidebar{padding:36px 28px 60px;background:var(--surface-2);}
@@ -68,16 +68,16 @@ h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text)
 p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
 ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
-ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--green);font-weight:700;font-size:18px;line-height:1.2;}
-.key-concept{background:var(--green-glow);border:1px solid var(--green-dim);border-left:3px solid var(--green);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
-.key-concept strong{color:var(--green);font-weight:600;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--blue);font-weight:700;font-size:18px;line-height:1.2;}
+.key-concept{background:var(--blue-glow);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept strong{color:var(--blue);font-weight:600;}
 .callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
 .callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
 .callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
 .callout-body{font-size:13px;line-height:1.7;}
-.callout-note{background:var(--green-glow);border-color:var(--green-dim);}
-.callout-note .callout-header{color:var(--green);}
-.callout-note .callout-icon{background:var(--green-dim);color:var(--green);}
+.callout-note{background:var(--blue-glow);border-color:var(--border);}
+.callout-note .callout-header{color:var(--blue);}
+.callout-note .callout-icon{background:var(--border);color:var(--blue);}
 .callout-note .callout-body{color:var(--text-soft);}
 .callout-tip{background:var(--blue-light);border-color:var(--blue-border);}
 .callout-tip .callout-header{color:var(--blue);}
@@ -87,7 +87,7 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--g
 /* PHASES PIPELINE */
 .phase-pipeline{display:flex;gap:0;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:18px;}
 .phase-step{flex:1;min-width:120px;text-align:center;padding:10px 8px;border-radius:8px;font-family:'Fraunces',serif;font-size:12px;font-weight:600;color:#fff;margin:2px;}
-.phase-step.s1{background:#9ec5fa;color:#0a1f12;}
+.phase-step.s1{background:#9ec5fa;color:#0d1a2e;}
 .phase-step.s2{background:#6ba8f5;}
 .phase-step.s3{background:#3b82f6;}
 .phase-step.s4{background:#2563eb;}
@@ -95,30 +95,30 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--g
 .phase-step.s6{background:#1e3a8a;}
 
 /* PHASE CARD */
-.phase-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--green);border-radius:0 14px 14px 0;padding:18px 22px;margin-bottom:14px;}
+.phase-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:0 14px 14px 0;padding:18px 22px;margin-bottom:14px;}
 .phase-card-head{display:flex;align-items:baseline;gap:12px;margin-bottom:10px;}
-.phase-num{width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.phase-num{width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .phase-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);}
 .phase-card p{margin-bottom:8px;font-size:13px;}
 .phase-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;}
 .phase-col{background:var(--surface-2);border-radius:10px;padding:12px 14px;}
-.phase-col-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--green);margin-bottom:6px;}
+.phase-col-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:6px;}
 .phase-col ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:4px;}
 .phase-col ul li{font-size:12.5px;color:var(--text-soft);padding-left:14px;position:relative;line-height:1.55;}
-.phase-col ul li::before{content:'›';position:absolute;left:0;color:var(--green);font-weight:700;}
+.phase-col ul li::before{content:'›';position:absolute;left:0;color:var(--blue);font-weight:700;}
 
 /* ZPA RELATIONSHIPS */
 .zpa-rel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:18px;}
 .zpa-rel-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
-.zpa-rel-title{font-size:12px;font-weight:700;color:var(--green);margin-bottom:6px;letter-spacing:0.04em;}
+.zpa-rel-title{font-size:12px;font-weight:700;color:var(--blue);margin-bottom:6px;letter-spacing:0.04em;}
 .zpa-rel-body{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
 .zpa-rel-rel{margin-top:6px;font-size:11px;color:var(--text-muted);font-style:italic;}
-.zpa-rel-rel strong{color:var(--green);font-style:normal;}
+.zpa-rel-rel strong{color:var(--blue);font-style:normal;}
 
 /* AREAS GRID */
 .areas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:16px;}
 .area-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;}
-.area-num{width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.area-num{width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .area-text{font-size:13px;color:var(--text-soft);font-weight:500;line-height:1.4;}
 
 /* QA */
@@ -128,28 +128,34 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--g
 .qa-a{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
 
 /* SOCRATIC */
-.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--green);}
-.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
 .socratic-icon{font-size:17px;flex-shrink:0;}
 .socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
 .socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
 .socratic-questions{list-style:none;padding:0;margin:0;}
 .socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
 .socratic-questions li:last-child{border-bottom:none;}
-.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--green);}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
 /* MENTAL NOTE */
-.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--green-glow);border:1px solid var(--green-dim);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--blue-glow);border:1px solid var(--border);}
 .mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
 .mental-note-block-inner{flex:1;}
-.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--green);margin-bottom:3px;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
 .mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
 /* ANALOGY */
-.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
-.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-box{background:#eff6ff;border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:4px;}
 .analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
 .analogy-label:hover::after{opacity:1;}
 .analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
-.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.analogy-text{font-size:13px;color:var(--text-soft);line-height:1.65;font-style:italic;}
 .analogy-box > .analogy-img{display:none;}
 .analogy-box.expanded > .analogy-img{display:block;}
 .analogy-img .img-missing-msg{display:none !important;}
@@ -171,13 +177,13 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--g
 .answer-textarea:focus{border-color:var(--text);}
 .answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
 .answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
-.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
 .btn-add-answer:hover:not(:disabled){opacity:0.85;}
 .btn-add-answer:disabled{opacity:0.5;cursor:default;}
 .btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
 .btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
-.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
-.btn-see-answer:hover:not(:disabled){background:var(--surface-2);}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
 .model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
 .model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
 .model-answer-item:first-child{padding-top:0;}
@@ -189,18 +195,18 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--g
 .lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
 .tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
 .tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;line-height:1.65;}
-.tool-textarea:focus{border-color:var(--green);background:#fff;}
+.tool-textarea:focus{border-color:var(--blue);background:#fff;}
 .tool-textarea::placeholder{color:var(--text-muted);}
 .tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
-.btn-add-q{background:#0a1f12;color:#4ade80;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
-.btn-add-q:hover{background:#1a3d24;}
-.save-status{font-size:11px;color:var(--green);font-style:italic;}
+.btn-add-q{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{background:var(--blue-deep);}
+.save-status{font-size:11px;color:var(--blue);font-style:italic;}
 footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
 .footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
-.footer-left span{color:var(--green);}
+.footer-left span{color:var(--blue);}
 .footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
 .mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
-.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#0a1f12;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#0d1a2e;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
 .mod-nav-hub:hover{opacity:0.85;}
 .sidebar-section{margin-bottom:28px;}
 .sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
@@ -208,18 +214,39 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
 .subtopic-list li:last-child{border-bottom:none;}
 .subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
-.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done .subtopic-check{background:var(--blue);border-color:var(--blue);}
 .subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
-.quick-ref{background:#0a1f12;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
-.quick-ref-term{font-size:11px;font-weight:600;color:#4ade80;letter-spacing:0.06em;margin-bottom:4px;}
-.quick-ref-def{font-size:12px;color:#6aaa80;line-height:1.6;}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#93c5fd;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#5a7a9a;line-height:1.6;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}.phase-grid{grid-template-columns:1fr;}.phase-step{min-width:80px;font-size:10px;}}
 /* DIAGRAM IMG ZOOM */
 .img-display-block img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
 .img-display-block img.zoomed{max-width:100% !important;cursor:zoom-out;}
 @media(max-width:520px){.img-display-block img{max-width:100% !important;}}
 .img-display-block .img-missing-msg{display:none !important;}
+/* SCREENSHOT EMBEDS */
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
 
+/* TOP PANELS — Q-panel left, Notes-panel right */
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+@media(max-width:900px){.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}
+.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
 <body>
@@ -246,6 +273,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <p class="motivation-sub">Without a phased framework, every customer engagement reinvents itself — risky, slow, inconsistent. The six phases (Initiate → Plan → Configure → Pilot → Production → Transition) give every Delivery Consultant the same scaffolding to fit ZIA, ZPA, and ZDX work into.</p>
 </div>
 
+<div class="top-panels">
 <div class="qpanel" id="qpanel">
   <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
     <span class="qpanel-title">MY QUESTIONS</span>
@@ -254,6 +282,16 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
   </button>
   <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+<div class="notes-panel" id="notes-panel">
+  <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+    <span class="notes-panel-title">MY NOTES</span>
+    <span class="notes-panel-count" id="notes-panel-count">0</span>
+    <span class="notes-panel-hint">— click to expand</span>
+    <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+  </button>
+  <div class="notes-panel-body" id="notes-panel-body"></div>
+</div>
 </div>
 
 <nav class="section-nav">
@@ -329,7 +367,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-overview" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('overview')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -397,7 +435,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-specialists" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('specialists','Deployment Specialists')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-specialists" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-specialists"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-specialists" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('specialists')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -429,6 +467,11 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <h2>The Six Deployment Phases</h2>
     <p>Zscaler recommends a phased approach to planning and completing deployments. Each phase has its own methodology actions and produces specific deliverables that, together, drive a successful customer outcome.</p>
 
+    <div class="screenshot-embed">
+      <img src="six-phase-pipeline.png" alt="Six deployment phases shown as a chevron pipeline: Initiate → Plan → Configure → Pilot Roll-out → Production Roll-out → Transition">
+      <div class="screenshot-caption">The six Zscaler deployment phases as a left-to-right chevron pipeline — each phase darkens in shade, visualising how the project progresses from initial scoping through to final handover.</div>
+    </div>
+
     <div class="phase-pipeline">
       <div class="phase-step s1">Initiate</div>
       <div class="phase-step s2">Plan</div>
@@ -436,13 +479,6 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="phase-step s4">Pilot Roll-out</div>
       <div class="phase-step s5">Production Roll-out</div>
       <div class="phase-step s6">Transition</div>
-    </div>
-
-    <div class="img-display-block">
-      <img src="1.png" alt="Six-phase deployment pipeline" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
-      <div class="img-missing-msg" style="display:none;">📷 <strong>1.png</strong> will appear here once you add it to this folder</div>
-      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
-      <div class="prompt-content" hidden>Flat green minimalist illustration of the six deployment phases as a horizontal chevron pipeline. Six arrow-shaped boxes pointing right, each a slightly darker shade of green from light mint on the left to deep forest green on the right, with rounded corners and tiny pictogram icons inside each (clipboard for Initiate, blueprint for Plan, gear for Configure, paper airplane for Pilot, factory for Production Roll-out, ribbon-tied folder for Transition). The whole pipeline sits on a clean light background with a subtle dashed timeline beneath. Clean simple shapes, no text labels.</div>
     </div>
 
     <div class="phase-card">
@@ -557,7 +593,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-phases" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('phases','Six Phases')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-phases" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-phases"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-phases" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('phases')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -636,7 +672,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zia" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zia','ZIA')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-zia" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-zia"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-zia" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('zia')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -697,13 +733,6 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       </div>
     </div>
 
-    <div class="img-display-block">
-      <img src="2.png" alt="ZPA configuration relationship map" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
-      <div class="img-missing-msg" style="display:none;">📷 <strong>2.png</strong> will appear here once you add it to this folder</div>
-      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
-      <div class="prompt-content" hidden>Flat green minimalist illustration of the ZPA configuration object model. Two columns connected by lines: left column has stacked rounded rectangles labelled with tiny icons — Application Segments (app icon) connecting to Segment Groups (folder icon) with a "many-to-one" arrow; right column has stacked App Connectors (plug icon) connecting upward to Connector Groups (network-folder icon) with a "many-to-one" arrow, and across to Server Groups (server-rack icon) with a "many-to-many" arrow. A small Policy diamond sits between the two columns linking selected Segment Groups to selected Connector Groups. Soft green gradient connecting lines. Clean simple shapes, no text labels.</div>
-    </div>
-
     <h3>Six ZPA design areas</h3>
     <div class="areas-grid">
       <div class="area-card"><div class="area-num">1</div><div class="area-text">Authentication</div></div>
@@ -712,6 +741,11 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <div class="area-card"><div class="area-num">4</div><div class="area-text">Applications &amp; Application Segments</div></div>
       <div class="area-card"><div class="area-num">5</div><div class="area-text">Policy Types</div></div>
       <div class="area-card"><div class="area-num">6</div><div class="area-text">Logging &amp; Diagnostics</div></div>
+    </div>
+
+    <div class="screenshot-embed">
+      <img src="zpa-six-design-areas.png" alt="ZPA Design and Deployment Areas: six numbered areas — Authentication, Zscaler Client Connector, App Connectors, Applications and Application Segments, Policy Types, Logging and Diagnostics">
+      <div class="screenshot-caption">The six ZPA design areas that must be addressed in every deployment — from authentication and ZCC through to logging and diagnostics. These form the checklist for any pre-customer design workshop.</div>
     </div>
 
     <h3>Pre-customer-meeting questionnaire</h3>
@@ -752,7 +786,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zpa" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zpa','ZPA')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-zpa" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-zpa"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-zpa" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('zpa')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -795,13 +829,6 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li><strong>Select private and cloud-based applications</strong> to monitor and configure probes</li>
       <li><strong>Review user experience insights</strong> and integrate with the customer's NOC/SOC workflow</li>
     </ul>
-
-    <div class="img-display-block">
-      <img src="3.png" alt="ZDX architecture flow" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
-      <div class="img-missing-msg" style="display:none;">📷 <strong>3.png</strong> will appear here once you add it to this folder</div>
-      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show image generation prompt</button>
-      <div class="prompt-content" hidden>Flat green minimalist illustration of the ZDX architecture flow. Left side: a user laptop with a tiny ZCC client icon glowing. Centre: an arc of cloud / network / device probes (tiny dots labelled with WiFi / ISP / VPN / app icons) feeding into a central Zero Trust Exchange shield. Right side: an "AI-Powered Root Cause Analysis" small brain icon, then a "User Experience" dashboard with a single happy/neutral/sad face indicator on a colour-graded bar from red through amber to green. Subtle connecting lines from probes into the brain, then out to the dashboard. Clean simple shapes, no text labels.</div>
-    </div>
 
     <h3>ZDX deployment methodology — same six phases</h3>
     <p>ZDX deployments use the same six phases as ZIA and ZPA — only the activities inside each phase differ:</p>
@@ -858,7 +885,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zdx" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zdx','ZDX')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-zdx" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-zdx"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-zdx" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('zdx')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -922,7 +949,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap','Recap')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-recap" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('recap')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -987,13 +1014,21 @@ function renderQPanel(){const qs=getQuestions();const count=document.getElementB
 function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
 function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
 
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();const name=(typeof SECTIONS!=='undefined'&&SECTIONS[key])?SECTIONS[key]:key;ns.push({id:Date.now(),section:key,sectionName:name,text});saveNotesArr(ns);ta.value='';renderNotesPanel();const body=document.getElementById('notes-panel-body');if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=typeof SECTIONS!=='undefined'?Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]])):{};ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);else{if(!groups['_other'])groups['_other']=[];groups['_other'].push(n);}});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;const label=typeof SECTIONS!=='undefined'&&SECTIONS[key]?SECTIONS[key]:key;html+=`<div class="q-group"><div class="q-group-label">${label}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
 function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
 function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
 function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 
 document.addEventListener('DOMContentLoaded',function(){
-  renderQPanel();initNotes();initChecks();
+  renderQPanel();renderNotesPanel();initChecks();
   if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
   document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
   document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
   document.querySelectorAll('.analogy-img img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
@@ -1008,6 +1043,7 @@ document.addEventListener('DOMContentLoaded',function(){
         img.classList.toggle('zoomed');
       });
     });
+    document.querySelectorAll('.screenshot-embed img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
   }
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', init);

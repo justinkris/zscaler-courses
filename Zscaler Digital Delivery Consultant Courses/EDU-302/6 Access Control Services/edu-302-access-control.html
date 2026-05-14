@@ -8,28 +8,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#fef2f2;--surface:#ffffff;--surface-2:#fefafa;--border:#fecaca;--border-dim:#fee2e2;
-  --text:#1f0a0a;--text-soft:#3d1414;--text-muted:#9a4040;
-  --red:#b91c1c;--red-glow:rgba(185,28,28,0.07);--red-dim:#fecaca;--red-deep:#7a1414;
+  --bg:#eef4ff;--surface:#ffffff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --red:#b91c1c;--red-glow:rgba(185,28,28,0.07);--red-dim:#fecaca;--red-deep:#7f1d1d;
   --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
   --blue:#1a6dcc;--blue-light:#e8f0fb;--blue-border:#bfdbfe;
   --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
-  --amber:#b45309;--amber-light:#fef3c7;--amber-border:#fde68a;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
 }
 html.pt-init body{opacity:0;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-header{padding:48px 60px 36px;background:#1f0a0a;display:flex;align-items:flex-end;gap:32px;}
+header{padding:48px 60px 36px;background:#0d1a2e;display:flex;align-items:flex-end;gap:32px;}
 .header-left{flex:1;}
-.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#9a4040;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
-.breadcrumb a{color:#fca5a5;text-decoration:none;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#5a7a9a;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;}
 .breadcrumb a:hover{text-decoration:underline;}
-.breadcrumb-sep{color:#3d1414;}
-.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(252,165,165,0.1);border:1px solid rgba(252,165,165,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#fca5a5;letter-spacing:0.08em;margin-bottom:14px;}
-.dot-live{width:6px;height:6px;background:#fca5a5;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+.breadcrumb-sep{color:#1e3a5c;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(147,197,253,0.1);border:1px solid rgba(147,197,253,0.25);padding:5px 14px;border-radius:20px;font-size:11px;color:#93c5fd;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#93c5fd;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
-h1 em{font-style:italic;font-weight:400;color:#fca5a5;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
 header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
 .motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
 .motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
@@ -48,7 +48,7 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
 .q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
 .q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
 .q-item:last-child{border-bottom:none;}
-.q-num{width:22px;height:22px;border-radius:50%;background:#1f0a0a;color:#fca5a5;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#0d1a2e;color:#93c5fd;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
 .q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
 .q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
 .q-del:hover{color:var(--red);background:var(--red-glow);}
@@ -70,15 +70,15 @@ p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
 ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
 ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--red);font-weight:700;font-size:18px;line-height:1.2;}
-.key-concept{background:var(--red-glow);border:1px solid var(--red-dim);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
+.key-concept{background:var(--red-glow);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text-soft);line-height:1.7;}
 .key-concept strong{color:var(--red);font-weight:600;}
 .callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
 .callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
 .callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
 .callout-body{font-size:13px;line-height:1.7;}
-.callout-note{background:var(--red-glow);border-color:var(--red-dim);}
+.callout-note{background:var(--red-glow);border-color:var(--border);}
 .callout-note .callout-header{color:var(--red);}
-.callout-note .callout-icon{background:var(--red-dim);color:var(--red);}
+.callout-note .callout-icon{background:var(--border);color:var(--red);}
 .callout-note .callout-body{color:var(--text-soft);}
 .callout-warn{background:#fff7ed;border-color:#fed7aa;}
 .callout-warn .callout-header{color:var(--amber);}
@@ -109,10 +109,10 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--r
 .phase-text{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
 
 /* SCENARIO BOX */
-.scenario{background:var(--red-glow);border:1px solid var(--red-dim);border-radius:12px;padding:16px 18px;margin-bottom:16px;}
+.scenario{background:var(--red-glow);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:16px;}
 .scenario-h{font-size:10px;font-weight:700;letter-spacing:0.16em;color:var(--red);margin-bottom:6px;}
-.scenario-h.problem{color:#9a4040;}
-.scenario-h.solution{color:var(--green);}
+.scenario-h.problem{color:#5a7a9a;}
+.scenario-h.solution{color:var(--blue);}
 .scenario-body{font-size:13px;color:var(--text-soft);line-height:1.7;margin-bottom:10px;}
 .scenario-body:last-child{margin-bottom:0;}
 
@@ -128,7 +128,7 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--r
 
 /* RULE TABLE */
 .rule-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-.rule-table th{background:#1f0a0a;color:#fca5a5;padding:10px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;}
+.rule-table th{background:#0d1a2e;color:#93c5fd;padding:10px 12px;text-align:left;font-weight:600;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;}
 .rule-table td{padding:10px 12px;border-top:1px solid var(--border);vertical-align:top;color:var(--text-soft);line-height:1.55;}
 .rule-table td:first-child{font-weight:600;color:var(--text);}
 
@@ -146,7 +146,13 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--r
 
 /* SOCRATIC */
 .socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--red);}
-.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
 .socratic-icon{font-size:17px;flex-shrink:0;}
 .socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
 .socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
@@ -154,12 +160,12 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--r
 .socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
 .socratic-questions li:last-child{border-bottom:none;}
 .socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--red);}
-.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--red-glow);border:1px solid var(--red-dim);}
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--red-glow);border:1px solid var(--border);}
 .mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
 .mental-note-block-inner{flex:1;}
 .mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--red);margin-bottom:3px;}
 .mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
-.analogy-box{background:#fff5f5;border:1px solid var(--red-dim);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-box{background:#eff6ff;border:1px solid var(--border);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
 .analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--red);margin-bottom:4px;}
 .analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
 .analogy-label:hover::after{opacity:1;}
@@ -175,6 +181,10 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--r
 .img-display-block img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;border-radius:8px;display:block;margin:0 auto 12px;}
 .img-display-block img.zoomed{max-width:100% !important;cursor:zoom-out;}
 .img-display-block .img-missing-msg{display:none !important;}
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
 .prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
 .prompt-toggle:hover{color:var(--text);border-color:var(--text);}
 .prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
@@ -184,13 +194,13 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--r
 .answer-textarea:focus{border-color:var(--text);}
 .answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
 .answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
-.btn-add-answer{background:var(--text);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
 .btn-add-answer:hover:not(:disabled){opacity:0.85;}
 .btn-add-answer:disabled{opacity:0.5;cursor:default;}
 .btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
 .btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
-.btn-see-answer:not(:disabled){color:var(--text);border-color:var(--text);}
-.btn-see-answer:hover:not(:disabled){background:var(--surface-2);}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
 .model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
 .model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
 .model-answer-item:first-child{padding-top:0;}
@@ -204,15 +214,15 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--r
 .tool-textarea:focus{border-color:var(--red);background:#fff;}
 .tool-textarea::placeholder{color:var(--text-muted);}
 .tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
-.btn-add-q{background:#1f0a0a;color:#fca5a5;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
-.btn-add-q:hover{background:#3d1414;}
-.save-status{font-size:11px;color:var(--green);font-style:italic;}
+.btn-add-q{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{background:var(--blue-deep);}
+.save-status{font-size:11px;color:var(--blue);font-style:italic;}
 footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
 .footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
 .footer-left span{color:var(--red);}
 .footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
 .mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
-.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#1f0a0a;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#0d1a2e;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
 .mod-nav-hub:hover{opacity:0.85;}
 .sidebar-section{margin-bottom:28px;}
 .sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
@@ -220,12 +230,28 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
 .subtopic-list li:last-child{border-bottom:none;}
 .subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
-.subtopic-list li.done .subtopic-check{background:var(--green);border-color:var(--green);}
+.subtopic-list li.done .subtopic-check{background:var(--blue);border-color:var(--blue);}
 .subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
-.quick-ref{background:#1f0a0a;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
-.quick-ref-term{font-size:11px;font-weight:600;color:#fca5a5;letter-spacing:0.06em;margin-bottom:4px;}
-.quick-ref-def{font-size:12px;color:#c97a7a;line-height:1.6;}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#93c5fd;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#5a7a9a;line-height:1.6;}
 @media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+/* TOP PANELS — Q-panel left, Notes-panel right */
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+@media(max-width:900px){.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}
+.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
 </style>
 </head>
 <body>
@@ -252,6 +278,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <p class="motivation-sub">The earlier sections got connectivity, identity, and platform services in place — every user can reach Zscaler, prove who they are, and get the platform's baseline protections. Section 6 is where you encode the customer's actual business rules: which URLs, which apps, which file types, which firewalls, which ZPA application segments, and how to diagnose the inevitable "but I can't reach my app" ticket.</p>
 </div>
 
+<div class="top-panels">
 <div class="qpanel" id="qpanel">
   <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
     <span class="qpanel-title">MY QUESTIONS</span>
@@ -260,6 +287,16 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
     <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
   </button>
   <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+<div class="notes-panel" id="notes-panel">
+  <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+    <span class="notes-panel-title">MY NOTES</span>
+    <span class="notes-panel-count" id="notes-panel-count">0</span>
+    <span class="notes-panel-hint">— click to expand</span>
+    <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+  </button>
+  <div class="notes-panel-body" id="notes-panel-body"></div>
+</div>
 </div>
 
 <nav class="section-nav">
@@ -360,7 +397,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('overview','Overview')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-overview" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-overview"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-overview" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('overview')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -417,7 +454,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap','Recap')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-recap" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('recap')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -495,18 +532,12 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       </div>
     </div>
 
-    <div class="img-display-block">
-      <img src="1.png" alt="Diagram 1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
-      <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>1.png</strong> — add this diagram to the folder</div>
-      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show diagram prompt</button>
-      <div class="prompt-content" hidden>Flat red minimalist illustration of three deployment scenarios side-by-side as three vertical lanes. Lane 1 "New": an empty plot with a fresh signpost and a workman placing a single new policy block. Lane 2 "Migration": an older building with a tangled rope of policy strings being carefully untangled and re-tied onto a new fence. Lane 3 "Rapid": a single firefighter erecting an emergency barrier with one big red stripe. All three feed into a single Zscaler-cloud shield on the right. Clean simple shapes, no text labels.</div>
-    </div>
   </div>
 
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-granular" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('granular','Granular Control')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-granular" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-granular"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-granular" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('granular')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -594,7 +625,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-url" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('url','URL &amp; Cloud Apps')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-url" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-url"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-url" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('url')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -654,7 +685,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-file" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('file','File Types')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-file" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-file"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-file" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('file')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -738,7 +769,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-fw" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('fw','Firewall')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-fw" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-fw"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-fw" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('fw')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -783,6 +814,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       <li>When a subnet-based Application Segment has been configured, if there is another Application Segment that contains only a specific IP address, the IP address will be removed from the subnet-based Application Segment.</li>
     </ul>
 
+
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Application Segments are the <em>floor plan in an architect's blueprint</em>. The building (your ZPA tenant) is one thing; how you carve it into rooms — open-plan office, executive corner, server closet, single-occupancy meeting pod — is the segmentation decision. Each room belongs to one wing of the building (Segment Group). A wildcard wing claims the whole floor unless a specific room is carved out — at which point the floor still exists, minus that one room.</div>
@@ -798,7 +830,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-appseg" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('appseg','App Segments')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-appseg" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-appseg"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-appseg" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('appseg')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -864,12 +896,6 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       </div>
     </div>
 
-    <div class="img-display-block">
-      <img src="2.png" alt="Diagram 2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
-      <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--red-dim);border-radius:8px;color:var(--red-deep);font-size:12px;margin-bottom:10px;">📷 <strong>2.png</strong> — add this diagram to the folder</div>
-      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show diagram prompt</button>
-      <div class="prompt-content" hidden>Flat red minimalist illustration of four App Segment deployment methods as four parallel lanes from a customer site on the left to a Zscaler ZPA cloud on the right. Lane 1 (wildcard + all ports) drawn as the widest open pipe with a "*.domain" tag. Lane 2 (wildcard + targeted ports) the same width but with two thin sub-pipes labelled "80" and "443". Lane 3 (IP-based) drawn as a narrow targeted pipe with a "192.x" tag. Lane 4 (bypass) drawn as a small detour pipe veering off and going directly to the internet, with a small "BYPASS" tag floating beside it. Clean simple shapes, no text labels other than the tags described.</div>
-    </div>
 
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
@@ -894,7 +920,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-methods" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('methods','Deployment Methods')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-methods" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-methods"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-methods" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('methods')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -971,7 +997,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-groups" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('groups','Groups &amp; Tenant')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-groups" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-groups"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-groups" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('groups')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -1052,6 +1078,16 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
       </tbody>
     </table>
 
+    <div class="screenshot-embed">
+      <img src="zpa-top-policy-blocks-dashboard.png" alt="ZPA Top Policy Blocks dashboard showing access and timeout policy block counts">
+      <div class="screenshot-caption">The ZPA Admin Portal's Top Policy Blocks widget surfaces access and timeout policy block events in real time — here "SE: Policy is not configured for access" accounts for 86.67% of errors, pinpointing exactly which rule to investigate.</div>
+    </div>
+
+    <div class="screenshot-embed">
+      <img src="zpa-troubleshooting-dns-domain-table.png" alt="ZPA troubleshooting table for DNS search domain verification">
+      <div class="screenshot-caption">Troubleshooting walkthrough comparing ZIATunnel.log output against App Segment DNS Search Domains configuration — if DNS Search Domains are empty in both the log and the Admin Portal, the Client Connector cannot validate the domain and access will silently fail.</div>
+    </div>
+
     <div class="analogy-box">
       <div class="analogy-label">Analogy</div>
       <div class="analogy-text">Diagnose is a <em>doctor's three-pass differential</em>. Pass 1: ask the patient (the error code says "no policy"). Pass 2: read the chart (User Metadata — what criteria did we actually evaluate?). Pass 3: physical exam (posture, group membership, trusted network on this device, right now). The error message tells you which symptom; the chart tells you which organ.</div>
@@ -1075,7 +1111,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-diagnose" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('diagnose','Diagnose')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-diagnose" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-diagnose"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-diagnose" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('diagnose')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -1115,7 +1151,7 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
   <div class="lesson-tools">
     <div class="lesson-tools-grid">
       <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-recap-final" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('recap-final','Recap')">Add Question</button></div></div>
-      <div><div class="tool-label">MY NOTES</div><textarea class="tool-textarea notes-ta" id="notes-recap-final" placeholder="Write your notes here..." rows="5"></textarea><div class="tool-row"><span class="save-status" id="ns-recap-final"></span></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-recap-final" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('recap-final')">+ Add Note</button></div></div>
     </div>
   </div>
 
@@ -1186,17 +1222,25 @@ function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));r
 function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
 function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
 function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();const name=(typeof SECTIONS!=='undefined'&&SECTIONS[key])?SECTIONS[key]:key;ns.push({id:Date.now(),section:key,sectionName:name,text});saveNotesArr(ns);ta.value='';renderNotesPanel();const body=document.getElementById('notes-panel-body');if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=typeof SECTIONS!=='undefined'?Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]])):{};ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);else{if(!groups['_other'])groups['_other']=[];groups['_other'].push(n);}});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;const label=typeof SECTIONS!=='undefined'&&SECTIONS[key]?SECTIONS[key]:key;html+=`<div class="q-group"><div class="q-group-label">${label}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
 function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
 function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
 function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
 function switchTab(btn,id){const wrap=btn.parentElement.parentElement;wrap.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');wrap.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));const target=document.getElementById(id);if(target)target.classList.add('active');}
 
 document.addEventListener('DOMContentLoaded',function(){
-  renderQPanel();initNotes();initChecks();
+  renderQPanel();renderNotesPanel();initChecks();
   if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
   document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
   document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
-  document.querySelectorAll('.analogy-img img, .img-display-block img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  document.querySelectorAll('.analogy-img img, .img-display-block img, .screenshot-embed img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
 });
 </script>
 <script src="../../../transitions.js"></script>

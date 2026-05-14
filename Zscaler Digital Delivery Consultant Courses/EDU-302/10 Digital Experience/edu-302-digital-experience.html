@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zscaler Digital Experience (ZDX) — EDU-302</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#ffffff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;--blue-deep:#0f3d7a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+html.pt-init body{opacity:0;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{padding:48px 60px 36px;background:#0d1a2e;display:flex;align-items:flex-end;gap:32px;}
+.header-left{flex:1;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;color:#5a7a9a;letter-spacing:0.08em;margin-bottom:12px;flex-wrap:wrap;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+.breadcrumb-sep{color:#1e3a5c;}
+.header-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(147,197,253,0.1);border:1px solid rgba(147,197,253,0.28);padding:5px 14px;border-radius:20px;font-size:11px;color:#93c5fd;letter-spacing:0.08em;margin-bottom:14px;}
+.dot-live{width:6px;height:6px;background:#93c5fd;border-radius:50%;display:inline-block;animation:blink 2.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1.0;color:#fff;margin-bottom:10px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height:1.7;}
+.motivation-banner{padding:20px 60px;min-height:84px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);background:var(--surface);}
+.motivation-text{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--text);}
+.motivation-text em{font-style:italic;color:var(--blue);}
+.motivation-sub{font-size:12px;color:var(--text-muted);line-height:1.7;margin-top:4px;}
+.qpanel{border-bottom:1px solid var(--border);background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 60px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 60px 22px;}
+.qpanel-body.open{display:block;}
+.q-group{margin-bottom:18px;}
+.q-group-label{font-size:10px;letter-spacing:0.16em;color:var(--text-muted);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border);}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-item:last-child{border-bottom:none;}
+.q-num{width:22px;height:22px;border-radius:50%;background:#0d1a2e;color:#93c5fd;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.q-text{font-size:13px;color:var(--text-soft);line-height:1.6;flex:1;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;border-radius:4px;}
+.q-del:hover{color:var(--red);background:var(--red-light);}
+.no-questions{font-size:13px;color:var(--text-muted);font-style:italic;padding:8px 0;}
+.section-nav{display:flex;gap:0;padding:0 60px;border-bottom:1px solid var(--border);background:var(--surface-2);overflow-x:auto;position:sticky;top:0;z-index:100;}
+.nav-tab{padding:14px 16px;font-size:12px;font-weight:500;color:var(--text-muted);letter-spacing:0.06em;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:'Epilogue',sans-serif;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+main{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 200px);}
+.main-content{padding:36px 48px 60px 60px;border-right:1px solid var(--border);}
+.sidebar{padding:36px 28px 60px;background:var(--surface-2);}
+.section-block{margin-bottom:40px;}
+.section-label{font-size:10px;letter-spacing:0.2em;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.2;}
+h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:10px;margin-top:24px;}
+h4{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;margin-top:16px;}
+p{font-size:14px;color:var(--text-soft);line-height:1.8;margin-bottom:12px;}
+ul.content-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+ul.content-list li{font-size:14px;color:var(--text-soft);padding-left:16px;position:relative;line-height:1.6;}
+ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--blue);font-weight:700;font-size:18px;line-height:1.2;}
+.callout{border-radius:14px;padding:18px 20px;margin-bottom:16px;border:1px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;margin-bottom:8px;}
+.callout-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.7;}
+.callout-note{background:var(--blue-glow);border-color:var(--blue-dim);}
+.callout-note .callout-header{color:var(--blue);}
+.callout-note .callout-icon{background:var(--blue-dim);color:var(--blue);}
+.callout-note .callout-body{color:var(--text-soft);}
+.callout-tip{background:var(--green-light);border-color:var(--green-border);}
+.callout-tip .callout-header{color:var(--green);}
+.callout-tip .callout-icon{background:var(--green-border);color:var(--green);}
+.callout-tip .callout-body{color:#0f4a28;}
+.callout-warn{background:var(--amber-light);border-color:var(--amber-border);}
+.callout-warn .callout-header{color:var(--amber);}
+.callout-warn .callout-icon{background:var(--amber-border);color:var(--amber);}
+.callout-warn .callout-body{color:#78350f;}
+.phase-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:18px;}
+.phase-step{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:0 12px 12px 0;padding:14px 16px;}
+.phase-num{width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.phase-body{flex:1;}
+.phase-title{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.phase-text{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+.two-col-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;border-left:4px solid var(--blue);}
+.info-card-title{font-size:13px;font-weight:700;color:var(--blue);margin-bottom:6px;}
+.info-card-body{font-size:12.5px;color:var(--text-soft);line-height:1.65;}
+@media(max-width:700px){.two-col-grid{grid-template-columns:1fr;}}
+/* SCREENSHOT EMBED */
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
+/* SOCRATIC */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+/* MENTAL NOTE */
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:var(--blue-glow);border:1px solid var(--blue-dim);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+/* ANALOGY */
+.analogy-box{background:#eff6ff;border:1px solid var(--blue-dim);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:var(--blue-deep);line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img .img-missing-msg{display:none !important;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+/* IMG PLACEHOLDER */
+.img-display-block{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;text-align:center;}
+.img-display-block img{max-width:100%;border-radius:8px;display:block;margin:0 auto 12px;cursor:zoom-in;}
+.img-display-block img.zoomed{cursor:zoom-out;}
+.img-display-block .img-missing-msg{display:none !important;}
+.img-missing-msg{padding:32px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--border);border-radius:8px;color:var(--text-muted);font-size:13px;margin-bottom:12px;}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+/* ANSWER FEATURE */
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+/* LESSON TOOLS */
+.lesson-tools{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 26px 24px;margin-top:32px;margin-bottom:52px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.tool-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface-2);resize:vertical;min-height:76px;outline:none;line-height:1.65;}
+.tool-textarea:focus{border-color:var(--blue);background:#fff;}
+.tool-textarea::placeholder{color:var(--text-muted);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.btn-add-q{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{background:var(--blue-deep);}
+.save-status{font-size:11px;color:var(--blue);font-style:italic;}
+footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);}
+.footer-left{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--text);}
+.footer-left span{color:var(--blue);}
+.footer-right{font-size:11px;color:var(--text-muted);letter-spacing:0.06em;}
+.mod-nav{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.mod-nav-hub{display:flex;align-items:center;gap:8px;text-decoration:none;background:#0d1a2e;color:#fff;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
+.mod-nav-hub:hover{opacity:0.85;}
+.sidebar-section{margin-bottom:28px;}
+.sidebar-label{font-size:10px;letter-spacing:0.18em;color:var(--text-muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.subtopic-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.subtopic-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-soft);padding:6px 0;border-bottom:1px solid var(--border);line-height:1.5;cursor:pointer;}
+.subtopic-list li:last-child{border-bottom:none;}
+.subtopic-check{width:14px;height:14px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s;}
+.subtopic-list li.done .subtopic-check{background:var(--blue);border-color:var(--blue);}
+.subtopic-list li.done span{text-decoration:line-through;color:var(--text-muted);}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.quick-ref-term{font-size:11px;font-weight:600;color:#93c5fd;letter-spacing:0.06em;margin-bottom:4px;}
+.quick-ref-def{font-size:12px;color:#5a7a9a;line-height:1.6;}
+@media(max-width:900px){header{padding:24px 20px 20px;flex-direction:column;}main{grid-template-columns:1fr;}.main-content{padding:24px 20px 40px;border-right:none;}.sidebar{padding:24px 20px 40px;border-top:1px solid var(--border);}.section-nav{padding:0 20px;}footer{padding:20px;flex-direction:column;gap:8px;text-align:center;}.lesson-tools-grid{grid-template-columns:1fr;}.qpanel-header,.qpanel-body{padding-left:20px;padding-right:20px;}}
+/* TOP PANELS — Q-panel left, Notes-panel right */
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+@media(max-width:900px){.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}
+.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="breadcrumb">
+      <a href="../../../index.html">Zscaler Courses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../../digital-delivery-consultant-hub.html">Digital Delivery Consultant</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="../edu-302-hub.html">EDU-302</a>
+      <span class="breadcrumb-sep">›</span>
+      Zscaler Digital Experience
+    </div>
+    <div class="header-eyebrow"><span class="dot-live"></span> Study Guide — Section 10 · EDU-302</div>
+    <h1>Zscaler Digital <em>Experience</em></h1>
+    <p>ZDX deployment methodology, application strategy (30-probe limit, three app categories), probe and alert best practices, the three-level troubleshooting workflow (MTTD · MTTR · MTTI), and Workflow Automation integration with ITSM tools.</p>
+  </div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">ZDX doesn't just tell you the network is slow — it tells you <em>which layer</em> made it slow and whose team should fix it.</div>
+  <p class="motivation-sub">Monitoring is only valuable when it narrows the problem to a responsible owner before the blame-game starts. ZDX's power is in translating raw telemetry into a differential diagnosis: device, Wi-Fi, ISP, Zscaler, or application.</p>
+</div>
+
+<div class="top-panels">
+<div class="qpanel" id="qpanel">
+  <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+    <span class="qpanel-title">MY QUESTIONS</span>
+    <span class="qpanel-count" id="qpanel-count">0</span>
+    <span class="qpanel-hint">— click to expand</span>
+    <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+  </button>
+  <div class="qpanel-body" id="qpanel-body"></div>
+</div>
+<div class="notes-panel" id="notes-panel">
+  <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+    <span class="notes-panel-title">MY NOTES</span>
+    <span class="notes-panel-count" id="notes-panel-count">0</span>
+    <span class="notes-panel-hint">— click to expand</span>
+    <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+  </button>
+  <div class="notes-panel-body" id="notes-panel-body"></div>
+</div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-zdx-overview',this)">ZDX Overview</button>
+  <button class="nav-tab" onclick="navTo('section-zdx-deployment',this)">Deployment</button>
+  <button class="nav-tab" onclick="navTo('section-app-strategy',this)">App Strategy &amp; Probes</button>
+  <button class="nav-tab" onclick="navTo('section-troubleshooting',this)">Troubleshooting</button>
+  <button class="nav-tab" onclick="navTo('section-workflow-automation',this)">Workflow Automation</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+  <!-- ============================================================ -->
+  <!-- SECTION 1: ZDX OVERVIEW -->
+  <!-- ============================================================ -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZDX OVERVIEW</span></div>
+    <p class="socratic-insight">ZDX monitors end-to-end digital experience — from the device, through the network, through the Zscaler Zero Trust Exchange, all the way to the destination application. It collects telemetry at every hop. The question it answers isn't "is the network up?" but "why does this user feel slowness, and where exactly is it coming from?"</p>
+    <ul class="socratic-questions">
+      <li>Traditional network monitoring tools have existed for decades. What specifically does ZDX provide that a combination of Ping, Traceroute, and an APM tool cannot?</li>
+      <li>ZDX requires Zscaler Client Connector to collect endpoint telemetry. What does that dependency imply about when ZDX can and cannot be deployed?</li>
+      <li>ZDX is described as monitoring application performance, network performance, endpoint device health, and UCaaS quality. Why is combining all four into one tool important — what breaks when they're separate?</li>
+    </ul>
+    <div class="answer-area" data-section="zdx-overview">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+          <div class="model-answer-text">Ping and Traceroute measure network reachability; APM measures application response times. Neither knows the user's device state, nor can they correlate a slow DNS lookup with a concurrent CPU spike on the endpoint. ZDX runs all measurements from inside the client, correlates them with ZTE cloud telemetry, and surfaces a unified ZDX Score per user per application — so you can compare one user's experience against their department's baseline and against the global average simultaneously.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+          <div class="model-answer-text">ZDX depends on Client Connector because that's the agent that runs probes from the user's device and reports back device health metrics (CPU, memory, Wi-Fi signal). This means ZDX can't monitor unmanaged devices or environments where the Client Connector can't be deployed — it's a managed-endpoint-first solution. The flip side is that for organisations already running ZIA or ZPA with Client Connector, ZDX requires no new agent deployment.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q3 — MODEL ANSWER</div>
+          <div class="model-answer-text">When tools are siloed, teams argue during an incident. Network says "our infrastructure is fine," App says "our backend latency is normal," and the desktop team says "the endpoint is clean." ZDX breaks the deadlock by correlating all four layers in a single timeline, letting you see that the network hops were normal but the user's Wi-Fi jitter spiked at exactly the moment the UCaaS call dropped. Correlation across layers is the key — not monitoring any one layer more deeply.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-zdx-overview">
+    <div class="section-label">SECTION 1 · INTRODUCTION TO ZDX</div>
+    <h2>What is Zscaler Digital Experience?</h2>
+    <p>Zscaler Digital Experience (ZDX) is a digital experience monitoring solution that provides end-to-end visibility into application performance and user experience. It correlates data from every hop — the endpoint device, the local network, the Zero Trust Exchange, and the destination application — into a single ZDX Score per user per app.</p>
+
+    <div class="screenshot-embed">
+      <img src="1.png" alt="Welcome to ZDX slide showing the EDU-302 learning path with ZDX highlighted">
+      <div class="screenshot-caption">EDU-302 learning path — ZDX (Section 10) sits in the final stretch before the Capstone Project and certification.</div>
+    </div>
+
+    <h3>Six Course Sections</h3>
+    <div class="phase-steps">
+      <div class="phase-step"><div class="phase-num">1</div><div class="phase-body"><div class="phase-title">Introduction to ZDX</div><div class="phase-text">Purpose, key features, and benefits of ZDX. ZDX's role in enhancing user digital experience through monitoring and troubleshooting.</div></div></div>
+      <div class="phase-step"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">ZDX Deployment &amp; Best Practices</div><div class="phase-text">Early ZDX service activation via Client Connector, pilot group rollout, best practices for Operationalizing ZDX, Probes &amp; Alerts.</div></div></div>
+      <div class="phase-step"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Level 1: Troubleshooting User Experience Issues</div><div class="phase-text">Proactively resolving global, regional, or office-wide issues at Level 1.</div></div></div>
+      <div class="phase-step"><div class="phase-num">4</div><div class="phase-body"><div class="phase-title">Level 2: Troubleshooting User Experience Issues</div><div class="phase-text">Reactive troubleshooting for escalated, individual user issues.</div></div></div>
+      <div class="phase-step"><div class="phase-num">5</div><div class="phase-body"><div class="phase-title">Level 3: Troubleshooting User Experience Issues</div><div class="phase-text">Steps to resolve highly escalated tickets using deep trace analysis.</div></div></div>
+      <div class="phase-step"><div class="phase-num">6</div><div class="phase-body"><div class="phase-title">ZDX Workflow Automation</div><div class="phase-text">Automating management and resolution of Data Protection incidents, Business Insights events, and ZDX alerts through ITSM integration.</div></div></div>
+    </div>
+
+    <h3>Four Monitoring Domains</h3>
+    <div class="two-col-grid">
+      <div class="info-card"><div class="info-card-title">Endpoint Monitoring</div><div class="info-card-body">Device health metrics: CPU, memory, disk I/O, battery level, Wi-Fi signal strength, and interface bandwidth — collected directly from the user's device by the Client Connector agent.</div></div>
+      <div class="info-card"><div class="info-card-title">Network Monitoring</div><div class="info-card-body">Cloud Path probes trace latency and packet loss through every network hop, from the device to the Zscaler node to the destination. Identifies ISP or egress bottlenecks.</div></div>
+      <div class="info-card"><div class="info-card-title">Application Monitoring</div><div class="info-card-body">Web probes measure page fetch time, DNS resolution time, and availability. Catches server-side slowness and DNS failures independently of network conditions.</div></div>
+      <div class="info-card"><div class="info-card-title">UCaaS Monitoring</div><div class="info-card-body">Call Quality applications use ZDX Score as the primary metric, weighted heavily by jitter — because real-time audio/video is uniquely sensitive to latency variance, not just average latency.</div></div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">ZDX requires Zscaler Client Connector — no agent, no endpoint telemetry. Its architecture has two key components: the Telemetry and Policy Gateway (TPG) and the ZDX Analytics Engine. The four monitoring domains are: Endpoint · Network (Cloud Path) · Application (Web Probe) · UCaaS. ZDX admin RBAC and user authentication inherit from ZIA.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">ZDX is like a flight data recorder combined with a live air traffic control dashboard. Every aircraft (user device) has its own black box recording altitude, airspeed, and engine health (endpoint metrics). The control tower (ZDX Analytics Engine) collects all those streams simultaneously, correlates them with weather data (network conditions) and runway status (application health), and spots that one flight's rough approach wasn't turbulence — it was a faulty altimeter (Wi-Fi chip issue). Without the combined view, each ground crew blames someone else's department.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--blue-dim);border-radius:8px;color:var(--blue-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration split into two panels. Left panel: a cheerful small aircraft with a visible black box recorder glowing, showing tiny gauges for speed, altitude, battery, and Wi-Fi signal. Right panel: a calm air traffic controller at a curved desk with four monitors — one showing a map of aircraft paths (network), one showing a digital health chart (endpoint), one showing a weather screen (app performance), one showing a call quality waveform (UCaaS). The controller has a calm expression and circles one anomalous blip on the network screen. Clean isometric-lite style, soft blues and whites, no text labels, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zdx-overview" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zdx-overview','ZDX Overview')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-zdx-overview" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('zdx-overview')">+ Add Note</button></div></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 2: DEPLOYMENT METHODOLOGY -->
+  <!-- ============================================================ -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · DEPLOYMENT METHODOLOGY</span></div>
+    <p class="socratic-insight">ZDX deployment has two parallel frameworks: a four-step activation sequence (Prerequisites → Enable → Configure Monitoring → Fine Tune) and a five-phase methodology ending with Operationalization. These aren't the same thing — activation gets the service running; operationalization gets teams actually using the data.</p>
+    <ul class="socratic-questions">
+      <li>The five-phase ZDX methodology ends with "Operationalization and Reporting." Why is operationalization listed as a separate final phase rather than being part of deployment configuration?</li>
+      <li>ZDX recommends starting with a pilot group of users who are "least resistant to change and efficient in debugging basic device issues." Why does the pilot user profile matter so much for a monitoring-only tool that doesn't change traffic forwarding?</li>
+      <li>Admin RBAC and user authentication are described as being "inherited from ZIA" during rollout. What's the operational benefit of this design, and what's the risk if an org's ZIA user list is outdated?</li>
+    </ul>
+    <div class="answer-area" data-section="zdx-deployment">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+          <div class="model-answer-text">Configuration gets the probes running and the data flowing — that's a technical deliverable. Operationalization is about turning that data into habitual workflows: the help desk knows to check ZDX before opening a network ticket, alerts are tuned to reduce noise, dashboards are shared with the right stakeholders, and reports go to the CISO weekly. Without an explicit operationalization phase, monitoring tools collect data that nobody acts on — they become expensive dashboards rather than incident-reduction tools.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+          <div class="model-answer-text">Even though ZDX doesn't forward traffic, the Client Connector running probes adds CPU and memory overhead on the device, and the probes themselves can generate load on monitored applications (especially privately hosted ones). Starting with technically proficient users means they can distinguish a ZDX probe artifact from a genuine performance issue and report accurately. It also ensures that early alert configurations get validated by people who understand what they're seeing, so the alerts are well-tuned before the less technical majority is onboarded.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q3 — MODEL ANSWER</div>
+          <div class="model-answer-text">Inheriting from ZIA eliminates duplicate provisioning — you don't need a separate ZDX identity store, so user onboarding and offboarding stays in one system. The risk is that if ZIA's user list has stale accounts (former employees, service accounts), those accounts will appear in ZDX with whatever RBAC they inherited. A deployment checklist should include auditing the ZIA user list before enabling ZDX to prevent ghost accounts from appearing in monitoring dashboards or receiving alert notifications.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-zdx-deployment">
+    <div class="section-label">SECTION 2 · ZDX DEPLOYMENT &amp; BEST PRACTICES</div>
+    <h2>Deploying ZDX: Methodology &amp; Rollout Strategy</h2>
+    <p>ZDX deployment follows a structured approach. The four-step activation sequence gets the service live; the five-phase methodology covers the full lifecycle from prerequisites to long-term operationalization.</p>
+
+    <h3>ZDX Deployment Sequence (4 Steps)</h3>
+    <div class="screenshot-embed">
+      <img src="zdx-deployment-steps.png" alt="4-step ZDX deployment wheel: Complete Prerequisites, Enable ZDX for Traffic Forwarding, Configure Monitoring Policy, Fine Tune Config for Operations">
+      <div class="screenshot-caption">ZDX Deployment Sequence — four parallel steps that run roughly in order, with fine-tuning continuing after the initial go-live.</div>
+    </div>
+
+    <ul class="content-list">
+      <li><strong>Step 1 — Complete Prerequisites:</strong> Tenant readiness, whitelist ZDX domains and processes, configure cloud connectivity network access controls.</li>
+      <li><strong>Step 2 — Enable ZDX for Traffic Forwarding:</strong> Enable ZDX Service, roll out Client Connector to end user devices with ZDX enabled.</li>
+      <li><strong>Step 3 — Configure Monitoring Policy:</strong> Configure predefined and custom Application Probes and Alerts using Config Blueprints.</li>
+      <li><strong>Step 4 — Fine Tune Config for Operations:</strong> Fine-tune relevant configuration to operationalize the environment — alert thresholds, RBAC, reporting.</li>
+    </ul>
+
+    <h3>ZDX Deployment Methodology (5 Phases)</h3>
+    <div class="screenshot-embed">
+      <img src="zdx-deployment-phases.png" alt="5-phase ZDX methodology: Initiation and Prerequisites, Application Discovery, Configuration and Roll Out, Admin Access and Alert Definition, Operationalization and Reporting">
+      <div class="screenshot-caption">Five-phase ZDX methodology — phases overlap; configuration and alert definition begin while the pilot rollout is in progress.</div>
+    </div>
+
+    <h3>Rollout Strategy</h3>
+    <p>Although ZDX does not make any forwarding decisions or change configurations on end user devices, a staggered rollout is still recommended to prevent any unexpected performance impact from probing overhead and to validate alert accuracy before wide deployment.</p>
+
+    <div class="screenshot-embed">
+      <img src="zdx-rollout-strategy.png" alt="Rollout Strategy 4-part diagram: Meet Prerequisites, Pilot Rollout, Manage Client Connector, Successive Staggered Rollout">
+      <div class="screenshot-caption">Staggered rollout strategy — start with a technically capable pilot group, validate, then expand in successive phases of up to 5,000 users per phase.</div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-header"><div class="callout-icon">💡</div> PILOT GROUP SELECTION</div>
+      <div class="callout-body">Choose users who are <strong>least resistant to change</strong> and <strong>efficient in debugging basic device issues</strong> (e.g. Tier 1 help desk, IT team). They can give accurate feedback on probe overhead and distinguish ZDX measurement artifacts from genuine performance issues.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">4-step deployment sequence: Prerequisites → Enable ZDX (ZIA + Client Connector) → Configure Monitoring Policy → Fine Tune for Operations. 5-phase methodology ends with Operationalization &amp; Reporting. Staggered rollout: pilot → successive phases up to 5,000 users per phase. Admin RBAC and user authentication are inherited from ZIA.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">ZDX rollout is like opening a new hospital wing's patient monitoring system. You don't connect all 500 patient beds on day one. You start with the ICU (the pilot group — most technically capable), run every alarm, verify the nurses' station receives the right notifications, tune the thresholds so minor fluctuations don't trigger false alarms, and only then expand to the general wards. Skipping the pilot phase doesn't save time — it costs it, because you end up tuning 500 badly-calibrated monitors simultaneously while patients (users) are complaining.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A2.png" alt="Analogy illustration A2" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--blue-dim);border-radius:8px;color:var(--blue-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A2.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon illustration of a hospital monitoring system rollout analogy. Wide scene split into four sections from left to right: (1) an engineer installing a single bedside monitor in a small ICU room with one attentive nurse checking readouts — labelled "Pilot"; (2) the nurse and engineer reviewing a glowing dashboard, adjusting a dial — labelled "Tune"; (3) two more monitor-filled rooms being activated with cheerful staff — labelled "Expand Phase 1"; (4) a full ward of monitors all glowing green with a satisfied manager giving a thumbs up — labelled "Full Rollout". Clean line art, warm blues and whites, small friendly characters, no text labels, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-zdx-deployment" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('zdx-deployment','Deployment')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-zdx-deployment" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('zdx-deployment')">+ Add Note</button></div></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 3: APPLICATION STRATEGY & PROBES -->
+  <!-- ============================================================ -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · APPLICATION STRATEGY &amp; PROBES</span></div>
+    <p class="socratic-insight">ZDX limits each user to 30 active probes simultaneously. This ceiling forces deliberate choices about what to monitor — not everything can be watched at once. How you organize applications and configure probes directly determines the quality and completeness of the monitoring data you'll have when an incident occurs.</p>
+    <ul class="socratic-questions">
+      <li>Given a 30-probe-per-user limit, a typical enterprise might have hundreds of apps. How would you prioritize which 30 slots to use, and how would you structure them across Critical, Group-specific, and Noisy categories?</li>
+      <li>ZDX recommends "single service per app" — e.g., SAP Americas and SAP Europe as separate ZDX apps rather than one. What specific measurement problem does bundling multiple services under one ZDX app create?</li>
+      <li>A Web Probe on an app that redirects unauthenticated requests to a login page (302 Found) should measure availability based on the redirect, not a 200 OK. Why would measuring for 200 OK give misleading availability data in this case?</li>
+    </ul>
+    <div class="answer-area" data-section="app-strategy">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+          <div class="model-answer-text">Use the three-category framework: Critical apps (e.g. Office 365, Okta) run for all users and consume the majority of slots. Group-specific critical apps (e.g. Azure for Operations, Salesforce for Sales) only run for users in those groups, so they don't burn slots for the broader population. Noisy apps — those with known variability unrelated to ZDX infrastructure — are allocated their own separate slots and not mixed with critical apps so their variability doesn't distort the ZDX Score. Direct (non-ZTE) and VPN apps also get their own probe category.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+          <div class="model-answer-text">When multiple services share one ZDX app, performance trends are averaged across all of them. A degradation in SAP Europe gets diluted by healthy performance from SAP Americas, and the ZDX Score stays green while European users are suffering. Single-service-per-app gives you clean, isolatable trend data: you can see exactly which service instance degraded, when it degraded, and whether it's recovering — without the noise from healthy instances masking the problem.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q3 — MODEL ANSWER</div>
+          <div class="model-answer-text">If you probe for 200 OK and the app redirects to a login service, the probe is actually measuring the login service's availability, not the original app. The login service could return 200 OK even if the app's own backend is completely down. You'd report the app as "available" when it isn't. Measuring for the 302 redirect ensures you're testing whether the original service endpoint is reachable and responding as designed — not whether something downstream of it is alive.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-app-strategy">
+    <div class="section-label">SECTION 2 (CONTINUED) · APPLICATION STRATEGY &amp; PROBE CONFIGURATION</div>
+    <h2>Probes, Alerts &amp; Application Strategy</h2>
+    <p>ZDX is limited to 30 probes per user at any time. This isn't a technical constraint to work around — it's a design boundary that forces deliberate decisions about what's actually worth monitoring continuously.</p>
+
+    <h3>Three Application Categories</h3>
+    <div class="screenshot-embed">
+      <img src="zdx-app-categories.png" alt="Three application categories: Critical applications (all users), Group-specific critical applications, Noisy applications, with VPN/ZIA/ZPA/Direct labels on the right">
+      <div class="screenshot-caption">The three usage-based categories for organising ZDX probe allocation — each category maps to a different probe strategy and audience scope.</div>
+    </div>
+
+    <div class="two-col-grid">
+      <div class="info-card"><div class="info-card-title">Critical Applications</div><div class="info-card-body">Applications that are critical for the entire organisation (e.g. Office 365, Okta). Run probes for all ZDX-enabled users. These consume the majority of the 30-probe budget.</div></div>
+      <div class="info-card"><div class="info-card-title">Group-Specific Critical Apps</div><div class="info-card-body">Applications critical to specific departments only (e.g. Azure for Operations, Salesforce for Sales). Assign probes only to users in those groups — saves slots for others.</div></div>
+      <div class="info-card"><div class="info-card-title">Noisy Applications</div><div class="info-card-body">Apps with known performance variability unrelated to ZDX infrastructure. Isolated into their own probe slots to prevent distorting the ZDX Score for critical apps.</div></div>
+      <div class="info-card"><div class="info-card-title">Direct / VPN Apps</div><div class="info-card-body">Apps accessed via VPN, ZIA, ZPA, or directly (bypassing ZTE). These have separate probe categories. Important to distinguish from ZTE-routed traffic in cloud path analysis.</div></div>
+    </div>
+
+    <h3>Application Arrangement: One Service Per App</h3>
+    <div class="screenshot-embed">
+      <img src="zdx-app-arrangement.png" alt="Recommended: single service per ZDX app (4 separate apps) vs Not Recommended: multiple services bundled under one ZDX app">
+      <div class="screenshot-caption">Single service per ZDX application is the best practice — bundling dilutes performance trend data and makes incident isolation impossible.</div>
+    </div>
+
+    <h3>Web Probe: Redirect &amp; Availability Best Practices</h3>
+    <p>Setting the correct expected response code is critical. The configuration depends on how the application responds to an unauthenticated HTTP request from the probe.</p>
+
+    <div class="screenshot-embed">
+      <img src="zdx-web-probe-redirect.png" alt="Web probe redirect diagram: application returning 200 OK directly vs application redirecting to login with 302 Found">
+      <div class="screenshot-caption">Two probe scenarios — apps that respond with 200 OK should be probed for that code; apps that redirect to a login page should be probed for the 302, not the downstream 200.</div>
+    </div>
+
+    <div class="two-col-grid">
+      <div class="info-card"><div class="info-card-title">200 OK — Direct Response</div><div class="info-card-body">App responds to an unauthenticated request directly. Measure availability based on the 200 response code and any followed redirects. Straightforward — measuring the app itself.</div></div>
+      <div class="info-card"><div class="info-card-title">302 Found — Redirect to Login</div><div class="info-card-body">App redirects to a login service. Measuring for 200 OK would test the login service, not the app. Configure availability based on the app's ability to issue the 302 redirect.</div></div>
+    </div>
+
+    <h3>Cloud Path Probe: Protocol &amp; Packet Count</h3>
+    <ul class="content-list">
+      <li><strong>Protocol — Use Adaptive:</strong> The internet is "best-effort." Devices don't consistently respond to specific protocols. The Adaptive protocol lets ZDX select the best-performing protocol per path. Fixing a protocol can cause false failures if that protocol is blocked on a particular network path.</li>
+      <li><strong>Packet Count — 5 for SaaS/ZIA/Direct, 3 for Private/ZPA:</strong> Packet Count is the number of traces each cloud path attempt makes. Use 5 for SaaS and ZIA/Direct destinations, 3 for Private/ZPA destinations.</li>
+    </ul>
+
+    <div class="callout callout-note">
+      <div class="callout-header"><div class="callout-icon">💡</div> ZDX v3.3.1 UPDATE</div>
+      <div class="callout-body">Starting ZDX v3.3.1, packet count is <strong>automatically reduced to 3 for all probes</strong> when a trusted network is detected, to reduce impact. Diagnostics will continue to run with the configured values.</div>
+    </div>
+
+    <h3>Alerting: What to Measure Per Probe Type</h3>
+    <div class="two-col-grid">
+      <div class="info-card"><div class="info-card-title">Web Probe Alerts</div><div class="info-card-body"><strong>Slowness:</strong> Page Fetch Time, DNS Time<br><strong>Failure:</strong> Availability<br><strong>Comprehensive:</strong> ZDX Score, Score Drops</div></div>
+      <div class="info-card"><div class="info-card-title">Cloud Path Probe Alerts</div><div class="info-card-body"><strong>Slowness:</strong> Latency<br><strong>Failure:</strong> Loss (packet loss)<br><strong>Comprehensive:</strong> ZDX Score, Score Drops</div></div>
+    </div>
+
+    <h3>Administrator Access (RBAC)</h3>
+    <p>ZDX provides granular, role-based access control. Four standard roles have different permissions across Dashboard Access, Device &amp; User Information, UCaaS Monitoring, Analytics, and more:</p>
+    <ul class="content-list">
+      <li><strong>Platform Owner:</strong> Full access to all features including Configuration Access and Administrator Management.</li>
+      <li><strong>Help Desk / Service Desk:</strong> View Only for most dashboards; Full access to Remote Assistance Management and Deep Tracing.</li>
+      <li><strong>Network Operations:</strong> View Only for user dashboards; Full access to Alerts, Configuration Access, and Locations.</li>
+      <li><strong>T1 Service Desk:</strong> Most restrictive. No access to configuration or administrator management. 2–12 hour Time Duration scope.</li>
+    </ul>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">30 probes per user limit — hard ceiling. Three categories: Critical (all users), Group-specific (department only), Noisy (isolated). Single service per ZDX app is best practice. Web probe for 302-redirecting apps: measure availability based on redirect, not downstream 200 OK. Cloud Path: Adaptive protocol always; Packet Count = 5 (SaaS/ZIA/Direct), 3 (Private/ZPA); auto-reduces to 3 on trusted network from v3.3.1.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">The 30-probe limit is like a hospital ward with 30 patient monitors — finite, shared infrastructure. You don't connect every person in the building; you connect the critical patients (Critical apps), give dedicated monitors to the high-dependency ward (Group-specific), and put the rowdy recovery patients together where their noise won't drown out the ICU alarms (Noisy apps). And you never put two patients on one monitor — if one flatlines, you can't tell which one.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A3.png" alt="Analogy illustration A3" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--blue-dim);border-radius:8px;color:var(--blue-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A3.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon of a hospital ward with exactly 30 patient monitor stands. Left zone: 12 monitors clustered around VIP beds labelled "Critical Apps" — all green. Centre zone: 8 monitors for a separate specialty ward labelled "Group-Specific" — each with a small team badge on the bed. Right zone: 6 monitors crammed together labelled "Noisy" — screens flickering but not alarming the others. One area is crossed out showing two stick-figure patients sharing a single monitor with a confused nurse — the "not recommended" arrangement. Clean cartoon style, soft blues and whites, small expressive characters, no text labels, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-app-strategy" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('app-strategy','App Strategy &amp; Probes')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-app-strategy" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('app-strategy')">+ Add Note</button></div></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 4: TROUBLESHOOTING -->
+  <!-- ============================================================ -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · ZDX TROUBLESHOOTING WORKFLOW</span></div>
+    <p class="socratic-insight">ZDX troubleshooting operates at two levels: proactively catching widespread issues before users report them (Level 1), and reactively diagnosing individual user issues that weren't global (Level 2). The goal isn't just resolution — it's reducing MTTD, MTTR, and MTTI (mean time to detection, resolution, and innocence), the last of which is about proving which team's layer is NOT the problem.</p>
+    <ul class="socratic-questions">
+      <li>MTTI stands for "mean time to innocence" — the time it takes to prove a layer is not responsible for an issue. Why is this metric as important as MTTD and MTTR in a cross-functional incident involving network, desktop, and application teams?</li>
+      <li>A user reports slow SharePoint access. Level 1 checks show no global, regional, or office-wide ZDX score drop. What Level 2 checks would you perform, and in what order?</li>
+      <li>ZDX identifies four symptom patterns for performance drops: Server Slowness, DNS Issue, Bandwidth Fluctuation, and Network Issue. Why does it matter to distinguish between these at the ZDX layer rather than just escalating a generic "slow app" ticket?</li>
+    </ul>
+    <div class="answer-area" data-section="troubleshooting">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+          <div class="model-answer-text">MTTI matters because in cross-functional incidents, the instinct of every team is to defend their own layer. Network ops says "our infrastructure is fine," the app team says "our backend latency is normal," and desktop says "the endpoint is healthy." Without data, this deadlock can persist for hours while the user suffers. ZDX gives you the path-level evidence to say definitively "network hops were normal, application response time was normal — the bottleneck was on the desktop Wi-Fi" — clearing three teams in one look and routing the fix to the right owner.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+          <div class="model-answer-text">Level 2 Wi-Fi checks (in order): (1) Wi-Fi signal strength — is it below 65%? (2) Wi-Fi type — is it 802.11n/a rather than 802.11ac/ax? (3) Wi-Fi channel — is the device on a 2.4 GHz channel (channel &lt; 15)? (4) Network bandwidth for the wireless interface — dropping well below 1 Gbps for 802.11ax or below 300 Mbps for 802.11ac? (5) Cloud Path latency to gateway — consistently above 50ms? (6) Packet loss at the gateway or egress node. All these are visible in Device Health and Cloud Path tabs in ZDX.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q3 — MODEL ANSWER</div>
+          <div class="model-answer-text">A generic "slow app" ticket lands on a generalist queue and spends the first hour being routed — network opens it, app team reopens it, help desk escalates it. ZDX's symptom-pattern approach routes the incident to the right team immediately: "Server Slowness" pattern (high page fetch + high server response, no extra latency) → app team. "Network Issue" pattern (high page fetch + high server response + extra latency) → network/ISP team. This eliminates the routing lag and prevents the blame game entirely.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-troubleshooting">
+    <div class="section-label">SECTIONS 3–5 · ZDX TROUBLESHOOTING WORKFLOW</div>
+    <h2>Three-Level Troubleshooting &amp; Differential Diagnosis</h2>
+    <p>ZDX troubleshooting is designed to reduce four key operational metrics:</p>
+    <ul class="content-list">
+      <li><strong>Decrease total trouble tickets</strong> — proactive monitoring catches issues before users report them.</li>
+      <li><strong>Reduce ticket escalations</strong> — Level 1 and Level 2 checklists resolve more tickets at source.</li>
+      <li><strong>Improve MTTD, MTTR, and MTTI</strong> — faster detection, resolution, and layer-innocence proof.</li>
+      <li><strong>Enhance cross-functional collaboration</strong> — shared ZDX data replaces finger-pointing between help desk, desktop, network, application, and security teams.</li>
+    </ul>
+
+    <div class="screenshot-embed">
+      <img src="7.png" alt="What's in it for me: Decreasing trouble tickets, improving MTTD, MTTR, MTTI, and enhancing cross-functional collaboration">
+      <div class="screenshot-caption">The four operational outcomes ZDX troubleshooting workflows are designed to deliver for IT and support organisations.</div>
+    </div>
+
+    <h3>Level 1: Proactive — Catching Widespread Issues</h3>
+    <p>Before a ticket is even raised, Level 1 support monitors the ZDX Dashboard for widespread ZDX Score drops across the organisation, a geographic region, or a specific office. Three proactive checks:</p>
+    <ul class="content-list">
+      <li><strong>Is the entire organisation experiencing a ZDX Score drop?</strong> → Application Tab → Choose Application → check for ZDX Score alert.</li>
+      <li><strong>Is a geographic region experiencing a score drop?</strong> → Application Tab → filter by region → check ZDX Score alert.</li>
+      <li><strong>Is the entire office experiencing application degradation?</strong> → Application Tab → filter by office → check ZDX Score alert.</li>
+    </ul>
+
+    <h3>Level 2: Reactive — Individual User Troubleshooting</h3>
+    <p>When Level 1 checks pass (no global/regional/office-wide issue), Level 2 investigates the individual user's device and network path.</p>
+
+    <div class="two-col-grid">
+      <div class="info-card"><div class="info-card-title">Wi-Fi Issues Checklist</div><div class="info-card-body">Signal strength &lt; 65% · Wi-Fi type not 802.11ac/ax · Channel &lt; 15 (2.4 GHz) · Bandwidth below threshold for type · Latency to gateway &gt; 50ms · Packet loss at gateway/egress node · Unexpected User Device Events during degradation</div></div>
+      <div class="info-card"><div class="info-card-title">Desktop Issues Checklist</div><div class="info-card-body">CPU bursting &gt; 85% · Memory bursting &gt; 85% · Disk Usage &gt; 98% · Disk I/O bursting · Network interface I/O bursting · User on battery during score drop · Unexpected User Device Events generated</div></div>
+    </div>
+
+    <h3>Symptom-Pattern Analysis: Identifying Root Cause</h3>
+    <p>ZDX maps metric combinations to root-cause categories, enabling direct team routing:</p>
+
+    <div class="screenshot-embed">
+      <img src="zdx-symptom-analysis.png" alt="Four symptom patterns: Server Slowness (high page fetch + server response, no extra latency), DNS Issue (high page fetch + DNS time increase), Bandwidth Fluctuation (high page fetch, no latency, no DNS increase), Network Issue (high page fetch + server response + extra latency)">
+      <div class="screenshot-caption">Symptom patterns map directly to responsible teams — enabling fast escalation routing without a "slow app" blame game.</div>
+    </div>
+
+    <div class="phase-steps">
+      <div class="phase-step"><div class="phase-num">1</div><div class="phase-body"><div class="phase-title">Server Slowness</div><div class="phase-text">High page fetch + high server response time. No extra latency, no DNS increase. → Escalate to Application team. The bottleneck is server-side.</div></div></div>
+      <div class="phase-step"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">DNS Issue</div><div class="phase-text">High page fetch + no extra latency + increase in DNS time. No server response time increase. → Escalate to DNS/network team.</div></div></div>
+      <div class="phase-step"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Bandwidth Fluctuation</div><div class="phase-text">High page fetch. No extra latency, no DNS increase, no increase in server response. → Likely client-side bandwidth constraint. Check device network interface metrics.</div></div></div>
+      <div class="phase-step"><div class="phase-num">4</div><div class="phase-body"><div class="phase-title">Network Issue</div><div class="phase-text">High page fetch + high server response time + extra latency. All three together → network/ISP path problem. Check Cloud Path hops for the specific bottleneck node.</div></div></div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">Three metrics: MTTD (detect), MTTR (resolve), MTTI (innocence — prove a layer isn't at fault). Level 1 = proactive, check Application Tab for org/region/office ZDX Score drops. Level 2 = reactive, individual user. Wi-Fi threshold: signal &lt;65%, latency to gateway &gt;50ms. Symptom patterns: Server Slowness (no extra latency) · DNS Issue (DNS time increase) · Bandwidth (no latency/DNS/server changes) · Network Issue (all three + extra latency).</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">ZDX troubleshooting is like a doctor performing a differential diagnosis. You don't prescribe treatment based on "the patient feels bad" — you map clusters of symptoms to root causes. High temperature + swollen nodes = viral. High temperature + localised pain + elevated white cells = bacterial infection at a specific site. In ZDX: high page fetch + high server response + extra latency = network issue. High page fetch + high DNS = DNS issue. You route the fix to the right specialist the first time, without sending the patient around five departments.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A4.png" alt="Analogy illustration A4" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--blue-dim);border-radius:8px;color:var(--blue-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A4.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon of a doctor at a diagnostic board. The doctor (calm, clipboard in hand) stands in front of a large whiteboard divided into four quadrants. Each quadrant has a different cluster of symptom icons: (1) a server icon + red response bar + no latency arrow = "Server" label; (2) a DNS icon + magnifying glass on a slow lookup = "DNS" label; (3) a bandwidth meter fluctuating = "Bandwidth" label; (4) all three with a tangled network cloud = "Network" label. Below the board, four doors are labelled App Team, DNS Team, Desktop Team, Network Team — with a cheerful patient being directed to the correct door. Clean cartoon style, light blues, expressive small characters, no text labels, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-troubleshooting" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('troubleshooting','Troubleshooting')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-troubleshooting" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('troubleshooting')">+ Add Note</button></div></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 5: WORKFLOW AUTOMATION -->
+  <!-- ============================================================ -->
+  <div class="socratic-block">
+    <div class="socratic-header"><span class="socratic-icon">💭</span><span class="socratic-label">THINK FIRST · WORKFLOW AUTOMATION &amp; ITSM</span></div>
+    <p class="socratic-insight">ZDX generates far more telemetry than any team can manually review. Workflow Automation integrates ZDX alerts with ITSM tools — automatically creating tickets, escalating, notifying, and closing incidents. The goal is compressing the gap between ZDX detecting a problem and the right team acting on it.</p>
+    <ul class="socratic-questions">
+      <li>What's the specific operational risk of relying on manual ZDX alert review rather than Workflow Automation integration with an ITSM tool?</li>
+      <li>ZDX has eight workflow templates — from "Auto Notify" through to "Auto Close Data Protection Incident With Resolution Label." What does the progression from notification to closure tell you about the trust levels required for each automation step?</li>
+      <li>For UCaaS monitoring (Teams, Zoom), ZDX Score weighs jitter heavily. Why is jitter a more important metric than average latency alone for real-time audio/video applications?</li>
+    </ul>
+    <div class="answer-area" data-section="workflow-automation">
+      <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+      <div class="answer-buttons">
+        <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+        <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+      </div>
+      <div class="model-answers" style="display:none;">
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+          <div class="model-answer-text">Manual review introduces a detection-to-action lag. ZDX might spot a ZDX Score drop at 2 AM, but if no one is watching the dashboard, the alert sits unacted upon until morning. During that window, more users suffer impact, the incident scope expands, and the window for proactive remediation (before users flood the help desk) closes. Workflow Automation compresses MTTD to seconds by triggering a ServiceNow ticket or PagerDuty alert the moment ZDX detects the threshold breach — routing it to the right team immediately, at any hour.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+          <div class="model-answer-text">The progression reflects decreasing reversibility. Notifying a human (Auto Notify) is the safest action — a human decides what to do. Auto Escalate adds urgency but still routes to a person. Auto Create Tickets involves ITSM systems, requiring configuration trust. Auto Close Incidents is the most consequential — it takes an action without human review. Each step requires additional validation that the ZDX data is accurate and the alert conditions are well-tuned, because an auto-close action on a false positive could suppress a real incident.</div>
+        </div>
+        <div class="model-answer-item">
+          <div class="model-answer-q">Q3 — MODEL ANSWER</div>
+          <div class="model-answer-text">Latency is the average delay — even moderate average latency can be tolerable if it's consistent, because audio codecs and video buffers can compensate. Jitter is variance in latency — it causes packets to arrive out of order, requiring reordering buffers. When jitter exceeds buffer capacity, packets are discarded, causing the characteristic choppy audio or frozen video frames that users immediately perceive. A call with 80ms average latency but 2ms jitter sounds fine; a call with 40ms average latency but 60ms jitter sounds terrible.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block" id="section-workflow-automation">
+    <div class="section-label">SECTION 6 · WORKFLOW AUTOMATION &amp; ITSM INTEGRATION</div>
+    <h2>Workflow Automation &amp; ITSM Integration</h2>
+    <p>ZDX Workflow Automation allows governance administrators to automatically trigger tickets, escalate alerts, send notifications, and close incidents based on ZDX alert state transitions. It connects ZDX to ITSM tools and integrates with Data Protection incidents and Business Insights events.</p>
+
+    <h3>Eight Workflow Templates</h3>
+    <div class="screenshot-embed">
+      <img src="zdx-workflow-templates.png" alt="8 Workflow Automation templates arranged in a hexagonal pattern: Auto Close Data Protection Incident With Resolution Label, Auto Close Data Protection Incident, Auto Create Tickets, Auto Escalate, Auto Notify, Auto Notify User and Concurrently Escalate, Auto Notify User and Escalate, Auto Notify User and Escalate to Manager">
+      <div class="screenshot-caption">Eight built-in workflow templates — ranging from simple notification to full automatic incident closure with a resolution label.</div>
+    </div>
+
+    <div class="two-col-grid">
+      <div class="info-card"><div class="info-card-title">Notification Templates</div><div class="info-card-body"><strong>Auto Notify</strong> — sends a notification when alert fires.<br><strong>Auto Notify + Escalate</strong> — notifies and escalates sequentially.<br><strong>Auto Notify + Concurrent Escalate</strong> — notifies and escalates simultaneously.<br><strong>Auto Notify + Escalate to Manager</strong> — escalates to user's manager.</div></div>
+      <div class="info-card"><div class="info-card-title">Ticket &amp; Closure Templates</div><div class="info-card-body"><strong>Auto Escalate</strong> — escalates without user notification.<br><strong>Auto Create Tickets</strong> — creates ITSM tickets automatically.<br><strong>Auto Close Data Protection Incident</strong> — closes when condition clears.<br><strong>Auto Close DPI With Resolution Label</strong> — closes and tags with resolution.</div></div>
+    </div>
+
+    <h3>Workflow Configuration Steps</h3>
+    <p>To configure a workflow in Workflow Automation, select a workflow template and configure the workflow steps within it. The five-step process: <strong>Configure Rule → Filters → Criteria → Action → Review</strong>. Alert rules can use ALL or ANY logic operators with nested conditions for fine-grained targeting.</p>
+
+    <h3>Data Analysis &amp; UCaaS Monitoring</h3>
+    <ul class="content-list">
+      <li><strong>Surrounding Data Rounds / Spike Analysis:</strong> When analyzing performance anomalies, historical context is essential. Look at data surrounding latency spikes — if a single node is consistently adding latency each round, that node is the injector. Use the StdDev column in Cloud Path CLI view to quantify jitter impact.</li>
+      <li><strong>UCaaS Monitoring:</strong> ZDX Score is the primary metric for call quality applications. Jitter (latency variance) is weighted heavily — consistent high latency is tolerable; variable latency causes audio dropouts and video freeze that users immediately notice.</li>
+    </ul>
+
+    <div class="callout callout-warn">
+      <div class="callout-header"><div class="callout-icon">💡</div> DDOS CONCERNS WITH PRIVATELY-HOSTED APPS</div>
+      <div class="callout-body">ZDX probes flow through Zscaler Cloud, which uses smart caching to protect end services. However, privately-hosted applications may not have the same resilience as SaaS. <strong>Start small</strong> with a group/department of geographically dispersed users and scale carefully. Run Deep Trace for users not currently running probes if an issue arises.</div>
+    </div>
+
+    <div class="mental-note-block">
+      <div class="mental-note-block-icon">🧠</div>
+      <div class="mental-note-block-inner">
+        <div class="mental-note-block-label">MENTAL NOTE</div>
+        <div class="mental-note-block-text">8 Workflow Automation templates: notification (Auto Notify, +Escalate, +Concurrent Escalate, +Escalate to Manager), ticket/closure (Auto Escalate, Auto Create Tickets, Auto Close DPI, Auto Close DPI With Resolution Label). Workflow steps: Configure Rule → Filters → Criteria → Action → Review. UCaaS key metric = ZDX Score, weighted by jitter (latency variance), not just average latency.</div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <div class="analogy-label">Analogy</div>
+      <div class="analogy-text">ZDX Workflow Automation is like an emergency dispatch system. When a smoke detector triggers (ZDX alert fires), the system doesn't wait for a human to call — it simultaneously notifies fire, police, and building management based on pre-configured protocols. The severity of the fire determines which templates activate: a small smoke event triggers "Auto Notify" (send a message to the facilities team); a structural alert triggers "Auto Escalate to Manager" and "Auto Create Ticket" simultaneously; a confirmed evacuation triggers "Auto Close Incident With Resolution Label" when occupants are confirmed safe. Each template matches the required response to the severity of the condition.</div>
+      <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+        <img src="A5.png" alt="Analogy illustration A5" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+        <div class="img-missing-msg" style="display:none;padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed var(--blue-dim);border-radius:8px;color:var(--blue-deep);font-size:12px;margin-bottom:10px;">📷 <strong>A5.png</strong> — add this image to the folder</div>
+        <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+        <div class="prompt-content" hidden>Flat minimalist cartoon of an automated emergency dispatch centre. Wide scene: on the left, a smoke detector on the ceiling of a building glows red — triggering a chain of automated actions shown as connected arrows flowing right. Three parallel action streams branch out: (1) a notification bell with a phone icon (Auto Notify); (2) a ticket icon labelled with a small clipboard (Auto Create Ticket); (3) a calendar icon with an escalation arrow (Auto Escalate to Manager). At the far right, a cheerful dispatcher at a control panel watches the process complete with a green "Resolved" badge on screen. Clean bold line art, warm blues and oranges for the alert states, soft greens for resolved state, no text labels, educational infographic feel, modern tech-analogy aesthetic.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div><div class="tool-label">ASK A QUESTION</div><textarea class="tool-textarea" id="q-workflow-automation" placeholder="What are you unsure about?" rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addQuestion('workflow-automation','Workflow Automation')">Add Question</button></div></div>
+      <div><div class="tool-label">ADD A NOTE</div><textarea class="tool-textarea" id="note-workflow-automation" placeholder="Write a note for this section..." rows="3"></textarea><div class="tool-row"><button class="btn-add-q" onclick="addNote('workflow-automation')">+ Add Note</button></div></div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<aside class="sidebar">
+  <div class="mod-nav">
+    <a class="mod-nav-hub" href="../edu-302-hub.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      EDU-302 Hub
+    </a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS CHECKLIST</div>
+    <ul class="subtopic-list" id="checklist">
+      <li onclick="toggleDone(this,0)"><div class="subtopic-check"></div><span>ZDX purpose: 4 monitoring domains (Endpoint · Network · App · UCaaS)</span></li>
+      <li onclick="toggleDone(this,1)"><div class="subtopic-check"></div><span>Deployment: 4-step sequence + 5-phase methodology + staggered rollout</span></li>
+      <li onclick="toggleDone(this,2)"><div class="subtopic-check"></div><span>30-probe limit · 3 categories · single service per app · web probe redirect rules</span></li>
+      <li onclick="toggleDone(this,3)"><div class="subtopic-check"></div><span>Cloud Path: Adaptive protocol · Packet Count 5/3 · auto-reduce on trusted network (v3.3.1)</span></li>
+      <li onclick="toggleDone(this,4)"><div class="subtopic-check"></div><span>MTTD · MTTR · MTTI — Level 1 proactive, Level 2 reactive checklists</span></li>
+      <li onclick="toggleDone(this,5)"><div class="subtopic-check"></div><span>4 symptom patterns: Server Slowness · DNS Issue · Bandwidth · Network Issue</span></li>
+      <li onclick="toggleDone(this,6)"><div class="subtopic-check"></div><span>8 Workflow Automation templates from Auto Notify to Auto Close DPI</span></li>
+      <li onclick="toggleDone(this,7)"><div class="subtopic-check"></div><span>UCaaS: ZDX Score weighted by jitter (latency variance), not just avg latency</span></li>
+      <li onclick="toggleDone(this,8)"><div class="subtopic-check"></div><span>Admin RBAC: 4 roles (Platform Owner · Help Desk · Network Ops · T1 Service Desk)</span></li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">KEY TERMS</div>
+    <div class="quick-ref"><div class="quick-ref-term">ZDX Score</div><div class="quick-ref-def">Composite per-user-per-app score combining application, network, and device health metrics. The primary KPI for all ZDX monitoring and alerting.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">TPG</div><div class="quick-ref-def">Telemetry and Policy Gateway — the ZDX component that receives probe data from Client Connector agents and routes it to the ZDX Analytics Engine.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Web Probe</div><div class="quick-ref-def">Measures application-layer performance: page fetch time, DNS time, and availability. Configure expected response code carefully for apps that redirect (302 vs 200 OK).</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Cloud Path Probe</div><div class="quick-ref-def">Traces latency and packet loss through every network hop to the destination. Use Adaptive protocol. Packet Count = 5 (SaaS/ZIA/Direct) or 3 (Private/ZPA).</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">MTTI</div><div class="quick-ref-def">Mean Time to Innocence — how quickly you can prove a layer (network, device, app) is NOT responsible for an incident. Critical for cross-team escalation resolution.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Jitter</div><div class="quick-ref-def">Variance in network latency. More damaging than average latency for UCaaS (Teams, Zoom). Causes out-of-order packets → audio dropout → frozen video. Key UCaaS metric.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Workflow Automation</div><div class="quick-ref-def">ZDX feature to auto-trigger tickets, escalations, notifications, and incident closures based on alert state transitions. Integrates with ITSM tools like ServiceNow.</div></div>
+    <div class="quick-ref"><div class="quick-ref-term">Deep Trace</div><div class="quick-ref-def">On-demand detailed diagnostic for a specific user, run by Help Desk or Network Operations. Available even for users not currently running probes.</div></div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div class="footer-left">EDU-302 · <span>Section 10</span></div>
+  <div class="footer-right">Zscaler Digital Experience (ZDX) · Section 10 of 11</div>
+</footer>
+
+<script>
+const PAGE_KEY='edu302-digital-experience';
+const SECTIONS={'zdx-overview':'ZDX Overview','zdx-deployment':'Deployment','app-strategy':'App Strategy & Probes','troubleshooting':'Troubleshooting','workflow-automation':'Workflow Automation'};
+
+function navTo(id,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');const target=document.getElementById(id);if(target){const offset=document.querySelector('.section-nav').offsetHeight+16;window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY-offset,behavior:'smooth'});}}
+function toggleDone(li,idx){li.classList.toggle('done');const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');checks[idx]=li.classList.contains('done');localStorage.setItem(PAGE_KEY+'-checks',JSON.stringify(checks));}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function getQuestions(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQuestions(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text)return;const qs=getQuestions();qs.push({id:Date.now(),lesson:key,lessonName:name,text});saveQuestions(qs);ta.value='';renderQPanel();const body=document.getElementById('qpanel-body');if(!body.classList.contains('open'))toggleQPanel();}
+function deleteQuestion(id){saveQuestions(getQuestions().filter(q=>q.id!==id));renderQPanel();}
+function renderQPanel(){const qs=getQuestions();const count=document.getElementById('qpanel-count');count.textContent=qs.length;count.style.display=qs.length?'inline':'none';const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups={};Object.keys(SECTIONS).forEach(k=>{groups[k]=[];});qs.forEach(q=>{if(groups[q.lesson])groups[q.lesson].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQuestion(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function initNotes(){document.querySelectorAll('.notes-ta').forEach(ta=>{const saved=localStorage.getItem(PAGE_KEY+'-'+ta.id);if(saved)ta.value=saved;ta.addEventListener('input',()=>{localStorage.setItem(PAGE_KEY+'-'+ta.id,ta.value);const statusId='ns-'+ta.id.replace('notes-','');const status=document.getElementById(statusId);if(status){status.textContent='Saved';clearTimeout(ta._st);ta._st=setTimeout(()=>{status.textContent='';},1500);}});});}
+function initChecks(){const checks=JSON.parse(localStorage.getItem(PAGE_KEY+'-checks')||'[]');document.querySelectorAll('#checklist li').forEach((li,i)=>{if(checks[i])li.classList.add('done');});}
+document.querySelectorAll('.socratic-header').forEach(function(h){h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});});
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();const name=(typeof SECTIONS!=='undefined'&&SECTIONS[key])?SECTIONS[key]:key;ns.push({id:Date.now(),section:key,sectionName:name,text});saveNotesArr(ns);ta.value='';renderNotesPanel();const body=document.getElementById('notes-panel-body');if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=typeof SECTIONS!=='undefined'?Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]])):{};ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);else{if(!groups['_other'])groups['_other']=[];groups['_other'].push(n);}});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;const label=typeof SECTIONS!=='undefined'&&SECTIONS[key]?SECTIONS[key]:key;html+=`<div class="q-group"><div class="q-group-label">${label}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();renderNotesPanel();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;const addBtn=area.querySelector('.btn-add-answer');addBtn.textContent='✓ Answer saved';addBtn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}});
+  document.querySelectorAll('.analogy-box').forEach(function(box){if(box.dataset.collapsibleInit)return;box.dataset.collapsibleInit='1';box.classList.add('expanded');const label=box.querySelector(':scope > .analogy-label');if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));});
+  document.querySelectorAll('.analogy-img img, .img-display-block img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+  document.querySelectorAll('.screenshot-embed img').forEach(function(img){img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
+});
+</script>
+<script src="../../../transitions.js"></script>
+</body>
+</html>

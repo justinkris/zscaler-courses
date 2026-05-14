@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pt')){document.documentElement.classList.add('pt-init')}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Protection Fundamentals · 101 — Zscaler Data Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef4ff;--surface:#fff;--surface-2:#f5f8ff;--border:#bfdbfe;--border-dim:#dbeafe;
+  --text:#0d1a2e;--text-soft:#1e3a5c;--text-muted:#5a7a9a;
+  --blue:#1a6dcc;--blue-glow:rgba(26,109,204,0.07);--blue-dim:#bfdbfe;--blue-deep:#0f3d7a;
+  --green:#1a7c4a;--green-light:#d4f0e0;--green-border:#a7e0c0;
+  --red:#b91c1c;--red-light:#fee2e2;--red-border:#fecaca;
+  --amber:#b45309;--amber-light:#fef9c3;--amber-border:#fde68a;
+  --purple:#5c35cc;--purple-light:#ece8ff;--purple-border:#c8bbff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html.pt-init body{opacity:0;}
+body{font-family:'Epilogue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+
+/* HEADER */
+header{background:#0d1a2e;color:#fff;padding:28px 40px 32px;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:#93c5fd;letter-spacing:0.06em;margin-bottom:20px;}
+.breadcrumb a{color:#93c5fd;text-decoration:none;opacity:0.8;}
+.breadcrumb a:hover{opacity:1;text-decoration:underline;}
+.breadcrumb-sep{opacity:0.5;}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.eyebrow-chip{background:rgba(147,197,253,0.15);border:1px solid rgba(147,197,253,0.3);color:#93c5fd;font-size:10px;font-weight:700;letter-spacing:0.18em;padding:4px 12px;border-radius:20px;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:#93c5fd;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+h1{font-family:'Fraunces',serif;font-size:42px;font-weight:700;line-height:1.1;color:#fff;margin-bottom:4px;}
+h1 em{font-style:italic;font-weight:400;color:#93c5fd;}
+.header-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-top:6px;letter-spacing:0.03em;}
+
+/* MOTIVATION BANNER */
+.motivation-banner{background:#1e3a5c;border-bottom:1px solid rgba(147,197,253,0.15);padding:14px 40px;}
+.motivation-text{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.6;}
+
+/* TOP PANELS */
+.top-panels{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.top-panels .qpanel{border-bottom:none;border-right:1px solid var(--border);}
+.top-panels .qpanel-header{padding-left:32px;padding-right:32px;}
+.top-panels .qpanel-body{padding-left:32px;padding-right:32px;}
+.qpanel{background:var(--surface);}
+.qpanel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 24px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.qpanel-header:hover,.qpanel-header.open{background:var(--surface-2);}
+.qpanel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.qpanel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.qpanel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.qpanel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.qpanel-body{display:none;padding:0 24px 22px;}
+.qpanel-body.open{display:block;}
+.notes-panel{background:var(--surface);}
+.notes-panel-header{width:100%;display:flex;align-items:center;gap:12px;padding:13px 32px;cursor:pointer;background:var(--surface);border:none;font-family:'Epilogue',sans-serif;text-align:left;}
+.notes-panel-header:hover,.notes-panel-header.open{background:var(--surface-2);}
+.notes-panel-title{font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--text);}
+.notes-panel-count{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:none;}
+.notes-panel-hint{font-size:11px;color:var(--text-muted);margin-left:4px;}
+.notes-panel-chevron{margin-left:auto;font-size:13px;color:var(--text-muted);}
+.notes-panel-body{display:none;padding:0 32px 22px;}
+.notes-panel-body.open{display:block;}
+.no-questions{font-size:12px;color:var(--text-muted);padding:10px 0;}
+.q-group{margin-bottom:14px;}
+.q-group-label{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:8px;}
+.q-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);}
+.q-num{font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0;margin-top:2px;}
+.q-text{font-size:13px;color:var(--text-soft);flex:1;line-height:1.5;}
+.q-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:11px;padding:2px 4px;flex-shrink:0;}
+.q-del:hover{color:var(--red);}
+
+/* SECTION NAV */
+.section-nav{display:flex;gap:2px;padding:10px 24px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:10;}
+.nav-tab{background:none;border:1px solid transparent;border-radius:8px;padding:6px 14px;font-family:'Epilogue',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.nav-tab:hover{background:var(--surface-2);color:var(--text);}
+.nav-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+
+/* MAIN LAYOUT */
+main{display:grid;grid-template-columns:1fr 320px;gap:0;flex:1;}
+.main-content{padding:32px 40px;min-width:0;}
+aside{padding:28px 24px;border-left:1px solid var(--border);position:sticky;top:45px;height:calc(100vh - 45px);overflow-y:auto;background:var(--surface);}
+
+/* SECTION BLOCKS */
+.section-block{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border-dim);}
+.section-block:last-child{border-bottom:none;}
+.section-tag{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--blue);margin-bottom:8px;}
+h2{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:16px;}
+h3{font-size:15px;font-weight:700;color:var(--text);margin:20px 0 10px;}
+p{font-size:14px;line-height:1.75;color:var(--text-soft);margin-bottom:12px;}
+ul,ol{padding-left:20px;margin-bottom:12px;}
+li{font-size:13.5px;line-height:1.7;color:var(--text-soft);margin-bottom:4px;}
+
+/* INFO CARDS */
+.info-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:16px 0;}
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.info-card-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:6px;}
+.info-card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.info-card-desc{font-size:12px;color:var(--text-muted);line-height:1.6;}
+
+/* CALLOUTS */
+.callout{border-radius:10px;padding:14px 16px;margin:16px 0;border-left:3px solid;}
+.callout-header{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.14em;margin-bottom:6px;}
+.callout-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
+.callout-body{font-size:13px;line-height:1.65;color:var(--text-soft);}
+.callout-tip{background:var(--blue-glow);border-color:var(--blue);}
+.callout-tip .callout-header{color:var(--blue);}
+.callout-tip .callout-icon{background:rgba(26,109,204,0.15);color:var(--blue);}
+
+/* SCREENSHOT EMBED */
+.screenshot-embed{margin:20px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+.screenshot-embed img{width:100%;display:block;cursor:zoom-in;}
+.screenshot-embed img.zoomed{cursor:zoom-out;transform:scale(1.5);transform-origin:top left;transition:transform 0.2s ease;}
+.screenshot-caption{font-size:11.5px;color:var(--text-muted);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--border-dim);line-height:1.5;}
+
+/* SOCRATIC */
+.socratic-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:16px;border-top:3px solid var(--blue);}
+.socratic-header{display:flex;align-items:center;gap:8px;margin-bottom:0;cursor:pointer;user-select:none;}
+.socratic-header::after{content:'▸ Expand';margin-left:auto;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);font-family:'Epilogue',sans-serif;}
+.socratic-block.soc-open .socratic-header{margin-bottom:10px;}
+.socratic-block.soc-open .socratic-header::after{content:'▾ Collapse';}
+.socratic-block:not(.soc-open) .socratic-insight,
+.socratic-block:not(.soc-open) .socratic-questions,
+.socratic-block:not(.soc-open) .answer-area{display:none;}
+.socratic-icon{font-size:17px;flex-shrink:0;}
+.socratic-label{font-size:9px;font-weight:700;letter-spacing:0.18em;color:var(--text-muted);}
+.socratic-insight{font-size:13px;color:var(--text-soft);line-height:1.75;margin-bottom:12px;border-left:3px solid var(--border);padding-left:12px;font-style:italic;}
+.socratic-questions{list-style:none;padding:0;margin:0;}
+.socratic-questions li{font-size:12.5px;color:var(--text);padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--border-dim);line-height:1.6;}
+.socratic-questions li:last-child{border-bottom:none;}
+.socratic-questions li::before{content:'?';position:absolute;left:0;font-weight:700;font-size:12px;top:8px;color:var(--blue);}
+
+/* MENTAL NOTE */
+.mental-note-block{border-radius:10px;padding:12px 16px;margin:16px 0;display:flex;gap:10px;align-items:flex-start;background:rgba(26,109,204,0.07);border:1px solid var(--border);}
+.mental-note-block-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mental-note-block-inner{flex:1;}
+.mental-note-block-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--blue);margin-bottom:3px;}
+.mental-note-block-text{font-size:13px;font-weight:600;line-height:1.55;color:var(--text);}
+
+/* ANALOGY */
+.analogy-box{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #b45309;border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;}
+.analogy-label{display:flex;align-items:center;gap:6px;user-select:none;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:0.16em;color:#b45309;margin-bottom:4px;}
+.analogy-label::after{content:'▾  Reveal illustration';margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0.04em;text-transform:none;opacity:0.75;}
+.analogy-label:hover::after{opacity:1;}
+.analogy-box.expanded > .analogy-label::after{content:'▴  Hide illustration';}
+.analogy-text{font-size:13px;color:#78350f;line-height:1.65;font-style:italic;}
+.analogy-box > .analogy-img{display:none;}
+.analogy-box.expanded > .analogy-img{display:block;}
+.analogy-img img{max-width:360px !important;width:100%;cursor:zoom-in;transition:max-width 0.25s ease;}
+.analogy-img img.zoomed{max-width:100% !important;cursor:zoom-out;}
+@media(max-width:520px){.analogy-img img{max-width:100% !important;}}
+
+/* PROMPT */
+.img-missing-msg{padding:24px 12px;background:rgba(0,0,0,0.03);border:1px dashed #fde68a;border-radius:8px;color:#78350f;font-size:12px;margin-bottom:10px;}
+.prompt-toggle{background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:10px;font-weight:600;letter-spacing:0.08em;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Epilogue',sans-serif;text-transform:uppercase;}
+.prompt-toggle:hover{color:var(--text);border-color:var(--text);}
+.prompt-content{margin-top:10px;padding:10px 14px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:11.5px;color:var(--text-muted);font-style:italic;line-height:1.65;text-align:left;}
+.prompt-content[hidden]{display:none;}
+
+/* ANSWER */
+.answer-area{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.answer-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:60px;outline:none;line-height:1.6;}
+.answer-textarea:focus{border-color:var(--text);}
+.answer-textarea:disabled{opacity:0.7;background:var(--surface-2);cursor:default;}
+.answer-buttons{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.btn-add-answer{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-answer:hover:not(:disabled){opacity:0.85;}
+.btn-add-answer:disabled{opacity:0.5;cursor:default;}
+.btn-see-answer{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-see-answer:disabled{opacity:0.5;cursor:not-allowed;}
+.btn-see-answer:not(:disabled){color:var(--blue);border-color:var(--blue);}
+.btn-see-answer:hover:not(:disabled){background:var(--blue-glow);}
+.model-answers{margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.model-answer-item{padding:10px 0;border-bottom:1px solid var(--border-dim);}
+.model-answer-item:first-child{padding-top:0;}
+.model-answer-item:last-child{border-bottom:none;padding-bottom:0;}
+.model-answer-q{font-size:9px;font-weight:700;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:4px;}
+.model-answer-text{font-size:13px;color:var(--text-soft);line-height:1.7;}
+
+/* LESSON TOOLS */
+.lesson-tools{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:24px;}
+.lesson-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.tool-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:8px;}
+.tool-textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Epilogue',sans-serif;font-size:13px;color:var(--text);background:var(--surface);resize:vertical;min-height:72px;outline:none;line-height:1.6;}
+.tool-textarea:focus{border-color:var(--blue);}
+.tool-row{margin-top:8px;text-align:right;}
+.btn-add-q{background:#0d1a2e;color:#93c5fd;border:none;border-radius:8px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;font-family:'Epilogue',sans-serif;}
+.btn-add-q:hover{opacity:0.85;}
+
+/* SIDEBAR */
+.sidebar-section{margin-bottom:24px;}
+.sidebar-label{font-size:9px;font-weight:700;letter-spacing:0.16em;color:var(--text-muted);margin-bottom:10px;}
+.hub-back{display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:10px 16px;border-radius:10px;transition:opacity 0.15s;margin-bottom:20px;}
+.hub-back:hover{opacity:0.88;}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.check-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-soft);padding:6px 10px;border-radius:8px;cursor:pointer;transition:background 0.12s;}
+.check-item:hover{background:var(--surface-2);}
+.check-item input{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.check-item.done{color:var(--text-muted);text-decoration:line-through;}
+.sidebar-divider{height:1px;background:var(--border);margin:18px 0;}
+.quick-ref{background:#0d1a2e;border-radius:12px;padding:16px;}
+.quick-ref-title{font-size:9px;font-weight:700;letter-spacing:0.16em;color:#93c5fd;margin-bottom:12px;}
+.qr-term{margin-bottom:10px;}
+.qr-label{font-size:10px;font-weight:700;color:#93c5fd;letter-spacing:0.08em;}
+.qr-def{font-size:11.5px;color:rgba(255,255,255,0.65);line-height:1.55;margin-top:2px;}
+
+/* FOOTER */
+footer{background:#0d1a2e;color:rgba(255,255,255,0.45);font-size:11px;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.04em;}
+footer span{color:#93c5fd;}
+
+@media(max-width:900px){main{grid-template-columns:1fr;}aside{display:none;}.main-content{padding:24px 20px;}header,footer{padding:24px 20px;}.motivation-banner{padding:12px 20px;}.section-nav{padding:8px 16px;}.lesson-tools-grid{grid-template-columns:1fr;}.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}.top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="breadcrumb">
+    <a href="../../index.html">Zscaler Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="../data-security-hub.html">Data Security Courses</a>
+    <span class="breadcrumb-sep">›</span>
+    Fundamentals-101
+  </div>
+  <div class="eyebrow">
+    <span class="eyebrow-chip">FUNDAMENTALS · 101</span>
+    <span class="header-dot"></span>
+  </div>
+  <h1>Data Protection <em>Fundamentals</em></h1>
+  <div class="header-sub">Why data protection matters now — and how Zscaler solves it</div>
+</header>
+
+<div class="motivation-banner">
+  <div class="motivation-text">"Data is your most valuable asset — and the cloud has scattered it everywhere traditional security can't follow."</div>
+</div>
+
+<div class="top-panels">
+  <div class="qpanel" id="qpanel">
+    <button class="qpanel-header" onclick="toggleQPanel()" id="qpanel-header">
+      <span class="qpanel-title">MY QUESTIONS</span>
+      <span class="qpanel-count" id="qpanel-count">0</span>
+      <span class="qpanel-hint">— click to expand</span>
+      <span class="qpanel-chevron" id="qpanel-chevron">▾</span>
+    </button>
+    <div class="qpanel-body" id="qpanel-body"></div>
+  </div>
+  <div class="notes-panel" id="notes-panel">
+    <button class="notes-panel-header" onclick="toggleNotesPanel()" id="notes-panel-header">
+      <span class="notes-panel-title">MY NOTES</span>
+      <span class="notes-panel-count" id="notes-panel-count">0</span>
+      <span class="notes-panel-hint">— click to expand</span>
+      <span class="notes-panel-chevron" id="notes-panel-chevron">▾</span>
+    </button>
+    <div class="notes-panel-body" id="notes-panel-body"></div>
+  </div>
+</div>
+
+<nav class="section-nav">
+  <button class="nav-tab active" onclick="navTo('section-problem')">1 · The Problem</button>
+  <button class="nav-tab" onclick="navTo('section-solution')">2 · The Solution</button>
+  <button class="nav-tab" onclick="navTo('section-use-cases')">3 · Core Use Cases</button>
+  <button class="nav-tab" onclick="navTo('section-glossary')">4 · Glossary</button>
+</nav>
+
+<main>
+<div class="main-content">
+
+<!-- SECTION 1 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · THE DATA PROTECTION PROBLEM</span>
+  </div>
+  <p class="socratic-insight">Data protection used to mean locking data inside the corporate perimeter. But SaaS adoption has placed that data in dozens of cloud services, accessed from any device, over the internet — far from traditional security controls. The tools built for the data-centre era simply weren't designed for this.</p>
+  <ul class="socratic-questions">
+    <li>Why can't traditional perimeter security protect data once it moves to SaaS apps and cloud platforms?</li>
+    <li>If 61% of organisations say their network security can't scale to the cloud, what does that mean for their actual data loss risk?</li>
+  </ul>
+  <div class="answer-area" data-section="problem">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">Traditional security appliances sit on-premise at the network edge — they inspect traffic that passes through the corporate gateway. Once users access SaaS apps over the internet on personal or mobile devices, that traffic never touches the gateway. Security appliances weren't designed to follow users; they were designed to protect a fixed perimeter, and the perimeter has effectively dissolved.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">If an organisation's security can't scale to the cloud, sensitive data flowing to SaaS apps is effectively uninspected. Employees can upload confidential files to unsanctioned apps, share data externally, or have credentials stolen via encrypted traffic — and the security team has no visibility to detect or block it. The 61% figure shows this isn't a fringe problem; it's the majority of enterprises operating blind.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-problem">
+  <div class="section-tag">SECTION 1</div>
+  <h2>The Data Protection Problem</h2>
+  <p>Data protection means safeguarding important information from compromise or loss. What changed is where data now lives. The widespread adoption of SaaS and public cloud apps has made data widely distributed — scattered across dozens of services, accessed from anywhere, by any device — and impossible to fully secure with legacy on-premises appliances.</p>
+
+  <h3>Three Key Challenges</h3>
+  <p>In a survey of over 500 IT and security leaders, three cloud data challenges stood out as the most acute:</p>
+
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="info-card-label">DISTRIBUTED DATA</div>
+      <div class="info-card-title">61% say security can't scale</div>
+      <div class="info-card-desc">Cloud apps need data to work — but that moves it out of data centres and beyond the reach of traditional security appliances. Most security wasn't built for cloud scale.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">MOBILITY REQUIREMENTS</div>
+      <div class="info-card-title">45% struggle with BYOD</div>
+      <div class="info-card-desc">Remote users and BYOD devices access data off-network via the internet — away from any traditional inspection point. Unmanaged devices can download and retain sensitive data.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">DATA EXPOSURE</div>
+      <div class="info-card-title">Cloud data easily exfiltrated</div>
+      <div class="info-card-desc">Cloud platforms enable sharing — but also make data easy to expose publicly or ingest malicious files. Misconfigurations are a leading cause of major breaches.</div>
+    </div>
+  </div>
+
+  <div class="screenshot-embed">
+    <img src="data-exposure-impact.png" alt="Data Exposure impact chart showing 61% productivity loss, 53% lost customers, 51% revenue loss">
+    <div class="screenshot-caption">Data exposure causes cascading business damage: 61% of organisations report IT/user productivity loss, 53% lost or unsatisfied customers, and 51% revenue loss — all from cloud data that's easily exposed or exfiltrated. (Zscaler Data@Risk Report, 500+ IT and security leaders, North America and EMEA.)</div>
+  </div>
+
+  <h3>Why Traditional Approaches No Longer Work</h3>
+  <p>Even organisations with mature security programs find their existing tools inadequate. Four fundamental reasons:</p>
+  <ul>
+    <li><strong>Unable to follow users</strong> — cloud apps are accessed over the internet, away from an organisation's traditional network and data controls. Security tools at the gateway simply can't see this traffic.</li>
+    <li><strong>Limited SSL inspection</strong> — most traffic is encrypted, but traditional appliances can't inspect SSL/TLS at scale, leaving organisations blind to threats and data loss within encrypted sessions.</li>
+    <li><strong>Unknown state of compliance</strong> — with apps spread across multiple cloud services and teams, understanding where sensitive data lives and who has access to it has become practically impossible.</li>
+    <li><strong>Missing the big picture</strong> — point products (a CASB here, a DLP there) create management silos and policy gaps. There's no unified view of what data is at risk across all channels.</li>
+  </ul>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">3 cloud data challenges: Distributed Data (61% can't scale security), Mobility/BYOD (45% struggling), Data Exposure (61% productivity loss · 53% lost customers · 51% revenue loss). Traditional approaches fail on 4 counts: can't follow users, limited SSL inspection, unknown compliance state, missing unified visibility.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-problem" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('problem','Section 1 — The Data Protection Problem')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-problem" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('problem')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 2 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · THE ZSCALER SOLUTION</span>
+  </div>
+  <p class="socratic-insight">82% of organisations view a zero-trust approach as critical to data protection. The response to point-product complexity is a unified Security Service Edge (SSE) platform — combining ZTNA, SWG, and CASB under one policy engine. But simply combining products isn't enough: the architecture must sit inline to inspect every session.</p>
+  <ul class="socratic-questions">
+    <li>Why isn't a Secure Web Gateway alone enough for full data protection — what does DLP+CASB add that SWG can't provide?</li>
+    <li>What's the real cost of deploying separate best-of-breed point solutions for CASB, DLP, and SWG instead of a unified platform?</li>
+  </ul>
+  <div class="answer-area" data-section="solution">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">SWG stops external threats — malware, ransomware, and bad actors trying to get in. But it doesn't address insider threats: an employee exfiltrating sensitive data to an unsanctioned app, or a cloud storage misconfiguration exposing private data. DLP inspects the content of outbound traffic to catch data leakage, and CASB controls which cloud apps can be accessed and what users can do inside them. All three are required for complete coverage.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Separate point solutions each require their own DLP policy, their own management console, and their own integration work — creating policy gaps at the handoff points and operational overhead as teams manage multiple tools. A unified platform means one DLP policy applies across all channels, one console to manage, and no gaps between products. It also enables unlimited SSL inspection at cloud scale, which hardware appliances can't sustain.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-solution">
+  <div class="section-tag">SECTION 2</div>
+  <h2>Why Zscaler: The Unified SSE Platform</h2>
+  <p>Zscaler Data Protection is a unified solution designed to help organisations protect their sensitive data across all cloud channels. With unified protections across DLP, CASB, CSPM, and Cloud Browser Isolation, organisations can secure cloud data with a holistic approach that reduces risk, complexity, and cost. Many competitors offer CASB or DLP as point solutions — focused on a single application or deployment — and this creates data protection gaps.</p>
+
+  <div class="screenshot-embed">
+    <img src="solution-knowledge-architecture.png" alt="Zscaler Solution Knowledge map placing the Zero Trust Exchange at the centre connecting Modern Workplace Enablement, Security Transformation, and Infrastructure Modernization pillars">
+    <div class="screenshot-caption">The Zscaler Solution Knowledge map: the Zero Trust Exchange sits at the centre connecting three pillars — Modern Workplace Enablement (secure hybrid workforce), Security Transformation (cyberthreat and data protection), and Infrastructure Modernization (branch and cloud connectivity).</div>
+  </div>
+
+  <h3>The SSE Platform: ZTNA, SWG, and DLP/CASB</h3>
+  <p>As a unified SSE (Security Service Edge) platform — the security subset of Gartner's SASE framework — Zscaler delivers three core capabilities addressing different data protection dimensions:</p>
+
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="info-card-label">ZTNA</div>
+      <div class="info-card-title">Zero Trust Network Access</div>
+      <div class="info-card-desc">Secures any-to-any connectivity. Identity-driven, least-privileged access for secure remote access — users only reach what they're authorised for, verified every session.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">SWG</div>
+      <div class="info-card-title">Secure Web Gateway</div>
+      <div class="info-card-desc">Provides secure internet and web access — designed to stop ransomware and advanced external threats. Key for stopping bad actors getting in.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">DLP / CASB</div>
+      <div class="info-card-title">Data Loss Prevention + CASB</div>
+      <div class="info-card-desc">Data protection for data in motion (headed to the cloud) and at rest (sitting in the cloud). Key for stopping insider threats and data exfiltration.</div>
+    </div>
+  </div>
+
+  <p>Both SWG and DLP/CASB are needed: SWG stops external threats, DLP and CASB stop insider threats. Zscaler offers a platform that delivers both through one policy, one console, one cloud service.</p>
+
+  <div class="screenshot-embed">
+    <img src="sse-platform-overview.png" alt="SSE platform diagram showing ZTNA for identity-driven access, SWG blocking external threats, and DLP/CASB stopping insider threats — all through the Zero Trust Exchange">
+    <div class="screenshot-caption">The SSE platform: ZTNA handles identity-driven access, SWG blocks external threats (ransomware, bad actors), and DLP/CASB addresses insider threats and data exposure — all enforced through the Zero Trust Exchange at cloud scale.</div>
+  </div>
+
+  <h3>What Sets Zscaler Apart</h3>
+  <ul>
+    <li><strong>Unified data loss protection</strong> — one policy across all cloud channels from a single platform. No gap between tools.</li>
+    <li><strong>Better risk reduction</strong> — unlimited SSL inspection at cloud scale finds more potential data leakage than hardware-constrained appliances ever could.</li>
+    <li><strong>Reduced cost and complexity</strong> — consolidates point solutions. No separate CASB, DLP, and SWG consoles to manage and integrate.</li>
+    <li><strong>Proven and trusted</strong> — world's largest security cloud (200B+ daily transactions), Gartner Magic Quadrant leader.</li>
+  </ul>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">82% of orgs view zero trust as critical to data protection. SSE = SWG (external threats) + DLP/CASB (insider threats) + ZTNA (identity-driven access). SWG stops attackers getting in; DLP+CASB stop data getting out. Zscaler differentiators: unified policy, unlimited SSL inspection at cloud scale, platform consolidation, Gartner leader.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-solution" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('solution','Section 2 — The Zscaler Solution')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-solution" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('solution')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 3 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · THE 4 CORE USE CASES</span>
+  </div>
+  <p class="socratic-insight">Zscaler protects data across four distinct channels: internet-bound traffic, BYOD devices, data already inside SaaS apps, and public cloud infrastructure. Each channel requires a different technical approach — inline inspection, pixel streaming, API scanning, or posture assessment — because data moves (or sits) differently in each context.</p>
+  <ul class="socratic-questions">
+    <li>Why does BYOD protection require Cloud Browser Isolation rather than a standard DLP policy applied to traffic? What makes unmanaged devices fundamentally different?</li>
+    <li>What's the difference between Real-time CASB and Scanning CASB — and why does an organisation need both?</li>
+  </ul>
+  <div class="answer-area" data-section="use-cases">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">On a managed device you can deploy a Zscaler client connector that routes all traffic through the Zero Trust Exchange for DLP inspection. On a BYOD device — an employee's personal phone or laptop — you can't install agents or enforce MDM profiles without the user's consent. Cloud Browser Isolation solves this agentlessly: web content runs in an isolated cloud browser, and only rendered pixels stream to the device. The raw data never lands on the unmanaged device, eliminating the exfiltration risk without requiring any software installation.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">Real-time CASB sits in the traffic path and intercepts every upload and download as it happens — it can block a sensitive file from being uploaded to an unsanctioned app in real time. Scanning CASB connects via API to SaaS apps and scans data already at rest inside them. These are complementary: Real-time CASB catches new data in motion, while Scanning CASB finds data that was uploaded before CASB was deployed or that arrived via internal collaboration rather than a direct user upload.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-use-cases">
+  <div class="section-tag">SECTION 3</div>
+  <h2>The 4 Core Use Cases</h2>
+  <p>Zscaler provides data protection for users, workloads, servers, and IoT/OT across four core use cases — spanning two delivery modes: <strong>Inline Data Protection</strong> (traffic flows through the Zero Trust Exchange for real-time inspection) and <strong>Out-of-Band Protection</strong> (APIs connect to cloud apps to scan and remediate data already at rest).</p>
+
+  <div class="screenshot-embed">
+    <img src="inline-outofband-protection.png" alt="Inline vs Out-of-Band protection diagram: left side shows Inline DLP preventing loss to internet/SaaS and Browser Isolation preventing BYOD loss; right side shows CASB/SSPM protecting data inside cloud apps and CNAPP/DLP securing public clouds">
+    <div class="screenshot-caption">The two protection modes: Inline (left) uses the Zero Trust Exchange to intercept traffic in real time for DLP and Browser Isolation. Out-of-Band (right) uses APIs to scan and remediate data already at rest in SaaS apps and public cloud platforms.</div>
+  </div>
+
+  <h3>Use Case 1 — Prevent Loss to Internet & SaaS (Inline DLP)</h3>
+  <p>Inline DLP inspects ALL content — including full SSL decryption — for users, servers, workloads, and IoT/OT, on and off network, across all ports and protocols. Three advanced classification methods make it precise:</p>
+  <ul>
+    <li><strong>Exact Data Match (EDM)</strong> — alert only on your specific customer data (e.g. your company's actual credit card numbers, not any credit card number).</li>
+    <li><strong>Index Document Match (IDM)</strong> — fingerprint a specific form or template and detect any other instance of it being uploaded anywhere.</li>
+    <li><strong>Optical Character Recognition (OCR)</strong> — lift text from images and screenshots to prevent sensitive data hidden in image files from bypassing DLP.</li>
+    <li><strong>Azure AIP Integration</strong> — read Microsoft sensitivity labels from tagged documents; create policies based on labels; automatically tag data found in OneDrive.</li>
+  </ul>
+
+  <div class="screenshot-embed">
+    <img src="inline-dlp-zte-diagram.png" alt="Inline DLP diagram: servers and workloads send internet traffic through the Zero Trust Exchange with Inline DLP, which blocks sensitive content from reaching Internet and SaaS">
+    <div class="screenshot-caption">Inline DLP: traffic from users, servers, workloads, and IoT/OT flows through the Zero Trust Exchange, which inspects and blocks any sensitive content before it reaches internet or SaaS destinations — all with full SSL inspection.</div>
+  </div>
+
+  <h3>Use Case 2 — Prevent Loss to BYOD (Cloud Browser Isolation)</h3>
+  <p>Most CASB vendors solve BYOD with reverse proxies — but these have two major limitations: they break some apps, and must be built app-by-app. Zscaler uses <strong>Cloud Browser Isolation</strong> instead.</p>
+  <p>An isolated browser runs inside the Zero Trust Exchange. Cloud apps render there; only pixels stream to the unmanaged device. The user can fully interact with the app — but can't copy, print, or download the actual data. Works agentlessly on any browser-based app.</p>
+
+  <div class="screenshot-embed">
+    <img src="cloud-browser-isolation-diagram.png" alt="Cloud Browser Isolation: Internet and SaaS apps load inside an isolated browser in the Zero Trust Exchange; only a pixel stream reaches the unmanaged BYOD device">
+    <div class="screenshot-caption">Cloud Browser Isolation: web content executes inside an isolated cloud browser in the Zero Trust Exchange. Only pixel streams reach the BYOD device — actual data (files, clipboard contents) never lands on the unmanaged endpoint.</div>
+  </div>
+
+  <h3>Use Case 3 — Control Data Inside Cloud Apps (Multi-mode CASB)</h3>
+  <p>Zscaler is a multi-mode CASB covering three delivery modes:</p>
+  <ul>
+    <li><strong>Real-time (inline) CASB</strong> — full visibility into risky apps and Shadow IT. Zscaler catalogs 8,500+ cloud apps with 25 risk attributes each (SSL version, breach history, terms of service, etc.) — score apps and block uploads to unsanctioned destinations in real time.</li>
+    <li><strong>Scanning (out-of-band) CASB</strong> — connects via API to SaaS apps to scan data at rest. Find sensitive data, control risky external sharing, and use Zscaler threat engines (Cloud Sandbox) to detect malware ingested into apps — then remediate or quarantine.</li>
+    <li><strong>BYOD CASB</strong> — delivered through Cloud Browser Isolation (Use Case 2).</li>
+  </ul>
+
+  <div class="analogy-box">
+    <div class="analogy-label">Analogy</div>
+    <div class="analogy-text">Real-time CASB is like a security guard at a club entrance checking every bag as guests arrive — nothing gets in or out without inspection, and a banned item is turned away on the spot. Scanning CASB is like a hotel manager doing room inspections after guests have already checked in — reviewing what's already inside and correcting any policy violations found there. You need the door guard to stop things in real time and the room check to catch what was already there.</div>
+    <div class="analogy-img" style="margin-top:14px;background:rgba(255,255,255,0.5);border-radius:10px;padding:14px;text-align:center;">
+      <img src="A1.png" alt="Analogy illustration A1" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" style="max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;">
+      <div class="img-missing-msg" style="display:none;">📷 <strong>A1.png</strong> — add this image to the folder</div>
+      <button class="prompt-toggle" onclick="togglePrompt(this)" type="button">▾ Show analogy image prompt</button>
+      <div class="prompt-content" hidden>Two-panel cartoon infographic: Left panel labelled "Real-time CASB — Inline" shows a friendly security guard at a club entrance checking a bag, a glowing red blocked badge on one item being turned away, label "Blocks data in motion"; Right panel labelled "Scanning CASB — API" shows a hotel manager with a clipboard doing a thorough room inspection inside an occupied room, checking drawers and surfaces, label "Finds data at rest"; both in clean cartoon style with warm colours, minimal text labels only where needed, educational infographic feel, modern tech-analogy aesthetic</div>
+    </div>
+  </div>
+
+  <h3>Use Case 4 — Secure Public Cloud Data (CSPM & CIEM)</h3>
+  <p>According to Gartner, 99% of cloud security incidents are the customer's own fault — primarily misconfiguration and excessive permissions. Zscaler's public cloud protection addresses this out-of-band:</p>
+  <ul>
+    <li><strong>CSPM</strong> — Automatically scans public cloud platforms (AWS, Azure, GCP) for misconfigurations. 2,500+ pre-built policy templates, 16 regulatory frameworks, automatic remediation. Covers discovery, inventory, policy mapping, risk prioritisation.</li>
+    <li><strong>CIEM</strong> — Scans SaaS and public clouds for unnecessary risky identity and access permissions using AI/ML. Identifies risky accounts, guides remediation to close entitlement gaps.</li>
+    <li><strong>CNAPP</strong> — Emerging Gartner-defined category that unifies CSPM, CIEM, and workload protection to identify and adapt to risk in cloud-native applications and infrastructure.</li>
+  </ul>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">4 use cases: (1) Inline DLP — internet/SaaS, full SSL inspection, EDM/IDM/OCR/AIP; (2) Cloud Browser Isolation — BYOD, agentless, pixels only; (3) Multi-mode CASB — Real-time (8,500+ app catalog, 25 risk attributes), Scanning (API, data at rest); (4) CSPM/CIEM — misconfigs and excess permissions, 2,500+ policy templates, 16 frameworks. Gartner: 99% of cloud incidents are the customer's own fault (misconfig).</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-use-cases" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('use-cases','Section 3 — The 4 Core Use Cases')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-use-cases" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('use-cases')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SECTION 4 -->
+<div class="socratic-block">
+  <div class="socratic-header">
+    <span class="socratic-icon">💭</span>
+    <span class="socratic-label">THINK FIRST · DATA PROTECTION GLOSSARY</span>
+  </div>
+  <p class="socratic-insight">The data protection space is dense with acronyms that are often confused. CSPM and SSPM sound similar but cover different cloud environments. CIEM sounds like CASB but focuses on identity permissions rather than traffic control. Getting these distinctions right matters in customer conversations and on the exam.</p>
+  <ul class="socratic-questions">
+    <li>What's the difference between CSPM and SSPM — and why does the distinction matter practically?</li>
+    <li>SSE is a subset of SASE — what does the other half of SASE cover, and why isn't it part of SSE?</li>
+  </ul>
+  <div class="answer-area" data-section="glossary">
+    <textarea class="answer-textarea" placeholder="Write your own thoughts here before revealing the model answer..." rows="3"></textarea>
+    <div class="answer-buttons">
+      <button class="btn-add-answer" onclick="saveSocAnswer(this)">+ Add My Answer</button>
+      <button class="btn-see-answer" onclick="revealSocAnswer(this)" disabled>🔒 See Model Answer</button>
+    </div>
+    <div class="model-answers" style="display:none;">
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q1 — MODEL ANSWER</div>
+        <div class="model-answer-text">CSPM scans public cloud infrastructure — AWS, Azure, GCP — for misconfigured services (open storage buckets, overly permissive IAM policies). SSPM does the same for SaaS apps — checking whether Microsoft 365, Salesforce, or Slack are configured securely at the app level. The distinction matters because the misconfig risks differ: public cloud risks involve infrastructure settings while SaaS risks involve app-level sharing permissions and integrations. An organisation needs both to cover all cloud environments.</div>
+      </div>
+      <div class="model-answer-item">
+        <div class="model-answer-q">Q2 — MODEL ANSWER</div>
+        <div class="model-answer-text">SASE (Secure Access Service Edge) combines two halves: SSE (Security Service Edge) — covering SWG, CASB, and ZTNA — handles security functions. The other half is the network services layer: SD-WAN, network-as-a-service, and WAN optimisation. Gartner separated SSE from SASE because many organisations are buying the security layer now while keeping existing WAN infrastructure, making SSE a meaningful standalone procurement category rather than forcing organisations to replace their entire network simultaneously.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-block" id="section-glossary">
+  <div class="section-tag">SECTION 4</div>
+  <h2>Data Protection Glossary</h2>
+  <p>A point solution addresses a single use case or challenge — a standalone CASB for one app, a DLP for one channel. Zscaler's integrated platform replaces these with one unified solution covering all channels. Below are the key terms every data protection practitioner needs to know.</p>
+
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="info-card-label">DLP</div>
+      <div class="info-card-title">Data Loss Prevention</div>
+      <div class="info-card-desc">Inspects and identifies sensitive data within content using predefined or custom dictionaries. Supports EDM, IDM, and OCR for advanced classification.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">CASB</div>
+      <div class="info-card-title">Cloud Access Security Broker</div>
+      <div class="info-card-desc">Intermediary between users and cloud providers. Inline CASB finds and blocks risky apps; out-of-band CASB uses APIs to inspect and remediate data at rest in cloud apps.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">Browser Isolation</div>
+      <div class="info-card-title">Cloud Browser Isolation</div>
+      <div class="info-card-desc">Loads pages in a cloud-based isolated browser; streams only pixels to the device. Agentless. Secures BYOD without breaking app functionality or requiring MDM.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">CSPM</div>
+      <div class="info-card-title">Cloud Security Posture Mgmt</div>
+      <div class="info-card-desc">Automatically scans public cloud platforms (AWS/Azure/GCP) for misconfigurations that lead to breaches and regulatory noncompliance.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">SSPM</div>
+      <div class="info-card-title">SaaS Security Posture Mgmt</div>
+      <div class="info-card-desc">Automatically scans SaaS cloud apps (M365, Salesforce, etc.) for misconfigurations that lead to breaches and regulatory noncompliance.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">CIEM</div>
+      <div class="info-card-title">Cloud Infrastructure Entitlement Mgmt</div>
+      <div class="info-card-desc">Scans SaaS and public clouds for unnecessary risky identity and access permissions. Uses AI/ML to flag and remediate excessive entitlements.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">SWG</div>
+      <div class="info-card-title">Secure Web Gateway</div>
+      <div class="info-card-desc">Protects networks and connected devices from internet-borne threats — ransomware, malware, bad actors. The external-threat pillar of SSE.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">ZTNA</div>
+      <div class="info-card-title">Zero Trust Network Access</div>
+      <div class="info-card-desc">Evaluates context (identity, location, device health) before granting least-privileged remote access to applications. Replaces VPN.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">BYOD</div>
+      <div class="info-card-title">Bring Your Own Device</div>
+      <div class="info-card-desc">Policy allowing employees to use personal devices for work. Creates security risk as sensitive data can land on unmanaged endpoints outside IT control.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">CNAPP</div>
+      <div class="info-card-title">Cloud Native App Protection Platform</div>
+      <div class="info-card-desc">Gartner-defined emerging category: identifies, assesses, prioritises, and adapts to risk in cloud-native applications, infrastructure, and configurations.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">SSE</div>
+      <div class="info-card-title">Security Service Edge</div>
+      <div class="info-card-desc">The security half of SASE — SWG + CASB + ZTNA. Gartner's Magic Quadrant for SSE defines these as the required components of a complete security service edge offering.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">SaaS</div>
+      <div class="info-card-title">Software as a Service</div>
+      <div class="info-card-desc">Cloud-hosted software delivered over the internet. The explosion of SaaS adoption distributed enterprise data across dozens of apps outside the traditional perimeter.</div>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-header"><div class="callout-icon">i</div>ZSCALER SASE SUMMARY</div>
+    <div class="callout-body">Zscaler offers a SASE-based solution that unifies CASB, SWG with DLP, and CSPM to ensure data protection across cloud applications and users — all delivered through the Zero Trust Exchange as a cloud-native service requiring no hardware appliances.</div>
+  </div>
+
+  <div class="mental-note-block">
+    <div class="mental-note-block-icon">🧠</div>
+    <div class="mental-note-block-inner">
+      <div class="mental-note-block-label">MENTAL NOTE</div>
+      <div class="mental-note-block-text">Key distinctions: DLP = inspects content; CASB = controls cloud app access (inline + API); CSPM = public cloud misconfigs; SSPM = SaaS misconfigs; CIEM = risky cloud permissions; SSE = SWG + CASB + ZTNA (security half of SASE). CNAPP = emerging unified category combining CSPM, CIEM, workload protection. Gartner: 99% of cloud incidents caused by customer misconfig.</div>
+    </div>
+  </div>
+
+  <div class="lesson-tools">
+    <div class="lesson-tools-grid">
+      <div>
+        <div class="tool-label">ASK A QUESTION</div>
+        <textarea class="tool-textarea" id="q-glossary" placeholder="What are you unsure about?" rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addQuestion('glossary','Section 4 — Data Protection Glossary')">Add Question</button></div>
+      </div>
+      <div>
+        <div class="tool-label">ADD A NOTE</div>
+        <textarea class="tool-textarea" id="note-glossary" placeholder="Write a note for this section..." rows="3"></textarea>
+        <div class="tool-row"><button class="btn-add-q" onclick="addNote('glossary')">+ Add Note</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .main-content -->
+
+<aside>
+  <a class="hub-back" href="../data-security-hub.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Data Security Hub
+  </a>
+  <div class="sidebar-section">
+    <div class="sidebar-label">PROGRESS</div>
+    <ul class="checklist">
+      <li class="check-item" onclick="toggleDone(this,'check-1')">
+        <input type="checkbox" id="check-1" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">
+        The Data Protection Problem
+      </li>
+      <li class="check-item" onclick="toggleDone(this,'check-2')">
+        <input type="checkbox" id="check-2" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">
+        The Zscaler Solution
+      </li>
+      <li class="check-item" onclick="toggleDone(this,'check-3')">
+        <input type="checkbox" id="check-3" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">
+        The 4 Core Use Cases
+      </li>
+      <li class="check-item" onclick="toggleDone(this,'check-4')">
+        <input type="checkbox" id="check-4" onchange="event.stopPropagation();toggleDone(this.parentElement,this.id)">
+        Data Protection Glossary
+      </li>
+    </ul>
+  </div>
+  <div class="sidebar-divider"></div>
+  <div class="quick-ref">
+    <div class="quick-ref-title">KEY TERMS</div>
+    <div class="qr-term">
+      <div class="qr-label">DLP</div>
+      <div class="qr-def">Inspects content for sensitive data using dictionaries, EDM, IDM, and OCR.</div>
+    </div>
+    <div class="qr-term">
+      <div class="qr-label">CASB</div>
+      <div class="qr-def">Cloud app broker — inline (real-time) + out-of-band (API scanning) modes.</div>
+    </div>
+    <div class="qr-term">
+      <div class="qr-label">CSPM / SSPM</div>
+      <div class="qr-def">Public cloud vs SaaS posture management — auto-scans for misconfigs.</div>
+    </div>
+    <div class="qr-term">
+      <div class="qr-label">CIEM</div>
+      <div class="qr-def">AI/ML scan of cloud permissions to find and close excess entitlements.</div>
+    </div>
+    <div class="qr-term">
+      <div class="qr-label">SSE</div>
+      <div class="qr-def">SWG + CASB + ZTNA — the security half of SASE (Gartner definition).</div>
+    </div>
+    <div class="qr-term">
+      <div class="qr-label">Zero Trust Exchange</div>
+      <div class="qr-def">Zscaler's global cloud — all traffic flows through for inline inspection.</div>
+    </div>
+  </div>
+</aside>
+</main>
+
+<footer>
+  <div>Fundamentals · <span>101</span></div>
+  <div>Data Protection Fundamentals — Zscaler Data Security</div>
+</footer>
+
+<script>
+const PAGE_KEY = 'fundamentals-101';
+const SECTIONS = {
+  'problem':   'Section 1 — The Data Protection Problem',
+  'solution':  'Section 2 — The Zscaler Solution',
+  'use-cases': 'Section 3 — The 4 Core Use Cases',
+  'glossary':  'Section 4 — Data Protection Glossary'
+};
+
+// Socratic collapse
+document.querySelectorAll('.socratic-header').forEach(function(h){
+  h.addEventListener('click',function(){h.closest('.socratic-block').classList.toggle('soc-open');});
+});
+
+// Notes panel
+function getNotesArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-notes')||'[]');}
+function saveNotesArr(ns){localStorage.setItem(PAGE_KEY+'-notes',JSON.stringify(ns));}
+function addNote(key){const ta=document.getElementById('note-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const ns=getNotesArr();ns.push({id:Date.now(),section:key,sectionName:SECTIONS[key]||key,text});saveNotesArr(ns);ta.value='';renderNotesPanel();if(!document.getElementById('notes-panel-body').classList.contains('open'))toggleNotesPanel();}
+function deleteNote(id){saveNotesArr(getNotesArr().filter(n=>n.id!==id));renderNotesPanel();}
+function toggleNotesPanel(){const body=document.getElementById('notes-panel-body');const header=document.getElementById('notes-panel-header');const chevron=document.getElementById('notes-panel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-notes-panel-open',open);}
+function renderNotesPanel(){const ns=getNotesArr();const count=document.getElementById('notes-panel-count');if(count){count.textContent=ns.length;count.style.display=ns.length?'inline':'none';}const hint=document.querySelector('.notes-panel-hint');if(hint)hint.textContent=ns.length?`— ${ns.length} note${ns.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('notes-panel-body');if(!body)return;if(!ns.length){body.innerHTML='<p class="no-questions">No notes yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));ns.forEach(n=>{if(groups[n.section])groups[n.section].push(n);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(n=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${n.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteNote(${n.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+
+// Q panel
+function getQArr(){return JSON.parse(localStorage.getItem(PAGE_KEY+'-questions')||'[]');}
+function saveQArr(qs){localStorage.setItem(PAGE_KEY+'-questions',JSON.stringify(qs));}
+function addQuestion(key,name){const ta=document.getElementById('q-'+key);const text=ta.value.trim();if(!text){ta.focus();return;}const qs=getQArr();qs.push({id:Date.now(),section:key,sectionName:name,text});saveQArr(qs);ta.value='';renderQPanel();if(!document.getElementById('qpanel-body').classList.contains('open'))toggleQPanel();}
+function deleteQ(id){saveQArr(getQArr().filter(q=>q.id!==id));renderQPanel();}
+function toggleQPanel(){const body=document.getElementById('qpanel-body');const header=document.getElementById('qpanel-header');const chevron=document.getElementById('qpanel-chevron');const open=body.classList.toggle('open');header.classList.toggle('open',open);chevron.textContent=open?'▴':'▾';localStorage.setItem(PAGE_KEY+'-qpanel-open',open);}
+function renderQPanel(){const qs=getQArr();const count=document.getElementById('qpanel-count');if(count){count.textContent=qs.length;count.style.display=qs.length?'inline':'none';}const hint=document.querySelector('.qpanel-hint');if(hint)hint.textContent=qs.length?`— ${qs.length} question${qs.length>1?'s':''}, click to expand`:'— click to expand';const body=document.getElementById('qpanel-body');if(!body)return;if(!qs.length){body.innerHTML='<p class="no-questions">No questions yet. Add one below each section.</p>';return;}const groups=Object.fromEntries(Object.keys(SECTIONS).map(k=>[k,[]]));qs.forEach(q=>{if(groups[q.section])groups[q.section].push(q);});let html='';let num=0;Object.entries(groups).forEach(([key,items])=>{if(!items.length)return;html+=`<div class="q-group"><div class="q-group-label">${SECTIONS[key]}</div>`;items.forEach(q=>{num++;html+=`<div class="q-item"><div class="q-num">${num}</div><div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div><button class="q-del" onclick="deleteQ(${q.id})" title="Remove">✕</button></div>`;});html+='</div>';});body.innerHTML=html;}
+
+// Socratic answers
+function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=PAGE_KEY+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
+function revealSocAnswer(btn){if(btn.disabled)return;const answers=btn.closest('.answer-area').querySelector('.model-answers');const isHidden=answers.style.display==='none'||!answers.style.display;answers.style.display=isHidden?'block':'none';btn.textContent=isHidden?'▲ Hide Model Answer':'💡 See Model Answer';}
+
+// Prompt toggle
+function togglePrompt(btn){const c=btn.nextElementSibling;const isHidden=c.hasAttribute('hidden');if(isHidden){c.removeAttribute('hidden');btn.textContent='▴ Hide image generation prompt';}else{c.setAttribute('hidden','');btn.textContent='▾ Show image generation prompt';}}
+
+// Section nav
+function navTo(id){const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}const ids=['section-problem','section-solution','section-use-cases','section-glossary'];document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));}
+
+// Progress checklist
+function toggleDone(li,id){const cb=li.querySelector('input[type="checkbox"]');const checked=!cb.checked;cb.checked=checked;li.classList.toggle('done',checked);localStorage.setItem(PAGE_KEY+'-check-'+id,checked);}
+function initChecks(){document.querySelectorAll('.check-item').forEach(function(li){const cb=li.querySelector('input[type="checkbox"]');if(!cb)return;if(localStorage.getItem(PAGE_KEY+'-check-'+cb.id)==='true'){cb.checked=true;li.classList.add('done');}});}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderQPanel();renderNotesPanel();initChecks();
+  if(localStorage.getItem(PAGE_KEY+'-qpanel-open')==='true'){document.getElementById('qpanel-body').classList.add('open');document.getElementById('qpanel-header').classList.add('open');document.getElementById('qpanel-chevron').textContent='▴';}
+  if(localStorage.getItem(PAGE_KEY+'-notes-panel-open')==='true'){document.getElementById('notes-panel-body').classList.add('open');document.getElementById('notes-panel-header').classList.add('open');document.getElementById('notes-panel-chevron').textContent='▴';}
+  document.querySelectorAll('.answer-area').forEach(function(area){
+    const key=PAGE_KEY+'-socans-'+area.dataset.section;
+    try{const saved=localStorage.getItem(key);if(saved){const ta=area.querySelector('.answer-textarea');ta.value=saved;ta.disabled=true;area.querySelector('.btn-add-answer').textContent='✓ Answer saved';area.querySelector('.btn-add-answer').disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}}catch(e){}
+  });
+  document.querySelectorAll('.analogy-box').forEach(function(box){
+    if(box.dataset.collapsibleInit)return;
+    box.dataset.collapsibleInit='1';
+    box.classList.add('expanded');
+    const label=box.querySelector(':scope > .analogy-label');
+    if(label)label.addEventListener('click',()=>box.classList.toggle('expanded'));
+  });
+  document.querySelectorAll('.analogy-img img').forEach(function(img){
+    img.addEventListener('click',()=>img.classList.toggle('zoomed'));
+  });
+  document.querySelectorAll('.screenshot-embed img').forEach(function(img){
+    img.addEventListener('click',()=>img.classList.toggle('zoomed'));
+  });
+  setTimeout(function(){document.body.style.opacity='1';document.body.style.transition='opacity 0.35s ease';},10);
+  document.querySelectorAll('a[href]').forEach(function(a){
+    a.addEventListener('click',function(){if(a.hostname===location.hostname)sessionStorage.setItem('pt','1');});
+  });
+});
+</script>
+</body>
+</html>

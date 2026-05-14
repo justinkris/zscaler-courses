@@ -8,18 +8,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,400&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cream: #fef9f0;
-    --cream-dark: #f5eddb;
-    --ink: #1a1209;
-    --ink-soft: #5a4a35;
-    --ink-muted: #8a7660;
-    --orange: #ff6b35;
-    --orange-light: #fff3ec;
-    --orange-border: #ffd5c0;
-    --blue: #1a6bcc;
+    --cream: #eef4ff;
+    --cream-dark: #f5f8ff;
+    --ink: #0d1a2e;
+    --ink-soft: #1e3a5c;
+    --ink-muted: #5a7a9a;
+    --orange: #1a6dcc;
+    --orange-light: #e8f0fb;
+    --orange-border: #bfdbfe;
+    --blue: #1a6dcc;
     --blue-light: #e8f0fb;
-    --blue-border: #b3ccf0;
-    --border: #ede5d8;
+    --blue-border: #bfdbfe;
+    --border: #bfdbfe;
   }
 
   *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
@@ -110,9 +110,9 @@
   .course-card.status-progress:hover {
     border-color: var(--orange);
     transform: translateY(-22px) scale(1.05) rotate(1.5deg);
-    box-shadow: 0 32px 64px rgba(255,107,53,0.32), 0 0 0 2px var(--orange-border);
+    box-shadow: 0 32px 64px rgba(26,109,204,0.32), 0 0 0 2px var(--orange-border);
   }
-  .course-card.status-progress:hover::after { box-shadow: 0 0 80px 20px rgba(255,107,53,0.3); }
+  .course-card.status-progress:hover::after { box-shadow: 0 0 80px 20px rgba(26,109,204,0.3); }
 
   .course-card.status-soon:hover {
     border-color: var(--blue);
@@ -138,8 +138,8 @@
     transition: transform 0.5s cubic-bezier(0.15, 0.85, 0.2, 1.2),
                 background 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.4s;
   }
-  .status-progress .cert-icon  { background: var(--orange-light); border: 1.5px solid var(--orange-border); color: #cc4a18; }
-  .status-progress:hover .cert-icon { background: var(--orange); border-color: var(--orange); color: #fff; box-shadow: 0 8px 24px rgba(255,107,53,0.5); }
+  .status-progress .cert-icon  { background: var(--orange-light); border: 1.5px solid var(--orange-border); color: #0f3d7a; }
+  .status-progress:hover .cert-icon { background: var(--orange); border-color: var(--orange); color: #fff; box-shadow: 0 8px 24px rgba(26,109,204,0.5); }
   .status-soon .cert-icon { background: var(--blue-light); border: 1.5px solid var(--blue-border); color: var(--blue); }
   .status-soon:hover .cert-icon { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 8px 24px rgba(26,107,204,0.4); }
   .course-card:hover .cert-icon { animation: icon-spin 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
@@ -158,7 +158,7 @@
     padding: 5px 11px; border-radius: 20px;
     transition: background 0.3s, border-color 0.3s, color 0.3s;
   }
-  .status-progress:hover .edu-tag { background: var(--orange-light); border-color: var(--orange-border); color: #cc4a18; }
+  .status-progress:hover .edu-tag { background: var(--orange-light); border-color: var(--orange-border); color: #0f3d7a; }
   .status-soon:hover .edu-tag     { background: var(--blue-light);   border-color: var(--blue-border);   color: var(--blue); }
 
   /* Cert name */
@@ -189,7 +189,7 @@
     padding: 3px 9px; border-radius: 20px;
     transition: background 0.3s, border-color 0.3s, color 0.3s;
   }
-  .status-progress:hover .cert-type { background: var(--orange-light); border-color: var(--orange-border); color: #cc4a18; }
+  .status-progress:hover .cert-type { background: var(--orange-light); border-color: var(--orange-border); color: #0f3d7a; }
 
   /* Divider */
   .card-divider {
@@ -211,11 +211,11 @@
     border: 1px solid; flex-shrink: 0;
   }
   .status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-  .status-progress .status-badge { background: var(--orange-light); color: #cc4a18; border-color: var(--orange-border); }
+  .status-progress .status-badge { background: var(--orange-light); color: #0f3d7a; border-color: var(--orange-border); }
   .status-progress .status-dot   { background: var(--orange); animation: pulse 1.8s ease-in-out infinite; }
   @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,53,0.55); }
-    50%       { box-shadow: 0 0 0 6px rgba(255,107,53,0); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(26,109,204,0.55); }
+    50%       { box-shadow: 0 0 0 6px rgba(26,109,204,0); }
   }
   .status-soon .status-badge { background: var(--blue-light); color: var(--blue); border-color: var(--blue-border); }
   .status-soon .status-dot   { background: var(--blue); }
@@ -244,7 +244,7 @@
   .card-grid .course-card:first-child {
     grid-column: 1 / -1;
     background: var(--ink);
-    border-color: #2e1f0f;
+    border-color: #1e3a5c;
     padding: 14px 40px 32px;
   }
   /* Horizontal split layout */
@@ -270,8 +270,8 @@
   /* Icon — larger, gold star */
   .card-grid .course-card:first-child .cert-icon {
     width: 56px; height: 56px; border-radius: 16px;
-    background: rgba(255,107,53,0.18);
-    border: 1.5px solid rgba(255,107,53,0.32);
+    background: rgba(26,109,204,0.18);
+    border: 1.5px solid rgba(26,109,204,0.32);
     color: var(--orange);
     margin-bottom: 20px;
   }
@@ -279,7 +279,7 @@
     background: var(--orange);
     border-color: var(--orange);
     color: #fff;
-    box-shadow: 0 8px 28px rgba(255,107,53,0.55);
+    box-shadow: 0 8px 28px rgba(26,109,204,0.55);
   }
   /* Typography */
   .card-grid .course-card:first-child .cert-code {
@@ -294,19 +294,19 @@
   .card-grid .course-card:first-child:hover .cert-name  { color: rgba(255,255,255,0.65); }
   /* EDU tag */
   .card-grid .course-card:first-child .edu-tag {
-    background: rgba(255,107,53,0.12);
-    border-color: rgba(255,107,53,0.25);
+    background: rgba(26,109,204,0.12);
+    border-color: rgba(26,109,204,0.25);
     color: var(--orange);
   }
   .card-grid .course-card:first-child:hover .edu-tag {
-    background: rgba(255,107,53,0.22);
-    border-color: rgba(255,107,53,0.45);
+    background: rgba(26,109,204,0.22);
+    border-color: rgba(26,109,204,0.45);
   }
   /* Status badge */
   .card-grid .course-card:first-child .status-badge {
-    background: rgba(255,107,53,0.12);
+    background: rgba(26,109,204,0.12);
     color: var(--orange);
-    border-color: rgba(255,107,53,0.25);
+    border-color: rgba(26,109,204,0.25);
   }
   .card-grid .course-card:first-child .status-dot { background: var(--orange); }
   /* CTA */
@@ -316,14 +316,14 @@
   }
   .card-grid .course-card:first-child:hover .card-cta {
     color: var(--orange);
-    border-color: rgba(255,107,53,0.4);
+    border-color: rgba(26,109,204,0.4);
   }
   /* Hover: no rotation on the wide card */
   .card-grid .course-card:first-child.status-progress:hover {
     transform: translateY(-16px) scale(1.025);
-    background: #201308;
+    background: #0a1f40;
     border-color: var(--orange);
-    box-shadow: 0 32px 64px rgba(255,107,53,0.36), 0 0 0 2px rgba(255,107,53,0.2);
+    box-shadow: 0 32px 64px rgba(26,109,204,0.36), 0 0 0 2px rgba(26,109,204,0.2);
   }
   /* Sheen tint lighter on dark card */
   .card-grid .course-card:first-child::before {
@@ -360,7 +360,7 @@
     .card-featured-side { align-items: flex-start; min-width: 0; }
     .card-grid .course-card:first-child .cert-icon {
       width: 46px; height: 46px; border-radius: 13px; margin-bottom: 0;
-      background: var(--orange-light); border-color: var(--orange-border); color: #cc4a18;
+      background: var(--orange-light); border-color: var(--orange-border); color: #0f3d7a;
     }
     .card-grid .course-card:first-child:hover .cert-icon {
       background: var(--orange); border-color: var(--orange); color: #fff;
@@ -373,7 +373,7 @@
       background: var(--cream-dark); border-color: var(--border); color: var(--ink-muted);
     }
     .card-grid .course-card:first-child .status-badge {
-      background: var(--orange-light); color: #cc4a18; border-color: var(--orange-border);
+      background: var(--orange-light); color: #0f3d7a; border-color: var(--orange-border);
     }
     .card-grid .course-card:first-child .status-dot { background: var(--orange); }
     .card-grid .course-card:first-child .card-cta {
@@ -383,7 +383,7 @@
       transform: translateY(-22px) scale(1.05) rotate(1.5deg);
       background: #fff;
       border-color: var(--orange);
-      box-shadow: 0 32px 64px rgba(255,107,53,0.32), 0 0 0 2px var(--orange-border);
+      box-shadow: 0 32px 64px rgba(26,109,204,0.32), 0 0 0 2px var(--orange-border);
     }
     .card-grid .course-card:first-child::before {
       background: linear-gradient(to right, transparent, rgba(255,255,255,0.28) 50%, transparent);
@@ -425,7 +425,7 @@
             </svg>
           </div>
           <div class="cert-code">ZDDC</div>
-          <div class="cert-name">Digital Delivery Consultant</div>
+          <div class="cert-name">Zscaler Digital Delivery Consultant</div>
         </div>
         <div class="card-featured-side">
           <div class="edu-tag">EDU-302</div>
@@ -450,7 +450,7 @@
           </div>
           <div class="edu-tag">EDU-110 · EDU-111</div>
         </div>
-        <div class="cert-code">Zscaler AI</div>
+        <div class="cert-code">Zscaler and AI</div>
         <div class="cert-name">Zscaler AI Courses</div>
         <div class="cert-type">Short Course</div>
         <div class="card-divider"></div>
@@ -472,8 +472,8 @@
           </div>
           <div class="edu-tag">EDU-220</div>
         </div>
-        <div class="cert-code">Data Security</div>
-        <div class="cert-name">Zscaler Data Security Courses</div>
+        <div class="cert-code">Zscaler Data Security</div>
+        <div class="cert-name">Data Security Courses</div>
         <div class="cert-type">Short Course</div>
         <div class="card-divider"></div>
         <div class="card-footer">
@@ -493,7 +493,7 @@
           </div>
           <div class="edu-tag">EDU-270</div>
         </div>
-        <div class="cert-code">Zero Trust</div>
+        <div class="cert-code">ZT Automation</div>
         <div class="cert-name">Zero Trust Automation Courses</div>
         <div class="cert-type">Short Course</div>
         <div class="card-divider"></div>
@@ -516,8 +516,8 @@
           </div>
           <div class="edu-tag">EDU-280</div>
         </div>
-        <div class="cert-code">ZT Branch</div>
-        <div class="cert-name">Zero Trust Branch Courses</div>
+        <div class="cert-code">Zero Trust Branch</div>
+        <div class="cert-name">ZT Branch Courses</div>
         <div class="cert-type">Short Course</div>
         <div class="card-divider"></div>
         <div class="card-footer">
