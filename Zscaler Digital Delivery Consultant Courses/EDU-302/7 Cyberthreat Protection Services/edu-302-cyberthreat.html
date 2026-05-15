@@ -257,6 +257,18 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 .notes-panel-body.open{display:block;}
 @media(max-width:900px){.top-panels{grid-template-columns:1fr;}.top-panels .qpanel{border-right:none;border-bottom:1px solid var(--border);}
 .top-panels .qpanel-header,.top-panels .qpanel-body,.notes-panel-header,.notes-panel-body{padding-left:20px;padding-right:20px;}}
+
+.page-nav{display:flex;border-top:2px solid var(--border);background:var(--surface);}
+.page-nav-btn{flex:1;display:flex;flex-direction:column;gap:4px;padding:16px 28px;text-decoration:none;transition:background 0.15s;cursor:pointer;}
+.page-nav-btn:hover:not(.page-nav-disabled){background:var(--surface-2);}
+.page-nav-prev{border-right:1px solid var(--border);}
+.page-nav-next{text-align:right;}
+.page-nav-disabled{opacity:0.3;pointer-events:none;}
+.page-nav-label{font-size:10px;font-weight:600;letter-spacing:0.14em;color:var(--text-muted);display:block;}
+.page-nav-title{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--blue);display:block;}
+.ssnav{display:flex;flex-direction:column;gap:2px;margin-top:4px;}
+.ssnav-item{font-size:12px;color:var(--text-soft);padding:6px 10px;border-radius:6px;text-decoration:none;line-height:1.4;display:block;transition:background 0.15s,color 0.15s;}
+.ssnav-item:hover,.ssnav-item.active{background:var(--blue-glow);color:var(--blue);}
 </style>
 </head>
 <body>
@@ -1073,6 +1085,19 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 </div><!-- /main-content -->
 
 <aside class="sidebar">
+<div class="sidebar-section">
+  <div class="sidebar-label">ON THIS PAGE</div>
+  <nav class="ssnav">
+    <a class="ssnav-item" href="#section-overview">Overview</a>
+    <a class="ssnav-item" href="#section-recap">Recap</a>
+    <a class="ssnav-item" href="#section-policy-design">ZIA Policy Design</a>
+    <a class="ssnav-item" href="#section-phases">Config Phases</a>
+    <a class="ssnav-item" href="#section-global">Global Control</a>
+    <a class="ssnav-item" href="#section-granular">Granular Control</a>
+    <a class="ssnav-item" href="#section-advanced">Advanced Control</a>
+    <a class="ssnav-item" href="#section-recap-final">Recap</a>
+  </nav>
+</div>
   <div class="mod-nav">
     <a class="mod-nav-hub" href="../edu-302-hub.html">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -1131,6 +1156,17 @@ footer{padding:20px 60px;border-top:1px solid var(--border);display:flex;justify
 </aside>
 </main>
 
+<div class="page-nav">
+  <a class="page-nav-btn page-nav-prev" href="../6 Access Control Services/edu-302-access-control.html">
+    <span class="page-nav-label">&#8592; PREVIOUS</span>
+    <span class="page-nav-title">Access Control Services</span>
+  </a>
+  <a class="page-nav-btn page-nav-next" href="../8 Data Security Services/edu-302-data-security.html">
+    <span class="page-nav-label">NEXT &#8594;</span>
+    <span class="page-nav-title">Data Security Services</span>
+  </a>
+</div>
+
 <footer>
   <div class="footer-left">EDU-302 · <span>Section 7</span></div>
   <div class="footer-right">Cyberthreat Protection · Section 7 of 11</div>
@@ -1171,6 +1207,9 @@ document.addEventListener('DOMContentLoaded',function(){
   document.querySelectorAll('.analogy-img img, .img-display-block img, .screenshot-embed img').forEach(function(img){if(img.dataset.zoomInit)return;img.dataset.zoomInit='1';img.addEventListener('click',()=>img.classList.toggle('zoomed'));});
 });
 </script>
-<script src="../../../transitions.js"></script>
+<script src="../../../transitions.js">
+// Sidebar section nav — highlight active section on scroll
+(function(){var items=document.querySelectorAll('.ssnav-item');if(!items.length)return;var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){var lnk=document.querySelector('.ssnav-item[href="#'+e.target.id+'"]');if(lnk)lnk.classList.toggle('active',e.isIntersecting);});},{rootMargin:'-10% 0% -70% 0%'});document.querySelectorAll('.section-block[id]').forEach(function(el){obs.observe(el);});})();
+</script>
 </body>
 </html>
