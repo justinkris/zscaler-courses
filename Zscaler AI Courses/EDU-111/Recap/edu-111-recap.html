@@ -411,6 +411,18 @@ header p{font-size:13px;color:rgba(255,255,255,0.42);margin-top:10px;line-height
     </div>
   </div>
 
+
+<div class="page-nav">
+  <a class="page-nav-btn page-nav-prev" href="../The Defence Strategy/edu-111-defence-strategy.html">
+    <span class="page-nav-label">&#8592; PREVIOUS</span>
+    <span class="page-nav-title">The Defence Strategy</span>
+  </a>
+  <span class="page-nav-btn page-nav-next page-nav-disabled">
+    <span class="page-nav-label">NEXT &#8594;</span>
+    <span class="page-nav-title">End of Course</span>
+  </span>
+</div>
+
 </div>
 <script>
 function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}

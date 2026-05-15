@@ -570,6 +570,18 @@ ul.content-list li::before{content:'·';position:absolute;left:2px;color:var(--p
     </div>
   </div>
 
+
+<div class="page-nav">
+  <a class="page-nav-btn page-nav-prev" href="../3 - Incident Management Capabilities/edu-220-incident-management.html">
+    <span class="page-nav-label">&#8592; PREVIOUS</span>
+    <span class="page-nav-title">Incident Management</span>
+  </a>
+  <span class="page-nav-btn page-nav-next page-nav-disabled">
+    <span class="page-nav-label">NEXT &#8594;</span>
+    <span class="page-nav-title">End of Course</span>
+  </span>
+</div>
+
 </div>
 <script>
 function saveSocAnswer(btn){const area=btn.closest('.answer-area');const ta=area.querySelector('.answer-textarea');if(!ta.value.trim()){ta.focus();return;}const key=(typeof PAGE_KEY!=='undefined'?PAGE_KEY:document.title)+'-socans-'+area.dataset.section;try{localStorage.setItem(key,ta.value);}catch(e){}ta.disabled=true;btn.textContent='✓ Answer saved';btn.disabled=true;const seeBtn=area.querySelector('.btn-see-answer');seeBtn.disabled=false;seeBtn.textContent='💡 See Model Answer';}
